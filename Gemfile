@@ -26,6 +26,7 @@ gem 'puma', '~> 3.0'
 # gem 'rack-cors'
 
 group :development, :test do
+  gem "rspec-rails"
 end
 
 group :development do
