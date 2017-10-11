@@ -1,24 +1,36 @@
-# README
+# Helpme App Backend API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Setting up the Project
 
-Things you may want to cover:
+* Install RVM
 
-* Ruby version
+      $ \curl -sSL https://get.rvm.io | bash -s stable
+      $ source ~/.rvm/scripts/rvm
+      $ rvm install ruby-2.4.2
 
-* System dependencies
+* Install Postgres
 
-* Configuration
+      $ brew install postgresql
+      $ initdb /usr/local/var/postgres -E utf8
+      $ brew services start postgresql
 
-* Database creation
+* Install Rails
 
-* Database initialization
+      $ gem install rails
 
-* How to run the test suite
+* Clone the Repo
 
-* Services (job queues, cache servers, search engines, etc.)
+      $ git clone https://your_username@bitbucket.org/hopecollegecs/backend-api.git
 
-* Deployment instructions
+* Set up the database
 
-* ...
+      $ bundle install
+      $ rake db:setup
+
+## Running Tests
+
+    $ rake
+
+## Running a local Server
+
+    $ rails server
