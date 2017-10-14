@@ -1,4 +1,4 @@
-class Session < ApplicationRecord
+class LabSession < ApplicationRecord
   # Set the number if it hasn't been set already
   before_validation :set_number, on: :create, unless: :number?
 
@@ -14,7 +14,7 @@ class Session < ApplicationRecord
     # Generates a random number between 9999 and 100000
     num = 10_000 + Random.new.rand(89_999)
     # Ensures that no other session already has the number (it is unique)
-    while Session.pluck(:number).include?(num) do
+    while LabSession.pluck(:number).include?(num) do
       num = 10_000 + Random.new.rand(89_999)
     end
     self.number = num

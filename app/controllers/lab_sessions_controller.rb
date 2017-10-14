@@ -1,6 +1,6 @@
-class SessionsController < ApplicationController
+class LabSessionsController < ApplicationController
   def create
-    sess = Session.new
+    sess = LabSession.new
     if sess.update(session_params)
       render json: sess
     else

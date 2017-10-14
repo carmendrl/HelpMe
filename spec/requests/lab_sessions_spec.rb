@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.describe "Sessions", type: :request do
+RSpec.describe "LabSessions", type: :request do
 
   describe "POST /sessions" do
-    let!(:url) { "https://example.com/sessions" }
+    let!(:url) { "https://example.com/lab_sessions" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
 
     it "creates a new session" do
@@ -12,14 +12,14 @@ RSpec.describe "Sessions", type: :request do
         "number" => "12345",
       }.to_json
 
-      expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(Session, :count).by(1)
+      expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).by(1)
 
-      s = Session.last
+      s = LabSession.last
 
       expect(json).to eq(
         {
           "data" => {
-            "type" => "sessions",
+            "type" => "lab-sessions",
             "id" => s.id,
             "attributes" => {
               "description" => "Computer science lab about C",
@@ -36,16 +36,16 @@ RSpec.describe "Sessions", type: :request do
         "description" => "Computer science lab about C",
       }.to_json
 
-      expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(Session, :count).from(0).to(1)
+      expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
 
       # Get the session we just created so we can verify that the number returned
       # is the one we expect
-      s = Session.last
+      s = LabSession.last
 
       expect(json).to eq(
         {
           "data" => {
-            "type" => "sessions",
+            "type" => "lab-sessions",
             "id" => s.id,
             "attributes" => {
               "description" => "Computer science lab about C",
@@ -58,19 +58,19 @@ RSpec.describe "Sessions", type: :request do
     end
 
     it "creates a new session without a number or description" do
-      expect { post(url, params: {}, headers: good_request_headers) }.to change(Session, :count).from(0).to(1)
+      expect { post(url, params: {}, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
 
       # Get the session we just created so we can verify that the number returned
       # is the one we expect
-      s = Session.last
+      s = LabSession.last
 
       expect(json).to eq(
         {
           "data" => {
-            "type" => "sessions",
+            "type" => "lab-sessions",
             "id" => s.id,
             "attributes" => {
-              "description" => nil,
+              "description" => "",
               "number" => s.number,
               "active" => true,
             }
@@ -84,7 +84,7 @@ RSpec.describe "Sessions", type: :request do
         "number" => 12,
       }.to_json
 
-      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(Session, :count)
+      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
       expect(json).to eq(
         "status" => 422,
         "error" => {
@@ -104,7 +104,7 @@ RSpec.describe "Sessions", type: :request do
         "number" => 123456,
       }.to_json
 
-      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(Session, :count)
+      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
       expect(json).to eq(
         "status" => 422,
         "error" => {

@@ -17,9 +17,9 @@ ActiveRecord::Schema.define(version: 20170927130127) do
   enable_extension "uuid-ossp"
   enable_extension "pgcrypto"
 
-  create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "lab_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "number", null: false
-    t.string "description"
+    t.string "description", default: "", null: false
     t.boolean "active", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
