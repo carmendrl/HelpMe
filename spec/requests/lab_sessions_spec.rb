@@ -9,7 +9,7 @@ RSpec.describe "LabSessions", type: :request do
     it "creates a new session" do
       good_request_json = {
         "description" => "Computer science lab about C",
-        "number" => "12345",
+        "token" => "12345",
       }.to_json
 
       expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).by(1)
@@ -23,7 +23,7 @@ RSpec.describe "LabSessions", type: :request do
             "id" => s.id,
             "attributes" => {
               "description" => "Computer science lab about C",
-              "number" => 12345,
+              "token" => "12345",
               "active" => true,
             }
           }
@@ -31,14 +31,14 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    it "creates a new session without a number" do
+    it "creates a new session without a token" do
       good_request_json = {
         "description" => "Computer science lab about C",
       }.to_json
 
       expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
 
-      # Get the session we just created so we can verify that the number returned
+      # Get the session we just created so we can verify that the token returned
       # is the one we expect
       s = LabSession.last
 
@@ -49,7 +49,7 @@ RSpec.describe "LabSessions", type: :request do
             "id" => s.id,
             "attributes" => {
               "description" => "Computer science lab about C",
-              "number" => s.number,
+              "token" => s.token,
               "active" => true,
             }
           }
@@ -57,10 +57,10 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    it "creates a new session without a number or description" do
+    it "creates a new session without a token or description" do
       expect { post(url, params: {}, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
 
-      # Get the session we just created so we can verify that the number returned
+      # Get the session we just created so we can verify that the token returned
       # is the one we expect
       s = LabSession.last
 
@@ -71,7 +71,7 @@ RSpec.describe "LabSessions", type: :request do
             "id" => s.id,
             "attributes" => {
               "description" => "",
-              "number" => s.number,
+              "token" => s.token,
               "active" => true,
             }
           }
@@ -79,9 +79,9 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    it "returns an error with a number too small" do
+    it "returns an error with a token too small" do
       invalid_params = {
-        "number" => 12,
+        "token" => 12,
       }.to_json
 
       expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
@@ -91,7 +91,7 @@ RSpec.describe "LabSessions", type: :request do
           "type" => "resource_invalid",
           "errors" => [
             {
-              "attribute" => "number",
+              "attribute" => "token",
               "message" => "is the wrong length (should be 5 characters)",
             }
           ]
@@ -99,9 +99,9 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    it "returns an error with a number too large" do
+    it "returns an error with a token too large" do
       invalid_params = {
-        "number" => 123456,
+        "token" => 123456,
       }.to_json
 
       expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
@@ -111,7 +111,7 @@ RSpec.describe "LabSessions", type: :request do
           "type" => "resource_invalid",
           "errors" => [
             {
-              "attribute" => "number",
+              "attribute" => "token",
               "message" => "is the wrong length (should be 5 characters)",
             }
           ]

@@ -17,7 +17,7 @@ class LabSessionsController < ApplicationController
   private
 
   def session_params
-    params.permit(:description, :number, :active)
+    params.permit(:description, :token, :active)
   end
 
   def serialize_errors(object)

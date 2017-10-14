@@ -1,5 +1,5 @@
 class LabSessionSerializer < ActiveModel::Serializer
   attribute :description
-  attribute :number
+  attribute :token
   attribute :active
 end

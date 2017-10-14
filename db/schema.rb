@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20170927130127) do
   enable_extension "pgcrypto"
 
   create_table "lab_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.integer "number", null: false
+    t.string "token", null: false
     t.string "description", default: "", null: false
     t.boolean "active", default: true
     t.datetime "created_at", null: false
