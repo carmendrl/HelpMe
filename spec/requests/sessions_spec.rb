@@ -13,11 +13,20 @@ RSpec.describe "Sessions", type: :request do
       }.to_json
 
       expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(Session, :count).by(1)
+
+      s = Session.last
+
       expect(json).to eq(
         {
-          "description" => "Computer science lab about C",
-          "number" => 12345,
-          "active" => true,
+          "data" => {
+            "type" => "sessions",
+            "id" => s.id,
+            "attributes" => {
+              "description" => "Computer science lab about C",
+              "number" => 12345,
+              "active" => true,
+            }
+          }
         }
       )
     end
@@ -35,9 +44,15 @@ RSpec.describe "Sessions", type: :request do
 
       expect(json).to eq(
         {
-          "description" => "Computer science lab about C",
-          "number" => s.number,
-          "active" => true,
+          "data" => {
+            "type" => "sessions",
+            "id" => s.id,
+            "attributes" => {
+              "description" => "Computer science lab about C",
+              "number" => s.number,
+              "active" => true,
+            }
+          }
         }
       )
     end
@@ -51,9 +66,15 @@ RSpec.describe "Sessions", type: :request do
 
       expect(json).to eq(
         {
-          "description" => nil,
-          "number" => s.number,
-          "active" => true,
+          "data" => {
+            "type" => "sessions",
+            "id" => s.id,
+            "attributes" => {
+              "description" => nil,
+              "number" => s.number,
+              "active" => true,
+            }
+          }
         }
       )
     end
