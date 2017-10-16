@@ -1,5 +1,7 @@
 # Helpme App Backend API
 
+## [View API Documentation](APIDOC.md)
+
 ## Setting up the Project
 
 * Install RVM
@@ -34,3 +36,4 @@
 ## Running a local Server
 
     $ rails server
+

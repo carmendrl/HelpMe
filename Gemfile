@@ -9,8 +9,7 @@ gem "pg", "~> 0.18"
 # Use Puma as the app server
 gem "puma", "~> 3.0"
 
-# Use Capistrano for deployment
-# gem "capistrano-rails", group: :development
+gem "active_model_serializers"
 
 group :development, :test do
   gem "rspec-rails"
