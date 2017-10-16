@@ -29,7 +29,7 @@ Return Object
 {
   "data": {
     "type": "lab-sessions",
-    "id": "SessionID",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
     "attributes": {
       "description": "Computer science lab about C",
       "token": "12345",
