@@ -11,7 +11,7 @@ Request Parameters
 ```json
 {
     "description": "This is the description of the lab session",
-    "number": "12345",
+    "token": "12345",
 }
 ```
 
