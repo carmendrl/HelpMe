@@ -12,10 +12,10 @@ class LabSession < ApplicationRecord
 
   def set_token
     # Generates a random number between 9999 and 100000
-    token = (10000 + Random.new.rand(89999)).to_s
     # Ensures that no other session already has the number (it is unique)
-    while LabSession.pluck(:token).include?(token) do
+    token = loop do
       token = (10000 + Random.new.rand(89999)).to_s
+      break token unless LabSession.pluck(:token).include?(token)
     end
     self.token = token
   end
