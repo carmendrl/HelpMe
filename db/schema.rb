@@ -11,7 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(version: 20171101121458) do
-
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -31,6 +30,13 @@ ActiveRecord::Schema.define(version: 20171101121458) do
     t.uuid "lab_session_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+
+  create_table "sessions_users", id: false, force: :cascade do |t|
+    t.uuid "user_id"
+    t.uuid "session_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "session_id"], name: "index_sessions_users_on_user_id_and_session_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
