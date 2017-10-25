@@ -1,4 +1,6 @@
 class LabSessionsController < ApplicationController
+  before_action :authenticate_user!
+
   def create
     sess = LabSession.new
     if sess.update(session_params)
