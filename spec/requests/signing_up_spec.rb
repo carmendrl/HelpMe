@@ -48,6 +48,32 @@ RSpec.describe "Signing up", type: :request do
       end.not_to change(User, :count)
       expect(response.code).to eq("422")
       expect(signed_in?).to eq(false)
+      expect(json).to eq(
+        {
+          "status"=>"error",
+          "data"=>
+          {
+            "id"=>nil,
+            "provider"=>"email",
+            "uid"=>"",
+            "username"=>"princess.buttercup",
+            "email"=>"",
+            "created_at"=>nil,
+            "updated_at"=>nil,
+            "type"=>"user"
+          },
+          "errors"=>{
+            "email"=>[
+              "can't be blank",
+              "is not an email"
+            ],
+            "full_messages"=>[
+              "Email can't be blank",
+              "Email is not an email"
+            ]
+          }
+        }
+      )
     end
 
     it "does not allow a user to sign up with invalid password confirmation" do
@@ -63,6 +89,30 @@ RSpec.describe "Signing up", type: :request do
       end.not_to change(User, :count)
       expect(response.code).to eq("422")
       expect(signed_in?).to eq(false)
+      expect(json).to eq(
+        {
+          "status"=>"error",
+          "data"=>
+          {
+            "id"=>nil,
+            "provider"=>"email",
+            "uid"=>"",
+            "username"=>"princess.buttercup",
+            "email"=>"buttercup@example.com",
+            "created_at"=>nil,
+            "updated_at"=>nil,
+            "type"=>"user"
+          },
+          "errors"=>{
+            "password_confirmation"=>[
+              "doesn't match Password"
+            ],
+            "full_messages"=>[
+              "Password confirmation doesn't match Password"
+            ]
+          }
+        }
+      )
     end
   end
 end

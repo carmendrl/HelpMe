@@ -66,19 +66,36 @@ RSpec.describe "Authentication", type: :request do
     end
   end
 
-  describe "POST /users/sign_out" do
+  describe "DELETE /users/sign_out" do
     let!(:url) { "https://example.com/users/sign_out" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
     let!(:user) { create(:user, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
 
-    before do
+    it "allows the user to sign out" do
       # Sign the user in
       good_request_headers.merge! sign_in(user)
-    end
 
-    it "allows the user to sign out" do
       delete(url, headers: good_request_headers)
       expect(signed_in?).to eq(false)
+      expect(response.code).to eq("200")
+      expect(json).to eq(
+        {
+          "success" => true,
+        }
+      )
+    end
+
+    it "errors if a user is not signed it" do
+      # The user will not be signed in
+      delete(url, headers: good_request_headers)
+      expect(response.code).to eq("404")
+      expect(json).to eq(
+        {
+          "errors"=>[
+            "User was not found or was not logged in."
+          ]
+        }
+      )
     end
   end
 end

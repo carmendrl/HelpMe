@@ -4,6 +4,7 @@ module RequestSpecHelper
     JSON.parse(response.body)
   end
 
+  # Returns headers to signify that the user is signed in
   def sign_in(user)
     user.create_new_auth_token
   end
