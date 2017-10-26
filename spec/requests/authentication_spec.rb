@@ -14,16 +14,18 @@ RSpec.describe "Authentication", type: :request do
 
       post(url, params: sign_in_params, headers: good_request_headers)
       expect(response.code).to eq("200")
+
+      user = User.find_by(email: "ferzle@example.com")
+
       expect(json).to eq(
         {
-          "data"=>
-          {
+          "data"=> {
+            "type"=> "users",
             "id"=> user.id,
-            "email"=> "ferzle@example.com",
-            "provider"=> "email",
-            "uid"=> "ferzle@example.com",
-            "username"=> "ferzle",
-            "type"=> "user"
+            "attributes"=> {
+              "email"=> "ferzle@example.com",
+              "username"=> "ferzle",
+            }
           }
         }
       )
