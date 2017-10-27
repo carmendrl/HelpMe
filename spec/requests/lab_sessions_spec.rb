@@ -84,7 +84,8 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    it "returns an error with a token too small" do
+    it "returns an error with a token that was taken" do
+      create(:lab_session, token: "12")
       invalid_params = {
         "token" => 12,
       }.to_json
@@ -97,27 +98,7 @@ RSpec.describe "LabSessions", type: :request do
           "errors" => [
             {
               "attribute" => "token",
-              "message" => "is the wrong length (should be 5 characters)",
-            }
-          ]
-        }
-      )
-    end
-
-    it "returns an error with a token too large" do
-      invalid_params = {
-        "token" => 123456,
-      }.to_json
-
-      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
-      expect(json).to eq(
-        "status" => 422,
-        "error" => {
-          "type" => "resource_invalid",
-          "errors" => [
-            {
-              "attribute" => "token",
-              "message" => "is the wrong length (should be 5 characters)",
+              "message" => "has already been taken",
             }
           ]
         }
