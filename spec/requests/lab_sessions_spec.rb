@@ -5,6 +5,11 @@ RSpec.describe "LabSessions", type: :request do
   describe "POST /sessions" do
     let!(:url) { "https://example.com/lab_sessions" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
+    let(:user) { create(:user) }
+
+    before do
+      good_request_headers.merge! sign_in(user)
+    end
 
     it "creates a new session" do
       good_request_json = {
@@ -115,6 +120,25 @@ RSpec.describe "LabSessions", type: :request do
               "message" => "is the wrong length (should be 5 characters)",
             }
           ]
+        }
+      )
+    end
+
+    it "does not allow a user to create a session if they are not signed in" do
+      good_request_headers = {
+        "Content-Type" => "application/json",
+      }
+      good_params = {
+        "description" => "Computer science lab about C",
+      }.to_json
+
+      expect { post(url, params: good_params, headers: good_request_headers) }.not_to change(LabSession, :count)
+      expect(response.code).to eq("401")
+      expect(json).to eq(
+        {
+          "errors" => [
+            "You need to sign in or sign up before continuing."
+          ],
         }
       )
     end

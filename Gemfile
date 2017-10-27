@@ -9,6 +9,10 @@ gem "pg", "~> 0.18"
 # Use Puma as the app server
 gem "puma", "~> 3.0"
 
+# Authentication
+gem "devise_token_auth"
+gem "omniauth"
+
 gem "active_model_serializers"
 
 group :development, :test do

@@ -1,11 +1,165 @@
 # API Documentation
 
+Ensure you set the header `Content-Type: application/json` for all requests
+
+If a user is not signed in for an action that they need to be signed in as, the status code will be 401, and the payload will be:
+
+```json
+{
+  "errors": [
+    "You need to sign in or sign up before continuing."
+  ]
+}
+```
+
+## Authentication
+
+#### Signing up
+#### `POST /users`
+
+The sign up process is to make a request with a new user's information, after which you will get back a response with the user's information and the headers will contain the proper authentication tokens.
+
+Request Parameters
+
+```json
+{
+  "email": "email@example.com",
+  "password": "abc123",
+  "password_confirmation": "abc123",
+  "username": "user.name",
+}
+```
+
+Request Parameters:
+
+| User Fields | Description |
+|-------|-------------|
+| `email` | Required. The email that the user will use to sign in |
+| `password` | Required. Their password. |
+| `password_confirmation` | Required. Must mast the password parameter. |
+| `username` | Optional (for now). What they will be referred to. Could be used for authentication later on. |
+
+Return Object
+
+```json
+{
+  "data": {
+    "type": "users",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "email": "email@example.com",
+      "username": "user.name",
+    }
+  }
+}
+```
+
+If there is an error signing up, the payload will have the errors present and the values that were not provided will be null.
+
+Error Payload:
+```json
+{
+  "status":"error",
+  "data":
+  {
+    "id":nil,
+    "provider":"email",
+    "uid":"",
+    "username":"princess.buttercup",
+    "email":"",
+    "created_at":nil,
+    "updated_at":nil,
+    "type":"user"
+  },
+  "errors":{
+    "attribute_name":[
+      "error messages"
+    ],
+    "full_messages":[
+      "Attribute Name error messages"
+    ]
+  }
+}
+```
+
+#### Signing in
+#### `POST /users/sign_in`
+
+Signing in consists of sending authentication and getting request headers back to use in future requests.
+
+Request Parameters
+
+```json
+{
+  "email": "email@example.com",
+  "password": "abc123",
+}
+```
+
+Request Parameters:
+
+| User Fields | Description |
+|-------|-------------|
+| `email` | Required. The email that the user will use to sign in |
+| `password` | Required. Their password. |
+
+Return Object
+
+```json
+{
+  "data": {
+    "type": "users",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "email": "email@example.com",
+      "username": "user.name",
+    }
+  }
+}
+```
+
+If signing in fails, the proper headers will not be returned and there will be JSON with all of the errors.
+
+Error Payload
+
+```json
+{
+    "errors": [
+      "Invalid login credentials. Please try again."
+    ]
+}
+
+```
+
+#### Signing out
+#### `DELETE /users/sign_out`
+
+In order to sign a user out a request to this endpoint will delete their current signed in headers and get rid of access tokens in the database. When making a call to this endpoint, ensure the credentials on the client are deleted since they are useless after this.
+
+Success Payload (Code: 200)
+
+```json
+{
+  "success": true,
+}
+```
+
+Error Payload (Code: 404)
+
+```json
+{
+  "errors": [
+    "User was not found or was not logged in."
+  ]
+}
+```
+
 ## Lab Sessions
 
 #### Creating a Lab Session
 #### `POST /lab_sessions`
 
-You can create a session by creating a JSON representation of one and sending a post request to `/lab_sessions`. Ensure you set the header `Content-Type: application/json` for the request
+You can create a session by creating a JSON representation of one and sending a post request to `/lab_sessions`.
 
 Request Parameters
 ```json
