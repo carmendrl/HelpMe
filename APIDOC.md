@@ -118,6 +118,17 @@ Return Object
 }
 ```
 
+To sign in, you _must_ post requests with the headers that are returned with this object.
+
+Return headers
+
+| Header | Description |
+|-------|-------------|
+| `access-token` | Serves as the user's password |
+| `client ` | This enables the use of multiple simultaneous sessions on different clients |
+| `expiry` | When the session will expire |
+| `uid` | The unique identifier that is used to find users |
+
 If signing in fails, the proper headers will not be returned and there will be JSON with all of the errors.
 
 Error Payload
