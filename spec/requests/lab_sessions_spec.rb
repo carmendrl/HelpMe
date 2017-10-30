@@ -5,7 +5,7 @@ RSpec.describe "LabSessions", type: :request do
   describe "POST /sessions" do
     let!(:url) { "https://example.com/lab_sessions" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
-    let(:user) { create(:user) }
+    let(:user) { create(:professor) }
 
     before do
       good_request_headers.merge! sign_in(user)

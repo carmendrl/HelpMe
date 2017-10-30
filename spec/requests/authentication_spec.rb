@@ -4,7 +4,7 @@ RSpec.describe "Authentication", type: :request do
   describe "POST /users/sign_in" do
     let!(:url) { "https://example.com/users/sign_in" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
-    let!(:user) { create(:user, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
+    let!(:user) { create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
 
     it "allows a user to sign in with valid credentials" do
       sign_in_params = {
@@ -20,7 +20,7 @@ RSpec.describe "Authentication", type: :request do
       expect(json).to eq(
         {
           "data"=> {
-            "type"=> "users",
+            "type"=> "professors",
             "id"=> user.id,
             "attributes"=> {
               "email"=> "ferzle@example.com",
@@ -69,7 +69,7 @@ RSpec.describe "Authentication", type: :request do
   describe "DELETE /users/sign_out" do
     let!(:url) { "https://example.com/users/sign_out" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
-    let!(:user) { create(:user, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
+    let!(:user) { create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
 
     it "allows the user to sign out" do
       # Sign the user in
