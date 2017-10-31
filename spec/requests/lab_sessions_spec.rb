@@ -138,5 +138,53 @@ RSpec.describe "LabSessions", type: :request do
         }
       )
     end
+
+    describe "POST /lab_sessions/join/:id" do
+      let!(:url) { "https://example.com/lab_sessions/join" }
+      let(:good_request_headers) { { "Content-Type" => "application/json" } }
+      let(:good_request_json) { {"description" => "Computer science lab about C",
+        "token" => "12345",
+      }.to_json }
+      let(:user) { create(:user) }
+      let(:session) { post(url, params: good_request_json, headers: good_request_headers) }
+
+      before do
+        auth_headers = sign_in(user)
+        good_request_headers.merge! auth_headers
+      end
+
+      it "lets a user join a session from a valid token" do
+        valid_request_json = {
+          "token" => "12345",
+        }.to_json
+
+        expect { post(url, params: valid_request_json) }.to change(user.lab_sessions, :count).by(1)
+
+        expect(json).to eq(
+          "status" => 202,
+        )
+      end
+
+      it "does not let a user join a session from an invalid token" do
+        invalid_request_json = {
+          "token" => "00000",
+        }.to_json
+
+        expect { post(url, params: invalid_request_json) }.to_not change(user.lab_sessions, :count).by(1)
+
+        expect(json).to eq(
+          "status" => 401,
+          "error" => {
+            "type" => "unauthorized_request",
+            "errors" => [
+              {
+                "attribute" => "token",
+                "message" => "is invalid",
+              }
+            ]
+          }
+        )
+      end
+    end
   end
 end

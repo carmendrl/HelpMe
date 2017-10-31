@@ -31,12 +31,12 @@ ActiveRecord::Schema.define(version: 20171101121458) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
 
-  create_table "sessions_users", id: false, force: :cascade do |t|
+  create_table "lab_sessions_users", id: false, force: :cascade do |t|
     t.uuid "user_id"
-    t.uuid "session_id"
+    t.uuid "lab_session_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id", "session_id"], name: "index_sessions_users_on_user_id_and_session_id"
+    t.index ["user_id", "lab_session_id"], name: "index_lab_sessions_users_on_user_id_and_lab_session_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
