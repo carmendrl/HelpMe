@@ -5,26 +5,58 @@ RSpec.describe "Signing up", type: :request do
     let!(:url) { "https://example.com/users" }
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
 
-    it "allows a user to sign up with good parameters" do
+    it "allows a student to sign up with good parameters" do
       sign_up_params = {
         email: "buttercup@example.com",
         password: "password",
         password_confirmation: "password",
         username: "princess.buttercup",
+        type: "Student"
       }.to_json
 
       expect do
         post(url, params: sign_up_params, headers: good_request_headers)
-      end.to change(User, :count).from(0).to(1)
+      end.to change(Student, :count).from(0).to(1)
       expect(response.code).to eq("200")
 
-      user = User.last
+      student = Student.last
 
       expect(json).to eq(
         {
           "data"=> {
-            "type"=> "users",
-            "id"=> user.id,
+            "type"=> "students",
+            "id"=> student.id,
+            "attributes"=> {
+              "email"=> "buttercup@example.com",
+              "username"=> "princess.buttercup",
+            }
+          }
+        }
+      )
+      expect(signed_in?).to eq(true)
+    end
+
+    it "allows a professor to sign up with good parameters" do
+      sign_up_params = {
+        email: "buttercup@example.com",
+        password: "password",
+        password_confirmation: "password",
+        username: "princess.buttercup",
+        type: "Professor"
+      }.to_json
+
+      expect do
+        post(url, params: sign_up_params, headers: good_request_headers)
+      end.to change(Professor, :count).from(0).to(1)
+      expect(response.code).to eq("200")
+
+      prof = Professor.last
+
+      expect(json).to eq(
+        {
+          "data"=> {
+            "type"=> "professors",
+            "id"=> prof.id,
             "attributes"=> {
               "email"=> "buttercup@example.com",
               "username"=> "princess.buttercup",

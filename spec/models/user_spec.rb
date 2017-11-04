@@ -1,9 +1,21 @@
 require "rails_helper"
 
 RSpec.describe "User" do
-  it "is able to create a user" do
+  it "is able to create a professor" do
     expect do
-      create(:user, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password")
-    end.to change(User, :count).from(0).to(1)
+      create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password")
+    end.to change(Professor, :count).from(0).to(1)
+
+    professor = User.last
+    expect(professor.type).to eq("Professor")
+  end
+
+  it "is able to create a student" do
+    expect do
+      create(:student, email: "buttercup@example.com", username: "buttercup", password: "password", password_confirmation: "password")
+    end.to change(Student, :count).from(0).to(1)
+
+    student = User.last
+    expect(student.type).to eq("Student")
   end
 end

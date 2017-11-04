@@ -27,6 +27,7 @@ Request Parameters
   "password": "abc123",
   "password_confirmation": "abc123",
   "username": "user.name",
+  "type": "Student"
 }
 ```
 
@@ -37,6 +38,7 @@ Request Parameters:
 | `email` | Required. The email that the user will use to sign in |
 | `password` | Required. Their password. |
 | `password_confirmation` | Required. Must mast the password parameter. |
+| `type` | Required. Must be either "Student" or "Professor" |
 | `username` | Optional (for now). What they will be referred to. Could be used for authentication later on. |
 
 Return Object
@@ -44,7 +46,7 @@ Return Object
 ```json
 {
   "data": {
-    "type": "users",
+    "type": "students",
     "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
     "attributes": {
       "email": "email@example.com",
@@ -69,7 +71,7 @@ Error Payload:
     "email":"",
     "created_at":nil,
     "updated_at":nil,
-    "type":"user"
+    "type":"student"
   },
   "errors":{
     "attribute_name":[
@@ -108,7 +110,7 @@ Return Object
 ```json
 {
   "data": {
-    "type": "users",
+    "type": "students",
     "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
     "attributes": {
       "email": "email@example.com",
