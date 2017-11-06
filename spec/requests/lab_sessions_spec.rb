@@ -105,7 +105,7 @@ RSpec.describe "LabSessions", type: :request do
         "token" => 12,
       }.to_json
 
-      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
+      expect { post(url, params: invalid_params, headers: good_request_headers) }.to_not change(LabSession, :count)
       expect(json).to eq(
         "status" => 422,
         "error" => {
@@ -139,14 +139,14 @@ RSpec.describe "LabSessions", type: :request do
       )
     end
 
-    describe "POST /lab_sessions/join/:id" do
-      let!(:url) { "https://example.com/lab_sessions/join" }
+    describe "POST /lab_sessions/join/:token" do
+      let(:lab_session) { create(:lab_session) }
+      let!(:url) { "https://example.com/lab_sessions/join/#{lab_session.token}" }
       let(:good_request_headers) { { "Content-Type" => "application/json" } }
       let(:good_request_json) { {"description" => "Computer science lab about C",
         "token" => "12345",
       }.to_json }
       let(:user) { create(:user) }
-      let(:session) { post(url, params: good_request_json, headers: good_request_headers) }
 
       before do
         auth_headers = sign_in(user)
@@ -155,33 +155,52 @@ RSpec.describe "LabSessions", type: :request do
 
       it "lets a user join a session from a valid token" do
         valid_request_json = {
-          "token" => "12345",
+          token: lab_session.token,
         }.to_json
 
-        expect { post(url, params: valid_request_json) }.to change(user.lab_sessions, :count).by(1)
+        expect do
+          post(url, params: valid_request_json, headers: good_request_headers)
+        end.to change(user.lab_sessions, :count).from(0).to(1)
+           .and change(lab_session.users, :count).from(0).to(1)
 
         expect(json).to eq(
-          "status" => 202,
+          {
+            "data" => {
+              "id" => json["data"]["id"],
+              "type" => "lab-session-memberships",
+              "attributes" => {
+                "created_at" => lab_session.created_at,
+              },
+              "relationships" => {
+                "lab_session" => {
+                  "data" => {
+                    "id" => lab_session.id,
+                    "type" => "lab-sessions"
+                  }     
+                },
+                "user" => {
+                  "data" => {
+                    "id" => user.id,
+                    "type" => "users"
+                  }
+                }
+              }
+            }
+          }
         )
       end
 
       it "does not let a user join a session from an invalid token" do
-        invalid_request_json = {
-          "token" => "00000",
-        }.to_json
-
-        expect { post(url, params: invalid_request_json) }.to_not change(user.lab_sessions, :count).by(1)
+        url = "https://example.com/lab_sessions/join/00000"
+        expect do
+          post(url, headers: good_request_headers)
+        end.not_to change(user.lab_sessions, :count)
 
         expect(json).to eq(
-          "status" => 401,
+          "status" => 404,
           "error" => {
-            "type" => "unauthorized_request",
-            "errors" => [
-              {
-                "attribute" => "token",
-                "message" => "is invalid",
-              }
-            ]
+            "type" => "resource_not_found",
+            "errors" => [],
           }
         )
       end
