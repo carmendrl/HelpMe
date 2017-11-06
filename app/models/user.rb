@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   has_many :questions, foreign_key: :asker_id
-  has_many :lab_sessions_users, class_name: "LabSessionUser"
-  has_many :lab_sessions, through: :lab_sessions_users
+  has_many :lab_session_memberships
+  has_many :lab_sessions, through: :lab_session_memberships, inverse_of: :users
 
   # Include default devise modules.
   devise :database_authenticatable, :registerable,

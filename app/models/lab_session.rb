@@ -1,7 +1,7 @@
 class LabSession < ApplicationRecord
   has_many :questions
-  has_many :lab_sessions_users, class_name: "LabSessionUser"
-  has_many :users, through: :lab_sessions_users
+  has_many :lab_session_memberships
+  has_many :users, through: :lab_session_memberships, inverse_of: :lab_sessions
 
   # Set the token (alpha/numeric) if it hasn't been set already
   before_validation :set_token, on: :create, unless: :token?
