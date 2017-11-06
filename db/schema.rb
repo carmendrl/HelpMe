@@ -16,10 +16,9 @@ ActiveRecord::Schema.define(version: 20171101121458) do
   enable_extension "uuid-ossp"
   enable_extension "pgcrypto"
 
-  create_table "lab_sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "token", null: false
-    t.string "description", default: "", null: false
-    t.boolean "active", default: true
+  create_table "lab_session_memberships", force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "lab_session_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -30,13 +29,6 @@ ActiveRecord::Schema.define(version: 20171101121458) do
     t.uuid "lab_session_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-
-  create_table "lab_sessions_users", id: false, force: :cascade do |t|
-    t.uuid "user_id"
-    t.uuid "lab_session_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id", "lab_session_id"], name: "index_lab_sessions_users_on_user_id_and_lab_session_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

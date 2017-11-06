@@ -1,10 +1,9 @@
 class CreateJoinTableUserSession < ActiveRecord::Migration[5.1]
   def change
-    create_join_table :users, :lab_sessions do |t|
-      t.uuid :user_id
-      t.uuid :lab_session_id
+    create_table :lab_session_memberships do |t|
+      t.uuid :user_id, null: false
+      t.uuid :lab_session_id, null: false
       t.timestamps
-      t.index [:user_id, :lab_session_id]
     end
   end
 end
