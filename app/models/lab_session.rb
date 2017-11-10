@@ -1,4 +1,6 @@
 class LabSession < ApplicationRecord
+  has_many :questions
+
   # Set the token (alpha/numeric) if it hasn't been set already
   before_validation :set_token, on: :create, unless: :token?
 

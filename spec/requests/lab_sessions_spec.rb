@@ -30,8 +30,13 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "Computer science lab about C",
               "token" => "12345",
               "active" => true,
-            }
-          }
+            },
+            "relationships" => {
+              "questions" => {
+                "data" => [],
+              },
+            },
+          },
         }
       )
     end
@@ -56,8 +61,13 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "Computer science lab about C",
               "token" => s.token,
               "active" => true,
-            }
-          }
+            },
+            "relationships" => {
+              "questions" => {
+                "data" => [],
+              },
+            },
+          },
         }
       )
     end
@@ -78,8 +88,13 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "",
               "token" => s.token,
               "active" => true,
-            }
-          }
+            },
+            "relationships" => {
+              "questions" => {
+                "data" => [],
+              },
+            },
+          },
         }
       )
     end
