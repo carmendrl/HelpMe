@@ -18,4 +18,14 @@ RSpec.describe "User" do
     student = User.last
     expect(student.type).to eq("Student")
   end
+
+  describe "#professor?" do
+    it "returns the correct values for students and professors" do
+      professor = create(:professor)
+      expect(professor.professor?).to eq(true)
+
+      student = create(:student)
+      expect(student.professor?).to eq(false)
+    end
+  end
 end
