@@ -201,8 +201,13 @@ Return Object
       "description": "Computer science lab about C",
       "token": "12345",
       "active": true,
-    }
-  }
+    },
+    "relationships": {
+      "questions": {
+        "data": [],
+      },
+    },
+  },
 }
 ```
 
