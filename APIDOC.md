@@ -224,3 +224,195 @@ Error Payload
     }
 }
 ```
+
+## Questions
+
+#### Creating a Question
+#### `POST /lab_sessions/:lab_session_id/questions`
+
+Request Parameters
+```json
+{
+    "text": "Why is abbreviated such a long word?",
+}
+```
+
+If the JSON has valid values, the question will be created.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `text` | Required. The text of the question |
+
+Return Object for Students
+
+```json
+{
+  "data": {
+    "type": "questions",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "text": "Why is abbreviated such a long word?",
+      "created-at": "2017-11-10T12:00:00Z",
+    },
+  }
+}
+```
+
+Return Object for Professors
+
+This will include the asker of the question. When the professor creates the question, clearly he or she is the asker. Only professors will be able to see the asker.
+
+```json
+{
+  "data" : {
+    "type" : "questions",
+    "id" : "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes" : {
+      "text" : "Why is abbreviated such a long word?",
+      "created-at" : "2017-11-10T12:00:00Z",
+    },
+    "relationships" : {
+      "asker" : {
+        "data" : {
+          "type" : "professors",
+          "id" : "52a11fe7-8394-48fc-bc42-8375555eed17",
+        },
+      },
+    },
+  },
+}
+```
+
+#### Updating a Question
+#### `PUT /lab_sessions/:lab_session_id/questions/:question_id`
+
+Request Parameters
+```json
+{
+    "text": "How much wood can a woodchuck chuck?",
+}
+```
+
+If the JSON has valid values, the question will be created.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `text` | Required. The text of the question |
+
+Return Object for Students
+
+```json
+{
+  "data": {
+    "type": "questions",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "text": "How much wood can a woodchuck chuck?",
+      "created-at": "2017-11-10T12:00:00Z",
+    },
+  }
+}
+```
+
+Return Object for Professors
+
+Notice that it was a student who asked this question, but the professor updated it. It still keeps the student as the original asker.
+
+```json
+{
+  "data" : {
+    "type" : "questions",
+    "id" : "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes" : {
+      "text" : "How much wood can a woodchuck chuck?",
+      "created-at" : "2017-11-10T12:00:00Z",
+    },
+    "relationships" : {
+      "asker" : {
+        "data" : {
+          "type" : "students",
+          "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+        },
+      },
+    },
+  },
+}
+```
+
+#### Listing Questions from a Lab Session
+#### `GET lab_sessions/:lab_session_id/questions`
+
+If requestor is a student response payload
+
+```json
+{
+  "data" : [
+    {
+      "id" : "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+      "type" : "questions",
+      "attributes" : {
+        "text" : "What is a string?",
+        "created-at" : "2017-11-10T12:00:00Z",
+      },
+    },
+    {
+      "id" : "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+      "type" : "questions",
+      "attributes" : {
+        "text" : "How do I call a method?",
+        "created-at" : "2017-11-10T12:00:00Z"
+      },
+    },
+  ],
+}
+```
+
+If requestor is a professor response payload
+
+```json
+{
+  "data" : [
+    {
+      "id" : "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+      "type" : "questions",
+      "attributes" : {
+        "text" : "What is a string?",
+        "created-at" : "2017-11-10T12:00:00Z"
+      },
+      "relationships" : {
+        "asker" : {
+          "data" : {
+            "type" : "students",
+            "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+          },
+        },
+      },
+    },
+    {
+      "id" : "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+      "type" : "questions",
+      "attributes" : {
+        "text" : "How do I call a method?",
+        "created-at" : "2017-11-10T12:00:00Z"
+      },
+      "relationships" : {
+        "asker" : {
+          "data" : {
+            "type" : "students",
+            "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",
+          },
+        },
+      },
+    },
+  ],
+}
+```
+
+#### Deleting a Question
+#### `DELETE /lab_sessions/:lab_session_id/questions/:question_id`
+
+Success Response Code 204 (No Content)
