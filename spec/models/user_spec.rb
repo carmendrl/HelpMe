@@ -1,6 +1,12 @@
 require "rails_helper"
 
-RSpec.describe "User" do
+RSpec.describe User do
+
+  describe "validations" do
+    before { create(:student) }
+    it { is_expected.to have_many(:questions) }
+  end
+
   it "is able to create a professor" do
     expect do
       create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password")

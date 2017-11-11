@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe LabSession, type: :model do
+  describe "valdiations" do
+    before { create(:lab_session) }
+
+    it { is_expected.to validate_uniqueness_of(:token) }
+    it { is_expected.to have_many(:questions) }
+  end
+
   it "can create a session" do
     expect do
       create(:lab_session, token: "12345")
