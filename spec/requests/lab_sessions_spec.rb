@@ -146,7 +146,7 @@ RSpec.describe "LabSessions", type: :request do
       let(:good_request_json) { {"description" => "Computer science lab about C",
         "token" => "12345",
       }.to_json }
-      let(:user) { create(:user) }
+      let(:user) { create(:student) }
 
       before do
         auth_headers = sign_in(user)
@@ -178,17 +178,17 @@ RSpec.describe "LabSessions", type: :request do
                 "lab_session" => {
                   "data" => {
                     "id" => lab_session.id,
-                    "type" => "lab-sessions"
-                  }     
+                    "type" => "lab-sessions",
+                  },     
                 },
                 "user" => {
                   "data" => {
                     "id" => user.id,
-                    "type" => "users"
-                  }
-                }
-              }
-            }
+                    "type" => "students",
+                  },
+                },
+              },
+            },
           }
         )
       end
