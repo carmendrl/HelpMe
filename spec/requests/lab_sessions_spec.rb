@@ -105,7 +105,7 @@ RSpec.describe "LabSessions", type: :request do
         "token" => 12,
       }.to_json
 
-      expect { post(url, params: invalid_params, headers: good_request_headers) }.to_not change(LabSession, :count)
+      expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
       expect(json).to eq(
         "status" => 422,
         "error" => {
@@ -200,10 +200,11 @@ RSpec.describe "LabSessions", type: :request do
         end.not_to change(user.lab_sessions, :count)
 
         expect(json).to eq(
-          "status" => 404,
-          "error" => {
-            "type" => "resource_not_found",
-            "errors" => [],
+          { "error"=> {
+              "type"=>"resource_not_found",
+              "message"=>"Could not find the requested resource"
+            },
+            "status"=> 404
           }
         )
       end

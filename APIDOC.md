@@ -274,7 +274,7 @@ Return Object
           },
         },
       },
-  },
+   },
 }
 ```
 
@@ -288,7 +288,7 @@ Error Payload
     "error" => {
       "type" => "resource_not_found",
       "errors" => [],
-    }
+   }
 }
 ```
 
