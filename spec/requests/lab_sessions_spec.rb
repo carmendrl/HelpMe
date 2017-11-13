@@ -158,6 +158,9 @@ RSpec.describe "LabSessions", type: :request do
           token: lab_session.token,
         }.to_json
 
+        new_time = Time.utc(2017, 11, 13, 12, 0, 0)
+        Timecop.freeze(new_time)
+
         expect do
           post(url, params: valid_request_json, headers: good_request_headers)
         end.to change(user.lab_sessions, :count).from(0).to(1)
@@ -169,7 +172,7 @@ RSpec.describe "LabSessions", type: :request do
               "id" => json["data"]["id"],
               "type" => "lab-session-memberships",
               "attributes" => {
-                "created_at" => lab_session.created_at,
+                "created_at" => "2017-11-13T12:00:00.000Z",
               },
               "relationships" => {
                 "lab_session" => {
