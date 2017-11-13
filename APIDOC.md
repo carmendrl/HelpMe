@@ -230,6 +230,69 @@ Error Payload
 }
 ```
 
+#### Joining a Lab Session
+#### `POST /lab_sessions/join/:token`
+
+You can join a session by supplying a valid token to and making a request to  `/lab_session/join/:token`.
+
+equest Parameters
+```json
+{
+    "token": "12345",
+}
+```
+
+If token in the JSON is valid, the user will join the session.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `token` | Required. The unique token of the session. |
+
+Return Object
+
+```json
+{
+  "data" => {
+    "id" => 35,
+      "type" => "lab-session-memberships",
+      "attributes" => {
+        "created_at" => "2017-11-13T12:00:00.000Z",
+      },
+      "relationships" => {
+        "lab_session" => {
+          "data" => {
+            "id" => "3e97d41c-8039-48b9-afbc-8abdb6dea46f",
+            "type" => "lab-sessions",
+          },
+        },
+        "user" => {
+          "data" => {
+            "id" => "402a84b0-e003-4092-9c67-581bd175fe1b",
+            "type" => "students",
+          },
+        },
+      },
+  },
+}
+```
+
+If the JSON has an invalid token, the user will not join the session there will be an error payload.
+
+Error Payload
+
+```json
+{
+  "status" => 404,
+    "error" => {
+      "type" => "resource_not_found",
+      "errors" => [],
+    }
+}
+```
+
+
 ## Questions
 
 #### Creating a Question
