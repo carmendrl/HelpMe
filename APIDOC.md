@@ -256,25 +256,25 @@ Return Object
 {
   "data" => {
     "id" => 35,
-      "type" => "lab-session-memberships",
-      "attributes" => {
-        "created_at" => "2017-11-13T12:00:00.000Z",
-      },
-      "relationships" => {
-        "lab_session" => {
-          "data" => {
-            "id" => "3e97d41c-8039-48b9-afbc-8abdb6dea46f",
-            "type" => "lab-sessions",
-          },
-        },
-        "user" => {
-          "data" => {
-            "id" => "402a84b0-e003-4092-9c67-581bd175fe1b",
-            "type" => "students",
-          },
+    "type" => "lab-session-memberships",
+    "attributes" => {
+      "created_at" => "2017-11-13T12:00:00.000Z",
+    },
+    "relationships" => {
+      "lab_session" => {
+        "data" => {
+          "id" => "3e97d41c-8039-48b9-afbc-8abdb6dea46f",
+          "type" => "lab-sessions",
         },
       },
-   },
+      "user" => {
+        "data" => {
+          "id" => "402a84b0-e003-4092-9c67-581bd175fe1b",
+          "type" => "students",
+        },
+      },
+    },
+  },
 }
 ```
 
