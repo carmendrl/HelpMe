@@ -4,6 +4,8 @@ class CreateJoinTableUserSession < ActiveRecord::Migration[5.1]
       t.uuid :user_id, null: false
       t.uuid :lab_session_id, null: false
       t.timestamps
+
+      t.index [:user_id, :lab_session_id], unique: true
     end
   end
 end

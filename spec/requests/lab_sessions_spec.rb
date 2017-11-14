@@ -148,11 +148,16 @@ RSpec.describe "LabSessions", type: :request do
       before do
         auth_headers = sign_in(user)
         good_request_headers.merge! auth_headers
+
+        new_time = Time.utc(2017, 11, 13, 12, 2, 1)
+        Timecop.freeze(new_time)
+      end
+
+      after do
+        Timecop.return
       end
 
       it "lets a user join a session from a valid token" do
-        new_time = Time.utc(2017, 11, 13, 12, 2, 1)
-        Timecop.freeze(new_time)
 
         expect do
           post(url, headers: good_request_headers)
@@ -188,6 +193,43 @@ RSpec.describe "LabSessions", type: :request do
         )
       end
 
+      it "does not allow a user to join a session they are already a part of" do
+        user.lab_sessions << lab_session
+        membership = user.lab_session_memberships.first
+
+        expect do
+          post(url, headers: good_request_headers)
+        end.not_to change(user.lab_sessions, :count)
+
+        # It will still render the same membership for continuity
+        expect(json).to eq(
+          {
+            "data" => {
+              "id" => membership.id,
+              "type" => "lab-session-memberships",
+              "attributes" => {
+                "created-at" => "2017-11-13T12:02:01Z",
+              },
+              "relationships" => {
+                "lab-session" => {
+                  "data" => {
+                    "id" => lab_session.id,
+                    "type" => "lab-sessions",
+                  },
+                },
+                "user" => {
+                  "data" => {
+                    "id" => user.id,
+                    "type" => "students",
+                  },
+                },
+              },
+            },
+          }
+        )
+        expect(response.code).to eq("200")
+      end
+
       it "does not let a user join a session from an invalid token" do
         url = "https://example.com/lab_sessions/join/00000"
         expect do
@@ -200,7 +242,7 @@ RSpec.describe "LabSessions", type: :request do
               "type"=>"resource_not_found",
               "message"=>"Could not find the requested resource"
             },
-            "status"=> 404
+            "status"=> 404,
           }
         )
       end
