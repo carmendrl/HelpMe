@@ -18,7 +18,6 @@ gem "active_model_serializers"
 group :development, :test do
   gem "rspec-rails"
   gem "pry-rails"
-  gem "timecop"
 end
 
 group :development do
@@ -28,10 +27,10 @@ group :development do
 end
 
 group :test do
-  gem "factory_girl_rails"
-  gem "timecop"
   gem "database_cleaner"
+  gem "factory_girl_rails"
   gem "shoulda-matchers"
+  gem "timecop"
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
