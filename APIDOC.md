@@ -254,44 +254,29 @@ Return Object
 
 ```json
 {
-  "data" => {
-    "id" => 35,
-    "type" => "lab-session-memberships",
-    "attributes" => {
-      "created_at" => "2017-11-13T12:00:00.000Z",
+  "data" : {
+    "id" : 35,
+    "type" : "lab-session-memberships",
+    "attributes" : {
+      "created-at" : "2017-11-13T12:02:01Z",
     },
-    "relationships" => {
-      "lab_session" => {
-        "data" => {
-          "id" => "3e97d41c-8039-48b9-afbc-8abdb6dea46f",
-          "type" => "lab-sessions",
+    "relationships" : {
+      "lab-session" : {
+        "data" : {
+          "id" : "3e97d41c-8039-48b9-afbc-8abdb6dea46f",
+          "type" : "lab-sessions",
         },
       },
-      "user" => {
-        "data" => {
-          "id" => "402a84b0-e003-4092-9c67-581bd175fe1b",
-          "type" => "students",
+      "user" : {
+        "data" : {
+          "id" : "402a84b0-e003-4092-9c67-581bd175fe1b",
+          "type" : "students",
         },
       },
     },
   },
 }
 ```
-
-If the JSON has an invalid token, the user will not join the session there will be an error payload.
-
-Error Payload
-
-```json
-{
-  "status" => 404,
-    "error" => {
-      "type" => "resource_not_found",
-      "errors" => [],
-   }
-}
-```
-
 
 ## Questions
 

@@ -143,9 +143,6 @@ RSpec.describe "LabSessions", type: :request do
       let(:lab_session) { create(:lab_session) }
       let!(:url) { "https://example.com/lab_sessions/join/#{lab_session.token}" }
       let(:good_request_headers) { { "Content-Type" => "application/json" } }
-      let(:good_request_json) { {"description" => "Computer science lab about C",
-        "token" => "12345",
-      }.to_json }
       let(:user) { create(:student) }
 
       before do
@@ -154,32 +151,30 @@ RSpec.describe "LabSessions", type: :request do
       end
 
       it "lets a user join a session from a valid token" do
-        valid_request_json = {
-          token: lab_session.token,
-        }.to_json
-
-        new_time = Time.utc(2017, 11, 13, 12, 0, 0)
+        new_time = Time.utc(2017, 11, 13, 12, 2, 1)
         Timecop.freeze(new_time)
 
         expect do
-          post(url, params: valid_request_json, headers: good_request_headers)
+          post(url, headers: good_request_headers)
         end.to change(user.lab_sessions, :count).from(0).to(1)
            .and change(lab_session.users, :count).from(0).to(1)
+
+        membership = user.lab_session_memberships.last
 
         expect(json).to eq(
           {
             "data" => {
-              "id" => json["data"]["id"],
+              "id" => membership.id,
               "type" => "lab-session-memberships",
               "attributes" => {
-                "created_at" => "2017-11-13T12:00:00.000Z",
+                "created-at" => "2017-11-13T12:02:01Z",
               },
               "relationships" => {
-                "lab_session" => {
+                "lab-session" => {
                   "data" => {
                     "id" => lab_session.id,
                     "type" => "lab-sessions",
-                  },     
+                  },
                 },
                 "user" => {
                   "data" => {
@@ -200,7 +195,8 @@ RSpec.describe "LabSessions", type: :request do
         end.not_to change(user.lab_sessions, :count)
 
         expect(json).to eq(
-          { "error"=> {
+          {
+            "error"=> {
               "type"=>"resource_not_found",
               "message"=>"Could not find the requested resource"
             },
