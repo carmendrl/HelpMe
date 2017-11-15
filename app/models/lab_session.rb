@@ -9,8 +9,8 @@ class LabSession < ApplicationRecord
   # Ensure that token is set
   validates_presence_of :token
 
-  # Also validates that the number is unique
-  validates_uniqueness_of :token
+  # Also validates that the token is unique
+  validates_uniqueness_of :token, case_sensitive: true
 
   private
 
