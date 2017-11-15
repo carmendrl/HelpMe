@@ -255,7 +255,7 @@ Return Object
 ```json
 {
   "data" : {
-    "id" : 35,
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
     "type" : "lab-session-memberships",
     "attributes" : {
       "created-at" : "2017-11-13T12:02:01Z",
