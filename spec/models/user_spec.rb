@@ -4,7 +4,8 @@ RSpec.describe User do
 
   describe "validations" do
     before { create(:student) }
-    it { is_expected.to have_many(:questions) }
+    it { is_expected.to have_many(:questions_asked) }
+    it { is_expected.to have_many(:questions_claimed) }
   end
 
   it "is able to create a professor" do
