@@ -31,6 +31,7 @@ RSpec.describe "Questions", type: :request do
     let!(:student) { create(:student) }
     before do
       good_request_headers.merge! sign_in(student)
+      student.lab_sessions << lab_session
     end
 
     describe "GET /lab_sessions/:lab_session_id/questions/" do
@@ -150,6 +151,7 @@ RSpec.describe "Questions", type: :request do
     let!(:professor) { create(:professor) }
     before do
       good_request_headers.merge! sign_in(professor)
+      professor.lab_sessions << lab_session
     end
 
     describe "GET lab_sessions/:lab_session_id/questions" do
