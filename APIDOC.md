@@ -280,6 +280,8 @@ Return Object
 
 ## Questions
 
+A user must be a part of a session to manipulate any of the questions in that session. 
+
 #### Creating a Question
 #### `POST /lab_sessions/:lab_session_id/questions`
 
