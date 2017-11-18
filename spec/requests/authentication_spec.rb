@@ -15,7 +15,7 @@ RSpec.describe "Authentication", type: :request do
       post(url, params: sign_in_params, headers: good_request_headers)
       expect(response.code).to eq("200")
 
-      user = User.find_by(email: "ferzle@example.com")
+      user = Professor.find_by(email: "ferzle@example.com")
 
       expect(json).to eq(
         {
@@ -36,22 +36,22 @@ RSpec.describe "Authentication", type: :request do
       user = create(:student, email: "student@example.com", username: "ferzle", password: "password", password_confirmation: "password")
 
       sign_in_params = {
-        email: "ferzle@example.com",
+        email: "student@example.com",
         password: "password",
       }.to_json
 
       post(url, params: sign_in_params, headers: good_request_headers)
       expect(response.code).to eq("200")
 
-      user = User.find_by(email: "ferzle@example.com")
+      user = Student.find_by(email: "student@example.com")
 
       expect(json).to eq(
         {
           "data"=> {
-            "type"=> "professors",
+            "type"=> "students",
             "id"=> user.id,
             "attributes"=> {
-              "email"=> "ferzle@example.com",
+              "email"=> "student@example.com",
               "username"=> "ferzle",
             }
           }

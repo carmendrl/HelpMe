@@ -1,9 +1,5 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
-  def create
-    super do |resource|
-      headers.merge! resource.create_new_auth_token
-      render json: resource
-      return
-    end
+  def render_create_success
+    render json: @resource
   end
 end
