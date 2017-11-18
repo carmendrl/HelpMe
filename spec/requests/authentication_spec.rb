@@ -6,7 +6,7 @@ RSpec.describe "Authentication", type: :request do
     let(:good_request_headers) { { "Content-Type" => "application/json" } }
     let!(:user) { create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password") }
 
-    it "allows a user to sign in with valid credentials" do
+    it "allows a professor to sign in with valid credentials" do
       sign_in_params = {
         email: "ferzle@example.com",
         password: "password",
@@ -29,6 +29,35 @@ RSpec.describe "Authentication", type: :request do
           }
         }
       )
+      expect(signed_in?).to eq(true)
+    end
+
+    it "allows a student to sign in with valid credentials" do
+      user = create(:student, email: "student@example.com", username: "ferzle", password: "password", password_confirmation: "password")
+
+      sign_in_params = {
+        email: "ferzle@example.com",
+        password: "password",
+      }.to_json
+
+      post(url, params: sign_in_params, headers: good_request_headers)
+      expect(response.code).to eq("200")
+
+      user = User.find_by(email: "ferzle@example.com")
+
+      expect(json).to eq(
+        {
+          "data"=> {
+            "type"=> "professors",
+            "id"=> user.id,
+            "attributes"=> {
+              "email"=> "ferzle@example.com",
+              "username"=> "ferzle",
+            }
+          }
+        }
+      )
+      expect(signed_in?).to eq(true)
     end
 
     it "does not allow a user to sign in with a bad password" do
