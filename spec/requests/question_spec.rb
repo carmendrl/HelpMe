@@ -141,7 +141,7 @@ RSpec.describe "Questions", type: :request do
         expect(json).to eq({
           "error" => {
             "type" => "resource_not_found",
-            "message" => "Could not find the requested resource",
+            "message" => "Couldn't find Question with 'id'=12345",
           },
         })
       end
