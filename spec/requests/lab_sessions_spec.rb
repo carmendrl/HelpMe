@@ -107,7 +107,6 @@ RSpec.describe "LabSessions", type: :request do
 
       expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
       expect(json).to eq(
-        "status" => 422,
         "error" => {
           "type" => "resource_invalid",
           "errors" => [
@@ -118,6 +117,7 @@ RSpec.describe "LabSessions", type: :request do
           ]
         }
       )
+      expect(response.code).to eq("422")
     end
 
     it "does not allow a user to create a session if they are not signed in" do
@@ -240,11 +240,11 @@ RSpec.describe "LabSessions", type: :request do
           {
             "error"=> {
               "type"=>"resource_not_found",
-              "message"=>"Could not find the requested resource"
+              "message"=>"Couldn't find lab session",
             },
-            "status"=> 404,
           }
         )
+        expect(response.code).to eq("404")
       end
     end
   end
