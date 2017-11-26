@@ -111,6 +111,42 @@ RSpec.describe "Questions", type: :request do
       end
     end
 
+    describe "GET /lab_sessions/:lab_session_id/questions/:id" do
+      it "returns the question" do
+        question = create(:question, :unclaimed, text: "How do I test questions?")
+        lab_session.questions << question
+
+        url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}"
+
+        get(url, headers: good_request_headers)
+
+        expect(response.code).to eq("200")
+        expect(json).to eq({
+          "data" => {
+            "id" => question.id,
+            "type" => "questions",
+            "attributes" => {
+              "text" => "How do I test questions?",
+              "created-at" => "2008-09-01T12:00:00Z",
+            },
+          },
+        })
+      end
+
+      it "returns a 404 error if given a bad id" do
+        url = "https://example.com/lab_sessions/#{lab_session.id}/questions/12345"
+
+        get(url, headers: good_request_headers)
+        expect(response.code).to eq("404")
+        expect(json).to eq({
+          "error" => {
+            "type" => "resource_not_found",
+            "message" => "Couldn't find Question with 'id'=12345",
+          },
+        })
+      end
+    end
+
     describe "PUT /lab_sessions/:lab_session_id/questions/:id" do
       it "updates the question" do
         question = create(:question, text: "How do I test questions?")
@@ -253,6 +289,37 @@ RSpec.describe "Questions", type: :request do
                 "data" => {
                   "type" => "professors",
                   "id" => professor.id
+                },
+              },
+            },
+          },
+        })
+      end
+    end
+
+    describe "GET /lab_sessions/:lab_session_id/questions/:id" do
+      it "gets the question" do
+        question = create(:question, :unclaimed, text: "How do I test questions?")
+        lab_session.questions << question
+
+        url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}"
+
+        get(url, headers: good_request_headers)
+
+        expect(response.code).to eq("200")
+        expect(json).to eq({
+          "data" => {
+            "id" => question.id,
+            "type" => "questions",
+            "attributes" => {
+              "text" => "How do I test questions?",
+              "created-at" => "2008-09-01T12:00:00Z",
+            },
+            "relationships" => {
+              "asker" => {
+                "data" => {
+                  "type" => "students",
+                  "id" => question.asker.id
                 },
               },
             },

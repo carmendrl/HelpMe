@@ -240,9 +240,9 @@ RSpec.describe "LabSessions", type: :request do
           {
             "error"=> {
               "type"=>"resource_not_found",
-              "message"=>"Couldn't find lab session",
+              "message"=>"Couldn't find Lab session",
             },
-          }
+          },
         )
         expect(response.code).to eq("404")
       end

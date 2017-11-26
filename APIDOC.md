@@ -335,6 +335,45 @@ This will include the asker of the question. When the professor creates the ques
 }
 ```
 
+#### Getting a Question
+#### `GET /lab_sessions/:lab_session_id/questions/:question_id`
+
+Return object for students
+```json
+{
+  "data": {
+    "type": "questions",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "text": "How much wood can a woodchuck chuck?",
+      "created-at": "2017-11-10T12:00:00Z",
+    },
+  }
+}
+```
+
+Return object for professors
+```json
+{
+  "data" : {
+    "type" : "questions",
+    "id" : "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes" : {
+      "text" : "How much wood can a woodchuck chuck?",
+      "created-at" : "2017-11-10T12:00:00Z",
+    },
+    "relationships" : {
+      "asker" : {
+        "data" : {
+          "type" : "students",
+          "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+        },
+      },
+    },
+  },
+}
+```
+
 #### Updating a Question
 #### `PUT /lab_sessions/:lab_session_id/questions/:question_id`
 
