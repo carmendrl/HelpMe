@@ -69,6 +69,14 @@ RSpec.describe "Questions", type: :request do
                 "text" => question.text,
                 "created-at" => question.created_at.iso8601,
               },
+              "relationships" => {
+                "claimed-by" => {
+                  "data" => {
+                    "id" => question.claimed_by.id,
+                    "type" => "professors",
+                  },
+                },
+              },
             },
           ],
         })
@@ -86,7 +94,7 @@ RSpec.describe "Questions", type: :request do
         expect do
           post(url, params: create_params, headers: good_request_headers)
         end.to change(lab_session.questions, :count).from(0).to(1)
-          .and change(student.questions, :count).from(0).to(1)
+          .and change(student.questions_asked, :count).from(0).to(1)
 
         q = Question.last
 
@@ -98,7 +106,7 @@ RSpec.describe "Questions", type: :request do
               "text" => "How much wood can a woodchuck chuck?",
               "created-at" => "2008-09-01T12:00:00Z",
             },
-          }
+          },
         })
       end
     end
@@ -125,7 +133,15 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "I think I understand how to test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
-            }
+            },
+            "relationships" => {
+              "claimed-by" => {
+                "data" => {
+                  "id" => question.claimed_by.id,
+                  "type" => "professors",
+                },
+              },
+            },
           },
         })
       end
@@ -196,6 +212,12 @@ RSpec.describe "Questions", type: :request do
                     "id" => question.asker.id,
                   },
                 },
+                "claimed-by" => {
+                  "data" => {
+                    "id" => question.claimed_by.id,
+                    "type" => "professors",
+                  },
+                },
               },
             },
           ],
@@ -214,7 +236,7 @@ RSpec.describe "Questions", type: :request do
         expect do
           post(url, params: create_params, headers: good_request_headers)
         end.to change(lab_session.questions, :count).from(0).to(1)
-          .and change(professor.questions, :count).from(0).to(1)
+          .and change(professor.questions_asked, :count).from(0).to(1)
 
         q = Question.last
 
@@ -269,6 +291,12 @@ RSpec.describe "Questions", type: :request do
                   "id" => question.asker.id
                 },
               },
+              "claimed-by" => {
+                "data" => {
+                  "id" => question.claimed_by.id,
+                  "type" => "professors",
+                },
+              },
             },
           },
         })
@@ -289,5 +317,64 @@ RSpec.describe "Questions", type: :request do
         expect(response.code).to eq("204")
       end
     end
+  end
+
+  it "is able to claim a question" do
+    user = create(:professor)
+    good_request_headers.merge! sign_in(user)
+
+    lab_session.users << user
+
+    question = create(:question, :unclaimed)
+    lab_session.questions << question
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/claim"
+
+    expect do
+      get(url, headers: good_request_headers)
+    end.to change(user.questions_claimed, :count).from(0).to(1)
+
+    expect(question.reload).to be_claimed
+    expect(question.claimed_by).to eq(user)
+    expect(json).to eq({
+      "data" => {
+        "id" => question.id,
+        "type" => "questions",
+        "attributes" => {
+          "text" => question.text,
+          "created-at" => "2008-09-01T12:00:00Z",
+        },
+        "relationships" => {
+          "asker" => {
+            "data" => {
+              "type" => "students",
+              "id" => question.asker.id
+            },
+          },
+          "claimed-by" => {
+            "data" => {
+              "id" => question.claimed_by.id,
+              "type" => "professors",
+            },
+          },
+        },
+      }
+    })
+  end
+
+  it "does not claim the qusetion if the user is not a part of the session" do
+    user = create(:professor)
+    good_request_headers.merge! sign_in(user)
+
+    question = create(:question, :unclaimed)
+    lab_session.questions << question
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/claim"
+    expect do
+      get(url, headers: good_request_headers)
+    end.not_to change(user.questions_claimed, :count)
+
+    expect(question.reload).not_to be_claimed
+    expect(response.code).to eq("404")
   end
 end

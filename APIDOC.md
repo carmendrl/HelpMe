@@ -272,6 +272,11 @@ Return Object
 
 A user must be a part of a session to manipulate any of the questions in that session.
 
+#### Questions have three different states:
+- Pending
+- Claimed
+- Answered
+
 #### Creating a Question
 #### `POST /lab_sessions/:lab_session_id/questions`
 
@@ -461,6 +466,11 @@ If requestor is a professor response payload
 #### `DELETE /lab_sessions/:lab_session_id/questions/:question_id`
 
 Success Response Code 204 (No Content)
+
+#### Claiming a Question
+### `GET /lab_sessions/:lab_session_id/questions/:id/claim`
+
+In order to claim a question, issue an authorized get request with the specified ids.
 
 ## Errors
 

@@ -25,6 +25,15 @@ class QuestionsController < ApplicationController
     head :no_content, status: 204
   end
 
+  def claim
+    sess = current_user.lab_sessions.find_by!(id: params[:lab_session_id])
+    question = sess.questions.find_by!(id: params[:id])
+    question.claim(current_user)
+    question.save!
+
+    render json: question
+  end
+
   private
 
   def questions_params
