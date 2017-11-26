@@ -41,6 +41,6 @@ class QuestionsController < ApplicationController
   private
 
   def questions_params
-    params.permit(:text, :lab_session_id)
+    params.permit(:text, :lab_session_id, :claimed_by_id)
   end
 end
