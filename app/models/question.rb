@@ -1,6 +1,7 @@
 class Question < ApplicationRecord
   belongs_to :asker, class_name: "User"
   belongs_to :lab_session
+  has_one :answer
 
   belongs_to :claimed_by, class_name: "User", optional: true
 
