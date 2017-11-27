@@ -3,7 +3,7 @@ class QuestionSerializer < ActiveModel::Serializer
   attribute :created_at
 
   has_one :asker, if: :professor?, serializer: UserSerializer
-  has_one :claimed_by, if: :claimed?
+  has_one :claimed_by, if: :claimed?, serializer: UserSerializer
 
   def professor?
     current_user.professor?

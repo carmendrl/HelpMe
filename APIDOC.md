@@ -381,6 +381,7 @@ Request Parameters
 ```json
 {
     "text": "How much wood can a woodchuck chuck?",
+    "claimed_by_id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
 }
 ```
 
@@ -391,6 +392,7 @@ Request Parameters:
 | Lab Session Field | Description |
 |-------|-------------|
 | `text` | Required. The text of the question |
+| `claimed_by_id` | Optional. The id of the person who has claimed the question |
 
 Return Object for Students
 
@@ -427,6 +429,12 @@ Notice that it was a student who asked this question, but the professor updated 
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
         },
       },
+      "claimed-by" : {
+        "data" : {
+          "type" : "professors",
+          "id" : "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+        },
+      },
     },
   },
 }
@@ -454,6 +462,14 @@ If requestor is a student response payload
       "attributes" : {
         "text" : "How do I call a method?",
         "created-at" : "2017-11-10T12:00:00Z"
+      },
+      "relationships" : {
+        "claimed-by" : {
+          "data" : {
+            "type" : "professors",
+            "id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+          },
+        },
       },
     },
   ],

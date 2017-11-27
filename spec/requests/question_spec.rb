@@ -368,6 +368,47 @@ RSpec.describe "Questions", type: :request do
           },
         })
       end
+
+      it "allows updating who has claimed the question" do
+        question = create(:question, text: "How do I test questions?", claimed_by: create(:professor))
+        lab_session.questions << question
+
+        url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}"
+
+        update_params = {
+          claimed_by_id: professor.id,
+          text: "I think I understand how to test questions?",
+        }.to_json
+
+        put(url, params: update_params, headers: good_request_headers)
+
+        expect(response.code).to eq("200")
+
+        expect(json).to eq({
+          "data" => {
+            "type" => "questions",
+            "id" => question.id,
+            "attributes" => {
+              "text" => "I think I understand how to test questions?",
+              "created-at" => "2008-09-01T12:00:00Z",
+            },
+            "relationships" => {
+              "asker" => {
+                "data" => {
+                  "type" => "students",
+                  "id" => question.asker.id,
+                },
+              },
+              "claimed-by" => {
+                "data" => {
+                  "id" => professor.id,
+                  "type" => "professors",
+                },
+              },
+            },
+          },
+        })
+      end
     end
 
     describe "DELETE /lab_sessions/:lab_session_id/questions/:id" do
