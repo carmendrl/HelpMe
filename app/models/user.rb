@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :lab_session_memberships
   has_many :lab_sessions, through: :lab_session_memberships, inverse_of: :users
 
