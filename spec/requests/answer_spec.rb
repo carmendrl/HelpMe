@@ -40,15 +40,6 @@ RSpec.describe "Answer", type: :request do
     describe "GET /lab_sessions/:lab_session_id/questions/:question_id/answer" do
       let(:url) { "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/answer" }
 
-      it "returns nil if the question is not answered" do
-        expect(question.answer).to be_nil
-      end
-
-      it "returns the answer to the question" do
-        answer = create(:answer, question: question, answerer: professor)
-        expect(question.answer).to eq(answer)
-      end
-
       it "renders the correct fields for the answer" do
         answer = create(:answer, question: question, answerer: professor)
         get(url, headers: good_request_headers)
@@ -91,7 +82,7 @@ RSpec.describe "Answer", type: :request do
             "id" => answer.id,
             "type" => "answers",
             "attributes" => {
-              "text" => answer.text,
+              "text" => "This is the answer",
               "created-at" => answer.created_at.iso8601,
             },
             "relationships" => {
