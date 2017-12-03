@@ -1,14 +1,14 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  def index
+  def show
     sess = current_user.lab_sessions.find(params[:lab_session_id])
     question = sess.questions.find(params[:question_id])
     render json: question.answer, each_serializer: AnswerSerializer
   end
 
   def update
-    answer = current_user.answers.find(params[:id])
+    answer = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:question_id]).answer
     answer.update(answer_params)
 
     render json: answer
