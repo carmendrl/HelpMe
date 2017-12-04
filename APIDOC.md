@@ -147,16 +147,6 @@ Success Payload (Code: 200)
 }
 ```
 
-Error Payload (Code: 404)
-
-```json
-{
-  "errors": [
-    "User was not found or was not logged in."
-  ]
-}
-```
-
 ## Lab Sessions
 
 #### Creating a Lab Session
@@ -198,25 +188,6 @@ Return Object
       },
     },
   },
-}
-```
-
-If the JSON has invalid values, the lab session will not be created and there will be a payload with all of the errors.
-
-Error Payload
-
-```json
-{
-    "status": 422,
-    "error": {
-        "type": "resource_invalid",
-        "errors": [
-          {
-              "attribute": "attribute_name",
-              "message": "error message for the attribute",
-          }
-        ],
-    }
 }
 ```
 
@@ -564,11 +535,11 @@ Return object
       "text": "This is an answer to a question",
       "created-at": "2017-12-1T12:00:00Z",
     },
-    "relationships" => {
-      "answerer" => {
-        "data" => {
-          "id" => "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
-          "type" => "professors"
+    "relationships": {
+      "answerer" : {
+        "data" : {
+          "id" : "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
+          "type" : "professors"
         },
       },
     },
@@ -590,11 +561,11 @@ Return object
       "text": "This is an answer to a question",
       "created-at": "2017-12-1T12:00:00Z",
     },
-    "relationships" => {
-      "answerer" => {
-        "data" => {
-          "id" => "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
-          "type" => "professors"
+    "relationships" : {
+      "answerer" : {
+        "data" : {
+          "id" : "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
+          "type" : "professors"
         },
       },
     },
@@ -632,11 +603,11 @@ Return object
       "text": "This is a new, updated anwswer",
       "created-at": "2017-12-1T12:00:00Z",
     },
-    "relationships" => {
-      "answerer" => {
-        "data" => {
-          "id" => "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
-          "type" => "professors"
+    "relationships" : {
+      "answerer" : {
+        "data" : {
+          "id" : "9cf952b0-33cd-4beb-ac5a-9a43173e534e",
+          "type" : "professors"
         },
       },
     },
