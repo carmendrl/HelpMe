@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
-    render json: sess.questions, each_serializer: QuestionSerializer
+    render json: sess.questions.order(created_at: :asc), each_serializer: QuestionSerializer
   end
 
   def show
