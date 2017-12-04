@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :questions_asked, foreign_key: :asker_id, class_name: "Question"
   has_many :questions_claimed, foreign_key: :claimed_by_id, class_name: "Question"
+  has_many :answers, foreign_key: :answerer_id
 
   # Include default devise modules.
   devise :database_authenticatable, :registerable,
