@@ -4,6 +4,10 @@ Rails.application.routes.draw do
     sessions: "sessions"
   }
 
+  devise_scope :user do
+    get "system/users/:user_id", to: "registrations#show", as: :user
+  end
+
   resources :lab_sessions, only: :create do
     resources :questions do
       get "claim", on: :member
