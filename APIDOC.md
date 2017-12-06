@@ -147,6 +147,25 @@ Success Payload (Code: 200)
 }
 ```
 
+#### Retrieving a User
+#### `GET system/users/:user_id`
+
+Return Payload
+
+```json
+{
+  "data": {
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "type": "students",
+    "attributes": {
+      "email": "buttercup@example.com",
+      "username": "butter.cup",
+    },
+  },
+}
+```
+
+
 ## Lab Sessions
 
 #### Creating a Lab Session
