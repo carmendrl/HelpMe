@@ -542,7 +542,7 @@ RSpec.describe "Questions", type: :request do
 
     good_request_headers.merge! sign_in(user)
 
-    original_asker = create(:original_asker)
+    original_asker = create(:student)
     lab_session.users << original_asker
 
     question = create(:question, :unclaimed, original_asker: original_asker)
@@ -592,5 +592,28 @@ RSpec.describe "Questions", type: :request do
       .and change(question.reload.askers, :count).by(-1)
 
     expect(response.code).to eq("204")
+  end
+
+  it "does not allow a question to be deleted if there are multiple users who are still asking it" do
+    user = create(:student)
+    lab_session.users << user
+    good_request_headers.merge! sign_in(user)
+
+    question = create(:question, lab_session: lab_session)
+    question.askers << user
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}"
+
+    expect do
+      delete(url, headers: good_request_headers)
+    end.not_to change(Question, :count)
+
+    expect(response.code).to eq("405")
+    expect(json).to eq({
+      "error" => {
+        "type" => "cannot_perform_operation",
+        "message" => "This user must be the only one that has asked this question",
+      },
+    })
   end
 end
