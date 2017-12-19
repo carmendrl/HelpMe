@@ -11,6 +11,8 @@ Rails.application.routes.draw do
   resources :lab_sessions, only: :create do
     resources :questions do
       get "claim", on: :member
+
+      resource :askers
       resource :answer
     end
   end

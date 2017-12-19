@@ -97,6 +97,7 @@ RSpec.describe "Questions", type: :request do
           .and change(student.questions_asked, :count).from(0).to(1)
 
         q = Question.last
+        expect(q.original_asker).to eq(student)
 
         expect(json).to eq({
           "data" => {
@@ -229,7 +230,7 @@ RSpec.describe "Questions", type: :request do
       end
 
       it "renders the correct fields for the questions" do
-        question = create(:question, lab_session: lab_session, asker: create(:student))
+        question = create(:question, lab_session: lab_session, original_asker: create(:student))
         get(url, headers: good_request_headers)
 
         expect(json).to eq({
@@ -242,11 +243,19 @@ RSpec.describe "Questions", type: :request do
                 "created-at" => "2008-09-01T12:00:00Z"
               },
               "relationships" => {
-                "asker" => {
+                "original-asker" => {
                   "data" => {
                     "type" => "students",
-                    "id" => question.asker.id,
+                    "id" => question.original_asker.id,
                   },
+                },
+                "asked-by" => {
+                  "data" => [
+                    {
+                      "type" => "students",
+                      "id" => question.original_asker.id,
+                    }
+                  ],
                 },
                 "claimed-by" => {
                   "data" => {
@@ -275,6 +284,7 @@ RSpec.describe "Questions", type: :request do
           .and change(professor.questions_asked, :count).from(0).to(1)
 
         q = Question.last
+        expect(q.original_asker).to eq(professor)
 
         expect(json).to eq({
           "data" => {
@@ -285,11 +295,19 @@ RSpec.describe "Questions", type: :request do
               "created-at" => "2008-09-01T12:00:00Z",
             },
             "relationships" => {
-              "asker" => {
+              "original-asker" => {
                 "data" => {
                   "type" => "professors",
                   "id" => professor.id
                 },
+              },
+              "asked-by" => {
+                "data" => [
+                  {
+                    "type" => "professors",
+                    "id" => q.original_asker.id,
+                  }
+                ],
               },
             },
           },
@@ -316,11 +334,19 @@ RSpec.describe "Questions", type: :request do
               "created-at" => "2008-09-01T12:00:00Z",
             },
             "relationships" => {
-              "asker" => {
+              "original-asker" => {
                 "data" => {
                   "type" => "students",
-                  "id" => question.asker.id
+                  "id" => question.original_asker.id
                 },
+              },
+              "asked-by" => {
+                "data" => [
+                  {
+                    "type" => "students",
+                    "id" => question.original_asker.id,
+                  }
+                ],
               },
             },
           },
@@ -352,11 +378,19 @@ RSpec.describe "Questions", type: :request do
               "created-at" => "2008-09-01T12:00:00Z",
             },
             "relationships" => {
-              "asker" => {
+              "original-asker" => {
                 "data" => {
                   "type" => "students",
-                  "id" => question.asker.id
+                  "id" => question.original_asker.id
                 },
+              },
+              "asked-by" => {
+                "data" => [
+                  {
+                    "type" => "students",
+                    "id" => question.original_asker.id,
+                  }
+                ],
               },
               "claimed-by" => {
                 "data" => {
@@ -393,11 +427,19 @@ RSpec.describe "Questions", type: :request do
               "created-at" => "2008-09-01T12:00:00Z",
             },
             "relationships" => {
-              "asker" => {
+              "original-asker" => {
                 "data" => {
                   "type" => "students",
-                  "id" => question.asker.id,
+                  "id" => question.original_asker.id,
                 },
+              },
+              "asked-by" => {
+                "data" => [
+                  {
+                    "type" => "students",
+                    "id" => question.original_asker.id,
+                  }
+                ],
               },
               "claimed-by" => {
                 "data" => {
@@ -453,11 +495,19 @@ RSpec.describe "Questions", type: :request do
           "created-at" => "2008-09-01T12:00:00Z",
         },
         "relationships" => {
-          "asker" => {
+          "original-asker" => {
             "data" => {
               "type" => "students",
-              "id" => question.asker.id
+              "id" => question.original_asker.id
             },
+          },
+          "asked-by" => {
+            "data" => [
+              {
+                "type" => "students",
+                "id" => question.original_asker.id,
+              }
+            ],
           },
           "claimed-by" => {
             "data" => {
@@ -484,5 +534,86 @@ RSpec.describe "Questions", type: :request do
 
     expect(question.reload).not_to be_claimed
     expect(response.code).to eq("404")
+  end
+
+  it "allows multiple students to have the same question" do
+    user = create(:student)
+    lab_session.users << user
+
+    good_request_headers.merge! sign_in(user)
+
+    original_asker = create(:student)
+    lab_session.users << original_asker
+
+    question = create(:question, :unclaimed, original_asker: original_asker)
+    lab_session.questions << question
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/askers"
+
+    expect do
+      post(url, headers: good_request_headers)
+    end.to change(question.reload.askers, :count).from(1).to(2)
+      .and change(user.reload.questions_asked, :count).by(1)
+
+    expect(response.code).to eq("200")
+    expect(json).to eq({
+      "data" => {
+        "id" => question.id,
+        "type" => "questions",
+        "attributes" => {
+          "text" => question.text,
+          "created-at" => "2008-09-01T12:00:00Z"
+        },
+      },
+    })
+
+    expect(question.askers).to contain_exactly(original_asker, user)
+  end
+
+  it "allows a student to remove themselves after having asked a question" do
+    user = create(:student)
+    lab_session.users << user
+
+    good_request_headers.merge! sign_in(user)
+
+    original_asker = create(:student)
+    lab_session.users << original_asker
+
+    question = create(:question, :unclaimed, original_asker: original_asker)
+    lab_session.questions << question
+
+    # This user must have also asked the question
+    question.askers << user
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/askers"
+    expect do
+      delete(url, headers: good_request_headers)
+    end.to change(user.reload.questions_asked, :count).by(-1)
+      .and change(question.reload.askers, :count).by(-1)
+
+    expect(response.code).to eq("204")
+  end
+
+  it "does not allow a question to be deleted if there are multiple users who are still asking it" do
+    user = create(:student)
+    lab_session.users << user
+    good_request_headers.merge! sign_in(user)
+
+    question = create(:question, lab_session: lab_session)
+    question.askers << user
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}"
+
+    expect do
+      delete(url, headers: good_request_headers)
+    end.not_to change(Question, :count)
+
+    expect(response.code).to eq("405")
+    expect(json).to eq({
+      "error" => {
+        "type" => "cannot_perform_operation",
+        "message" => "This user must be the only one that has asked this question",
+      },
+    })
   end
 end

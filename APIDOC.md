@@ -517,12 +517,25 @@ Success Response Code 204 (No Content)
 
 In order to claim a question, issue an authorized get request with the specified ids.
 
-#### Answering a Question
-### `GET /lab_sessions/:lab_session_id/questions/:id/answer`
+Return object is the question
 
-To answer a question, include the specfied id in an authorized request as well as an optional text answer to the question.
+#### Asking a question that has already been asked (Me too!)
+### `POST /lab_sessions/:lab_session_id/questions/:question_id/askers`
+
+This will add the signed in user to the question's list of askers
+
+Return Object is the question
+
+#### Removing someone from asking a question
+### `DELETE /lab_sessions/:lab_session_id/questions/:question_id/askers`
+
+If someone no longer has a question, this will remove them from the question.
+
+Success Response Code 204 (No Content)
 
 ## Answers
+
+To answer a question, include the specified id in an authorized request as well as an optional text answer to the question.
 
 #### Creating an Answer
 #### `POST /lab_sessions/:lab_session_id/questions/:question_id/answer`

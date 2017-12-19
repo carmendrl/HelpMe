@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
-  belongs_to :asker, class_name: "User"
+  belongs_to :original_asker, class_name: "User"
+  has_and_belongs_to_many :askers, through: :questions_users, class_name: "User"
   belongs_to :lab_session
   has_one :answer, :dependent => :destroy
 

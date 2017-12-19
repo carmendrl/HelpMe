@@ -6,7 +6,7 @@ FactoryGirl.define do
     password_confirmation "password"
   end
 
-factory :student, aliases: [:asker] do
+factory :student, aliases: [:original_asker] do
     sequence(:email) { |n| "student#{n}@example.com" }
     username "Buttercup"
     password "password"

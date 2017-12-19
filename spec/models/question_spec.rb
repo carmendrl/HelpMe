@@ -4,7 +4,8 @@ RSpec.describe Question do
   describe "validations" do
     it { is_expected.to validate_presence_of(:text) }
 
-    it { is_expected.to belong_to(:asker) }
+    it { is_expected.to have_and_belong_to_many(:askers) }
+    it { is_expected.to belong_to(:original_asker) }
     it { is_expected.to belong_to(:claimed_by) }
     it { is_expected.to belong_to(:lab_session) }
   end
