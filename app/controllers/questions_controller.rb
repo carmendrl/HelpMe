@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
+  before_action :find_question!, except: [:index, :create]
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
@@ -7,15 +8,13 @@ class QuestionsController < ApplicationController
   end
 
   def show
-    question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
-    render json: question
+    render json: @question
   end
 
   def update
-    question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
-    question.update!(question_params)
+    @question.update!(question_params)
 
-    render json: question
+    render json: @question
   end
 
   def create
@@ -24,10 +23,8 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
-
-    if question.askers.count == 1 # The only person is the current user
-      question.destroy!
+    if @question.askers.count == 1 # The only person is the current user
+      @question.destroy!
       head :no_content, status: 204
     else
       render json: {
@@ -40,17 +37,19 @@ class QuestionsController < ApplicationController
   end
 
   def claim
-    sess = current_user.lab_sessions.find(params[:lab_session_id])
-    question = sess.questions.find(params[:id])
-    question.claim(current_user)
-    question.save!
+    @question.claim(current_user)
+    @question.save!
 
-    render json: question
+    render json: @question
   end
 
   private
 
   def question_params
     params.permit(:text, :lab_session_id, :claimed_by_id)
+  end
+
+  def find_question!
+    @question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
   end
 end
