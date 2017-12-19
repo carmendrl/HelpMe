@@ -30,7 +30,7 @@ class QuestionsController < ApplicationController
       render json: {
         error: {
           type: "cannot_perform_operation",
-          message: "This user must be the only one that has hasked this question",
+          message: "This user must be the only one that has asked this question",
         },
       }, status: 405
     end
