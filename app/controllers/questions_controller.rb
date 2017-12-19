@@ -13,25 +13,35 @@ class QuestionsController < ApplicationController
 
   def update
     question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
-    question.update!(questions_params)
+    question.update!(question_params)
 
     render json: question
   end
 
   def create
-    render json: current_user.questions_asked.create!(questions_params)
+    approved_params = question_params.merge!({ original_asker_id: current_user.id })
+    render json: current_user.questions_asked.create!(approved_params)
   end
 
   def destroy
     question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
 
-    question.destroy!
-    head :no_content, status: 204
+    if question.askers.count == 1 # The only person is the current user
+      question.destroy!
+      head :no_content, status: 204
+    else
+      render json: {
+        error: {
+          type: "cannot_perform_operation",
+          message: "This user must be the only one that has hasked this question",
+        },
+      }, status: 405
+    end
   end
 
   def claim
-    sess = current_user.lab_sessions.find_by!(id: params[:lab_session_id])
-    question = sess.questions.find_by!(id: params[:id])
+    sess = current_user.lab_sessions.find(params[:lab_session_id])
+    question = sess.questions.find(params[:id])
     question.claim(current_user)
     question.save!
 
@@ -40,7 +50,7 @@ class QuestionsController < ApplicationController
 
   private
 
-  def questions_params
+  def question_params
     params.permit(:text, :lab_session_id, :claimed_by_id)
   end
 end
