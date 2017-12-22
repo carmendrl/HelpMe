@@ -25,6 +25,18 @@ When requesting a resource with an invalid ID or without proper access-rights (e
 }
 ```
 
+#### Could not perform operation (Code: 405)
+When trying to perform an operation that couldn't be completed for some reason, the response will be a 405 with the following payload:
+
+```json
+{
+  "error": {
+    "type": "cannot_perform_operation",
+    "message": "Why the system cannot perform the given operation",
+  },
+}
+```
+
 #### Invalid Resource (Code: 422)
 wWhen making a request to update or create a resource with invalid parameters, the response code will be a 422 with the following payload:
 
