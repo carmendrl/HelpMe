@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   end
 
   resources :lab_sessions do
+    delete "leave", on: :member, to: "lab_session_memberships#destroy"
+
     resources :questions do
       get "claim", on: :member
 

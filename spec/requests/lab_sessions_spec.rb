@@ -248,6 +248,25 @@ RSpec.describe "LabSessions", type: :request do
     end
   end
 
+  describe "DELETE /lab_sessions/:id/leave" do
+    let(:lab_session) { create(:lab_session, users: [create(:student)]) }
+    let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}/leave" }
+    let(:user) { create(:student, lab_sessions: [lab_session]) }
+
+    before { good_request_headers.merge! sign_in(user) }
+
+    it "allows a user to leave a lab session" do
+      expect(lab_session.users.count).to eq(2)
+
+      expect do
+        delete(url, headers: good_request_headers)
+      end.to change(user.lab_sessions, :count).by(-1)
+        .and change(LabSession, :count).by(0)
+
+      expect(response.code).to eq("204")
+    end
+  end
+
   describe "GET /lab_sessions/:id" do
     let(:lab_session) { create(:lab_session) }
     let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}" }
