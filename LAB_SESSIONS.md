@@ -2,6 +2,51 @@
 
 ## Lab Sessions
 
+A Lab Session Object
+```json
+{
+  "data": {
+    "type": "lab-sessions",
+    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+    "attributes": {
+      "description": "Computer science lab about C",
+      "token": "12345",
+      "active": true,
+    },
+    "relationships": {
+      "questions": {
+        "data": [],
+      },
+    },
+  },
+}
+```
+
+#### Listing a users lab sessions
+#### `GET /lab_sessions`
+
+Return object
+```json
+{
+  "data": [
+    {
+      "type": "lab-sessions",
+      "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
+      "attributes": {
+        "description": "Computer science lab about C",
+        "token": "12345",
+        "active": true,
+      },
+      "relationships": {
+        "questions": {
+          "data": [],
+        },
+      },
+    },
+  ],
+}
+```
+
 #### Creating a Lab Session
 #### `POST /lab_sessions`
 
@@ -24,32 +69,43 @@ Request Parameters:
 | `description` | Optional. The description of the lab session. Will be empty otherwise |
 | `token` | Optional. The unique token of the session. If not specified, it will be randomly generated. |
 
-Return Object
+Returns a json representation of a lab session as specified at the top of this file.
+
+#### Updating a Lab Session
+#### `PUT /lab_sessions/:id`
+
+Request Parameters
 ```json
 {
-  "data": {
-    "type": "lab-sessions",
-    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
-    "attributes": {
-      "description": "Computer science lab about C",
-      "token": "12345",
-      "active": true,
-    },
-    "relationships": {
-      "questions": {
-        "data": [],
-      },
-    },
-  },
+    "description": "This is the new description of the lab session",
+    "token": "acb123",
 }
 ```
+
+Returns a json representation of a lab session with the new values.
+
+#### Getting a specific lab session
+#### `GET /lab_sessions/:id`
+
+Returns a json representation of the lab session if the user is a pat of it.
+
+#### Deleting a Lab Session
+#### `DELETE /lab_sessions/:id`
+
+If the user is a student and they are the only one on the lab session, it will be
+deleted. Otherwise, it will return an error. If the user is a professor, the lab
+session will be deleted.
+
+In either case, the user must be a part of the lab session already.
+
+Success Response Code 204 (No Content)
 
 #### Joining a Lab Session
 #### `POST /lab_sessions/join/:token`
 
 You can join a session by supplying a valid token to and making a request to  `/lab_session/join/:token`.
 
-equest Parameters
+Request Parameters
 ```json
 {
     "token": "12345",
@@ -91,3 +147,11 @@ Return Object
   },
 }
 ```
+
+#### Leaving a lab session
+#### `DELETE /lab_sessions/:id/leave`
+
+If the user is a part of the lab session, they will be removed from it. They can
+join again with the token.
+
+Success Response Code 204 (No Content)
