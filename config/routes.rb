@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     get "system/users/:user_id", to: "registrations#show", as: :user
   end
 
-  resources :lab_sessions, only: :create do
+  resources :lab_sessions do
     resources :questions do
       get "claim", on: :member
 
