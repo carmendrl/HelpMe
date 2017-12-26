@@ -341,4 +341,102 @@ RSpec.describe "Courses", type: :request do
       })
     end
   end
+
+  describe "users on a course" do
+    describe "POST /courses/:id/students/" do
+      it "adds a user to a course" do
+        user = create(:student)
+        course = create(:course)
+
+        headers.merge! sign_in(user)
+
+        url = "https://example.com/courses/#{course.id}/students/"
+
+        expect do
+          post(url, headers: headers)
+        end.to change(course.users, :count).from(0).to(1)
+          .and change(user.courses, :count).from(0).to(1)
+
+        expect(response.code).to eq("204")
+      end
+    end
+
+    describe "DELETE /courses/:id/students/:id" do
+
+      it "removes a student if they are the ones requesting to be removed" do
+        user = create(:student)
+        course = create(:course, users: [user])
+
+        headers.merge! sign_in(user)
+
+        url = "https://example.com/courses/#{course.id}/students/#{user.id}/"
+
+        expect do
+          delete(url, headers: headers)
+        end.to change(course.users, :count).from(1).to(0)
+          .and change(user.courses, :count).from(1).to(0)
+
+        expect(response.code).to eq("204")
+      end
+
+      it "removes a student if a professor removes them" do
+        user = create(:professor)
+        student_to_remove = create(:student)
+        course = create(:course, users: [student_to_remove])
+
+        headers.merge! sign_in(user)
+
+        url = "https://example.com/courses/#{course.id}/students/#{student_to_remove.id}/"
+
+        expect do
+          delete(url, headers: headers)
+        end.to change(course.users, :count).from(1).to(0)
+
+        expect(response.code).to eq("204")
+      end
+
+      it "returns an error if a student requests to remove another student" do
+        user = create(:student)
+        student_to_remove = create(:student)
+        course = create(:course, users: [student_to_remove])
+
+        headers.merge! sign_in(user)
+
+        url = "https://example.com/courses/#{course.id}/students/#{student_to_remove.id}/"
+
+        expect do
+          delete(url, headers: headers)
+        end.not_to change(course.users, :count)
+
+        expect(response.code).to eq("405")
+        expect(json).to eq({
+          "error" => {
+            "type" => "cannot_perform_operation",
+            "message" => "Cannot remove this user from the course",
+          },
+        })
+      end
+
+      it "returns an error if the user that is being removed is not on the course" do
+        user = create(:professor)
+        student_to_remove = create(:student)
+        course = create(:course)
+
+        headers.merge! sign_in(user)
+
+        url = "https://example.com/courses/#{course.id}/students/#{student_to_remove.id}/"
+        expect do
+          delete(url, headers: headers)
+        end.not_to change(course.users, :count)
+
+        expect(response.code).to eq("405")
+        expect(json).to eq({
+          "error" => {
+            "type" => "cannot_perform_operation",
+            "message" => "User is not on that course",
+          },
+        })
+      end
+    end
+  end
 end
