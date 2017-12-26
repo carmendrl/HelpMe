@@ -20,5 +20,7 @@ Rails.application.routes.draw do
   end
   post "lab_sessions/join/:token", to: "lab_session_memberships#create"
 
+  resources :courses
+
   root to: "root#index"
 end
