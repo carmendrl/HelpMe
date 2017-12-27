@@ -4,10 +4,17 @@
 
 A user must be a part of a session to manipulate any of the questions in that session.
 
-#### Questions have three different states:
+#### Questions have three different statuses:
 - Pending
 - Claimed
 - Answered
+
+If there is an answer existing for a question, it will be "answered". This is
+true even if there is someone who has "claimed" it.
+
+If someone has claimed it and there is still no answer, it will be "claimed".
+
+Otherwise the status of the question will be "pending".
 
 #### Creating a Question
 #### `POST /lab_sessions/:lab_session_id/questions`
@@ -37,6 +44,7 @@ Return Object for Students
     "attributes": {
       "text": "Why is abbreviated such a long word?",
       "created-at": "2017-11-10T12:00:00Z",
+      "status": "pending",
     },
   }
 }
@@ -54,6 +62,7 @@ This will include the asker of the question. When the professor creates the ques
     "attributes" : {
       "text" : "Why is abbreviated such a long word?",
       "created-at" : "2017-11-10T12:00:00Z",
+      "status": "pending",
     },
     "relationships" : {
       "asker" : {
@@ -79,6 +88,7 @@ Return object for students
     "attributes": {
       "text": "How much wood can a woodchuck chuck?",
       "created-at": "2017-11-10T12:00:00Z",
+      "status": "pending"
     },
   }
 }
@@ -93,6 +103,7 @@ Return object for professors
     "attributes" : {
       "text" : "How much wood can a woodchuck chuck?",
       "created-at" : "2017-11-10T12:00:00Z",
+      "status": "pending",
     },
     "relationships" : {
       "asker" : {
@@ -136,6 +147,7 @@ Return Object for Students
     "attributes": {
       "text": "How much wood can a woodchuck chuck?",
       "created-at": "2017-11-10T12:00:00Z",
+      "status": "pending"
     },
   }
 }
@@ -153,6 +165,7 @@ Notice that it was a student who asked this question, but the professor updated 
     "attributes" : {
       "text" : "How much wood can a woodchuck chuck?",
       "created-at" : "2017-11-10T12:00:00Z",
+      "status": "claimed",
     },
     "relationships" : {
       "asker" : {
@@ -186,6 +199,7 @@ If requestor is a student response payload
       "attributes" : {
         "text" : "What is a string?",
         "created-at" : "2017-11-10T12:00:00Z",
+        "status": "claimed",
       },
     },
     {
@@ -218,7 +232,8 @@ If requestor is a professor response payload
       "type" : "questions",
       "attributes" : {
         "text" : "What is a string?",
-        "created-at" : "2017-11-10T12:00:00Z"
+        "created-at" : "2017-11-10T12:00:00Z",
+        "status": "pending",
       },
       "relationships" : {
         "asker" : {
@@ -234,7 +249,8 @@ If requestor is a professor response payload
       "type" : "questions",
       "attributes" : {
         "text" : "How do I call a method?",
-        "created-at" : "2017-11-10T12:00:00Z"
+        "created-at" : "2017-11-10T12:00:00Z",
+        "status": "pending",
       },
       "relationships" : {
         "asker" : {
