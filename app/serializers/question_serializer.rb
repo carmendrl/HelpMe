@@ -1,6 +1,7 @@
 class QuestionSerializer < ActiveModel::Serializer
   attribute :text
   attribute :created_at
+  attribute :status
 
   has_one :original_asker, if: :professor?
   has_many :askers, if: :show_askers?, key: :asked_by

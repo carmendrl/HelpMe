@@ -8,6 +8,20 @@ RSpec.describe Question do
     it { is_expected.to belong_to(:original_asker) }
     it { is_expected.to belong_to(:claimed_by) }
     it { is_expected.to belong_to(:lab_session) }
+
+    it "validates that the status is one of the given statuses" do
+      question = build(:question, status: "pending")
+      expect(question).to be_valid
+
+      question = build(:question, status: "claimed")
+      expect(question).to be_valid
+
+      question = build(:question, status: "answered")
+      expect(question).to be_valid
+
+      question = build(:question, status: "not-a-status")
+      expect(question).not_to be_valid
+    end
   end
 
   it "creates a question" do

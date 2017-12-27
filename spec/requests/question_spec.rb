@@ -68,6 +68,7 @@ RSpec.describe "Questions", type: :request do
               "attributes" => {
                 "text" => question.text,
                 "created-at" => question.created_at.iso8601,
+                "status" => "claimed",
               },
               "relationships" => {
                 "claimed-by" => {
@@ -106,6 +107,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "How much wood can a woodchuck chuck?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "pending",
             },
           },
         })
@@ -129,6 +131,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "How do I test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "pending",
             },
           },
         })
@@ -170,6 +173,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "I think I understand how to test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "claimed",
             },
             "relationships" => {
               "claimed-by" => {
@@ -240,7 +244,8 @@ RSpec.describe "Questions", type: :request do
               "type" => "questions",
               "attributes" => {
                 "text" => question.text,
-                "created-at" => "2008-09-01T12:00:00Z"
+                "created-at" => "2008-09-01T12:00:00Z",
+                "status" => "claimed",
               },
               "relationships" => {
                 "original-asker" => {
@@ -293,6 +298,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "How much wood can a woodchuck chuck?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "pending",
             },
             "relationships" => {
               "original-asker" => {
@@ -332,6 +338,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "How do I test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "pending",
             },
             "relationships" => {
               "original-asker" => {
@@ -376,6 +383,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "I think I understand how to test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "claimed",
             },
             "relationships" => {
               "original-asker" => {
@@ -425,6 +433,7 @@ RSpec.describe "Questions", type: :request do
             "attributes" => {
               "text" => "I think I understand how to test questions?",
               "created-at" => "2008-09-01T12:00:00Z",
+              "status" => "claimed",
             },
             "relationships" => {
               "original-asker" => {
@@ -484,8 +493,11 @@ RSpec.describe "Questions", type: :request do
       get(url, headers: good_request_headers)
     end.to change(user.questions_claimed, :count).from(0).to(1)
 
+    question.reload
     expect(question.reload).to be_claimed
     expect(question.claimed_by).to eq(user)
+    expect(question.status).to eq("claimed")
+
     expect(json).to eq({
       "data" => {
         "id" => question.id,
@@ -493,6 +505,7 @@ RSpec.describe "Questions", type: :request do
         "attributes" => {
           "text" => question.text,
           "created-at" => "2008-09-01T12:00:00Z",
+          "status" => "claimed",
         },
         "relationships" => {
           "original-asker" => {
@@ -562,7 +575,8 @@ RSpec.describe "Questions", type: :request do
         "type" => "questions",
         "attributes" => {
           "text" => question.text,
-          "created-at" => "2008-09-01T12:00:00Z"
+          "created-at" => "2008-09-01T12:00:00Z",
+          "status" => "pending",
         },
       },
     })
