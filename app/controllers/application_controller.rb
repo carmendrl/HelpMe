@@ -31,6 +31,17 @@ class ApplicationController < ActionController::API
     }, status: 404
   end
 
+  def render_cannot_perform_operation(message)
+    render json: {
+      error: {
+        type: "cannot_perform_operation",
+        message: message,
+      },
+    }, status: 405
+  end
+
+  private
+
   def serialize_errors(resource)
     resource.errors.map do |attribute, message|
       {

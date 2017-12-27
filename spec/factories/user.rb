@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :professor do
+  factory :professor, aliases: [:instructor] do
     sequence(:email) { |n| "professor#{n}@example.com" }
     username "Ferzle"
     password "password"

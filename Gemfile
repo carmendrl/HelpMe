@@ -14,6 +14,7 @@ gem "devise_token_auth"
 gem "omniauth"
 
 gem "active_model_serializers"
+gem "interactor"
 
 group :development, :test do
   gem "rspec-rails"
