@@ -27,13 +27,7 @@ class LabSessionsController < ApplicationController
       @lab_session.destroy!
       head :no_content
     else
-
-      render json: {
-        error: {
-          type: "cannot_perform_operation",
-          message: "This user must be the only user on the lab session",
-        },
-      }, status: 405
+      render_cannot_perform_operation("This user must be the only user on the lab session")
     end
   end
 

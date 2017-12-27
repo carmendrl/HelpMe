@@ -27,12 +27,7 @@ class QuestionsController < ApplicationController
       @question.destroy!
       head :no_content, status: 204
     else
-      render json: {
-        error: {
-          type: "cannot_perform_operation",
-          message: "This user must be the only one that has asked this question",
-        },
-      }, status: 405
+      render_cannot_perform_operation("This user must be the only one that has asked this question")
     end
   end
 
