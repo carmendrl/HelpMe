@@ -5,11 +5,13 @@ class Question < ApplicationRecord
     "answered",
   ].freeze
 
-  belongs_to :original_asker, class_name: "User"
-  has_and_belongs_to_many :askers, through: :questions_users, class_name: "User"
-  belongs_to :lab_session
   has_one :answer, dependent: :destroy
 
+  has_and_belongs_to_many :askers, through: :questions_users, class_name: "User"
+  has_and_belongs_to_many :tags, through: :questions_tags, inverse_of: :questions
+
+  belongs_to :original_asker, class_name: "User"
+  belongs_to :lab_session
   belongs_to :claimed_by, class_name: "User", optional: true
 
   validates_presence_of :text
