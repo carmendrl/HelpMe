@@ -4,9 +4,11 @@ FactoryGirl.define do
     association :original_asker
     association :lab_session
     association :claimed_by, factory: :professor
+    status "claimed"
 
     trait :unclaimed do
       claimed_by nil
+      status "pending"
     end
 
     after :create do |q|

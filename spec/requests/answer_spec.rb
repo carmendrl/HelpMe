@@ -27,7 +27,7 @@ RSpec.describe "Answer", type: :request do
       }
     )
   end
-  
+
   context "with a signed in user" do
     let(:professor) { create(:professor) }
 
@@ -76,7 +76,11 @@ RSpec.describe "Answer", type: :request do
         answer = Answer.last
 
         expect(Answer.count).to eq(1)
+
+        question.reload
         expect(question.answer).to eq(answer)
+        expect(question.status).to eq("answered")
+
         expect(json).to eq({
           "data" => {
             "id" => answer.id,
@@ -108,7 +112,7 @@ RSpec.describe "Answer", type: :request do
 
         url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/answer"
          put(url, params: update_params, headers: good_request_headers)
-        
+
          expect(status).to eq(200)
 
          expect(json).to eq({
@@ -131,11 +135,11 @@ RSpec.describe "Answer", type: :request do
         })
       end
     end
-    
+
     describe "DELETE /lab_sessions/:lab_session_id/questions/:question_id/answer" do
       it "deletes an answer" do
         answer = create(:answer, text: "This is an answer", answerer: professor, question: question)
-        
+
         url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/answer"
 
         delete(url, headers: good_request_headers)
@@ -145,6 +149,7 @@ RSpec.describe "Answer", type: :request do
 
         question.reload
         expect(question.answer).to be_nil
+        expect(question.status).to eq("claimed")
       end
     end
   end

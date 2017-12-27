@@ -15,13 +15,20 @@ class AnswersController < ApplicationController
   end
 
   def create
-    render json: current_user.answers.create!(answer_params)
+    question = Question.find(params[:question_id])
+    answer = current_user.answers.create!(answer_params)
+
+    question.save!
+
+    render json: answer
   end
 
   def destroy
-    answer = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:question_id]).answer
+    question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:question_id])
 
+    answer = question.answer
     answer.destroy!
+
     head :no_content, status: 204
   end
 
