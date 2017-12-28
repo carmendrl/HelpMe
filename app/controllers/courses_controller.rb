@@ -39,7 +39,7 @@ class CoursesController < ApplicationController
   end
 
   def tags
-    render json: tag_json(@course.tags)
+    render json: tag_json(@course.tags + Tag.all.global)
   end
 
   def add_tag

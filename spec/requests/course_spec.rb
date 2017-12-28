@@ -440,8 +440,11 @@ RSpec.describe "Courses", type: :request do
     end
   end
 
-  it "gets the tags on the course" do
+  it "gets the tags on the course and global ones" do
     course = create(:course, tags: [create(:tag, name: "CS"), create(:tag, name: "Coding")])
+
+    global = create(:tag, :global, name: "Global")
+    not_global = create(:tag, global: false)
 
     user = create(:student)
     course.users << user
@@ -456,6 +459,7 @@ RSpec.describe "Courses", type: :request do
       "data" => [
         "CS",
         "Coding",
+        "Global",
       ],
     })
   end
