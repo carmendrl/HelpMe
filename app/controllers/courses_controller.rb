@@ -42,20 +42,6 @@ class CoursesController < ApplicationController
     render json: tag_json(@course.tags + Tag.all.global)
   end
 
-  def add_tag
-    tag = Tag.find_by!(name: params[:tag])
-    @course.tags << tag
-    render json: tag_json(@course.tags)
-  end
-
-  def remove_tag
-    tag = @course.tags.find_by!(name: params[:tag])
-    @course.tags.delete(tag)
-    @course.save!
-
-    render json: tag_json(@course.tags)
-  end
-
   private
 
   def course_params
