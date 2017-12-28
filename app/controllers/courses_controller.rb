@@ -38,6 +38,10 @@ class CoursesController < ApplicationController
     end
   end
 
+  def tags
+    render json: tag_json(@course.tags + Tag.all.global)
+  end
+
   private
 
   def course_params

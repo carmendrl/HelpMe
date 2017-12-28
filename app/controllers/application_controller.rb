@@ -21,8 +21,14 @@ class ApplicationController < ActionController::API
   end
 
   def not_found(error)
-    message = "Couldn't find #{error.model.underscore.humanize}"
-    message +=  + " with 'id'=#{error.id}" if error.id.present?
+    message = ""
+    if error.model.present?
+      message = "Couldn't find #{error.model.underscore.humanize}"
+      message +=  + " with 'id'=#{error.id}" if error.id.present?
+    else
+      message = "Couldn't find record"
+    end
+
     render json: {
       error: {
         type: "resource_not_found",
@@ -38,6 +44,14 @@ class ApplicationController < ActionController::API
         message: message,
       },
     }, status: 405
+  end
+
+  def tag_json(tags)
+    tag_names = tags.map { |t| t.name }
+
+    return {
+      data: tag_names,
+    }.to_json
   end
 
   private

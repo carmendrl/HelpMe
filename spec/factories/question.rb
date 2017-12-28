@@ -11,6 +11,10 @@ FactoryGirl.define do
       status "pending"
     end
 
+    trait :with_tags do
+      tags { build_list(:tag, 2) }
+    end
+
     after :create do |q|
       q.askers << q.original_asker
     end

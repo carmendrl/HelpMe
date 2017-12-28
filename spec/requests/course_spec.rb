@@ -439,4 +439,28 @@ RSpec.describe "Courses", type: :request do
       end
     end
   end
+
+  it "gets the tags on the course and global ones" do
+    course = create(:course, tags: [create(:tag, name: "CS"), create(:tag, name: "Coding")])
+
+    global = create(:tag, :global, name: "Global")
+    not_global = create(:tag, global: false)
+
+    user = create(:student)
+    course.users << user
+    headers.merge! sign_in(user)
+
+    url = "https://example.com/courses/#{course.id}/tags"
+
+    get(url, headers: headers)
+
+    expect(response.code).to eq("200")
+    expect(json).to eq({
+      "data" => [
+        "CS",
+        "Coding",
+        "Global",
+      ],
+    })
+  end
 end

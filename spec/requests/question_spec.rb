@@ -630,4 +630,133 @@ RSpec.describe "Questions", type: :request do
       },
     })
   end
+
+  it "can get the tags of a question properly" do
+    user = create(:student)
+    lab_session.users << user
+    good_request_headers.merge! sign_in(user)
+
+    question = create(:question, tags: [create(:tag, name: "Safety"), create(:tag, name: "Hazard")])
+    question.askers << user
+    lab_session.questions << question
+
+    url = "https://exmaple.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/tags"
+
+    get(url, headers: good_request_headers)
+
+    expect(response.code).to eq("200")
+    expect(json).to eq({
+      "data" => [
+        "Safety",
+        "Hazard",
+      ],
+    })
+  end
+
+  describe "tags" do
+    let(:user) { create(:student) }
+    before do
+      lab_session.users << user
+      good_request_headers.merge! sign_in(user)
+    end
+
+    it "can add a tag to a question" do
+      question = create(:question, tags: [create(:tag, name: "Safety"), create(:tag, name: "Hazard")])
+      question.askers << user
+      lab_session.questions << question
+
+      new_tag = create(:tag, :global, name: "Help!")
+
+      params = {
+        tag: "Help!",
+      }.to_json
+
+      url = "https://exmaple.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/tags/"
+
+      post(url, headers: good_request_headers, params: params)
+
+      expect(response.code).to eq("200")
+      expect(json).to eq({
+        "data" => [
+          "Safety",
+          "Hazard",
+          "Help!",
+        ],
+      })
+
+      expect(question.reload.tags).to include(new_tag)
+    end
+
+    it "can add a tag that is not global but is on the course" do
+      question = create(:question, tags: [create(:tag, name: "Safety"), create(:tag, name: "Hazard")])
+      question.askers << user
+      lab_session.questions << question
+
+      new_tag = create(:tag, global: false, name: "Help!")
+      lab_session.course.tags << new_tag
+
+      params = {
+        tag: "Help!",
+      }.to_json
+
+      url = "https://exmaple.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/tags/"
+
+      post(url, headers: good_request_headers, params: params)
+
+      expect(response.code).to eq("200")
+      expect(json).to eq({
+        "data" => [
+          "Safety",
+          "Hazard",
+          "Help!",
+        ],
+      })
+
+      expect(question.reload.tags).to include(new_tag)
+    end
+
+    it "canoot add a tag that is not global and not on the course" do
+      question = create(:question, tags: [create(:tag, name: "Safety"), create(:tag, name: "Hazard")])
+      question.askers << user
+      lab_session.questions << question
+
+      new_tag = create(:tag, global: false, name: "Help!")
+
+      params = {
+        tag: "Help!",
+      }.to_json
+
+      url = "https://exmaple.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/tags/"
+
+      post(url, headers: good_request_headers, params: params)
+
+      expect(response.code).to eq("404")
+      expect(json).to eq({
+        "error" => {
+          "type" => "resource_not_found",
+          "message" => "Couldn't find record",
+        },
+      })
+    end
+
+    it "can remove tags" do
+      tag = create(:tag, name: "Safety")
+      question = create(:question, tags: [tag, create(:tag, name: "Hazard")])
+      question.askers << user
+      lab_session.questions << question
+
+      url = "https://exmaple.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/tags/Safety/"
+
+      delete(url, headers: good_request_headers)
+
+      expect(response.code).to eq("200")
+      expect(json).to eq({
+        "data" => [
+          "Hazard",
+        ],
+      })
+
+      expect(question.reload.tags).not_to include(tag)
+    end
+  end
 end
