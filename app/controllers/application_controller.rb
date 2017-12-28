@@ -21,8 +21,14 @@ class ApplicationController < ActionController::API
   end
 
   def not_found(error)
-    message = "Couldn't find #{error.model.underscore.humanize}"
-    message +=  + " with 'id'=#{error.id}" if error.id.present?
+    message = ""
+    if error.model.present?
+      message = "Couldn't find #{error.model.underscore.humanize}"
+      message +=  + " with 'id'=#{error.id}" if error.id.present?
+    else
+      message = "Couldn't find record"
+    end
+
     render json: {
       error: {
         type: "resource_not_found",

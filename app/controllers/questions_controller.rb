@@ -43,8 +43,19 @@ class QuestionsController < ApplicationController
   end
 
   def add_tag
-    @question.tags << Tag.find_by!(name: params[:tag])
-    render json: tag_json(@question.tags)
+    # Finds tags on the question's course with the given tag
+    tags = Tag.joins("inner join courses_tags on courses_tags.course_id = '#{@question.lab_session.course.id}' where tags.name = '#{params[:tag]}'") if @question.lab_session.course.present?
+
+    # Puts them together with all of the global ones
+    tags += Tag.global
+
+    tags.map { |t| t.name == params[:tag] }
+    if tags.any?
+      @question.tags << tags.flatten
+      render json: tag_json(@question.tags)
+    else
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   def remove_tag

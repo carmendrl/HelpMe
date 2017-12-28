@@ -28,8 +28,6 @@ Rails.application.routes.draw do
   resources :courses do
     member do
       get "tags"
-      post "tags/", to: "courses#add_tag"
-      delete "tags/:tag", to: "courses#remove_tag"
     end
 
     scope module: :courses do
