@@ -10,3 +10,4 @@ Ensure you set the header `Content-Type: application/json` for all requests
 * [Errors](ERRORS.md)
 * [Lab Sessions](LAB_SESSIONS.md)
 * [Questions](QUESTIONS.md)
+* [Tags](TAGS.md)
