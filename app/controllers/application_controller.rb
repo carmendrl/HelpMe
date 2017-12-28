@@ -40,6 +40,14 @@ class ApplicationController < ActionController::API
     }, status: 405
   end
 
+  def tag_json(tags)
+    tag_names = tags.map { |t| t.name }
+
+    return {
+      data: tag_names,
+    }.to_json
+  end
+
   private
 
   def serialize_errors(resource)

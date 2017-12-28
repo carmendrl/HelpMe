@@ -12,7 +12,12 @@ Rails.application.routes.draw do
     delete "leave", on: :member, to: "lab_session_memberships#destroy"
 
     resources :questions do
-      get "claim", on: :member
+      member do
+        get "claim"
+        get "tags"
+        post "tags", to: "questions#add_tag"
+        delete "tags/:tag", to: "questions#remove_tag"
+      end
 
       resource :askers
       resource :answer
@@ -21,11 +26,18 @@ Rails.application.routes.draw do
   post "lab_sessions/join/:token", to: "lab_session_memberships#create"
 
   resources :courses do
+    member do
+      get "tags"
+      post "tags/", to: "courses#add_tag"
+      delete "tags/:tag", to: "courses#remove_tag"
+    end
 
     scope module: :courses do
       resources :students
     end
   end
+
+  resources :tags, only: :index
 
   root to: "root#index"
 end

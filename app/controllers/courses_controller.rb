@@ -38,6 +38,24 @@ class CoursesController < ApplicationController
     end
   end
 
+  def tags
+    render json: tag_json(@course.tags)
+  end
+
+  def add_tag
+    tag = Tag.find_by!(name: params[:tag])
+    @course.tags << tag
+    render json: tag_json(@course.tags)
+  end
+
+  def remove_tag
+    tag = @course.tags.find_by!(name: params[:tag])
+    @course.tags.delete(tag)
+    @course.save!
+
+    render json: tag_json(@course.tags)
+  end
+
   private
 
   def course_params

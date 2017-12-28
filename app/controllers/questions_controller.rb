@@ -38,6 +38,23 @@ class QuestionsController < ApplicationController
     render json: @question
   end
 
+  def tags
+    render json: tag_json(@question.tags)
+  end
+
+  def add_tag
+    @question.tags << Tag.find_by!(name: params[:tag])
+    render json: tag_json(@question.tags)
+  end
+
+  def remove_tag
+    tag = @question.tags.find_by!(name: params[:tag])
+    @question.tags.delete(tag)
+    @question.save!
+
+    render json: tag_json(@question.tags)
+  end
+
   private
 
   def question_params
