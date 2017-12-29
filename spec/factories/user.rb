@@ -11,5 +11,9 @@ factory :student, aliases: [:original_asker] do
     username "Buttercup"
     password "password"
     password_confirmation "password"
+
+    trait :ta do
+      role "ta"
+    end
   end
 end

@@ -26,6 +26,7 @@ RSpec.describe User do
 
     student = User.last
     expect(student.type).to eq("Student")
+    expect(student.role).to eq("none")
   end
 
   describe "#professor?" do

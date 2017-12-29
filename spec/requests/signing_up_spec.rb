@@ -29,6 +29,7 @@ RSpec.describe "Signing up", type: :request do
             "attributes"=> {
               "email"=> "buttercup@example.com",
               "username"=> "princess.buttercup",
+              "role" => "none",
             }
           }
         }
@@ -60,6 +61,7 @@ RSpec.describe "Signing up", type: :request do
             "attributes"=> {
               "email"=> "buttercup@example.com",
               "username"=> "princess.buttercup",
+              "role" => "none",
             }
           }
         }
@@ -92,16 +94,17 @@ RSpec.describe "Signing up", type: :request do
             "email"=>"",
             "created_at"=>nil,
             "updated_at"=>nil,
-            "type"=>"user"
+            "type"=>"user",
+            "role" => "none",
           },
           "errors"=>{
             "email"=>[
               "can't be blank",
-              "is not an email"
+              "is not an email",
             ],
             "full_messages"=>[
               "Email can't be blank",
-              "Email is not an email"
+              "Email is not an email",
             ]
           }
         }
@@ -133,14 +136,15 @@ RSpec.describe "Signing up", type: :request do
             "email"=>"buttercup@example.com",
             "created_at"=>nil,
             "updated_at"=>nil,
-            "type"=>"user"
+            "type"=>"user",
+            "role" => "none",
           },
           "errors"=>{
             "password_confirmation"=>[
-              "doesn't match Password"
+              "doesn't match Password",
             ],
             "full_messages"=>[
-              "Password confirmation doesn't match Password"
+              "Password confirmation doesn't match Password",
             ]
           }
         }

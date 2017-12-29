@@ -3,7 +3,7 @@ class Question < ApplicationRecord
     "pending",
     "claimed",
     "answered",
-    "assigned_to",
+    "assigned",
   ].freeze
 
   has_one :answer, dependent: :destroy
@@ -31,13 +31,22 @@ class Question < ApplicationRecord
     claimed_by.present?
   end
 
+  def assign_to(user)
+    self.assigned_to = user
+    self.save!
+  end
+
+  def assigned?
+    assigned_to.present?
+  end
+
   def update_status!
     if answer.present?
       self.status = :answered
-    elsif assigned_to.present?
-      self.status = :assigned_to
     elsif claimed_by.present?
       self.status = :claimed
+    elsif assigned_to.present?
+      self.status = :assigned
     else
       self.status = :pending
     end

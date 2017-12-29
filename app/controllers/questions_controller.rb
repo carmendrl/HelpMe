@@ -33,9 +33,19 @@ class QuestionsController < ApplicationController
 
   def claim
     @question.claim(current_user)
-    @question.save!
 
     render json: @question
+  end
+
+  def assign
+    user = User.find(params[:user_id])
+    if user.ta?
+      @question.assign_to(user)
+
+      render json: @question
+    else
+      render_cannot_perform_operation("User must be a TA in order to assign them a question.")
+    end
   end
 
   def tags
