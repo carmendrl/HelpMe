@@ -491,7 +491,7 @@ RSpec.describe "Questions", type: :request do
 
     expect do
       get(url, headers: good_request_headers)
-    end.to change(user.questions_claimed, :count).from(0).to(1)
+    end.to change(user.claimed_questions, :count).from(0).to(1)
 
     question.reload
     expect(question.reload).to be_claimed
@@ -543,7 +543,7 @@ RSpec.describe "Questions", type: :request do
     url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/claim"
     expect do
       get(url, headers: good_request_headers)
-    end.not_to change(user.questions_claimed, :count)
+    end.not_to change(user.claimed_questions, :count)
 
     expect(question.reload).not_to be_claimed
     expect(response.code).to eq("404")

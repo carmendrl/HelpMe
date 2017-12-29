@@ -6,7 +6,8 @@ RSpec.describe User do
     before { create(:student) }
     it { is_expected.to have_and_belong_to_many(:questions_asked) }
     it { is_expected.to have_and_belong_to_many(:courses) }
-    it { is_expected.to have_many(:questions_claimed) }
+    it { is_expected.to have_many(:claimed_questions) }
+    it { is_expected.to have_many(:assigned_questions) }
   end
 
   it "is able to create a professor" do

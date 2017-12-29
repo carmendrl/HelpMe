@@ -7,6 +7,7 @@ RSpec.describe Question do
     it { is_expected.to have_and_belong_to_many(:askers) }
     it { is_expected.to belong_to(:original_asker) }
     it { is_expected.to belong_to(:claimed_by) }
+    it { is_expected.to belong_to(:assigned_to) }
     it { is_expected.to belong_to(:lab_session) }
   end
 
