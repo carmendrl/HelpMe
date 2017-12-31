@@ -39,7 +39,7 @@ class QuestionsController < ApplicationController
 
   def assign
     user = User.find(params[:user_id])
-    if user.ta?
+    if user.ta? || user.professor?
       @question.assign_to(user)
 
       render json: @question
