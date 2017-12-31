@@ -7,7 +7,7 @@ class DeleteCourseStudents
     course = context.course
 
     if course.users.include?(user)
-      if current_user == user || current_user.is_a?(Professor)
+      if current_user == user || current_user.professor?
         course.users.delete(user)
         course.save!
       else

@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
   end
 
   def create
-    if current_user.is_a?(Professor)
+    if current_user.professor?
       permitted_params = course_params.merge!({ instructor_id: current_user.id })
       course = Course.create!(permitted_params)
       render json: course
@@ -17,7 +17,7 @@ class CoursesController < ApplicationController
   end
 
   def update
-    if current_user.is_a?(Professor)
+    if current_user.professor?
       @course.update!(course_params)
       render json: @course
     else
@@ -30,7 +30,7 @@ class CoursesController < ApplicationController
   end
 
   def destroy
-    if current_user.is_a?(Professor)
+    if current_user.professor?
       @course.destroy!
       head :no_content, status: 204
     else

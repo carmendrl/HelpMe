@@ -23,7 +23,7 @@ class LabSessionsController < ApplicationController
 
   def destroy
     # If the user is a prof or the current user is the only one
-    if current_user.is_a?(Professor) || @lab_session.users.count == 1
+    if current_user.professor? || @lab_session.users.count == 1
       @lab_session.destroy!
       head :no_content
     else
