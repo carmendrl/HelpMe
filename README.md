@@ -1,4 +1,4 @@
-# [Helpme App Backend API](http://helpmeapp-backend-api.herokuapp.com/)
+# [Helpme App Backend API](http://helpme-backend-api.herokuapp.com/)
 
 ## [View API Documentation](APIDOC.md)
 
