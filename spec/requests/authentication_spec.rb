@@ -25,6 +25,7 @@ RSpec.describe "Authentication", type: :request do
             "attributes"=> {
               "email"=> "ferzle@example.com",
               "username"=> "ferzle",
+              "role" => "none",
             }
           }
         }
@@ -53,6 +54,7 @@ RSpec.describe "Authentication", type: :request do
             "attributes"=> {
               "email"=> "student@example.com",
               "username"=> "ferzle",
+              "role" => "none",
             }
           }
         }

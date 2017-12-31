@@ -39,6 +39,7 @@ Return Object
     "attributes": {
       "email": "email@example.com",
       "username": "user.name",
+      "role": "none"
     }
   }
 }
@@ -59,7 +60,8 @@ Error Payload:
     "email":"",
     "created_at":nil,
     "updated_at":nil,
-    "type":"student"
+    "type":"student",
+    "role": "none"
   },
   "errors":{
     "attribute_name":[
@@ -103,6 +105,7 @@ Return Object
     "attributes": {
       "email": "email@example.com",
       "username": "user.name",
+      "role": "none"
     }
   }
 }
@@ -158,6 +161,79 @@ Return Payload
     "attributes": {
       "email": "buttercup@example.com",
       "username": "butter.cup",
+      "role": "none"
+    },
+  },
+}
+```
+
+### Teaching Assistants
+In order to promote or demote, the user who is doing it must be a professor.
+
+
+#### Promoting a User to a TA
+#### `POST /system/users/promote`
+
+Request Parameters
+```json
+{
+    "user_id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+}
+```
+
+If the JSON has valid values, the question will be created.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `user_id` | Require. The id of the person who is being promoted |
+
+The return object is the user that has been promoted.
+
+```json
+{
+  "data": {
+    "id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+    "type": "students",
+    "attributes": {
+      "email": "buttercup@example.com",
+      "username": "butter.cup",
+      "role": "ta"
+    },
+  },
+}
+```
+
+#### Demoting a user from a TA
+#### `POST /system/users/demote`
+
+Request Parameters
+```json
+{
+    "user_id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+}
+```
+
+If the JSON has valid values, the question will be created.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `user_id` | Require. The id of the person who is being promoted |
+
+The return object is the user that has been demoted.
+
+```json
+{
+  "data": {
+    "id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+    "type": "students",
+    "attributes": {
+      "email": "buttercup@example.com",
+      "username": "butter.cup",
+      "role": "none"
     },
   },
 }

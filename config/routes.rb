@@ -6,6 +6,8 @@ Rails.application.routes.draw do
 
   devise_scope :user do
     get "system/users/:user_id", to: "registrations#show", as: :user
+    post "system/users/promote", to: "registrations#promote", as: :promote
+    post "system/users/demote", to: "registrations#demote", as: :demote
   end
 
   resources :lab_sessions do
@@ -14,6 +16,9 @@ Rails.application.routes.draw do
     resources :questions do
       member do
         get "claim"
+        post "assign"
+
+        # Tags
         get "tags"
         post "tags", to: "questions#add_tag"
         delete "tags/:tag", to: "questions#remove_tag"

@@ -491,7 +491,7 @@ RSpec.describe "Questions", type: :request do
 
     expect do
       get(url, headers: good_request_headers)
-    end.to change(user.questions_claimed, :count).from(0).to(1)
+    end.to change(user.claimed_questions, :count).from(0).to(1)
 
     question.reload
     expect(question.reload).to be_claimed
@@ -533,6 +533,61 @@ RSpec.describe "Questions", type: :request do
     })
   end
 
+  it "a professor on a question can assign a question to a ta" do
+    user = create(:professor, lab_sessions: [lab_session])
+    good_request_headers.merge! sign_in(user)
+
+    student = create(:student, :ta, lab_sessions: [lab_session])
+
+    question = create(:question, :unclaimed, :unassigned)
+    lab_session.questions << question
+
+    url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/assign"
+
+    params = {
+      user_id: student.id,
+    }.to_json
+
+    post(url, headers: good_request_headers, params: params)
+
+    expect(question.reload).to be_assigned
+    expect(question.assigned_to).to eq(student)
+    expect(response.code).to eq("200")
+    expect(json).to eq({
+      "data" => {
+        "id" => question.id,
+        "type" => "questions",
+        "attributes" => {
+          "text" => question.text,
+          "created-at" => "2008-09-01T12:00:00Z",
+          "status" => "assigned",
+        },
+        "relationships" => {
+          "original-asker" => {
+            "data" => {
+              "type" => "students",
+              "id" => question.original_asker.id
+            },
+          },
+          "asked-by" => {
+            "data" => [
+              {
+                "type" => "students",
+                "id" => question.original_asker.id,
+              }
+            ],
+          },
+          "assigned-to" => {
+            "data" => {
+              "id" => student.id,
+              "type" => "students",
+            },
+          },
+        },
+      }
+    })
+  end
+
   it "does not claim the qusetion if the user is not a part of the session" do
     user = create(:professor)
     good_request_headers.merge! sign_in(user)
@@ -543,7 +598,7 @@ RSpec.describe "Questions", type: :request do
     url = "https://example.com/lab_sessions/#{lab_session.id}/questions/#{question.id}/claim"
     expect do
       get(url, headers: good_request_headers)
-    end.not_to change(user.questions_claimed, :count)
+    end.not_to change(user.claimed_questions, :count)
 
     expect(question.reload).not_to be_claimed
     expect(response.code).to eq("404")

@@ -4,13 +4,16 @@
 
 A user must be a part of a session to manipulate any of the questions in that session.
 
-#### Questions have three different statuses:
+#### Questions have four different statuses:
 - Pending
 - Claimed
+- Assigned
 - Answered
 
 If there is an answer existing for a question, it will be "answered". This is
 true even if there is someone who has "claimed" it.
+
+If someone has been assigned, it will be "assigned". "Claimed", however, has precedence and if someone has claimed it, even if someone else has been assigned, it will be "claimed".
 
 If someone has claimed it and there is still no answer, it will be "claimed".
 
@@ -271,11 +274,32 @@ If requestor is a professor response payload
 Success Response Code 204 (No Content)
 
 #### Claiming a Question
-### `GET /lab_sessions/:lab_session_id/questions/:id/claim`
+#### `GET /lab_sessions/:lab_session_id/questions/:id/claim`
 
 In order to claim a question, issue an authorized get request with the specified ids.
 
 Return object is the question
+
+#### Assigning a Question
+### `POST /lab_sessions/:lab_session_id/questions/:id/assign`
+
+Request Parameters
+```json
+{
+    "user_id": "8e6b3037-5bbd-48a3-a0a3-142287101d65",
+}
+```
+
+If the JSON has valid values, the question will be assigned. Additionally,
+the person who is being assigned the question must be a professor or a TA.
+
+Request Parameters:
+
+| Lab Session Field | Description |
+|-------|-------------|
+| `user_id` | Required. The id of the user that this question is being assigned to. |
+
+Return object is the question.
 
 #### Asking a question that has already been asked (Me too!)
 ### `POST /lab_sessions/:lab_session_id/questions/:question_id/askers`

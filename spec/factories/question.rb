@@ -11,6 +11,11 @@ FactoryGirl.define do
       status "pending"
     end
 
+    trait :unassigned do
+      assigned_to nil
+      status "pending"
+    end
+
     trait :with_tags do
       tags { build_list(:tag, 2) }
     end
