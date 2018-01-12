@@ -68,7 +68,7 @@ This will include the asker of the question. When the professor creates the ques
       "status": "pending",
     },
     "relationships" : {
-      "asker" : {
+      "original-asker" : {
         "data" : {
           "type" : "professors",
           "id" : "52a11fe7-8394-48fc-bc42-8375555eed17",
@@ -109,7 +109,7 @@ Return object for professors
       "status": "pending",
     },
     "relationships" : {
-      "asker" : {
+      "original-asker" : {
         "data" : {
           "type" : "students",
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
@@ -171,7 +171,7 @@ Notice that it was a student who asked this question, but the professor updated 
       "status": "claimed",
     },
     "relationships" : {
-      "asker" : {
+      "original-asker" : {
         "data" : {
           "type" : "students",
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
@@ -239,7 +239,7 @@ If requestor is a professor response payload
         "status": "pending",
       },
       "relationships" : {
-        "asker" : {
+        "original-asker" : {
           "data" : {
             "type" : "students",
             "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
@@ -256,7 +256,7 @@ If requestor is a professor response payload
         "status": "pending",
       },
       "relationships" : {
-        "asker" : {
+        "original-asker" : {
           "data" : {
             "type" : "students",
             "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",
