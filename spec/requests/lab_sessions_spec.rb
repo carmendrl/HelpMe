@@ -35,6 +35,12 @@ RSpec.describe "LabSessions", type: :request do
               "questions" => {
                 "data" => [],
               },
+              "users" => {
+                "data" => [{
+                  "id" => user.id,
+                  "type" => "professors"
+                }]
+              },
             },
           },
         }
@@ -66,6 +72,12 @@ RSpec.describe "LabSessions", type: :request do
               "questions" => {
                 "data" => [],
               },
+              "users" => {
+                "data" => [{
+                  "id" => user.id,
+                  "type" => "professors"
+                }]
+              },
             },
           },
         }
@@ -92,6 +104,12 @@ RSpec.describe "LabSessions", type: :request do
             "relationships" => {
               "questions" => {
                 "data" => [],
+              },
+              "users" => {
+                "data" => [{
+                  "id" => user.id,
+                  "type" => "professors"
+                }]
               },
             },
           },
@@ -293,6 +311,12 @@ RSpec.describe "LabSessions", type: :request do
             "questions" => {
               "data" => [],
             },
+            "users" => {
+              "data" => [{
+                "id" => user.id,
+                "type" => "students"
+              }]
+            }
           },
         },
       })
@@ -417,6 +441,12 @@ RSpec.describe "LabSessions", type: :request do
               "questions" => {
                 "data" => [],
               },
+              "users" => {
+                "data" => [{
+                  "id" => user.id,
+                  "type" => "students"
+                }]
+              }
             },
           },
         ],
@@ -454,6 +484,12 @@ RSpec.describe "LabSessions", type: :request do
             "questions" => {
               "data" => [],
             },
+            "users" => {
+              "data" => [{
+                "id" => user.id,
+                "type" => "students"
+              }]
+            }
           },
         },
       })
