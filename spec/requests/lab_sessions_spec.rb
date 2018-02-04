@@ -17,6 +17,8 @@ RSpec.describe "LabSessions", type: :request do
         "token" => "12345",
       }.to_json
 
+   
+
       expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).by(1)
 
       s = LabSession.last
@@ -38,7 +40,7 @@ RSpec.describe "LabSessions", type: :request do
               "users" => {
                 "data" => [{
                   "id" => user.id,
-                  "type" => "professors"
+                  "type" => "professors",
                 }]
               },
             },
@@ -319,6 +321,9 @@ RSpec.describe "LabSessions", type: :request do
             }
           },
         },
+        "meta" => {
+          user.email => user.id
+        }
       })
     end
 
@@ -444,7 +449,7 @@ RSpec.describe "LabSessions", type: :request do
               "users" => {
                 "data" => [{
                   "id" => user.id,
-                  "type" => "students"
+                  "type" => "students",
                 }]
               }
             },

@@ -10,9 +10,11 @@ Rails.application.routes.draw do
     post "system/users/demote", to: "registrations#demote", as: :demote
   end
 
+  get "lab_sessions/:id", to: "lab_sessions#show_with_users"
+  
   resources :lab_sessions do
     delete "leave", on: :member, to: "lab_session_memberships#destroy"
-
+    
     resources :questions do
       member do
         get "claim"
@@ -29,7 +31,7 @@ Rails.application.routes.draw do
     end
   end
   post "lab_sessions/join/:token", to: "lab_session_memberships#create"
-
+  
   resources :courses do
     member do
       get "tags"

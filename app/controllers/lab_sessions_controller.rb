@@ -10,6 +10,19 @@ class LabSessionsController < ApplicationController
     render json: @lab_session
   end
 
+  def show_with_users
+    render json: @lab_session, meta: get_users
+  end
+
+  def get_users
+    user_list = {}
+    
+    @lab_session.users.each do |user|
+      user_list[user.email] = user.id
+    end
+    return user_list
+  end
+
   def create
     lab_session = current_user.lab_sessions.create!(session_params)
     render json: lab_session
