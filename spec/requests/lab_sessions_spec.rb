@@ -6,6 +6,7 @@ RSpec.describe "LabSessions", type: :request do
   describe "POST /lab_sessions" do
     let!(:url) { "https://example.com/lab_sessions" }
     let(:user) { create(:professor) }
+    let(:course) { create(:course) }
 
     before do
       good_request_headers.merge! sign_in(user)
@@ -15,6 +16,7 @@ RSpec.describe "LabSessions", type: :request do
       good_request_json = {
         "description" => "Computer science lab about C",
         "token" => "12345",
+        "course_id" => course.id
       }.to_json
 
    
@@ -32,6 +34,7 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "Computer science lab about C",
               "token" => "12345",
               "active" => true,
+              "course-id" => course.id
             },
             "relationships" => {
               "questions" => {
@@ -52,6 +55,7 @@ RSpec.describe "LabSessions", type: :request do
     it "creates a new session without a token" do
       good_request_json = {
         "description" => "Computer science lab about C",
+        "course_id" => course.id
       }.to_json
 
       expect { post(url, params: good_request_json, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
@@ -69,6 +73,7 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "Computer science lab about C",
               "token" => s.token,
               "active" => true,
+              "course-id" => s.course_id,
             },
             "relationships" => {
               "questions" => {
@@ -87,7 +92,11 @@ RSpec.describe "LabSessions", type: :request do
     end
 
     it "creates a new session without a token or description" do
-      expect { post(url, params: {}, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
+      course_json = {
+        "course_id" => course.id
+    }.to_json
+
+      expect { post(url, params: course_json, headers: good_request_headers) }.to change(LabSession, :count).from(0).to(1)
 
       # Get the session we just created so we can verify that the token returned
       # is the one we expect
@@ -102,6 +111,7 @@ RSpec.describe "LabSessions", type: :request do
               "description" => "",
               "token" => s.token,
               "active" => true,
+              "course-id" => s.course_id
             },
             "relationships" => {
               "questions" => {
@@ -123,6 +133,7 @@ RSpec.describe "LabSessions", type: :request do
       create(:lab_session, token: "12")
       invalid_params = {
         "token" => 12,
+        "course_id" => course.id
       }.to_json
 
       expect { post(url, params: invalid_params, headers: good_request_headers) }.not_to change(LabSession, :count)
@@ -140,12 +151,33 @@ RSpec.describe "LabSessions", type: :request do
       expect(response.code).to eq("422")
     end
 
+    it "returns an error when the course does not exist" do
+      invalid_params = {
+        "token" => "1234",
+        "course_id" => "id"
+    }.to_json
+    expect{ post(url, params:invalid_params, headers: good_request_headers)}.not_to change(LabSession, :count)
+    expect(json).to eq(
+      "error" => {
+        "type" => "resource_invalid",
+        "errors" => [
+          {
+            "attribute" => "course",
+            "message" => "must exist",
+          }
+        ]
+      }
+    )
+    expect(response.code).to eq("422")
+    end
+
     it "does not allow a user to create a session if they are not signed in" do
       good_request_headers = {
         "Content-Type" => "application/json",
       }
       good_params = {
         "description" => "Computer science lab about C",
+        "course_id" => course.id
       }.to_json
 
       expect { post(url, params: good_params, headers: good_request_headers) }.not_to change(LabSession, :count)
@@ -160,9 +192,11 @@ RSpec.describe "LabSessions", type: :request do
     end
 
     describe "POST /lab_sessions/join/:token" do
+      let(:course) { create(:course) }
       let(:lab_session) { create(:lab_session) }
       let!(:url) { "https://example.com/lab_sessions/join/#{lab_session.token}" }
       let(:user) { create(:student) }
+      
 
       before do
         auth_headers = sign_in(user)
@@ -177,7 +211,7 @@ RSpec.describe "LabSessions", type: :request do
       end
 
       it "lets a user join a session from a valid token" do
-
+        
         expect do
           post(url, headers: good_request_headers)
         end.to change(user.lab_sessions, :count).from(0).to(1)
@@ -269,9 +303,11 @@ RSpec.describe "LabSessions", type: :request do
   end
 
   describe "DELETE /lab_sessions/:id/leave" do
+    let(:course) { create(:course) }
     let(:lab_session) { create(:lab_session, users: [create(:student)]) }
     let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}/leave" }
     let(:user) { create(:student, lab_sessions: [lab_session]) }
+    
 
     before { good_request_headers.merge! sign_in(user) }
 
@@ -291,6 +327,7 @@ RSpec.describe "LabSessions", type: :request do
     let(:lab_session) { create(:lab_session) }
     let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}" }
     let(:user) { create(:student) }
+    let(:course) { create(:course) }
 
     before { good_request_headers.merge! sign_in(user) }
 
@@ -308,6 +345,7 @@ RSpec.describe "LabSessions", type: :request do
             "description" => lab_session.description,
             "token" => lab_session.token,
             "active" => lab_session.active,
+            "course-id" => lab_session.course_id
           },
           "relationships" => {
             "questions" => {
@@ -321,9 +359,15 @@ RSpec.describe "LabSessions", type: :request do
             }
           },
         },
-        "meta" => {
-          user.email => user.id
-        }
+        "included" => [{
+          "id"=> user.id, 
+        "type"=>"students",
+         "attributes"=>{
+           "email"=> user.email, 
+           "username"=> user.username, 
+           "role" => "none"
+          }
+           }]
       })
     end
 
@@ -341,6 +385,7 @@ RSpec.describe "LabSessions", type: :request do
   end
 
   describe "DELETE /lab_sessions/:id" do
+    let(:course) { create(:course) }
     let(:lab_session) { create(:lab_session) }
     let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}" }
 
@@ -404,6 +449,7 @@ RSpec.describe "LabSessions", type: :request do
   describe "GET /lab_sessions" do
     let!(:url) { "https://example.com/lab_sessions" }
     let(:user) { create(:student) }
+    let(:course) { create(:course) }
 
     before { good_request_headers.merge! sign_in(user) }
 
@@ -427,6 +473,7 @@ RSpec.describe "LabSessions", type: :request do
     end
 
     it "gets the lab session data correctly" do
+
       lab_session = create(:lab_session, users: [user])
 
       get(url, headers: good_request_headers)
@@ -441,6 +488,7 @@ RSpec.describe "LabSessions", type: :request do
               "description" => lab_session.description,
               "token" => lab_session.token,
               "active" => lab_session.active,
+              "course-id" => lab_session.course_id,
             },
             "relationships" => {
               "questions" => {
@@ -460,6 +508,7 @@ RSpec.describe "LabSessions", type: :request do
   end
 
   describe "PUT /lab_sessions/:id" do
+    let(:course) { create(:course) }
     let(:lab_session) { create(:lab_session) }
     let!(:url) { "https://example.com/lab_sessions/#{lab_session.id}" }
     let(:user) { create(:student) }
@@ -484,6 +533,7 @@ RSpec.describe "LabSessions", type: :request do
             "description" => "This is a brand new description!",
             "token" => lab_session.token,
             "active" => lab_session.active,
+            "course-id" => lab_session.course_id,
           },
           "relationships" => {
             "questions" => {

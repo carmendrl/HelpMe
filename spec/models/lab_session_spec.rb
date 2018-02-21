@@ -2,8 +2,9 @@ require 'rails_helper'
 
 RSpec.describe LabSession, type: :model do
   describe "valdiations" do
+    before { create(:course) }
     before { create(:lab_session) }
-
+  
     it { is_expected.to validate_uniqueness_of(:token) }
     it { is_expected.to have_many(:questions) }
   end
@@ -11,6 +12,7 @@ RSpec.describe LabSession, type: :model do
   it "can create a session" do
     expect do
       create(:lab_session, token: "12345")
+
     end.to change(LabSession, :count).from(0).to(1)
   end
 
@@ -29,4 +31,11 @@ RSpec.describe LabSession, type: :model do
       token: ["has already been taken"],
     })
   end
+
+  it "does not allow a session without a course" do
+    expect do
+     sess1 =  build(:lab_session, course_id: "invalid")
+      
+  end.not_to change(LabSession, :count)
+end
 end

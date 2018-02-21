@@ -11,15 +11,20 @@ class LabSessionsController < ApplicationController
   end
 
   def show_with_users
-    render json: @lab_session, meta: get_users
+    render json: @lab_session, include: [:users]
   end
 
   def get_users
     user_list = {}
-    
+    emails = []    
     @lab_session.users.each do |user|
-      user_list[user.email] = user.id
+      user_info = {
+        "email": user.email,
+        "id": user.id
+      }
+      emails.push(user_info)
     end
+    user_list["emails"] = emails
     return user_list
   end
 
@@ -47,7 +52,7 @@ class LabSessionsController < ApplicationController
   private
 
   def session_params
-    params.permit(:description, :token, :active)
+    params.permit(:description, :token, :active, :course_id)
   end
 
   def find_lab_session!
