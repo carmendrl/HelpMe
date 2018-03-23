@@ -11,7 +11,9 @@ RSpec.describe "Signing up", type: :request do
         password: "password",
         password_confirmation: "password",
         username: "princess.buttercup",
-        type: "Student"
+        type: "Student",
+        first_name: "Princess",
+        last_name: "Buttercup"
       }.to_json
 
       expect do
@@ -24,12 +26,14 @@ RSpec.describe "Signing up", type: :request do
       expect(json).to eq(
         {
           "data"=> {
-            "type"=> "students",
             "id"=> student.id,
+            "type"=> "students",
             "attributes"=> {
               "email"=> "buttercup@example.com",
               "username"=> "princess.buttercup",
               "role" => "none",
+              "first-name" => "Princess",
+              "last-name" => "Buttercup"
             }
           }
         }
@@ -43,7 +47,9 @@ RSpec.describe "Signing up", type: :request do
         password: "password",
         password_confirmation: "password",
         username: "princess.buttercup",
-        type: "Professor"
+        type: "Professor",
+        first_name: "Princess",
+        last_name: "Buttercup"
       }.to_json
 
       expect do
@@ -56,12 +62,14 @@ RSpec.describe "Signing up", type: :request do
       expect(json).to eq(
         {
           "data"=> {
-            "type"=> "professors",
             "id"=> prof.id,
+            "type"=> "professors",
             "attributes"=> {
               "email"=> "buttercup@example.com",
               "username"=> "princess.buttercup",
               "role" => "none",
+              "first-name" => "Princess",
+              "last-name" => "Buttercup"
             }
           }
         }
@@ -75,6 +83,8 @@ RSpec.describe "Signing up", type: :request do
         password: "password",
         password_confirmation: "password",
         username: "princess.buttercup",
+        first_name: "Princess",
+        last_name: "Buttercup",
       }.to_json
 
       expect do
@@ -94,8 +104,10 @@ RSpec.describe "Signing up", type: :request do
             "email"=>"",
             "created_at"=>nil,
             "updated_at"=>nil,
-            "type"=>"user",
             "role" => "none",
+            "first_name" => "Princess",
+            "last_name" => "Buttercup",
+            "type"=>"user",
           },
           "errors"=>{
             "email"=>[
@@ -117,6 +129,8 @@ RSpec.describe "Signing up", type: :request do
         password: "password",
         password_confirmation: "not the right password",
         username: "princess.buttercup",
+        first_name: "Princess",
+        last_name: "Buttercup",
       }.to_json
 
       expect do
@@ -136,19 +150,112 @@ RSpec.describe "Signing up", type: :request do
             "email"=>"buttercup@example.com",
             "created_at"=>nil,
             "updated_at"=>nil,
-            "type"=>"user",
             "role" => "none",
+            "first_name" => "Princess",
+            "last_name" => "Buttercup",
+            "type"=>"user",
           },
           "errors"=>{
             "password_confirmation"=>[
               "doesn't match Password",
             ],
             "full_messages"=>[
-              "Password confirmation doesn't match Password",
+              "Password confirmation doesn't match Password"
             ]
-          }
+          },
         }
       )
-    end
+    
   end
+
+  it "does not allow a user to sign up without a first name" do
+    sign_up_params = {
+      email: "buttercup@example.com",
+      password: "password",
+      password_confirmation: "password",
+      username: "princess.buttercup",
+      first_name: "",
+      last_name: "Buttercup",
+    }.to_json
+
+    expect do
+      post(url, params: sign_up_params, headers: good_request_headers)
+    end.not_to change(User, :count)
+    expect(response.code).to eq("422")
+    expect(signed_in?).to eq(false)
+    expect(json).to eq(
+      {
+        "status"=>"error",
+        "data"=>
+        {
+          "id"=>nil,
+          "provider"=>"email",
+          "uid"=>"",
+          "username"=>"princess.buttercup",
+          "email"=>"buttercup@example.com",
+          "created_at"=>nil,
+          "updated_at"=>nil,
+          "role" => "none",
+          "first_name" =>"",
+          "last_name" => "Buttercup",
+          "type"=>"user",
+        },
+        "errors"=>{
+          "first_name"=>[
+            "can't be blank"
+          ], 
+          "full_messages"=>[
+            "First name can't be blank"
+            ]
+          }
+      }
+    )
+  
+end
+
+it "does not allow a user to sign up without a last name" do
+  sign_up_params = {
+    email: "buttercup@example.com",
+    password: "password",
+    password_confirmation: "password",
+    username: "princess.buttercup",
+    first_name: "Princess",
+    last_name: "",
+  }.to_json
+
+  expect do
+    post(url, params: sign_up_params, headers: good_request_headers)
+  end.not_to change(User, :count)
+  expect(response.code).to eq("422")
+  expect(signed_in?).to eq(false)
+  expect(json).to eq(
+    {
+      "status"=>"error",
+      "data"=>
+      {
+        "id"=>nil,
+        "provider"=>"email",
+        "uid"=>"",
+        "username"=>"princess.buttercup",
+        "email"=>"buttercup@example.com",
+        "created_at"=>nil,
+        "updated_at"=>nil,
+        "role" => "none",
+        "first_name" => "Princess",
+        "last_name"=> "",
+        "type"=>"user",
+      },
+      "errors"=>{
+        "last_name"=>[
+          "can't be blank"
+        ], 
+        "full_messages"=>[
+          "Last name can't be blank"
+          ]
+        }
+    }
+  )
+
+end
+end
 end

@@ -12,7 +12,7 @@ RSpec.describe User do
 
   it "is able to create a professor" do
     expect do
-      create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password")
+      create(:professor, email: "ferzle@example.com", username: "ferzle", password: "password", password_confirmation: "password", first_name: "Professor", last_name: "Ferzle")
     end.to change(Professor, :count).from(0).to(1)
 
     professor = User.last
@@ -21,7 +21,7 @@ RSpec.describe User do
 
   it "is able to create a student" do
     expect do
-      create(:student, email: "buttercup@example.com", username: "buttercup", password: "password", password_confirmation: "password")
+      create(:student, email: "buttercup@example.com", username: "buttercup", password: "password", password_confirmation: "password", first_name: "Student", last_name: "Buttercup")
     end.to change(Student, :count).from(0).to(1)
 
     student = User.last

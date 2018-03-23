@@ -4,6 +4,8 @@ FactoryGirl.define do
     username "Ferzle"
     password "password"
     password_confirmation "password"
+    first_name "Professor"
+    last_name "Ferzle"
   end
 
 factory :student, aliases: [:original_asker] do
@@ -11,7 +13,9 @@ factory :student, aliases: [:original_asker] do
     username "Buttercup"
     password "password"
     password_confirmation "password"
-
+    first_name "Student"
+    last_name "Buttercup"
+    
     trait :ta do
       role "ta"
     end

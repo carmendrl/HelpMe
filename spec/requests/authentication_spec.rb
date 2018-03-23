@@ -26,6 +26,8 @@ RSpec.describe "Authentication", type: :request do
               "email"=> "ferzle@example.com",
               "username"=> "ferzle",
               "role" => "none",
+              "first-name" => "Professor",
+              "last-name" => "Ferzle"
             }
           }
         }
@@ -34,7 +36,7 @@ RSpec.describe "Authentication", type: :request do
     end
 
     it "allows a student to sign in with valid credentials" do
-      user = create(:student, email: "student@example.com", username: "ferzle", password: "password", password_confirmation: "password")
+      user = create(:student, email: "student@example.com", username: "ferzle", password: "password", password_confirmation: "password", first_name: "fer", last_name: "zle")
 
       sign_in_params = {
         email: "student@example.com",
@@ -55,6 +57,8 @@ RSpec.describe "Authentication", type: :request do
               "email"=> "student@example.com",
               "username"=> "ferzle",
               "role" => "none",
+              "first-name" => "fer",
+              "last-name" => "zle"
             }
           }
         }

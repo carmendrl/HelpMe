@@ -22,7 +22,9 @@ RSpec.describe "Users", type: :request do
           "username" => student.username,
           "email" => student.email,
           "role" => "none",
-        },
+          "first-name" => student.first_name,
+          "last-name" => student.last_name,
+        }, 
       },
     })
   end
@@ -50,6 +52,8 @@ RSpec.describe "Users", type: :request do
           "email" => student.email,
           "username" => student.username,
           "role" => "ta",
+          "first-name" => student.first_name,
+          "last-name" => student.last_name,
         },
       },
     })
@@ -78,6 +82,8 @@ RSpec.describe "Users", type: :request do
           "email" => student.email,
           "username" => student.username,
           "role" => "none",
+          "first-name" => student.first_name,
+          "last-name" => student.last_name,
         },
       },
     })

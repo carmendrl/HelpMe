@@ -21,7 +21,8 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   validates_inclusion_of :role, in: ROLES
-
+  validates_presence_of :first_name
+  validates_presence_of :last_name
   before_create :set_role_to_none
 
   def professor?

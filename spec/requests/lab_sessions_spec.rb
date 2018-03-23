@@ -365,7 +365,9 @@ RSpec.describe "LabSessions", type: :request do
          "attributes"=>{
            "email"=> user.email, 
            "username"=> user.username, 
-           "role" => "none"
+           "role" => "none",
+           "first-name" => user.first_name,
+           "last-name" => user.last_name
           }
            }]
       })
