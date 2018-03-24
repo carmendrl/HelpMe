@@ -193,7 +193,7 @@ Notice that it was a student who asked this question, but the professor updated 
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
         },
       },
-      "original-asker" : {
+      "asked-by" : {
         "data" : [
           {
             "type" : "students",
@@ -269,6 +269,12 @@ If requestor is a professor response payload
             "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
           },
         },
+        "asked-by" : {
+          "data" : {
+            "type" : "students",
+            "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+          },
+        },
       },
     },
     {
@@ -281,6 +287,12 @@ If requestor is a professor response payload
       },
       "relationships" : {
         "original-asker" : {
+          "data" : {
+            "type" : "students",
+            "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",
+          },
+        },
+        "asked-by" : {
           "data" : {
             "type" : "students",
             "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",
