@@ -15,7 +15,10 @@ Request Parameters
   "password": "abc123",
   "password_confirmation": "abc123",
   "username": "user.name",
-  "type": "Student"
+  "type": "Student",
+  "first_name": "First",
+  "last_name": "Last"
+  
 }
 ```
 
@@ -27,6 +30,8 @@ Request Parameters:
 | `password` | Required. Their password. |
 | `password_confirmation` | Required. Must mast the password parameter. |
 | `type` | Required. Must be either "Student" or "Professor" |
+| `first_name` | Required. The user's first name. |
+| `last_name` | Required. The user's last name. 
 | `username` | Optional (for now). What they will be referred to. Could be used for authentication later on. |
 
 Return Object
@@ -39,7 +44,9 @@ Return Object
     "attributes": {
       "email": "email@example.com",
       "username": "user.name",
-      "role": "none"
+      "role": "none",
+      "first-name": "First",
+      "last-name": "Last"
     }
   }
 }
@@ -61,7 +68,9 @@ Error Payload:
     "created_at":nil,
     "updated_at":nil,
     "type":"student",
-    "role": "none"
+    "role": "none",
+    "first_name":"",
+    "last_name":""
   },
   "errors":{
     "attribute_name":[
@@ -105,7 +114,9 @@ Return Object
     "attributes": {
       "email": "email@example.com",
       "username": "user.name",
-      "role": "none"
+      "role": "none",
+      "first-name": "First",
+      "last-name": "Last"
     }
   }
 }
@@ -161,7 +172,9 @@ Return Payload
     "attributes": {
       "email": "buttercup@example.com",
       "username": "butter.cup",
-      "role": "none"
+      "role": "none",
+      "first-name": "butter",
+      "last-name": "cup"
     },
   },
 }
@@ -199,7 +212,9 @@ The return object is the user that has been promoted.
     "attributes": {
       "email": "buttercup@example.com",
       "username": "butter.cup",
-      "role": "ta"
+      "role": "ta",
+      "first-name":"butter",
+      "last-name":"cup"
     },
   },
 }
@@ -233,7 +248,9 @@ The return object is the user that has been demoted.
     "attributes": {
       "email": "buttercup@example.com",
       "username": "butter.cup",
-      "role": "none"
+      "role": "none",
+      "first-name":"butter",
+      "last-name":"cup"
     },
   },
 }
