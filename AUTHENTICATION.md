@@ -162,6 +162,8 @@ Success Payload (Code: 200)
 #### Retrieving a User
 #### `GET system/users/:user_id`
 
+Allows you to retrieve information about an individual user given their id.
+
 Return Payload
 
 ```json
