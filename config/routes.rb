@@ -9,8 +9,6 @@ Rails.application.routes.draw do
     post "system/users/promote", to: "registrations#promote", as: :promote
     post "system/users/demote", to: "registrations#demote", as: :demote
   end
-
-  get "lab_sessions/:id", to: "lab_sessions#show_with_users"
   
   resources :lab_sessions do
     delete "leave", on: :member, to: "lab_session_memberships#destroy"

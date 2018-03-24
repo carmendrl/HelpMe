@@ -7,25 +7,7 @@ class LabSessionsController < ApplicationController
   end
 
   def show
-    render json: @lab_session
-  end
-
-  def show_with_users
     render json: @lab_session, include: [:users]
-  end
-
-  def get_users
-    user_list = {}
-    emails = []    
-    @lab_session.users.each do |user|
-      user_info = {
-        "email": user.email,
-        "id": user.id
-      }
-      emails.push(user_info)
-    end
-    user_list["emails"] = emails
-    return user_list
   end
 
   def create
