@@ -74,6 +74,14 @@ This will include the asker of the question. When the professor creates the ques
           "id" : "52a11fe7-8394-48fc-bc42-8375555eed17",
         },
       },
+      "asked-by": {
+        "data": [
+           {
+              "id": "e0f2018a-2b36-401a-9c42-3245be316701",
+              "type": "students"
+           }
+        ]
+      },
     },
   },
 }
@@ -114,6 +122,14 @@ Return object for professors
           "type" : "students",
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
         },
+      },
+      "asked-by" : {
+        "data" : [
+            {
+              "type" : "students",
+              "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+            },
+          ]
       },
     },
   },
@@ -176,6 +192,14 @@ Notice that it was a student who asked this question, but the professor updated 
           "type" : "students",
           "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
         },
+      },
+      "asked-by" : {
+        "data" : [
+          {
+            "type" : "students",
+            "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+          },
+        ]  
       },
       "claimed-by" : {
         "data" : {
@@ -245,6 +269,12 @@ If requestor is a professor response payload
             "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
           },
         },
+        "asked-by" : {
+          "data" : {
+            "type" : "students",
+            "id" : "2b460811-fae1-49ab-98f5-f2a783a2a1db",
+          },
+        },
       },
     },
     {
@@ -257,6 +287,12 @@ If requestor is a professor response payload
       },
       "relationships" : {
         "original-asker" : {
+          "data" : {
+            "type" : "students",
+            "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",
+          },
+        },
+        "asked-by" : {
           "data" : {
             "type" : "students",
             "id" : "314df30b-078b-437c-84c1-edc3949d3ae2",

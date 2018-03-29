@@ -6,19 +6,36 @@ A Lab Session Object
 ```json
 {
   "data": {
-    "type": "lab-sessions",
-    "id": "7ee48dd3-84a0-4e5b-adea-4794d5941683",
-    "attributes": {
-      "description": "Computer science lab about C",
-      "token": "12345",
-      "active": true,
+        "id": "998810dd-6830-42ef-8182-eb630ae9417f",
+        "type": "lab-sessions",
+        "attributes": {
+            "description": "",
+            "token": "83609b",
+            "active": true,
+            "course-id": "0950b466-effb-42f4-b8e0-8e73084581d6"
+        },
+        "relationships": {
+            "questions": {
+                "data": []
+            },
+            "users": {
+                "data": []
+            }
+        }
     },
-    "relationships": {
-      "questions": {
-        "data": [],
-      },
-    },
-  },
+    "included": [
+        {
+            "id": "e0f2018a-2b36-401a-9c42-3245be316701",
+            "type": "students",
+            "attributes": {
+                "email": "useremail@test.com",
+                "username": "userInSession",
+                "role": "none",
+                "first-name": "User",
+                "last-name": "inSession"
+            }
+        },...
+    ]
 }
 ```
 
@@ -36,11 +53,15 @@ Return object
         "description": "Computer science lab about C",
         "token": "12345",
         "active": true,
+        "course-id": "0950b466-effb-42f4-b8e0-8e73084581d6"
       },
       "relationships": {
         "questions": {
           "data": [],
         },
+        "users": {
+          "data": [],
+        }
       },
     },
   ],
@@ -57,6 +78,7 @@ Request Parameters
 {
     "description": "This is the description of the lab session",
     "token": "12345",
+    "course_id": "0950b466-effb-42f4-b8e0-8e73084581d6"
 }
 ```
 
@@ -68,6 +90,7 @@ Request Parameters:
 |-------|-------------|
 | `description` | Optional. The description of the lab session. Will be empty otherwise |
 | `token` | Optional. The unique token of the session. If not specified, it will be randomly generated. |
+| `course_id` | Required. The unique identifier for the course a lab session is to be associated with.
 
 Returns a json representation of a lab session as specified at the top of this file.
 
@@ -79,6 +102,7 @@ Request Parameters
 {
     "description": "This is the new description of the lab session",
     "token": "acb123",
+    "course_id": "0950b466-effb-42f4-b8e0-8e73084581d6"
 }
 ```
 
@@ -87,7 +111,7 @@ Returns a json representation of a lab session with the new values.
 #### Getting a specific lab session
 #### `GET /lab_sessions/:id`
 
-Returns a json representation of the lab session if the user is a pat of it.
+Returns a json representation of the lab session if the user is a part of it.
 
 #### Deleting a Lab Session
 #### `DELETE /lab_sessions/:id`
