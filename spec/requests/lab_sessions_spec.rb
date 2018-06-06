@@ -361,15 +361,15 @@ RSpec.describe "LabSessions", type: :request do
         },
         "included" => [{
           "id"=> user.id, 
-        "type"=>"students",
-         "attributes"=>{
-           "email"=> user.email, 
-           "username"=> user.username, 
-           "role" => "none",
-           "first-name" => user.first_name,
-           "last-name" => user.last_name
+          "type"=>"students",
+          "attributes"=>{
+            "email"=> user.email, 
+            "username"=> user.username, 
+            "role" => "none",
+            "first-name" => user.first_name,
+            "last-name" => user.last_name
           }
-           }]
+        }]
       })
     end
 
