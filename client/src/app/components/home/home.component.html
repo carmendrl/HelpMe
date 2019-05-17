@@ -1,0 +1,61 @@
+<h1>Welcome!</h1>
+
+<p>
+  Let HelpMe help YOU keep track of questions during your lab sessions!
+</p>
+
+<div>
+<button class="btn btn-primary" (click)="gotoLogin()">Log in</button>
+</div>
+
+<p>
+OR
+</p>
+<div id="newAccount">
+  <h2>Get started by creating an account</h2>
+
+  <form (submit)="createNewAccount()" #thisForm = "ngForm">
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="firstName" class="sr-only">First Name</label>
+      <input type="text" name="firstName" [(ngModel)]="newUser.FirstName" placeholder="First Name" class="form-control col-md-6" required>
+    </div>
+
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="lastName" class="sr-only">Last Name</label>
+      <input type="text" name="lastName" [(ngModel)]="newUser.LastName" placeholder="Last Name" class="form-control col-md-6" required>
+    </div>
+
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+      <input type="email" name="emailAddress" [(ngModel)]="newUser.EmailAddress" placeholder="Email Address" class="form-control col-md-6" required>
+    </div>
+
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="username" class="sr-only">Username</label>
+      <input type="text" name="username" [(ngModel)]="newUser.Username" placeholder="Username" class="form-control col-md-6" required>
+    </div>
+
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="password" class="sr-only">Password</label>
+      <input type="password" name="password" #passwordField="ngModel" [(ngModel)]="newUser.Password" placeholder="Password" class="form-control col-md-6" required minlength="4">
+      <div [hidden]="passwordField.valid || passwordField.pristine">
+        <p>Password is invalid</p>
+        <p *ngIf="passwordField.errors && passwordField.errors.required">Password is required</p>
+        <p *ngIf="passwordField.errors && passwordField.errors.minlength">Password must be at least 4 characters</p>
+      </div>
+    </div>
+
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="confirmPassword" class="sr-only">Confirm password</label>
+      <input type="password" name="confirmpassword" [(ngModel)]="confirmPassword" placeholder="Confirm password" class="form-control col-md-6" required>
+    </div>
+
+    <div *ngIf="newUser.Password !== confirmPassword" class="alert alert-danger">
+      Passwords do not match
+    </div>
+
+
+    <button type="submit" class="btn btn-primary" [disabled]="!thisForm.valid">Create Account</button>
+
+  </form>
+</div>

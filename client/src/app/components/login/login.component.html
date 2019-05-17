@@ -1,0 +1,40 @@
+<div [ngSwitch]="currentUser.Username">
+
+<form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit()" >
+  <div class="row form-group">
+    <div class="col-12 col-sm-2">
+      <label for="Email">Email Address</label>
+    </div>
+
+    <div class="col-12 col-sm-8">
+      <input [(ngModel)] = "emailAddress" class="form-control" type="email" name="Email" required placeholder="Email address" email/>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-12 col-sm-2">
+      <label for="Password">Password</label>
+    </div>
+
+    <div class="col-12 col-sm-8">
+      <input [(ngModel)] = "password" class="form-control" type="password" name="Password" required placeholder="Your password"/>
+    </div>    
+  </div>
+
+  <div class="row form-group">
+    <div class="col">
+      <button type="submit" [disabled]="thisForm.invalid" class="btn btn-primary">Log In</button>
+    </div>
+  </div>
+
+  <div *ngIf="failedLogin" class="alert alert-danger">
+    User name or password are incorrect
+  </div>
+
+</form>
+
+<div *ngSwitchDefault>
+You are already logged in as {{currentUser.Username}}.
+
+<button class="btn btn-primary" (click)="doLogout()">Log out</button>
+</div>

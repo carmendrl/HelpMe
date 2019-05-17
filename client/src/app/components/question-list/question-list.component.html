@@ -1,0 +1,31 @@
+<form class="form-inline">
+  <label for="SearchMyQuestions">Search</label>
+  <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
+  <button class="btn btn-primary form-control ml-1" (click)="filter()" [disabled]="filterTextIsEmpty()"><span class="fas fa-search"></span></button>
+</form>
+
+<div class="results">
+<p class="table-caption">Matching Questions</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Course</th>
+      <th>Question</th>
+      <th>Answer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor = "let question of filteredQuestions">
+      <td>{{question.date | date:'EEE LLL dd'}}</td>
+      <td>{{question.session.course.subjectAndNumber}}</td>
+      <td>{{question.text}}</td>
+      <td><a href="#">{{question.answer}}</a></td>
+    </tr>
+  </tbody>
+</table>
+<div *ngIf="filterApplied">
+  {{filteredQuestions.length}} of {{questions.length}} questions displayed
+  <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
+</div>
+</div>

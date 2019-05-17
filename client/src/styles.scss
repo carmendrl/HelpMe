@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+$hopeOrange: #f46a1f;
+
+section {
+  border-bottom: $hopeOrange 1px solid;
+  padding-top: 2em;
+  padding-bottom: 2em;
+
+  h1 {
+    color: $hopeOrange;
+  }
+
+  section {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    margin-bottom: 1em;
+    padding: 1em;
+  }
+}
+
+.table-caption {
+  font-weight: bold;
+}
+
+.results {
+  margin-top: 1em;
+}
