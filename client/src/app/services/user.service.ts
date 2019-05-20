@@ -82,8 +82,8 @@ export class UserService {
   createAccount(user : User) : Observable<boolean> {
     let url : string = `${this.apiHost}/users`;
     let body = this.buildCreateAccountBodyFromUser (user);
-    return this.httpClient.post(url, body).pipe(
-      tap(r => this.updateLoggedInUserFromResponse(r["data"])),
+    return this.httpClient.post<UserResponseData>(url, body).pipe(
+      tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
       map(r => true ),
       catchError(error => this.handleCreateAccountError(error))
     );
