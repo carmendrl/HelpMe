@@ -19,6 +19,9 @@ export class LoginComponent implements OnInit {
 
   private currentUser : User;
 
+  private time: number = 0;
+  private interval;
+
   constructor(private userService : UserService, private router : Router) {
     this.failedLogin = false;
 
@@ -60,12 +63,11 @@ export class LoginComponent implements OnInit {
       }
     )
   }
-  time: number = 0;
-  interval;
+
 
   startTimer() {
     this.play = true;
-    this.interval = setInterval(()) => {
+    this.interval = setInterval(() => {
       this.time++;
     }, 1000)
   }
