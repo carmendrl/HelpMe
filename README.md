@@ -12,7 +12,7 @@
 
 * Install RVM
 
-        $ \curl -sSL https://get.rvm.io | bash -s stable
+        $ curl -sSL https://get.rvm.io | bash -s stable
         $ source ~/.rvm/scripts/rvm
         $ rvm install ruby-2.4.2
 
