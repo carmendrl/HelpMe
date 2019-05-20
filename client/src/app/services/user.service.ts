@@ -11,7 +11,7 @@ import { map, catchError, tap } from 'rxjs/operators';
 
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
-
+import { delay } from 'rxjs/operators';
 
 class UserResponseAttributes {
   public email : string;
@@ -62,7 +62,7 @@ export class UserService {
     };
 
     return this.httpClient.post<UserResponseData>(url, body).pipe(
-      delay (5000)
+      delay(20000),
       tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
       map(r => {
         return true
