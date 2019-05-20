@@ -7,11 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { of } from 'rxjs/observable/of';
 import { Observer } from 'rxjs/Observer';
-import { map, catchError, tap } from 'rxjs/operators';
+import { map, catchError, tap, delay } from 'rxjs/operators';
 
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
-import { delay } from 'rxjs/operators';
+
 
 class UserResponseAttributes {
   public email : string;

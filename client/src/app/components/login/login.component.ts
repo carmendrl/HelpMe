@@ -5,8 +5,6 @@ import { UserService } from '../../services/user.service';
 
 import { User } from '../../models/user.model';
 
-//import { timer } from 'rxjs
-//import { Observable} from 'rxjs/Rx';
 import { timer } from 'rxjs/observable/timer';
 
 @Component({
@@ -55,7 +53,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() : void {
-    //stimer();
+
     this.userService.login(this.emailAddress, this.password).subscribe(
       response => this.handleLoginResponse(response)
     );
