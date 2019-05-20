@@ -1,46 +1,50 @@
 Rails.application.routes.draw do
-  mount_devise_token_auth_for "User", at: "users", controllers: {
-    registrations: "registrations",
-    sessions: "sessions"
-  }
 
-  devise_scope :user do
-    get "system/users/:user_id", to: "registrations#show", as: :user
-    post "system/users/promote", to: "registrations#promote", as: :promote
-    post "system/users/demote", to: "registrations#demote", as: :demote
-  end
-  
-  resources :lab_sessions do
-    delete "leave", on: :member, to: "lab_session_memberships#destroy"
-    
-    resources :questions do
-      member do
-        get "claim"
-        post "assign"
+	scope :api do
+	  mount_devise_token_auth_for "User", at: "users", controllers: {
+	    registrations: "registrations",
+	    sessions: "sessions"
+	  }
+	
+	  devise_scope :user do
+	    get "system/users/:user_id", to: "registrations#show", as: :user
+	    post "system/users/promote", to: "registrations#promote", as: :promote
+	    post "system/users/demote", to: "registrations#demote", as: :demote
+	  end
 
-        # Tags
-        get "tags"
-        post "tags", to: "questions#add_tag"
-        delete "tags/:tag", to: "questions#remove_tag"
-      end
 
-      resource :askers
-      resource :answer
-    end
-  end
-  post "lab_sessions/join/:token", to: "lab_session_memberships#create"
-  
-  resources :courses do
-    member do
-      get "tags"
-    end
+	  resources :lab_sessions do
+	    delete "leave", on: :member, to: "lab_session_memberships#destroy"
 
-    scope module: :courses do
-      resources :students
-    end
-  end
+	    resources :questions do
+	      member do
+	        get "claim"
+	        post "assign"
 
-  resources :tags, only: :index
+	        # Tags
+	        get "tags"
+	        post "tags", to: "questions#add_tag"
+	        delete "tags/:tag", to: "questions#remove_tag"
+	      end
 
-  root to: "root#index"
+	      resource :askers
+	      resource :answer
+	    end
+	  end
+	  post "lab_sessions/join/:token", to: "lab_session_memberships#create"
+
+	  resources :courses do
+	    member do
+	      get "tags"
+	    end
+
+	    scope module: :courses do
+	      resources :students
+	    end
+	  end
+
+	  resources :tags, only: :index
+
+	  root to: "root#index"
+	end
 end

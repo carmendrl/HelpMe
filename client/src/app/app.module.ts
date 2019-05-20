@@ -24,8 +24,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { StartSessionComponent } from './components/start-session/start-session.component';
 
-// const Server = 'http://helpme-backend-api.herokuapp.com';
-const Server = 'http://localhost:3000';
+const Server = '/api';
 
 @NgModule({
   declarations: [
