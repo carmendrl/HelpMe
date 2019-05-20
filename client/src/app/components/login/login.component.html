@@ -33,12 +33,12 @@
 
   </form>
 
-<div *ngIf="(this.time > 0 && this.time < 5)">
+<div *ngIf="(this.time > 0 && this.time <= 5)">
   <div class="alert alert-primary" role="alert">
     We are contacting the server.
   </div>
 </div>
-<div *ngIf="(this.time > 5 && this.time < 15)">
+<div *ngIf="(this.time > 5 && this.time <= 15)">
   <div class="alert alert-primary" role="alert">
     Thank you for your patience. We are still trying to contact the server.
   </div>

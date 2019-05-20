@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { of } from 'rxjs/observable/of';
 import { Observer } from 'rxjs/Observer';
-import { map, catchError, tap, delay } from 'rxjs/operators';
+import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
@@ -62,7 +62,8 @@ export class UserService {
     };
 
     return this.httpClient.post<UserResponseData>(url, body).pipe(
-      delay(20000),
+      //timeout(5000), //possible other way to have login delay messsage possibly displayed.
+      //delay(20000), //This is here to test for login delay messages
       tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
       map(r => {
         return true

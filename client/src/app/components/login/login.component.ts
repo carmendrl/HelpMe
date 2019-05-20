@@ -23,8 +23,7 @@ export class LoginComponent implements OnInit {
   private currentUser : User;
 
   private time: number = 0;
-  private interval;
-  private play;
+
 
 
 
@@ -74,6 +73,4 @@ loginTimer(){
   const subscribe = source.subscribe(val => this.time=val);
 }
 
-stopTimer(){
-    this.subscription.unsubscribe();
 }
