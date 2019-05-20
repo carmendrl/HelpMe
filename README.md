@@ -2,7 +2,13 @@
 
 ## [View API Documentation](APIDOC.md)
 
-## Setting up the Project
+# Setting up the Project
+
+* Clone the Repo
+
+        $ git clone https://your_username@bitbucket.org/hopecollegecs/help-me-web.git
+
+##  Setting up the backend
 
 * Install RVM
 
@@ -10,6 +16,7 @@
         $ source ~/.rvm/scripts/rvm
         $ rvm install ruby-2.4.2
 
+* Make sure [Homebrew](https://brew.sh/) is installed
 * Install Postgres
 
         $ brew install postgresql
@@ -20,20 +27,33 @@
 
         $ gem install rails
 
-* Clone the Repo
-
-        $ git clone https://your_username@bitbucket.org/hopecollegecs/backend-api.git
-
 * Set up the database
 
         $ bundle install
         $ rake db:setup
 
-## Running Tests
+### Running Tests
 
     $ rake
 
-## Running a local Server
+### Running a local Server
 
     $ rails server
 
+##  Setting up the front end
+
+All of the front-end code is located in the `client` folder; the contents of this folder follow a standard Angular application structure.
+
+*  Install the Angular CLI tools by following the instructions in [the Angular Getting Started Guide](https://angular.io/guide/quickstart).  Just install the prerequisites and the Angular CLI tools.
+
+*  Change into the `client` folder
+
+		$  cd client
+
+*  Install dependencies
+
+		$  npm install
+
+*  Start the angular server
+
+		$  ng serve --proxy-config proxy.conf.json
