@@ -58,4 +58,18 @@ export class LoginComponent implements OnInit {
       }
     )
   }
+  time: number = 0;
+  interval;
+
+  startTimer() {
+    this.play = true;
+    this.interval = setInterval(()) => {
+      this.time++;
+    }, 1000)
+  }
+
+  pauseTimer() {
+    this.play = false;
+    clearInterval(this.interval);
+  }
 }
