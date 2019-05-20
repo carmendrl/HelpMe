@@ -68,8 +68,9 @@ export class LoginComponent implements OnInit {
     }, 1000)
   }
 
-  pauseTimer() {
+  stopTimer() {
     this.play = false;
     clearInterval(this.interval);
+    this.time = 0;
   }
 }
