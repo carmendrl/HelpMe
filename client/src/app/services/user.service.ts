@@ -62,6 +62,7 @@ export class UserService {
     };
 
     return this.httpClient.post<UserResponseData>(url, body).pipe(
+      delay (5000)
       tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
       map(r => {
         return true

@@ -5,6 +5,8 @@ import { UserService } from '../../services/user.service';
 
 import { User } from '../../models/user.model';
 
+import { timer } from 'rxjs';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,6 +20,10 @@ export class LoginComponent implements OnInit {
   private failedLogin : boolean;
 
   private currentUser : User;
+
+  private time: number = 0;
+  private interval;
+  private play;
 
   constructor(private userService : UserService, private router : Router) {
     this.failedLogin = false;
@@ -44,9 +50,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() : void {
+    startTimer();
     this.userService.login(this.emailAddress, this.password).subscribe(
       response => this.handleLoginResponse(response)
     );
+    stopTimer();
   }
 
   doLogout() : void {
@@ -58,4 +66,22 @@ export class LoginComponent implements OnInit {
       }
     )
   }
+
+timer(){
+  const source = timer(5000,5000)
+  const subscribe = source.subscribe(val => this.time=val)
+}
+
+  // startTimer() {
+  //   this.play = true;
+  //   this.interval = setInterval(() => {
+  //     this.time++;
+  //   }, 1000)
+  // }
+  //
+  // stopTimer() {
+  //   this.play = false;
+  //   clearInterval(this.interval);
+  //   this.time = 0;
+  // }
 }
