@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
 
   private time: number = 0;
   private interval;
+  private play;
 
   constructor(private userService : UserService, private router : Router) {
     this.failedLogin = false;
