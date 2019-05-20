@@ -1,6 +1,6 @@
 <div [ngSwitch]="currentUser.Username">
 
-  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit()" >
+  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" >
     <div class="row form-group">
       <div class="col-12 col-sm-2">
         <label for="Email">Email Address</label>
@@ -32,14 +32,21 @@
     </div>
 
   </form>
-<div *ngIf="this.time > 0">
+
+<div *ngIf="(this.time > 0 && this.time <= 5)">
   <div class="alert alert-primary" role="alert">
     We are contacting the server.
   </div>
 </div>
-<div *ngIf="this.time > 5000 ">
+<div *ngIf="(this.time > 5 && this.time <= 15)">
   <div class="alert alert-primary" role="alert">
     Thank you for your patience. We are still trying to contact the server.
+  </div>
+</div>
+
+<div *ngIf="(this.time > 15)">
+  <div class="alert alert-primary" role="alert">
+    There has been a problem contacting the server. Pleases try again later.
   </div>
 </div>
 
