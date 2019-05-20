@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() : void {
+    startTimer();
     this.userService.login(this.emailAddress, this.password).subscribe(
       response => this.handleLoginResponse(response)
     );
