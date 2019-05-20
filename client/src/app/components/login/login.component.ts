@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.emailAddress, this.password).subscribe(
       response => this.handleLoginResponse(response)
     );
+    stopTimer();
   }
 
   doLogout() : void {
