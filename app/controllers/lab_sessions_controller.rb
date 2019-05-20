@@ -3,7 +3,7 @@ class LabSessionsController < ApplicationController
   before_action :find_lab_session!, except: [:index, :create]
 
   def index
-    render json: current_user.lab_sessions, each_serializer: LabSessionSerializer
+    render json: current_user.lab_sessions, each_serializer: LabSessionSerializer, include: ['course', 'course.instructor']
   end
 
   def show
