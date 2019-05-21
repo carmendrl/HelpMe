@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 
+
 class LabsessionResponseAttributes {
   public description : string;
   public token : string;
@@ -128,6 +129,7 @@ export class LabSessionService {
      }
     return sessions;
   }
+
 
     private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
         let session = new LabSession(s.Description, s.StartDate, s.EndDate, new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
