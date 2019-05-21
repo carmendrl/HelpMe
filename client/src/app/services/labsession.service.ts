@@ -96,10 +96,8 @@ export class LabSessionService {
 
     private updateLabsessionsFromResponse(r : UserResponse) {
         let session = new Labsession();
-        session._description = r._description;
-        user._startDate = r._startDate;
-        user._endDate = r._endDate;
-        user._course = r._course;
-        user.__course.professor = r._course.professor;
+        session.description = r.description;
+        session.id = r.id;
+        
     }
 }
