@@ -102,17 +102,21 @@ export class LabSessionService {
     private buildCreateLabsessionBodyFromSession ( s : LabSession ) {
       return {
         description : s.description,
-        course_id : s.course_id
+        start_date : s.startDate,
+        end_date : s.endDate,
+        course : s.course,
+
       };
     }
 
     private updateLabsessionsFromResponse(r : LabsessionResponse) {
         let session = new LabSession();
-        session.description = r.Description;
-        session.id = r.Id;
+        session.Description = r.Description;
+        session.Id = r.Id;
         this._currentSessions$.next(session);
 
     }
+<<<<<<< HEAD
 
 
     //Format if we wish to creat more specific error message
@@ -126,6 +130,18 @@ export class LabSessionService {
     //   }
     //   return of(false);
     // }
+=======
+    private handleCreateAccountError (error) : Observable<boolean> {
+      if (error instanceof HttpErrorResponse) {
+        let httpError = <HttpErrorResponse> error;
+        let errorMessage : string = "The account was not created for the following reasons:";
+        let reasons = error.error.errors.full_messages.join(", ");
+        console.log(reasons);
+      }
+      return of(false);
+    }
+
+>>>>>>> d6db1b1f92a7519cc7a0e6ccbc513b3b8440b71c
 
     private handleError (error) : Observable<boolean> {
       return of(false);
