@@ -10,6 +10,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 
+
 class LabsessionResponseAttributes {
   public description : string;
   public token : string;
@@ -105,12 +106,12 @@ export class LabSessionService {
   private createLabsessionsArray(object: Object[]) : LabSession[]{
     let sessions = new Array<LabSession>();
      for(let obj in object){
-       sessions.push(this.buildCreateLabsessionFromJson(obj));
+       sessions.push(this.buildCreateLabsessionFromJson(new LabsessionResponse(obj)));
      }
     return sessions;
   }
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponse) : LabSession {
         let session = new LabSession();
         session.description = s.Description;
         session.start_date = s.StartDate;
