@@ -81,11 +81,11 @@ export class LabSessionService {
   }
 
   get labSessions() : Subject<LabSession> {
-        // let url : string =`${this.apiHost}/lab_sessions/`;
-        // return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-        //   map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
-        //   catchError(error => this.handleError(error))
-        // );
+        let url : string =`${this.apiHost}/lab_sessions/`;
+        return this.httpClient.get<LabsessionResponseData>(url, body).pipe(
+          map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
+           catchError(error => this.handleError(error))
+         );
         return this._currentSessions$;
   }
 
@@ -113,6 +113,9 @@ export class LabSessionService {
         this._currentSessions$.next(session);
 
     }
+
+
+    //Format if we wish to creat more specific error message
     // private handleCreateAccountError (error) : Observable<boolean> {
     //   debugger
     //   if (error instanceof HttpErrorResponse) {
