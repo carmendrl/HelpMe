@@ -71,33 +71,25 @@ export class LabSessionService {
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
-    this._currentSessions$ = new ReplaySubject<LabSessions> (1);
+    this.sessions = this.labSessions();
     this.apiHost = host;
-    this.noUser = new LabSession();
-    this.noUser.description = "";
+
   }
 
   get labSessions() : Observable<LabSession[]> {
-    //return Observable.of(this.sessions);
-
-    //Start added interaction with server code
         let url : string =`${this.apiHost}/lab_sessions/`;
-        //all below needs to be changed (jjust copied from user.service)
 
-        return this.httpClient.post<UserResponseData>(url, body).pipe(
+        return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
 
-          tap(r => (new UserResponse(r["data"]))),
-          map(r => {
-            return true
-          }),
+          tap(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
           catchError(error => this.handleError(error))
         );
   }
 
-    private updateLabsessionsFromResponse(r : UserResponse) {
+    private updateLabsessionsFromResponse(r : LabsessionResponse) {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
-        
+
     }
 }
