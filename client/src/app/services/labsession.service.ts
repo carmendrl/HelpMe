@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
-
+import { API_SERVER } from '../app.config';
+import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
-
+import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 
 @Injectable()
@@ -16,7 +17,7 @@ export class LabSessionService {
   private sessions : LabSession[];
   private apiHost : string;
 
-  constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService) {
+  constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
     this.sessions = [
       _modelFactory.labSession1, _modelFactory.labSession2
