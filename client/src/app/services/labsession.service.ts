@@ -79,11 +79,9 @@ export class LabSessionService {
   get CurrentSessions$() : Observable<Labsessions> {
     return this._currentSession$;
   }
-  
+
   get labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions/`;
-
-<<<<<<< HEAD
         return this.httpClient.post<UserResponseData>(url).pipe(
           //timeout(5000), //possible other way to have login delay messsage possibly displayed.
           //delay(20000), //This is here to test for login delay messages
@@ -91,11 +89,8 @@ export class LabSessionService {
           map(r => {
             return true
           }),
-=======
         return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-
           map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
->>>>>>> 372ecf6372a7b59a711309f087a45f412065d1ad
           catchError(error => this.handleError(error))
         );
   }
@@ -104,7 +99,6 @@ export class LabSessionService {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
-<<<<<<< HEAD
         this._currentSessions$.next(session);
 
     }
@@ -118,9 +112,6 @@ export class LabSessionService {
       }
       return of(false);
     }
-=======
-        
->>>>>>> 372ecf6372a7b59a711309f087a45f412065d1ad
 
     private handleError (error) : Observable<boolean> {
       return of(false);
