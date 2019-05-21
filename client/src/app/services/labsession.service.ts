@@ -99,10 +99,10 @@ export class LabSessionService {
 //     return this._currentSessions$;
 //   }
 //
-  labSessions() : LabSession[] {
+  labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions`;
         return this.httpClient.get(url).pipe(
-          map(r => r = createLabsessionsArray(r)),
+          map(r => this.createLabsessionsArray(r["data"])),
           catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
@@ -118,22 +118,22 @@ export class LabSessionService {
   //   );
   // }
   //
-  private createLabsessionsArray(object: Object[]) : Labsessions[]{
-    sessions : LabSessions[];
-    for(let obj in object){
-      sessions.push(buildCreateLabsessionFromJson(obj));
-    }
+  private createLabsessionsArray(object: Object[]) : LabSession[]{
+    let sessions = new Array<LabSession>();
+     for(let obj in object){
+       sessions.push(this.buildCreateLabsessionFromJson(obj));
+     }
     return sessions;
   }
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse ) {
-      return {
-        description : s.description,
-        start_date : s.startDate,
-        end_date : s.endDate,
-        course : ,
-
-      };
+    private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
+        let session = new LabSession();
+        session.description = s.Description;
+        session.start_date = s.StartDate;
+        session.end_date = s.EndDate;
+        session.course = (new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
+        "ryanmcfall-prof","Ryan", "McFall","professors","cd11850c-4dbb-4e71-a6c3-e14ec69847ae","password"))));
+        return session;
     }
   //
   //   private updateLabsessionsFromResponse(r : LabsessionResponse) {
