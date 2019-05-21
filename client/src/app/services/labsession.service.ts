@@ -39,6 +39,10 @@ class LabsessionResponseUsersData {
 }
 
 class LabsessionResponseCourse {
+  public data: LabsessionResponseCourseData;
+}
+
+class LabsessionResponseCourseData {
   public id: string;
   public type: string;
 }
@@ -65,6 +69,18 @@ class LabsessionResponse {
   get Rdata() : string[] { return this.data.relationships.questions["data"]}
   get userId() : string {return this.data.relationships.users.data["id"]}
   get userType() : string { return this.data.relationships.users.data["type"]}
+}
+
+class IncludedCourseObjResponse{
+  constructor (private data: IncludedObjResponseData )
+}
+
+class IncludedCourseObjResponseData{
+  public type : string;
+  public id : string;
+  public attributes: ;
+  public relationships : ;
+
 }
 
 @Injectable()
