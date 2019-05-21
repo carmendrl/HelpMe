@@ -111,7 +111,6 @@ export class LabSessionService {
 
     private updateLabsessionsFromResponse(r : LabsessionResponse) {
         let session = new LabSession();
-<<<<<<< HEAD
         session.Description = r.Description;
         session.Id = r.Id;
         this._currentSessions$.next(session);
@@ -126,7 +125,6 @@ export class LabSessionService {
       }
       return of(false);
     }
-=======
         session.description = r.Description;
         session.id = r.Id;
         this._currentSessions$.next(session);
@@ -142,7 +140,6 @@ export class LabSessionService {
     //   }
     //   return of(false);
     // }
->>>>>>> 2a8bf847da7cdd813b1e8a6a66bae6dff311dd30
 
     private handleError (error) : Observable<boolean> {
       return of(false);
