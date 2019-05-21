@@ -76,36 +76,30 @@ export class LabSessionService {
 
   }
 
-  get CurrentSessions$() : Observable<Labsessions> {
-    return this._currentSession$;
+  get CurrentSessions$() : Observable<LabSession> {
+    return this._currentSessions$;
   }
 
-  get labSessions() : Observable<LabSession[]> {
-        let url : string =`${this.apiHost}/lab_sessions/`;
-        return this.httpClient.post<UserResponseData>(url).pipe(
-          //timeout(5000), //possible other way to have login delay messsage possibly displayed.
-          //delay(20000), //This is here to test for login delay messages
-          tap(r => this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"]))),
-          map(r => {
-            return true
-          }),
-        return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-          map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
-          catchError(error => this.handleError(error))
-        );
+  get labSessions() : Subject<LabSession> {
+        // let url : string =`${this.apiHost}/lab_sessions/`;
+        // return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
+        //   map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
+        //   catchError(error => this.handleError(error))
+        // );
+        return this._currentSessions$;
   }
 
-  createLabsessions(session : Labsession) : Observable<boolean> {
+  createLabsessions(session : LabSession) : Observable<boolean> {
     let url : string = `${this.apiHost}/lab_sessions`;
     let body = this.buildCreateLabsessionBodyFromSession (session);
-    return this.httpClient.post<UserResponseData>(url, body).pipe(
+    return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
       tap(r => this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"]))),
       map(r => true ),
       catchError(error => this.handleCreateAccountError(error))
     );
   }
 
-    private buildCreateLabsessionBodyFromSession ( s : Labsession ) {
+    private buildCreateLabsessionBodyFromSession ( s : LabSession ) {
       return {
         description : s.description,
         course_id : s.course_id
@@ -113,7 +107,7 @@ export class LabSessionService {
     }
 
     private updateLabsessionsFromResponse(r : LabsessionResponse) {
-        let session = new Labsession();
+        let session = new LabSession();
         session.description = r.description;
         session.id = r.id;
         this._currentSessions$.next(session);
