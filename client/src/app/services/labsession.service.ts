@@ -73,9 +73,10 @@ export class LabSessionService {
 //     return this._currentSessions$;
 //   }
 //
-  labSessions() : Observable<LabSession[]> {
+  labSessions() : LabSession[] {
         let url : string =`${this.apiHost}/lab_sessions`;
-        return this.httpClient.get<LabSession[]>(url).pipe(
+        return this.httpClient.get(url).pipe(
+          map(r => r = createLabsessionsArray(r)),
           catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
@@ -91,15 +92,23 @@ export class LabSessionService {
   //   );
   // }
   //
-  //   private buildCreateLabsessionBodyFromSession ( s : LabSession ) {
-  //     return {
-  //       description : s.description,
-  //       start_date : s.startDate,
-  //       end_date : s.endDate,
-  //       course : s.course,
-  //
-  //     };
-  //   }
+  private createLabsessionsArray(object: Object[]) : Labsessions[]{
+    sessions : LabSessions[];
+    for(let obj in object){
+      sessions.push(buildCreateLabsessionFromJson(obj));
+    }
+    return sessions;
+  }
+
+    private buildCreateLabsessionFromJson(s: Object) : Labsession {
+      return {
+        description : s.description,
+        start_date : s.startDate,
+        end_date : s.endDate,
+        course : s.course,
+
+      };
+    }
   //
   //   private updateLabsessionsFromResponse(r : LabsessionResponse) {
   //       let session = new LabSession();
