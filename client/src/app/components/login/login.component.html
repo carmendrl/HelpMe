@@ -33,18 +33,18 @@
 
   </form>
 
-<div *ngIf="(this.time > 0 && this.time <= 5)">
+<div *ngIf="(this.time > 0 && this.time <= 5 && !failedLogin)">
   <div class="alert alert-primary" role="alert">
     We are contacting the server.
   </div>
 </div>
-<div *ngIf="(this.time > 5 && this.time <= 15)">
+<div *ngIf="(this.time > 5 && this.time <= 15 && !failedLogin)">
   <div class="alert alert-primary" role="alert">
     Thank you for your patience. We are still trying to contact the server.
   </div>
 </div>
 
-<div *ngIf="(this.time > 15)">
+<div *ngIf="(this.time > 15 && !failedLogin)">
   <div class="alert alert-primary" role="alert">
     There has been a problem contacting the server. Pleases try again later.
   </div>

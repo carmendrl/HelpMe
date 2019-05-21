@@ -82,9 +82,14 @@ export class LabSessionService {
 
   get labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions/`;
-
+        return this.httpClient.post<UserResponseData>(url).pipe(
+          //timeout(5000), //possible other way to have login delay messsage possibly displayed.
+          //delay(20000), //This is here to test for login delay messages
+          tap(r => this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"]))),
+          map(r => {
+            return true
+          }),
         return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-
           map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
           catchError(error => this.handleError(error))
         );
