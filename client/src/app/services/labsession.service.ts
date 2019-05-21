@@ -52,13 +52,13 @@ class LabsessionResponse {
 	}
   get Type() : string { return this.data.type }
   get Id() : string { return this.data.id }
-  get Description() : string { return this.data.attributes.description }
-  get Token() : string { return this.data.attributes.token }
-  get ActiveStatus() : string { return this.data.attributes.activeStatus }
-  get CourseId() : string { return this.data.attributes.courseId }
-  get questionData() : string[] { return this.data.relationships.questions.data}
-  get userId() : string {return this.data.relationships.users.data.id}
-  get userType() : string { return this.data.relationships.users.data.type}
+  get Description() : string { return this.data.attributes["description"] }
+  get Token() : string { return this.data.attributes["token"] }
+  get ActiveStatus() : boolean { return this.data.attributes["active"] }
+  get CourseId() : string { return this.data.attributes["course-id"]}
+  get Rdata() : string[] { return this.data.relationships.questions["data"]}
+  get userId() : string {return this.data.relationships.users.data["id"]}
+  get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
 @Injectable()
@@ -83,6 +83,7 @@ export class LabSessionService {
   get labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions/`;
 
+<<<<<<< HEAD
         return this.httpClient.post<UserResponseData>(url).pipe(
           //timeout(5000), //possible other way to have login delay messsage possibly displayed.
           //delay(20000), //This is here to test for login delay messages
@@ -90,6 +91,11 @@ export class LabSessionService {
           map(r => {
             return true
           }),
+=======
+        return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
+
+          map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
+>>>>>>> 372ecf6372a7b59a711309f087a45f412065d1ad
           catchError(error => this.handleError(error))
         );
   }
@@ -98,6 +104,7 @@ export class LabSessionService {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
+<<<<<<< HEAD
         this._currentSessions$.next(session);
 
     }
@@ -111,6 +118,9 @@ export class LabSessionService {
       }
       return of(false);
     }
+=======
+        
+>>>>>>> 372ecf6372a7b59a711309f087a45f412065d1ad
 
     private handleError (error) : Observable<boolean> {
       return of(false);
