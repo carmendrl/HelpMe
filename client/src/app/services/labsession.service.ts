@@ -12,6 +12,30 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { Subject } from 'rxjs/Subject';
 
+class UserResponseAttributes {
+  public description : string;
+  public token : string;
+  public activeStatus : boolean;
+  public course_id : string;
+}
+
+class UserResponseData {
+  public type : string;
+  public id : string;
+  public attributes: UserResponseAttributes;
+}
+
+class UserResponse {
+  constructor (private data : UserResponseData) {
+	}
+  get Type() : string { return this.data.type }
+  get Id() : string { return this.data.id }
+  get Email() : string { return this.data.attributes.email }
+  get Username() : string { return this.data.attributes.username }
+  get FirstName () : string { return this.data.attributes["first-name"] }
+  get LastName () : string { return this.data.attributes["last-name"] }
+}
+
 @Injectable()
 export class LabSessionService {
 
