@@ -11,6 +11,8 @@ import { LabSession } from '../models/lab_session.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 
 class LabsessionResponseAttributes {
   public description : string;
@@ -63,12 +65,15 @@ class LabsessionResponse {
 export class LabSessionService {
 
   private sessions : LabSession[];
+  private _currentSessions$: Subject<LabSession>;
   private apiHost : string;
+  private noSession : LabSession;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
     this.sessions = this.labSessions();
     this.apiHost = host;
+
   }
 
   get labSessions() : Observable<LabSession[]> {
