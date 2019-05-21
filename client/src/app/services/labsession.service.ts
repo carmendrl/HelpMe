@@ -12,7 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-
+import { of } from 'rxjs/observable/of';
 
 class LabsessionResponseAttributes {
   public description : string;
@@ -76,12 +76,20 @@ export class LabSessionService {
 
   }
 
+  get CurrentSessions$() : Observable<Labsessions> {
+    return this._currentSession$;
+  }
+  
   get labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions/`;
 
-        return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-
-          tap(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
+        return this.httpClient.post<UserResponseData>(url).pipe(
+          //timeout(5000), //possible other way to have login delay messsage possibly displayed.
+          //delay(20000), //This is here to test for login delay messages
+          tap(r => this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"]))),
+          map(r => {
+            return true
+          }),
           catchError(error => this.handleError(error))
         );
   }
@@ -90,6 +98,21 @@ export class LabSessionService {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
+        this._currentSessions$.next(session);
 
+    }
+    private handleCreateAccountError (error) : Observable<boolean> {
+      debugger
+      if (error instanceof HttpErrorResponse) {
+        let httpError = <HttpErrorResponse> error;
+        let errorMessage : string = "The account was not created for the following reasons:";
+        let reasons = error.error.errors.full_messages.join(", ");
+        console.log(reasons);
+      }
+      return of(false);
+    }
+
+    private handleError (error) : Observable<boolean> {
+      return of(false);
     }
 }
