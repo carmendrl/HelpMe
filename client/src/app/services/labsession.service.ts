@@ -15,11 +15,14 @@ class LabsessionResponseAttributes {
   public token : string;
   public activeStatus : boolean;
   public course_id : string;
+  public start_date:string;
+  public end_date:string;
 }
 
 class LabsessionResponseRelationships{
   public questions : LabsessionQuestionsData;
   public users: LabsessionResponseUsers;
+  public course: LabsessionResponseCourse;
 }
 
 class LabsessionQuestionsData{
@@ -32,6 +35,11 @@ class LabsessionResponseUsers {
 
 class LabsessionResponseUsersData {
   public id : string;
+  public type: string;
+}
+
+class LabsessionResponseCourse {
+  public id: string;
   public type: string;
 }
 
@@ -51,6 +59,8 @@ class LabsessionResponse {
   get Description() : string { return this.data.attributes["description"] }
   get Token() : string { return this.data.attributes["token"] }
   get ActiveStatus() : boolean { return this.data.attributes["active"] }
+  get StartDate() : string { return this.data.attributes["start-date"]}
+  get EndDate() : string { return this.data.attributes["end-date"]}
   get CourseId() : string { return this.data.attributes["course-id"]}
   get Rdata() : string[] { return this.data.relationships.questions["data"]}
   get userId() : string {return this.data.relationships.users.data["id"]}
