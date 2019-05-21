@@ -10,12 +10,14 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class LabSessionService {
 
   private sessions : LabSession[];
   private apiHost : string;
+  private _currentSessions$: Subject<User>;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
@@ -25,8 +27,8 @@ export class LabSessionService {
     this.apiHost = host;
   }
 
-  get labSessions() : Observable<Array<LabSession>> {
-    return Observable.of(this.sessions);
+  get labSessions() : Observable<LabSession[]> {
+    //return Observable.of(this.sessions);
 
     //Start added interaction with server code
         let url : string =`${this.apiHost}/lab_sessions/`;
@@ -34,11 +36,20 @@ export class LabSessionService {
 
         return this.httpClient.post<UserResponseData>(url, body).pipe(
 
-          tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
+          tap(r => (new UserResponse(r["data"]))),
           map(r => {
             return true
           }),
           catchError(error => this.handleError(error))
         );
   }
+
+    private updateLabsessionsFromResponse(r : UserResponse) {
+        let session = new Labsession();
+        session._description = r._description;
+        user._startDate = r._startDate;
+        user._endDate = r._endDate;
+        user._course = r._course;
+        user.__course.professor = r._course.professor;
+    }
 }
