@@ -50,13 +50,13 @@ class LabsessionResponse {
 	}
   get Type() : string { return this.data.type }
   get Id() : string { return this.data.id }
-  get Description() : string { return this.data.attributes.description }
-  get Token() : string { return this.data.attributes.token }
-  get ActiveStatus() : string { return this.data.attributes.activeStatus }
-  get CourseId() : string { return this.data.attributes.courseId }
-  get Rdata() : string[] { return this.data.relationships.questions.data}
-  get userId() : string {return this.data.relationships.users.data.id}
-  get userType() : string { return this.data.relationships.users.data.type}
+  get Description() : string { return this.data.attributes["description"] }
+  get Token() : string { return this.data.attributes["token"] }
+  get ActiveStatus() : boolean { return this.data.attributes["active"] }
+  get CourseId() : string { return this.data.attributes["course-id"]}
+  get Rdata() : string[] { return this.data.relationships.questions["data"]}
+  get userId() : string {return this.data.relationships.users.data["id"]}
+  get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
 @Injectable()
@@ -76,7 +76,7 @@ export class LabSessionService {
 
         return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
 
-          tap(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
+          map(r => (this.updateLabsessionsFromResponse(new LabsessionResponse(r["data"])))),
           catchError(error => this.handleError(error))
         );
   }
@@ -85,6 +85,7 @@ export class LabSessionService {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
+        this.
 
     }
 }
