@@ -11,6 +11,8 @@ import { LabSession } from '../models/lab_session.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+
 
 class LabsessionResponseAttributes {
   public description : string;
@@ -38,7 +40,6 @@ class LabsessionResponseUsersData {
 }
 
 
-
 class LabsessionResponseData {
   public type : string;
   public id : string;
@@ -55,7 +56,7 @@ class LabsessionResponse {
   get Token() : string { return this.data.attributes.token }
   get ActiveStatus() : string { return this.data.attributes.activeStatus }
   get CourseId() : string { return this.data.attributes.courseId }
-  get Rdata() : string[] { return this.data.relationships.questions.data}
+  get questionData() : string[] { return this.data.relationships.questions.data}
   get userId() : string {return this.data.relationships.users.data.id}
   get userType() : string { return this.data.relationships.users.data.type}
 }
@@ -64,14 +65,16 @@ class LabsessionResponse {
 export class LabSessionService {
 
   private sessions : LabSession[];
+  private _currentSessions$: Subject<LabSession>;
   private apiHost : string;
+  private noSession : LabSession;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
-    this.sessions = [
-      _modelFactory.labSession1, _modelFactory.labSession2
-    ];
+    this._currentSessions$ = new ReplaySubject<LabSessions> (1);
     this.apiHost = host;
+    this.noUser = new LabSession();
+    this.noUser.description = "";
   }
 
   get labSessions() : Observable<LabSession[]> {
