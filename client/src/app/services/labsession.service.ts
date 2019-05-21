@@ -125,21 +125,7 @@ export class LabSessionService {
       }
       return of(false);
     }
-        session.description = r.Description;
-        session.id = r.Id;
-        this._currentSessions$.next(session);
 
-    }
-    // private handleCreateAccountError (error) : Observable<boolean> {
-    //   debugger
-    //   if (error instanceof HttpErrorResponse) {
-    //     let httpError = <HttpErrorResponse> error;
-    //     let errorMessage : string = "The account was not created for the following reasons:";
-    //     let reasons = error.error.errors.full_messages.join(", ");
-    //     console.log(reasons);
-    //   }
-    //   return of(false);
-    // }
 
     private handleError (error) : Observable<boolean> {
       return of(false);
