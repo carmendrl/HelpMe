@@ -80,7 +80,7 @@ export class LabSessionService {
   labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions`;
         return this.httpClient.get<LabSession[]>(url).pipe(
-          catchError(error => this.handleError(error))
+          catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
   }
@@ -122,7 +122,18 @@ export class LabSessionService {
       return of(false);
     }
 
-    private handleError (error) : Observable<boolean> {
-      return of(false);
-    }
+    // private handleError (error) : Observable<boolean> {
+    //   return of(false);
+    // }
+    private handleError<T> (operation = 'operation', result?: T) {
+  return (error: any): Observable<T> => {
+
+    // TODO: send the error to remote logging infrastructure
+    console.error(error); // log to console instead
+
+
+    // Let the app keep running by returning an empty result.
+    return of(result as T);
+  };
+}
 }
