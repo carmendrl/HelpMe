@@ -12,28 +12,32 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { Subject } from 'rxjs/Subject';
 
-class UserResponseAttributes {
+class LabsessionResponseAttributes {
   public description : string;
   public token : string;
   public activeStatus : boolean;
   public course_id : string;
 }
 
-class UserResponseData {
+class LabsessionResponseData {
   public type : string;
   public id : string;
-  public attributes: UserResponseAttributes;
+  public attributes: LabsessionResponseAttributes;
+  public relationships : LabsessionResponseRelationships;
 }
 
-class UserResponse {
-  constructor (private data : UserResponseData) {
+class LabsessionResponse {
+  constructor (private data : LabsessionResponseData) {
 	}
   get Type() : string { return this.data.type }
   get Id() : string { return this.data.id }
-  get Email() : string { return this.data.attributes.email }
-  get Username() : string { return this.data.attributes.username }
-  get FirstName () : string { return this.data.attributes["first-name"] }
-  get LastName () : string { return this.data.attributes["last-name"] }
+  get Description() : string { return this.data.attributes.description }
+  get Token() : string { return this.data.attributes.token }
+  get ActiveStatus() : string { return this.data.attributes.activeStatus }
+  get CourseId() : string { return this.data.attributes.courseId }
+  get Rdata() : string[] { return this.data.relationships.questions.data}
+  get userId() : string {return this.data.relationships.users.data.id}
+  get userType() : string { return this.data.relationships.users.data.type}
 }
 
 @Injectable()
@@ -41,7 +45,6 @@ export class LabSessionService {
 
   private sessions : LabSession[];
   private apiHost : string;
-  private _currentSessions$: Subject<User>;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
 
