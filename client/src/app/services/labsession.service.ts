@@ -90,7 +90,7 @@ export class LabSessionService {
         let session = new Labsession();
         session.description = r.description;
         session.id = r.id;
-        this.
+        
 
     }
 }
