@@ -18,7 +18,7 @@ export class StudentDashboardComponent implements OnInit {
   constructor(private labSessionService : LabSessionService, private questionService: QuestionService) { }
 
   ngOnInit() {
-    this.labSessionService.labSessions.subscribe (
+    this.labSessionService.labSessions().subscribe (
       sessions => this.sessions = sessions
     );
 

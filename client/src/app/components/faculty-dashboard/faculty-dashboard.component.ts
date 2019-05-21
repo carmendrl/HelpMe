@@ -16,7 +16,7 @@ export class FacultyDashboardComponent implements OnInit {
   constructor(private labSessionService : LabSessionService) { }
 
   ngOnInit() {
-    this.labSessionService.labSessions.subscribe(
+    this.labSessionService.labSessions().subscribe(
       sessions => this.pastSessions = sessions
     );
   }
