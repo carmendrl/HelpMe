@@ -52,7 +52,6 @@ class LabsessionResponseCourseData {
 
 
 class LabsessionResponseData {
-  constructor(private)
   public type : string;
   public id : number;
   public attributes: LabsessionResponseAttributes;
@@ -106,7 +105,7 @@ export class LabSessionService {
   labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions`;
         return this.httpClient.get(url).pipe(
-          map(r => this.createLabsessionsArray(new Array<LabsessionResponse>(r["data"]))),
+          map(r => this.createLabsessionsArray(r["data"])),
           catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
@@ -124,8 +123,8 @@ export class LabSessionService {
   //
   private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
     let sessions = new Array<LabSession>();
-     for(let obj in objects){
-       sessions.push(this.buildCreateLabsessionFromJson(new LabsessionResponse(obj)));
+     for(let obj of objects){
+       sessions.push(this.buildCreateLabsessionFromJson(obj));
      }
     return sessions;
   }
