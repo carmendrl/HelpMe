@@ -120,6 +120,8 @@ export class LabSessionService {
       return of(false);
     }
 
+>>>>>>> d6db1b1f92a7519cc7a0e6ccbc513b3b8440b71c
+
     private handleError (error) : Observable<boolean> {
       return of(false);
     }
