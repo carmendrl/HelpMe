@@ -19,6 +19,16 @@ class UserResponseAttributes {
   public course_id : string;
 }
 
+class LabsessionResponseUsers {
+  public data : LabsessionResponseUsersData;
+}
+
+class LabsessionResponseUsersData {
+  public id : string;
+  public type: string;
+}
+
+
 class UserResponseData {
   public type : string;
   public id : string;
