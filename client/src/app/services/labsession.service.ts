@@ -10,53 +10,53 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 
-// class LabsessionResponseAttributes {
-//   public description : string;
-//   public token : string;
-//   public activeStatus : boolean;
-//   public course_id : string;
-// }
-//
-// class LabsessionResponseRelationships{
-//   public questions : LabsessionQuestionsData;
-//   public users: LabsessionResponseUsers;
-// }
-//
-// class LabsessionQuestionsData{
-//   public data : string[];
-// }
-//
-// class LabsessionResponseUsers {
-//   public data : LabsessionResponseUsersData;
-// }
-//
-// class LabsessionResponseUsersData {
-//   public id : string;
-//   public type: string;
-// }
-//
-//
-// class LabsessionResponseData {
-//   public type : string;
-//   public id : string;
-//   public attributes: LabsessionResponseAttributes;
-//   public relationships : LabsessionResponseRelationships;
-// }
-//
-// class LabsessionResponse {
-//   constructor (private data : LabsessionResponseData) {
-// 	}
-//   get Type() : string { return this.data.type }
-//   get Id() : string { return this.data.id }
-//   get Description() : string { return this.data.attributes["description"] }
-//   get Token() : string { return this.data.attributes["token"] }
-//   get ActiveStatus() : boolean { return this.data.attributes["active"] }
-//   get CourseId() : string { return this.data.attributes["course-id"]}
-//   get Rdata() : string[] { return this.data.relationships.questions["data"]}
-//   get userId() : string {return this.data.relationships.users.data["id"]}
-//   get userType() : string { return this.data.relationships.users.data["type"]}
-// }
-//
+class LabsessionResponseAttributes {
+  public description : string;
+  public token : string;
+  public activeStatus : boolean;
+  public course_id : string;
+}
+
+class LabsessionResponseRelationships{
+  public questions : LabsessionQuestionsData;
+  public users: LabsessionResponseUsers;
+}
+
+class LabsessionQuestionsData{
+  public data : string[];
+}
+
+class LabsessionResponseUsers {
+  public data : LabsessionResponseUsersData;
+}
+
+class LabsessionResponseUsersData {
+  public id : string;
+  public type: string;
+}
+
+
+class LabsessionResponseData {
+  public type : string;
+  public id : string;
+  public attributes: LabsessionResponseAttributes;
+  public relationships : LabsessionResponseRelationships;
+}
+
+class LabsessionResponse {
+  constructor (private data : LabsessionResponseData) {
+	}
+  get Type() : string { return this.data.type }
+  get Id() : string { return this.data.id }
+  get Description() : string { return this.data.attributes["description"] }
+  get Token() : string { return this.data.attributes["token"] }
+  get ActiveStatus() : boolean { return this.data.attributes["active"] }
+  get CourseId() : string { return this.data.attributes["course-id"]}
+  get Rdata() : string[] { return this.data.relationships.questions["data"]}
+  get userId() : string {return this.data.relationships.users.data["id"]}
+  get userType() : string { return this.data.relationships.users.data["type"]}
+}
+
 @Injectable()
 export class LabSessionService {
 //
@@ -100,12 +100,12 @@ export class LabSessionService {
     return sessions;
   }
 
-    private buildCreateLabsessionFromJson(s: Object) : Labsession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponse ) {
       return {
         description : s.description,
         start_date : s.startDate,
         end_date : s.endDate,
-        course : s.course,
+        course : ,
 
       };
     }
