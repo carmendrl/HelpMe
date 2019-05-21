@@ -111,7 +111,6 @@ export class LabSessionService {
 
     private updateLabsessionsFromResponse(r : LabsessionResponse) {
         let session = new LabSession();
-<<<<<<< HEAD
         session.Description = r.Description;
         session.Id = r.Id;
         this._currentSessions$.next(session);
@@ -126,23 +125,6 @@ export class LabSessionService {
       }
       return of(false);
     }
-=======
-        session.description = r.Description;
-        session.id = r.Id;
-        this._currentSessions$.next(session);
-
-    }
-    // private handleCreateAccountError (error) : Observable<boolean> {
-    //   debugger
-    //   if (error instanceof HttpErrorResponse) {
-    //     let httpError = <HttpErrorResponse> error;
-    //     let errorMessage : string = "The account was not created for the following reasons:";
-    //     let reasons = error.error.errors.full_messages.join(", ");
-    //     console.log(reasons);
-    //   }
-    //   return of(false);
-    // }
->>>>>>> 2a8bf847da7cdd813b1e8a6a66bae6dff311dd30
 
     private handleError (error) : Observable<boolean> {
       return of(false);
