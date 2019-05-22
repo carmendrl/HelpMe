@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Course } from '../../models/course.model';
+
+import { CourseService } from '../../services/course.service';
+
 
 @Component({
   selector: 'app-start-session',
@@ -7,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class StartSessionComponent implements OnInit {
 
-  constructor() { }
+  constructor(private courseService : CourseService) { }
 
   ngOnInit() {
   }
