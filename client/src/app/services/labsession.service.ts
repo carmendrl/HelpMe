@@ -111,7 +111,7 @@ class IncludedProfessorResponse{
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
   get FristName() : string {return this.data.attributes["first_name"]}
-  get LastName() : string {return this.data.attributes["last_name"]} 
+  get LastName() : string {return this.data.attributes["last_name"]}
 }
 
 class IncludedProfessorResponseData{
@@ -163,21 +163,35 @@ export class LabSessionService {
   //   );
   // }
   //
-  private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
+  private createLabsessionsArray(dataResponses: LabsessionResponse[], includedResponse: IncludedObjResponse) : LabSession[]{
     let sessions = new Array<LabSession>();
-    debugger
-     for(let obj of objects){
-       sessions.push(this.buildCreateLabsessionFromJson(obj));
+    //debugger
+
+    //search for the course information
+    var course = includedResponse.find(function(element) {
+      return element ==="course";
+    });
+
+    //search for the professor information
+    var prof = includedResponse.find(function(element) {
+      return element==="professors";
+    });
+
+    //loop through the labsessions and push them onto an array after reformating
+     for(let response of dataResponses){
+       sessions.push(this.buildCreateLabsessionFromJson(obj, course, prof));
      }
     return sessions;
   }
 
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponse, a: Course, b: User ) : LabSession {
         debugger
         let l = new LabsessionResponse(s);
-        let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course("CSCI","140","Web Design and Implementation","201801",(new User("professor@test.com",
-        "ryanmcfall-prof","Claire", "Lundy"))), l.Id);
+        let c = new Course(a);
+        let p = new User(b);
+
+        let session = new LabSession(l.Description, l.StartDate, l.EndDate, c)), l.Id);
         return session;
     }
 
