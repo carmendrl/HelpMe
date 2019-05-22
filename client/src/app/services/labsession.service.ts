@@ -74,16 +74,46 @@ class LabsessionResponse {
   get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
-class IncludedObjResponse{
+class IncludedCourseResponse{
   constructor (private data: IncludedCourseResponseData){}
 }
 
-class IncludedCourseObjResponseData{
+class IncludedCourseResponseData{
   public type : string;
   public id : string;
-  //public attributes: ;
-  //public relationships : ;
+  public attributes: IncludedCourseResponseAttributes;
+  public relationships : IncludedCourseResponseInstructor;
+}
 
+class IncludedCourseResponseAttributes{
+  public title: string;
+  public subject: string;
+  public number: string;
+  public semester: string;
+}
+
+class IncludedCourseResponseInstructor{
+public data:  IncludedCourseResponseInstructorData;
+}
+
+class IncludedCourseResponseRelationshipsData{
+public id:  number;
+public type: string;
+
+}
+
+class IncludedProfessorResponseData{
+  public id : number;
+  public type : string;
+  public attributes: IncludedProfessorAttributes;
+}
+
+class IncludedProfessorAttributes{
+  public email: string;
+  public username: string;
+  public role: string;
+  public firstNmae: string;
+  public lastName: string;
 }
 
 @Injectable()
