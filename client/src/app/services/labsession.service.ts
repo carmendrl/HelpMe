@@ -110,8 +110,8 @@ class IncludedProfessorResponse{
   get Email() : string { return this.data.attributes["email"]}
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
-  get FristName() : string {return this.data.attributes["first_name"]}
-  get LastName() : string {return this.data.attributes["last_name"]} 
+  get FristName() : string {return this.data.attributes["first-name"]}
+  get LastName() : string {return this.data.attributes["last-name"]}
 }
 
 class IncludedProfessorResponseData{
