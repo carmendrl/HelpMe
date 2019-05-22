@@ -83,14 +83,14 @@ get Title(): string {return this.data.attributes["title"]}
 get Subject():string {return this.data.attributes["subject"]}
 get Number(): string {return this.data.attributes["number"]}
 get Semester(): string {return this.data.attributes["semester"]}
-get ProfId() :number {return this.data.relationships.instructor.data["id"]}
-get ProfType() :string {return this.data.relationships.instructor.data["type"]}
+get ProfId() :number {return this.data.relationships.data["id"]}
+get ProfType() :string {return this.data.relationships.data["type"]}
 
 }
 
 class IncludedCourseResponseData{
   public type : string;
-  public id : string;
+  public id : number;
   public attributes: IncludedCourseResponseAttributes;
   public relationships : IncludedCourseResponseInstructor;
 }
@@ -106,7 +106,7 @@ class IncludedCourseResponseInstructor{
 public data:  IncludedCourseResponseInstructorData;
 }
 
-class IncludedCourseResponseRelationshipsData{
+class IncludedCourseResponseInstructorData{
 public id:  number;
 public type: string;
 
