@@ -75,16 +75,7 @@ class LabsessionResponse {
 }
 
 class IncludedCourseResponse{
-  constructor (private data: IncludedCourseResponseData){
-  }
-  get Id(): number {return this.data.id}
-  get Type(): string {return this.data.type}
-  get Title(): string {return this.data.attributes["title"]}
-  get Subject():string {return this.data.attributes["subject"]}
-  get Number(): string {return this.data.attributes["number"]}
-  get Semester(): string {return this.data.attributes["semester"]}
-  get ProfId() :number {return this.data.relationships.instructor.data["id"]}
-  get ProfType() :string {return this.data.relationships.instructor.data["type"]}
+  constructor (private data: IncludedCourseResponseData){}
 }
 
 class IncludedCourseResponseData{
@@ -109,6 +100,18 @@ class IncludedCourseResponseRelationshipsData{
 public id:  number;
 public type: string;
 
+}
+
+class IncludedProfessorResponse{
+  constructor (private data: IncludedCourseResponseData){}
+
+  get Id() : number { return this.data.id }
+  get Type() : string { return this.data.type }
+  get Email() : string { return this.data.attributes["email"]}
+  get Username() : string {return this.data.attributes["username"]}
+  get Role() : string {return this.data.attributes["role"]}
+  get FristName() : string {return this.data.attributes["first_name"]}
+  get LastName() : string {return this.data.attributes["last_name"]} 
 }
 
 class IncludedProfessorResponseData{
@@ -160,35 +163,21 @@ export class LabSessionService {
   //   );
   // }
   //
-  private createLabsessionsArray(dataResponses: LabsessionResponse[], includedResponse: IncludedObjResponse) : LabSession[]{
+  private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
     let sessions = new Array<LabSession>();
-    //debugger
-
-    //search for the course information
-    var course = includedResponse.find(function(element) {
-      return element ==="course";
-    });
-
-    //search for the professor information
-    var prof = includedResponse.find(function(element) {
-      return element==="professors";
-    });
-
-    //loop through the labsessions and push them onto an array after reformating
-     for(let response of dataResponses){
-       sessions.push(this.buildCreateLabsessionFromJson(obj, course, prof));
+    debugger
+     for(let obj of objects){
+       sessions.push(this.buildCreateLabsessionFromJson(obj));
      }
     return sessions;
   }
 
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse, a: Course, b: User ) : LabSession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
         debugger
         let l = new LabsessionResponse(s);
-        let c = new Course(a);
-        let p = new User(b);
-
-        let session = new LabSession(l.Description, l.StartDate, l.EndDate, c)), l.Id);
+        let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course("CSCI","140","Web Design and Implementation","201801",(new User("professor@test.com",
+        "ryanmcfall-prof","Claire", "Lundy"))), l.Id);
         return session;
     }
 
