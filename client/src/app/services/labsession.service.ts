@@ -76,7 +76,6 @@ class LabsessionResponse {
 
 
 class IncludedObjResponse{
-
 }
 
 class IncludedCourseResponse{
@@ -193,6 +192,7 @@ export class LabSessionService {
          return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
        });
 
+
        //search for the professor information
        let prof: IncludedProfessorResponse = includedResponses.find(function(element) {
          return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
@@ -203,12 +203,12 @@ export class LabSessionService {
   }
 
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse, a: IncludedCourseResponse, b: IncludedProfessorResponse ) : LabSession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponseData, a: IncludedCourseResponseData, b: IncludedProfessorResponseData ) : LabSession {
         debugger
         let l = new LabsessionResponse(s);
         let c = new IncludedCourseResponse(a);
         let p = new IncludedProfessorResponse(b);
-
+    
         let prof = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type,p.Id);
         let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof);
         let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
