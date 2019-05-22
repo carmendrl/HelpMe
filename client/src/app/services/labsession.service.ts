@@ -102,7 +102,19 @@ public type: string;
 
 }
 
+class IncludedProfessorResponseData{
+  public id : number;
+  public type : string;
+  public attributes: IncludedProfessorAttributes;
+}
 
+class IncludedProfessorAttributes{
+  public email: string;
+  public username: string;
+  public role: string;
+  public firstNmae: string;
+  public lastName: string;
+}
 
 @Injectable()
 export class LabSessionService {
