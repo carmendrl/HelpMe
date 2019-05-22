@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { Router } from '@angular/router';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-start-session',
@@ -12,7 +13,7 @@ export class StartSessionComponent implements OnInit {
 
 private description: string;
 private courseId:number;
-  constructor(private router : Router, private labSessionService: LabSessionService) {
+  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -27,6 +28,24 @@ private courseId:number;
       }
     );
 
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
   }
 
 }
