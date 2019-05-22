@@ -28,6 +28,45 @@
       <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
     </div>
   </div>
+<!--opens modal to create a session-->
+  <div class="row form-group">
+    <div class="col">
+      <button class="btn btn-primary" data-toggle="modal" data-target="#createSessionModal"(click)="open(content)">Create Course</button>
+    </div>
+  </div>
+
+<!--Modal to creat a session-->
+<div id="createSessionModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!--modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create a Session</h4>
+      </div>
+      <div class="modal-body">
+          <form #createSessionForm="ngForm" (ngSubmit)="newSession()">
+            Title:
+            <input type="text">
+            Subject:
+            <input type="text">
+            Number:
+            <input type="number">
+            Semester:
+            <input type="radio" name="semester" value="Fall(08)">
+            <input type="radio" name="semester" value="Spring(01)">
+            <input type="radio" name="semester" value="May(05)">
+            <input type="radio" name="semester" value="June(06)">
+            <input type="radio" name="semester" value="July(07)">
+            Year:
+            <input type="text" name="year" value="2019">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div *ngIf="generatedCoded > 0" class="alert alert-success">
     <p>
