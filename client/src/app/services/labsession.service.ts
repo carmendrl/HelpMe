@@ -189,15 +189,15 @@ export class LabSessionService {
      for(let dataResponse of dataResponses){
        debugger
        //search for the course information
-       var course = includedResponses.find(function(element) {
+    let course: IncludedCourseResponse = includedResponses.find(function(element) {
          return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
        });
 
        //search for the professor information
-       var prof = includedResponses.find(function(element) {
+       let prof: IncludedProfessorResponse = includedResponses.find(function(element) {
          return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
        });
-       sessions.push(this.buildCreateLabsessionFromJson(response, course, prof));
+       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
      }
     return sessions;
   }
