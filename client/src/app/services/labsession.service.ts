@@ -75,7 +75,7 @@ class LabsessionResponse {
 }
 
 class IncludedCourseResponse{
-  constructor (private data: IncludedCourseResponseData){  
+  constructor (private data: IncludedCourseResponseData){
   }
 get Id(): number {return this.data.id}
 get Type(): string {return this.data.type}
@@ -113,20 +113,16 @@ public type: string;
 }
 
 class IncludedProfessorResponse{
-  constructor (private data: IncludedCourseResponseData){}
-
+  constructor (private data: IncludedProfessorResponseData){
+  }
   get Id() : number { return this.data.id }
   get Type() : string { return this.data.type }
   get Email() : string { return this.data.attributes["email"]}
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
-<<<<<<< HEAD
-  get FristName() : string {return this.data.attributes["first-name"]}
+  get FirstName() : string {return this.data.attributes["first-name"]}
   get LastName() : string {return this.data.attributes["last-name"]}
-=======
-  get FristName() : string {return this.data.attributes["first_name"]}
-  get LastName() : string {return this.data.attributes["last_name"]}
->>>>>>> 0599bca56a3aa112fb5aad1936464f613d0005e1
+
 }
 
 class IncludedProfessorResponseData{
