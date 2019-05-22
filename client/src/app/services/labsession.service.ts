@@ -6,57 +6,86 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { API_SERVER } from '../app.config';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
+import { Course } from '../models/course.model';
+import { User } from '../models/user.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 
-// class LabsessionResponseAttributes {
-//   public description : string;
-//   public token : string;
-//   public activeStatus : boolean;
-//   public course_id : string;
-// }
-//
-// class LabsessionResponseRelationships{
-//   public questions : LabsessionQuestionsData;
-//   public users: LabsessionResponseUsers;
-// }
-//
-// class LabsessionQuestionsData{
-//   public data : string[];
-// }
-//
-// class LabsessionResponseUsers {
-//   public data : LabsessionResponseUsersData;
-// }
-//
-// class LabsessionResponseUsersData {
-//   public id : string;
-//   public type: string;
-// }
-//
-//
-// class LabsessionResponseData {
-//   public type : string;
-//   public id : string;
-//   public attributes: LabsessionResponseAttributes;
-//   public relationships : LabsessionResponseRelationships;
-// }
-//
-// class LabsessionResponse {
-//   constructor (private data : LabsessionResponseData) {
-// 	}
-//   get Type() : string { return this.data.type }
-//   get Id() : string { return this.data.id }
-//   get Description() : string { return this.data.attributes["description"] }
-//   get Token() : string { return this.data.attributes["token"] }
-//   get ActiveStatus() : boolean { return this.data.attributes["active"] }
-//   get CourseId() : string { return this.data.attributes["course-id"]}
-//   get Rdata() : string[] { return this.data.relationships.questions["data"]}
-//   get userId() : string {return this.data.relationships.users.data["id"]}
-//   get userType() : string { return this.data.relationships.users.data["type"]}
-// }
-//
+
+class LabsessionResponseAttributes {
+  public description : string;
+  public token : string;
+  public activeStatus : boolean;
+  public course_id : number;
+  public start_date: Date;
+  public end_date: Date;
+}
+
+class LabsessionResponseRelationships{
+  public questions : LabsessionQuestionsData;
+  public users: LabsessionResponseUsers;
+  public course: LabsessionResponseCourse;
+}
+
+class LabsessionQuestionsData{
+  public data : string[];
+}
+
+class LabsessionResponseUsers {
+  public data : LabsessionResponseUsersData;
+}
+
+class LabsessionResponseUsersData {
+  public id : number;
+  public type: string;
+}
+
+class LabsessionResponseCourse {
+  public data: LabsessionResponseCourseData;
+}
+
+class LabsessionResponseCourseData {
+  public id: number;
+  public type: string;
+}
+
+
+class LabsessionResponseData {
+  public type : string;
+  public id : number;
+  public attributes: LabsessionResponseAttributes;
+  public relationships : LabsessionResponseRelationships;
+}
+
+class LabsessionResponse {
+  constructor (private data : LabsessionResponseData) {
+	}
+  get Type() : string { return this.data.type }
+  get Id() : number { return this.data.id }
+  get Description() : string { return this.data.attributes["description"] }
+  get Token() : string { return this.data.attributes["token"] }
+  get ActiveStatus() : boolean { return this.data.attributes["active"] }
+  get StartDate() : Date { return this.data.attributes["start-date"]}
+  get EndDate() : Date { return this.data.attributes["end-date"]}
+  get CourseId() : number { return this.data.attributes["course-id"]}
+  get Rdata() : string[] { return this.data.relationships.questions["data"]}
+  get userId() : number {return this.data.relationships.users.data["id"]}
+  get userType() : string { return this.data.relationships.users.data["type"]}
+}
+
+class IncludedCourseObjResponse{
+  constructor (private data: IncludedCourseObjResponseData){}
+}
+
+class IncludedCourseObjResponseData{
+  public type : string;
+  public id : string;
+  //public attributes: ;
+  //public relationships : ;
+
+}
+
 @Injectable()
 export class LabSessionService {
 //
@@ -75,7 +104,8 @@ export class LabSessionService {
 //
   labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions`;
-        return this.httpClient.get<LabSession[]>(url).pipe(
+        return this.httpClient.get(url).pipe(
+          map(r => this.createLabsessionsArray(r["data"])),
           catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
@@ -91,15 +121,26 @@ export class LabSessionService {
   //   );
   // }
   //
-  //   private buildCreateLabsessionBodyFromSession ( s : LabSession ) {
-  //     return {
-  //       description : s.description,
-  //       start_date : s.startDate,
-  //       end_date : s.endDate,
-  //       course : s.course,
-  //
-  //     };
-  //   }
+  private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
+    let sessions = new Array<LabSession>();
+     for(let obj of objects){
+       sessions.push(this.buildCreateLabsessionFromJson(obj));
+     }
+    return sessions;
+  }
+
+
+    private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
+        let session = new LabSession(s.Description, s.StartDate, s.EndDate, new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
+        "ryanmcfall-prof","Ryan", "McFall"))), s.Id);
+        // session.description = s.Description;
+        // session.start_date = s.StartDate;
+        // session.end_date = s.EndDate;
+        // session.id = s.Id
+        // session.course = (new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
+        // "ryanmcfall-prof","Ryan", "McFall","professors","cd11850c-4dbb-4e71-a6c3-e14ec69847ae","password"))));
+        return session;
+    }
   //
   //   private updateLabsessionsFromResponse(r : LabsessionResponse) {
   //       let session = new LabSession();
