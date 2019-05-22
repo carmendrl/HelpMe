@@ -123,6 +123,7 @@ export class LabSessionService {
   //
   private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
     let sessions = new Array<LabSession>();
+    debugger
      for(let obj of objects){
        sessions.push(this.buildCreateLabsessionFromJson(obj));
      }
@@ -131,17 +132,13 @@ export class LabSessionService {
 
 
     private buildCreateLabsessionFromJson(s: LabsessionResponse ) : LabSession {
-        let session = new LabSession(s.Description, s.StartDate, s.EndDate, new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
-        "ryanmcfall-prof","Ryan", "McFall"))), s.Id);
-        // session.description = s.Description;
-        // session.start_date = s.StartDate;
-        // session.end_date = s.EndDate;
-        // session.id = s.Id
-        // session.course = (new Course("CSCI","150","Web Design and Implementation","201801",(new User("professorlogin@test.com",
-        // "ryanmcfall-prof","Ryan", "McFall","professors","cd11850c-4dbb-4e71-a6c3-e14ec69847ae","password"))));
+        debugger
+        let l = new LabsessionResponse(s);
+        let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course("CSCI","140","Web Design and Implementation","201801",(new User("professor@test.com",
+        "ryanmcfall-prof","Claire", "Lundy"))), l.Id);
         return session;
     }
-  //
+
   //   private updateLabsessionsFromResponse(r : LabsessionResponse) {
   //       let session = new LabSession();
   //       session.Description = r.Description;
