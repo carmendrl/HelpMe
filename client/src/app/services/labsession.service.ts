@@ -189,6 +189,7 @@ export class LabSessionService {
      for(let dataResponse of dataResponses){
        debugger
        //search for the course information
+<<<<<<< HEAD
        var course = includedResponses.find(function(element) {
          return element["type"] === "courses" && element["id"]=== dataResponse.data.attributes["course-id"];
        });
@@ -200,6 +201,17 @@ export class LabSessionService {
        });
        let profTest = <IncludedProfessorResponse>prof;
        sessions.push(this.buildCreateLabsessionFromJson(dataResponse, courseTest, profTest));
+=======
+    let course: IncludedCourseResponse = includedResponses.find(function(element) {
+         return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
+       });
+
+       //search for the professor information
+       let prof: IncludedProfessorResponse = includedResponses.find(function(element) {
+         return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+       });
+       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
+>>>>>>> 72944cd37aae7715acc330c94d289c35f5479a52
      }
     return sessions;
   }
