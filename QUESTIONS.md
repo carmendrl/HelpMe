@@ -303,6 +303,10 @@ If requestor is a professor response payload
   ],
 }
 ```
+#### Listing Questions from the logged in user
+#### `GET user/questions`
+
+This gets all of the questions that were asked by the currently logged in user.
 
 #### Deleting a Question
 #### `DELETE /lab_sessions/:lab_session_id/questions/:question_id`

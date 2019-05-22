@@ -5,13 +5,16 @@ Rails.application.routes.draw do
 	    registrations: "registrations",
 	    sessions: "sessions"
 	  }
-	
+
 	  devise_scope :user do
 	    get "system/users/:user_id", to: "registrations#show", as: :user
 	    post "system/users/promote", to: "registrations#promote", as: :promote
 	    post "system/users/demote", to: "registrations#demote", as: :demote
 	  end
 
+		scope :user do
+			get "questions", to: "questions#show_user_questions"
+		end
 
 	  resources :lab_sessions do
 	    delete "leave", on: :member, to: "lab_session_memberships#destroy"

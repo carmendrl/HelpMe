@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :find_question!, except: [:index, :create]
+  before_action :find_question!, except: [:index, :create, :show_user_questions]
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
@@ -75,6 +75,13 @@ class QuestionsController < ApplicationController
 
     render json: tag_json(@question.tags)
   end
+
+  def show_user_questions
+		#  Find all of the questions that this user has asked, either as the original asker, or through the
+		#  "Me Too!" mechanism
+		questions = Question.joins("INNER JOIN questions_users on id = question_id where user_id = '#{current_user.id}'")
+		render json: questions
+	end
 
   private
 
