@@ -59,7 +59,7 @@ class LabsessionResponseData {
 }
 
 class LabsessionResponse {
-  constructor (private data : LabsessionResponseData) {
+  constructor (public data : LabsessionResponseData) {
 	}
   get Type() : string { return this.data.type }
   get Id() : number { return this.data.id }
@@ -190,7 +190,7 @@ export class LabSessionService {
        debugger
        //search for the course information
        var course = includedResponses.find(function(element) {
-         return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
+         return element["type"] === "courses" && element["id"]=== dataResponse.data.attributes["course-id"];
        });
 
        //search for the professor information
