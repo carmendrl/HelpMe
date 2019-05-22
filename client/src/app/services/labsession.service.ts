@@ -75,7 +75,17 @@ class LabsessionResponse {
 }
 
 class IncludedCourseResponse{
-  constructor (private data: IncludedCourseResponseData){}
+  constructor (private data: IncludedCourseResponseData){  
+  }
+get Id(): number {return this.data.id}
+get Type(): string {return this.data.type}
+get Title(): string {return this.data.attributes["title"]}
+get Subject():string {return this.data.attributes["subject"]}
+get Number(): string {return this.data.attributes["number"]}
+get Semester(): string {return this.data.attributes["semester"]}
+get ProfId() :number {return this.data.relationships.instructor.data["id"]}
+get ProfType() :string {return this.data.relationships.instructor.data["type"]}
+
 }
 
 class IncludedCourseResponseData{
