@@ -183,24 +183,20 @@ export class LabSessionService {
     let sessions = new Array<LabSession>();
     //debugger
 
-    //search for the course information
-    var course = includedResponses.find(function(element) {
-      return element ==="course";
-    });
 
-    //search for the professor information
-    var prof = includedResponses.find(function(element) {
-      return element==="professors";
-    });
-
+    debugger
     //loop through the labsessions and push them onto an array after reformating
-     for(let response of dataResponses){
-
+     for(let dataResponse of dataResponses){
+       debugger
        //search for the course information
-       let course = includedResponses.find(function(element) {
-         return element.Id === response.CourseId;
+       var course = includedResponses.find(function(element) {
+         return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
        });
 
+       //search for the professor information
+       var prof = includedResponses.find(function(element) {
+         return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+       });
        sessions.push(this.buildCreateLabsessionFromJson(response, course, prof));
      }
     return sessions;
@@ -218,6 +214,7 @@ export class LabSessionService {
         let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
         return session;
     }
+
 
   //   private updateLabsessionsFromResponse(r : LabsessionResponse) {
   //       let session = new LabSession();
