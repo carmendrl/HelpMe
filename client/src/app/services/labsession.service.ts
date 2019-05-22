@@ -74,8 +74,8 @@ class LabsessionResponse {
   get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
-class IncludedCourseObjResponse{
-  constructor (private data: IncludedCourseObjResponseData){}
+class IncludedObjResponse{
+  constructor (private data: IncludedCourseResponseData){}
 }
 
 class IncludedCourseObjResponseData{
@@ -121,7 +121,7 @@ export class LabSessionService {
   //   );
   // }
   //
-  private createLabsessionsArray(objects: LabsessionResponse[]) : LabSession[]{
+  private createLabsessionsArray(objects: LabsessionResponse[] ) : LabSession[]{
     let sessions = new Array<LabSession>();
     debugger
      for(let obj of objects){
