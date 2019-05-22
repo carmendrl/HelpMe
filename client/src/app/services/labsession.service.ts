@@ -199,10 +199,12 @@ export class LabSessionService {
     private buildCreateLabsessionFromJson(s: LabsessionResponse, a: Course, b: User ) : LabSession {
         debugger
         let l = new LabsessionResponse(s);
-        let c = new Course(a);
-        let p = new User(b);
+        let c = new IncludedCourseResponse(a);
+        let p = new IncludedProfessorResponse(b);
 
-        let session = new LabSession(l.Description, l.StartDate, l.EndDate, c)), l.Id);
+        let prof = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type,p.Id);
+        let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof);
+        let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
         return session;
     }
 
