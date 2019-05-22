@@ -172,6 +172,7 @@ export class LabSessionService {
          return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
        });
 
+
        //search for the professor information
        var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
          return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
