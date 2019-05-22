@@ -203,7 +203,7 @@ export class LabSessionService {
   }
 
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponse, a: Course, b: User ) : LabSession {
+    private buildCreateLabsessionFromJson(s: LabsessionResponse, a: IncludedCourseResponse, b: IncludedProfessorResponse ) : LabSession {
         debugger
         let l = new LabsessionResponse(s);
         let c = new IncludedCourseResponse(a);
