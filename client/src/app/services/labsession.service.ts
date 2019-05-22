@@ -74,6 +74,11 @@ class LabsessionResponse {
   get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
+
+class IncludedObjResponse{
+
+}
+
 class IncludedCourseResponse{
   constructor (private data: IncludedCourseResponseData){
   }
@@ -158,7 +163,7 @@ export class LabSessionService {
   labSessions() : Observable<LabSession[]> {
         let url : string =`${this.apiHost}/lab_sessions`;
         return this.httpClient.get(url).pipe(
-          map(r => this.createLabsessionsArray(r["data"])),
+          map(r => this.createLabsessionsArray(r["data"], r["included"] )),
           catchError(this.handleError<LabSession[]>(`labSessions`))
         );
         //return this._currentSessions$;
@@ -174,23 +179,29 @@ export class LabSessionService {
   //   );
   // }
   //
-  private createLabsessionsArray(dataResponses: LabsessionResponse[], includedResponse: IncludedObjResponse) : LabSession[]{
+  private createLabsessionsArray(dataResponses: LabsessionResponse[], includedResponses: IncludedObjResponse[]) : LabSession[]{
     let sessions = new Array<LabSession>();
     //debugger
 
     //search for the course information
-    var course = includedResponse.find(function(element) {
+    var course = includedResponses.find(function(element) {
       return element ==="course";
     });
 
     //search for the professor information
-    var prof = includedResponse.find(function(element) {
+    var prof = includedResponses.find(function(element) {
       return element==="professors";
     });
 
     //loop through the labsessions and push them onto an array after reformating
      for(let response of dataResponses){
-       sessions.push(this.buildCreateLabsessionFromJson(obj, course, prof));
+
+       //search for the course information
+       let course = includedResponses.find(function(element) {
+         return element.Id === response.CourseId;
+       });
+
+       sessions.push(this.buildCreateLabsessionFromJson(response, course, prof));
      }
     return sessions;
   }
