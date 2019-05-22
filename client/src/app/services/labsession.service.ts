@@ -80,7 +80,7 @@ class IncludedObjResponse{
 }
 
 class IncludedCourseResponse{
-  constructor (private data: IncludedCourseResponseData){
+  constructor (public data: IncludedCourseResponseData){
   }
 get Id(): number {return this.data.id}
 get Type(): string {return this.data.type}
@@ -194,10 +194,12 @@ export class LabSessionService {
        });
 
        //search for the professor information
+       let courseTest = <IncludedCourseResponse>course;
        var prof = includedResponses.find(function(element) {
-         return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+         return element["type"]==="professors" && element["id"]=== courseTest.relationships.instructor.data["id"];
        });
-       sessions.push(this.buildCreateLabsessionFromJson(response, course, prof));
+       let profTest = <IncludedProfessorResponse>prof;
+       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, courseTest, profTest));
      }
     return sessions;
   }
@@ -205,13 +207,10 @@ export class LabSessionService {
 
     private buildCreateLabsessionFromJson(s: LabsessionResponse, a: IncludedCourseResponse, b: IncludedProfessorResponse ) : LabSession {
         debugger
-        let l = new LabsessionResponse(s);
-        let c = new IncludedCourseResponse(a);
-        let p = new IncludedProfessorResponse(b);
 
-        let prof = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type,p.Id);
-        let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof);
-        let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
+        let prof = new User(b.Email, b.Username, b.FirstName, b.LastName, b.Type,b.Id);
+        let course = new Course(a.Subject, a.Number, a.Title, a.Semester, prof);
+        let session = new LabSession(s.Description, s.StartDate, s.EndDate, course);
         return session;
     }
 
