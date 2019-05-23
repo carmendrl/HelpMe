@@ -3,6 +3,7 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { Router } from '@angular/router';
+import { CourseService } from'./../services/course.service';
 
 
 @Component({
