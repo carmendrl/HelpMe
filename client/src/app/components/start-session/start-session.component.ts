@@ -28,9 +28,15 @@ export class StartSessionComponent implements OnInit {
   }
 
   ngOnInit() {
+
     this.courseService.coursesList().subscribe(
       courses => this.startCourse = courses);
   }
+
+// setCourses(courses : Course[]){
+//   this.startCourse = courses;
+// }
+
 
   OnSubmit(){
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
