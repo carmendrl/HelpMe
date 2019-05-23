@@ -165,15 +165,34 @@ class IncludedProfessorAttributes{
 
 
  createNewCourse(subject: string, num: string, title: string, semester: string){
+    debugger
     let newCourse = new Course();
     newCourse.subject= subject;
     newCourse.number= num;
     newCourse.title=title;
     newCourse.semester=semester;
     //let professor=this.getCurrentUser();
-
+    this.postNewCourse(newCourse);
   }
 
+  private postNewCourse(c: Course){
+    debugger
+    let url : string=`${this.apiHost}/courses`;
+    let body= this.buildCourseBodyFromC(c);
+    this.httpClient.post(url, body).pipe(
+      map(r => true ),
+      catchError(error => this.handleCreateAccountError(error))
+    );
+  }
+  private buildCourseBodyFromC (c: Course) {
+    return {
+      subject: c.subject,
+      number: c.number,
+      title: c.title,
+      semester: c.semester,
+      type: 'courses'
+    }
+  }
 
   private handleCreateAccountError (error) : Observable<boolean> {
     if (error instanceof HttpErrorResponse) {
