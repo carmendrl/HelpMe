@@ -160,7 +160,6 @@ export class LabSessionService {
         );
   }
 
-
   private createLabsessionsArray(dataResponses: LabsessionResponseData[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
 
@@ -194,6 +193,30 @@ export class LabSessionService {
         let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
         return session;
     }
+
+
+
+    createNewLabSession(description:String, courseId:number) : Observable<LabSession> {
+          let url : string =`${this.apiHost}/lab_sessions`;
+          let body = {
+            description: description,
+            course_id: courseId
+          };
+          return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
+            map(r => this.createNewLabSessionFromResponse(new LabsessionResponse(r["data"]))  ),
+            catchError(this.handleError<LabSession>(`labSessions`))
+          );
+    }
+
+    createNewLabSessionFromResponse(l: LabsessionResponse){
+      let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course());
+      return session
+      //just return the token? - how are dates set?
+    }
+
+
+
+
 
    private handleCreateAccountError (error) : Observable<boolean> {
       if (error instanceof HttpErrorResponse) {

@@ -1,12 +1,12 @@
 <h2>Start a session</h2>
-<form #thisForm="ngForm" (ngSubmit)="onSubmit()" >
+<form #thisForm="ngForm" (submit)="onSubmit()" > <!-- was: (ngSubmit) -->
   <div class="row form-group">
     <div class="col-12 col-sm-2">
       <label for="course">Select course</label>
     </div>
 
     <div class="col-12 col-sm-8">
-      <select class="form-control" name="course">
+      <select [(ngModel)] = "courseId" class="form-control" name="course">
         <option>CSCI 150</option>
         <option>CSCI 495</option>
       </select>

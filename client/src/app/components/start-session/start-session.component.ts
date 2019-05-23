@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { LabSession } from '../../models/lab_session.model';
+import { LabSessionService } from '../../services/labsession.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-start-session',
@@ -9,10 +13,23 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 
 export class StartSessionComponent implements OnInit {
   closeResult: string;
-
-  constructor(private modalService: NgbModal) {}
+  description: string;
+  private courseId:number;
+  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal) {
+  }
 
   ngOnInit() {
+  }
+
+  OnSubmit(){
+    this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
+      r => {
+        if (r) {
+          //this.router.navigateByUrl('/lab_sessions');     //this will have to change
+        }
+      }
+    );
+
   }
 
   open(content) {
@@ -25,12 +42,12 @@ export class StartSessionComponent implements OnInit {
 
 
   private getDismissReason(reason: any): string {
-     if (reason === ModalDismissReasons.ESC) {
-       return 'by pressing ESC';
-     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-       return 'by clicking on a backdrop';
-     } else {
-       return  `with: ${reason}`;
-     }
-   }
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
+  }
 }
