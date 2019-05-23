@@ -19,8 +19,8 @@ class CourseResponse{
     get Subject():string {return this.data.attributes["subject"]}
     get Number(): string {return this.data.attributes["number"]}
     get Semester(): string {return this.data.attributes["semester"]}
-    get ReId() : number {return this.data.relationships.instructor["id"]}
-    get ReType() :string {return this.data.relationships.instructor["type"]}
+    get ReId() : number {return this.data.relationships.instructor.data["id"]}
+    get ReType() :string {return this.data.relationships.instructor.data["type"]}
   }
 
   class CourseResponseData{
@@ -41,11 +41,11 @@ class CourseResponse{
     public instructor: CourseResponseRelationshipInstructorData;
   }
 
-  // class CourseResponseRelationshipInstructorData{
-  //   public data: CourseResponseRelationshipInstructorDataDetails;
-  // }
-
   class CourseResponseRelationshipInstructorData{
+    public data: CourseResponseRelationshipInstructorDataDetails;
+  }
+
+  class CourseResponseRelationshipInstructorDataDetails{
     public id:  number;
     public type: string;
   }
@@ -116,26 +116,26 @@ class IncludedProfessorAttributes{
 
 
   coursesList() : Observable<Course[]>{
+
     let url : string =`${this.apiHost}/courses`;
-    return this.httpClient.get(url).pipe(map(r => this.createCoursesArray(r["data"]))
+
+    return this.httpClient.get(url).pipe(
+      map(r => this.createCoursesArray(r["data"], r["included"]))
     );
+
   }
 
 
-  private createCoursesArray(courseData : CourseResponseData[], includedResponse : any[]) : Course[]{
+  private createCoursesArray(courseDatas : CourseResponseData[], includedResponse : any[]) : Course[]{
     let courses = new Array <Course>();
-    let course = new CourseResponseData;
-
-    for(let data of courseData){
-
+    for(let courseData of courseDatas){
     var professor : IncludedProfessorResponseData = includedResponse.find(function(element){
-        return element["type"]==="professors" && element["id"]=== course.relationships.instructor["id"]})
+        return element["type"]==="professors" && element["id"]=== courseData.relationships.instructor.data["id"]})
 
-      courses.push(this.buildCreateCourse(data, professor));
+      courses.push(this.buildCreateCourse(courseData, professor));
     }
     return courses;
   }
-
 
 
   private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
@@ -157,7 +157,7 @@ class IncludedProfessorAttributes{
   }
 
   private formatProfessor(d: IncludedProfessorResponse) : User{
-    debugger
+    
     //let p = new IncludedProfessorResponse(d)
     let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     return prof;
