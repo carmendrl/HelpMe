@@ -1,9 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+import {DOCUMENT} from '@angular/common';
+import {Course} from '../../models/course.model';
+import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
-import { Router } from '@angular/router';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import {DOCUMENT} from '@angular/common';
+import { CourseService } from'../../services/course.service';
+
 
 @Component({
   selector: 'app-start-session',
@@ -13,6 +16,15 @@ import {DOCUMENT} from '@angular/common';
 
 
 export class StartSessionComponent implements OnInit {
+  closeResult: string;
+  description: string;
+  private courseId:number;
+  subject: string;
+  number: string;
+  title: string;
+  semester: string;
+  private year: string;
+  private startCourse : Course[];
 
 private description: string;
 private courseId:number;
@@ -22,12 +34,14 @@ private sessionStarted: boolean;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal){
+  private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService){
 
   }
 
   ngOnInit() {
     this.sessionStarted = false;
+    this.courseService.coursesList().subscribe(
+      courses => this.startCourse = courses);
   }
 
   startSession(){
@@ -61,13 +75,21 @@ private sessionStarted: boolean;
   }
 
 
+  createNewSession(){
+    //debugger
+    let yearSemester = this.semester + this.year;
+    this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester)
+  }
+
   open(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+    console.log("Testing Modal");
   }
+
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -78,5 +100,4 @@ private sessionStarted: boolean;
       return  `with: ${reason}`;
     }
   }
-
 }

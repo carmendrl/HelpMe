@@ -104,7 +104,7 @@ export class UserService {
   }
 
   private updateLoggedInUserFromResponse(r : UserResponse) {
-      debugger
+      //debugger
       let user = new User();
       user.Type = r.Type;
       user.FirstName = r.FirstName;
@@ -115,7 +115,7 @@ export class UserService {
   }
 
   private handleCreateAccountError (error) : Observable<boolean> {
-    debugger
+    //debugger
     if (error instanceof HttpErrorResponse) {
       let httpError = <HttpErrorResponse> error;
       let errorMessage : string = "The account was not created for the following reasons:";

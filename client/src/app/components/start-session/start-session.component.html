@@ -6,9 +6,10 @@
     </div>
 
     <div class="col-12 col-sm-8">
-      <select [(ngModel)] = "courseId"  class="form-control" name="course">
-        <option value="888b6dee-c3ae-4cb1-9865-2dab0475188f">CSCI 150 </option>
-        <option value="888b6dee-c3ae-4cb1-9865-2dab0475188f">CSCI 495</option>
+
+      <select [(ngModel)] = "courseId" class="form-control" name="course">
+        <option *ngFor="let course of startCourse" [ngValue]="course"> {{course.subjectAndNumber}} </option>
+
       </select>
     </div>
   </div>
@@ -38,45 +39,50 @@
         <span (click)="copySessionLink()"  class="btn btn-primary">Copy Session Link</span>
   </div>
 
+
+  <!--button that opens modal-->
+    <a class="btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
+
+  <hr>
+
+
+
 </form>
 
-
-<!--opens modal to create a session-->
-  <div class="row form-group">
-    <div class="col">
-      <button class="btn btn-primary" data-toggle="modal" data-target="#createSessionModal"(click)="open(content)">Create Course</button>
+<!--modal-->
+  <ng-template #content let-modal let-d="dismiss" let-c="close">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-create-session" aria-labelledBy="modal-create-course">Create Course</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-  </div>
+    <div class="modal-body">
+      <!---form-->
+      <form class="needs-validation" novalidate>
+        <div class="form-group">
+          Title:
+          <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
 
-<!--Modal to creat a session-->
-<div id="createSessionModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <!--modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Create a Session</h4>
-      </div>
-      <div class="modal-body">
-          <form #createSessionForm="ngForm" (ngSubmit)="newSession()">
-            Title:
-            <input type="text">
-            Subject:
-            <input type="text">
-            Number:
-            <input type="number">
-            Semester:
-            <input type="radio" name="semester" value="Fall(08)">
-            <input type="radio" name="semester" value="Spring(01)">
-            <input type="radio" name="semester" value="May(05)">
-            <input type="radio" name="semester" value="June(06)">
-            <input type="radio" name="semester" value="July(07)">
-            Year:
-            <input type="text" name="year" value="2019">
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-      </div>
+          Subject:
+          <input type="text" class="form-control" name="subject" [(ngModel)]="this.subject" required><br>
+
+          Number:
+          <input type="text" class="form-control" name="number" [(ngModel)]="this.number" required><br>
+
+          Semester:<br>
+          <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall(08)<br>
+          <input type="radio" name="semester" value="01" [(ngModel)]="this.semester">Spring(01) <br>
+          <input type="radio" name="semester" value="05" [(ngModel)]="this.semester">May(05)<br>
+          <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
+          <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
+          Year:
+          <input type="text" class="form-control" name="year" [(ngModel)]="this.year" required>
+          </div>
+      </form>
     </div>
-  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="c('Save click');createNewSession()">Save</button>
+    </div>
+  </ng-template>
+<!--end modal-->

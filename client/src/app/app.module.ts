@@ -23,7 +23,7 @@ import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { StartSessionComponent } from './components/start-session/start-session.component';
-
+import { CourseService } from './services/course.service';
 const Server = '/api';
 
 @NgModule({
@@ -46,6 +46,7 @@ const Server = '/api';
     UserService,
     LabSessionService,
     QuestionService,
+    CourseService,
     ModelFactoryService,
     {
       provide: HTTP_INTERCEPTORS, useClass: AddAuthorizationInterceptorService, multi: true
