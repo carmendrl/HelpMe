@@ -52,9 +52,15 @@ class CourseResponse{
 
   class professorResponse{
     constructor(private data : professorResponseData){
-      
     }
 
+    get Id(): number {return this.data.id}
+    get Type(): string {return this.data.type}
+    get Email(): string {return this.data.attributes["email"]}
+    get Username(): string {return this.data.attributes["username"]}
+    get Role(): string {return this.data.attributes["role"]}
+    get FirstName(): string {return this.data.attributes["first_name"]}
+    get LastName(): string {return this.data.attributes["last_name"]}
   }
 
   class professorResponseData{
