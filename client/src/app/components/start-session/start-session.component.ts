@@ -17,7 +17,7 @@ import { CourseService } from'../../services/course.service';
 
 export class StartSessionComponent implements OnInit {
   closeResult: string;
-  description: string;
+  private description: string;
   private courseId:number;
   subject: string;
   number: string;
@@ -25,9 +25,6 @@ export class StartSessionComponent implements OnInit {
   semester: string;
   private year: string;
   private startCourse : Course[];
-
-private description: string;
-private courseId:number;
 private generatedCode: string;
 private generatedId:number;
 private sessionStarted: boolean;
