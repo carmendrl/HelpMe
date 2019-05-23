@@ -151,19 +151,26 @@ class IncludedProfessorAttributes{
   private getCurrentUser() : User{
     let url : string=`${this.apiHost}/users`;
     return this.httpClient.get(url).pipe(
-
-    )
+      map(r => this.formatProfessor(r["data"])),
+      catchError(this.handleError<User>(`labSessions`))
+    );
   }
 
-  private formatProfessor(){}
+  private formatProfessor(d: IncludedProfessorResponse) : User{
+    debugger
+    //let p = new IncludedProfessorResponse(d)
+    let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    return prof;
+  }
 
 
-  private createNewCourse(subject: string, num: number, title: string, semester: string){
+ createNewCourse(subject: string, num: number, title: string, semester: string){
     let newCourse = new Course();
     newCourse.subject(subject);
     newCourse.number(num);
     newCourse.title(title);
     newCourse.semester(semester);
+    newCourse.professor(getCurrentUser());
 
   }
 
@@ -178,5 +185,16 @@ class IncludedProfessorAttributes{
     return of(false);
   }
 
+      private handleError<T> (operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
 
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+
+
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+
+}
 }
