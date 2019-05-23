@@ -68,6 +68,15 @@ class CourseResponse{
     public id : string;
     public type : string;
     public attributes: IncludedProfessorAttributes;
+}
+
+class IncludedProfessorAttributes{
+  public email: string;
+  public username: string;
+  public role: string;
+  public firstNmae: string;
+  public lastName: string;
+}
 
   class professorResponse{
     constructor(private data : professorResponseData){
@@ -90,13 +99,6 @@ class CourseResponse{
 
   }
 
-  class IncludedProfessorAttributes{
-    public email: string;
-    public username: string;
-    public role: string;
-    public firstNmae: string;
-    public lastName: string;
-  }
 
   @Injectable()
   export class CourseService {
@@ -126,7 +128,7 @@ class CourseResponse{
 
   private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
     let c = new CourseResponse(b);
-    let p = new IncludedProfessorResponse9a);
+    let p = new IncludedProfessorResponse(a);
 
     let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
     let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor);
