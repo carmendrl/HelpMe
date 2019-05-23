@@ -148,7 +148,7 @@ class IncludedProfessorAttributes{
     return course;
   }
 
-  private getCurrentUser() : User{
+  private getCurrentUser() : Observable<User>{
     let url : string=`${this.apiHost}/users`;
     return this.httpClient.get(url).pipe(
       map(r => this.formatProfessor(r["data"])),
@@ -164,13 +164,13 @@ class IncludedProfessorAttributes{
   }
 
 
- createNewCourse(subject: string, num: number, title: string, semester: string){
+ createNewCourse(subject: string, num: string, title: string, semester: string){
     let newCourse = new Course();
-    newCourse.subject(subject);
-    newCourse.number(num);
-    newCourse.title(title);
-    newCourse.semester(semester);
-    newCourse.professor(getCurrentUser());
+    newCourse.subject= subject;
+    newCourse.number= num;
+    newCourse.title=title;
+    newCourse.semester=semester;
+    //let professor=this.getCurrentUser();
 
   }
 
