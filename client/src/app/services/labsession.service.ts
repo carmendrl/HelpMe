@@ -189,7 +189,7 @@ export class LabSessionService {
     let d = new IncludedProfessorResponse (b);
 
     let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof);
+    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof, c.Id);
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
     return session;
   }
