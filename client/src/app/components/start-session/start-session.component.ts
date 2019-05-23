@@ -33,6 +33,7 @@ export class StartSessionComponent implements OnInit {
   }
 
   OnSubmit(){
+    debugger
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {
         if (r) {
@@ -55,6 +56,7 @@ export class StartSessionComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+    console.log("Testing Modal");
   }
 
 

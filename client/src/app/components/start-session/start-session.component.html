@@ -28,6 +28,24 @@
       <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
     </div>
   </div>
+
+
+
+
+  <hr>
+
+  <div *ngIf="generatedCoded > 0" class="alert alert-success">
+    <p>
+      Session code is <strong>{{generatedCode}}</strong>
+      <a [routerLink]="['/session-view/', generatedCode]">Go to session</a>
+    </p>
+    <p>
+      Code has been copied to clipboard
+    </p>
+  </div>
+
+</form>
+
 <!--modal-->
   <ng-template #content let-modal let-d="dismiss">
     <div class="modal-header">
@@ -67,19 +85,3 @@
 <!--end modal-->
 <!--button that opens modal-->
   <button class="btn btn-primary" (click)="open(content)">Create Course</button>
-
-  <hr>
-
-  <pre>{{closeResult}}</pre>
-
-  <div *ngIf="generatedCoded > 0" class="alert alert-success">
-    <p>
-      Session code is <strong>{{generatedCode}}</strong>
-      <a [routerLink]="['/session-view/', generatedCode]">Go to session</a>
-    </p>
-    <p>
-      Code has been copied to clipboard
-    </p>
-  </div>
-
-</form>
