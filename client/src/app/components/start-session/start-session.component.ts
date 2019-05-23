@@ -25,9 +25,9 @@ export class StartSessionComponent implements OnInit {
   semester: string;
   private year: string;
   private startCourse : Course[];
-private generatedCode: string;
-private generatedId:number;
-private sessionStarted: boolean;
+  private generatedCode: string;
+  private generatedId:number;
+  private sessionStarted: boolean;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
