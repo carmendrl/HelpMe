@@ -11,9 +11,14 @@ import { CourseService } from '../../services/course.service';
 })
 export class StartSessionComponent implements OnInit {
 
-  constructor(private courseService : CourseService) { }
+  private startCourses : Course[];
 
+  constructor() { }
+private courseService : CourseService
   ngOnInit() {
+    this.courseService.coursesList().subscribe(
+      courses => this.startCourses = courses
+    );
   }
 
 }
