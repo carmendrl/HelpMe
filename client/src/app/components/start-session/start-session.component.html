@@ -1,14 +1,14 @@
 <h2>Start a session</h2>
-<form #thisForm="ngForm" (submit)="onSubmit()" > <!-- was: (ngSubmit) -->
+<form #thisForm="ngForm" (ngSubmit)="startSession()">
   <div class="row form-group">
     <div class="col-12 col-sm-2">
       <label for="course">Select course</label>
     </div>
 
     <div class="col-12 col-sm-8">
-      <select [(ngModel)] = "courseId" class="form-control" name="course">
-        <option>CSCI 150</option>
-        <option>CSCI 495</option>
+      <select [(ngModel)] = "courseId"  class="form-control" name="course">
+        <option value="888b6dee-c3ae-4cb1-9865-2dab0475188f">CSCI 150 </option>
+        <option value="888b6dee-c3ae-4cb1-9865-2dab0475188f">CSCI 495</option>
       </select>
     </div>
   </div>
@@ -28,6 +28,19 @@
       <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
     </div>
   </div>
+
+  <div *ngIf=sessionStarted class="alert alert-success">
+    <p>
+      Session code is <strong>{{generatedCode}}</strong>
+      <a [routerLink]="['/session-view/', generatedId]">Go to session</a>
+    </p>
+        <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
+        <span (click)="copySessionLink()"  class="btn btn-primary">Copy Session Link</span>
+  </div>
+
+</form>
+
+
 <!--opens modal to create a session-->
   <div class="row form-group">
     <div class="col">
@@ -67,15 +80,3 @@
       </div>
     </div>
   </div>
-
-  <div *ngIf="generatedCoded > 0" class="alert alert-success">
-    <p>
-      Session code is <strong>{{generatedCode}}</strong>
-      <a [routerLink]="['/session-view/', generatedCode]">Go to session</a>
-    </p>
-    <p>
-      Code has been copied to clipboard
-    </p>
-  </div>
-
-</form>
