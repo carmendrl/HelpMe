@@ -14,18 +14,18 @@ import { map, tap, catchError } from 'rxjs/operators';
 
 class CourseResponse{
     constructor (private data: CourseResponseData){}
-    get Id(): number {return this.data.id}
+    get Id(): string {return this.data.id}
     get Type(): string {return this.data.type}
     get Title(): string {return this.data.attributes["title"]}
     get Subject():string {return this.data.attributes["subject"]}
     get Number(): string {return this.data.attributes["number"]}
     get Semester(): string {return this.data.attributes["semester"]}
-    get ReId() : number {return this.data.relationships.instructor["id"]}
+    get ReId() : string {return this.data.relationships.instructor["id"]}
     get ReType() :string {return this.data.relationships.instructor["type"]}
   }
 
   class CourseResponseData{
-    public id : number;
+    public id : string;
     public type : string;
     public attributes : CourseResponseAttributes;
     public relationships : CourseResponseRelationshipInstructor;
@@ -47,11 +47,36 @@ class CourseResponse{
   // }
 
   class CourseResponseRelationshipInstructorData{
-    public id:  number;
+    public id:  string;
     public type: string;
   }
 
+  class IncludedProfessorResponse{
+    constructor (private data: IncludedProfessorResponseData){
+    }
+    get Id() : string { return this.data.id }
+    get Type() : string { return this.data.type }
+    get Email() : string { return this.data.attributes["email"]}
+    get Username() : string {return this.data.attributes["username"]}
+    get Role() : string {return this.data.attributes["role"]}
+    get FirstName() : string {return this.data.attributes["first-name"]}
+    get LastName() : string {return this.data.attributes["last-name"]}
 
+  }
+
+  class IncludedProfessorResponseData{
+    public id : string;
+    public type : string;
+    public attributes: IncludedProfessorAttributes;
+  }
+
+  class IncludedProfessorAttributes{
+    public email: string;
+    public username: string;
+    public role: string;
+    public firstNmae: string;
+    public lastName: string;
+  }
 
   @Injectable()
   export class CourseService {
@@ -79,10 +104,12 @@ class CourseResponse{
   }
 
 
-  private buildCreateCourse(d : CourseResponseData) : Course{
-    let c = new CourseResponse(d);
+  private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
+    let c = new CourseResponse(b);
+    let p = new IncludedProfessorResponse9a);
 
-    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, c.User);
+    let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
+    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor);
 
     return course;
   }
@@ -98,5 +125,5 @@ class CourseResponse{
     return of(false);
   }
 
-  
+
 }
