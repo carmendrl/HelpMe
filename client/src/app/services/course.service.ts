@@ -4,7 +4,6 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { API_SERVER } from '../app.config';
-
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
 import { ModelFactoryService } from './model-factory.service';
@@ -51,6 +50,25 @@ class CourseResponse{
     public type: string;
   }
 
+  class professorResponse{
+    constructor(private data : professorResponseData){
+
+    }
+
+  }
+
+  class professorResponseData{
+    public id: string;
+    public type: string;
+    public attributes: professorResponseAttributes;
+  }
+
+  class professorResponseAttributes{
+    public email: string;
+    public username: string;
+    public role: string;
+    public first-name
+  }
 
 
   @Injectable()
@@ -87,6 +105,24 @@ class CourseResponse{
     return course;
   }
 
+  private getCurrentUser() : User{
+    let url : string=`${this.apiHost}/users`;
+    return this.httpClient.get(url).pipe(
+
+    )
+  }
+
+  private formatProfessor()
+
+  private createNewCourse(subject: string, num: number, title: string, semester: string){
+    let newCourse = new Course();
+    newCourse.subject(subject);
+    newCourse.number(num);
+    newCourse.title(title);
+    newCourse.semester(semester);
+
+  }
+
 
   private handleCreateAccountError (error) : Observable<boolean> {
     if (error instanceof HttpErrorResponse) {
@@ -98,5 +134,5 @@ class CourseResponse{
     return of(false);
   }
 
-  
+
 }
