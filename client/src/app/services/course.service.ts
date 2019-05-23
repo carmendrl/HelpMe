@@ -78,32 +78,32 @@ class IncludedProfessorAttributes{
   public lastName: string;
 }
 
-  class professorResponse{
-    constructor(private data : professorResponseData){
-    }
-
-    get Id(): number {return this.data.id}
-    get Type(): string {return this.data.type}
-    get Email(): string {return this.data.attributes["email"]}
-    get Username(): string {return this.data.attributes["username"]}
-    get Role(): string {return this.data.attributes["role"]}
-    get FirstName(): string {return this.data.attributes["first_name"]}
-    get LastName(): string {return this.data.attributes["last_name"]}
-  }
-
-  class professorResponseData{
-    public id: string;
-    public type: string;
-    public attributes: professorResponseAttributes;
-  }
-
-  class professorResponseAttributes{
-    public email: string;
-    public username: string;
-    public role: string;
-    public first_name: string;
-    public last_name: string;
-  }
+  // class professorResponse{
+  //   constructor(private data : professorResponseData){
+  //   }
+  //
+  //   get Id(): number {return this.data.id}
+  //   get Type(): string {return this.data.type}
+  //   get Email(): string {return this.data.attributes["email"]}
+  //   get Username(): string {return this.data.attributes["username"]}
+  //   get Role(): string {return this.data.attributes["role"]}
+  //   get FirstName(): string {return this.data.attributes["first_name"]}
+  //   get LastName(): string {return this.data.attributes["last_name"]}
+  // }
+  //
+  // class professorResponseData{
+  //   public id: string;
+  //   public type: string;
+  //   public attributes: professorResponseAttributes;
+  // }
+  //
+  // class professorResponseAttributes{
+  //   public email: string;
+  //   public username: string;
+  //   public role: string;
+  //   public first_name: string;
+  //   public last_name: string;
+  // }
 
 
   @Injectable()
@@ -132,14 +132,10 @@ class IncludedProfessorAttributes{
   }
 
 
-<<<<<<< HEAD
+
   private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
     let c = new CourseResponse(b);
     let p = new IncludedProfessorResponse(a);
-=======
-  private buildCreateCourse(d : CourseResponseData) : Course{
-    let c = new CourseResponse(d);
->>>>>>> f60a59ad252d6a7485fe774272ed3b6170bbb885
 
     let course = new Course(c.Subject, c.Number, c.Title, c.Semester, c.User);
 
@@ -153,7 +149,8 @@ class IncludedProfessorAttributes{
     )
   }
 
-  private formatProfessor()
+  private formatProfessor(){}
+
 
   private createNewCourse(subject: string, num: number, title: string, semester: string){
     let newCourse = new Course();
