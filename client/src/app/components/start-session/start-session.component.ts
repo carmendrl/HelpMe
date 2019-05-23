@@ -75,7 +75,7 @@ private sessionStarted: boolean;
   }
 
 
-  createNewSession(){
+  createNewCourseFromForm(){
     debugger
     let yearSemester = this.semester + this.year;
     this.startCourse.push(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
