@@ -157,14 +157,14 @@ class IncludedProfessorAttributes{
   }
 
   private formatProfessor(d: IncludedProfessorResponse) : User{
-    
+
     //let p = new IncludedProfessorResponse(d)
     let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     return prof;
   }
 
 
- createNewCourse(subject: string, num: string, title: string, semester: string){
+ createNewCourse(subject: string, num: string, title: string, semester: string): Course{
     debugger
     let newCourse = new Course();
     newCourse.subject= subject;
@@ -173,6 +173,7 @@ class IncludedProfessorAttributes{
     newCourse.semester=semester;
     //let professor=this.getCurrentUser();
     this.postNewCourse(newCourse);
+    return newCourse;
   }
 
   private postNewCourse(c: Course){
