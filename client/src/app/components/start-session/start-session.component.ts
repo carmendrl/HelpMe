@@ -17,7 +17,13 @@ export class StartSessionComponent implements OnInit {
   closeResult: string;
   description: string;
   private courseId:number;
-  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private course: CourseService) {
+  subject: string;
+  number: number;
+  title: string;
+  semester: string;
+  year:string;
+
+  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService) {
   }
 
   ngOnInit() {
@@ -34,6 +40,10 @@ export class StartSessionComponent implements OnInit {
 
   }
 
+  createNewSession(){
+    let yearSemester = this.semester + this.year;
+    this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester)
+  }
   open(content) {
     this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-session'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;

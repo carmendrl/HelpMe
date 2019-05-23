@@ -41,23 +41,22 @@
       <form class="needs-validation" novalidate>
         <div class="form-group">
           Title:
-          <input type="text" class="form-control" required><br>
-          <!-- make sure they put something in the field-->
+          <input type="text" class="form-control" [(ngModel)]="this.title" required><br>
 
           Subject:
-          <input type="text" class="form-control" required><br>
+          <input type="text" class="form-control" [(ngModel)]="this.subject" required><br>
 
           Number:
-          <input type="number" class="form-control" required><br>
+          <input type="number" class="form-control" [(ngModel)]="this.number" required><br>
 
           Semester:<br>
-          <input type="radio" name="semester" value="Fall(08)">Fall(08)<br>
-          <input type="radio" name="semester" value="Spring(01)">Spring(01) <br>
-          <input type="radio" name="semester" value="May(05)">May(05)<br>
-          <input type="radio" name="semester" value="June(06)">June(06)<br>
-          <input type="radio" name="semester" value="July(07)" >July(07)<br><br>
+          <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall(08)<br>
+          <input type="radio" name="semester" value="01" [(ngModel)]="this.semester">Spring(01) <br>
+          <input type="radio" name="semester" value="05" [(ngModel)]="this.semester">May(05)<br>
+          <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
+          <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
           Year:
-          <input type="text" placeholder="2019" class="form-control" required>
+          <input type="text" placeholder="2019" class="form-control" [(ngModel)]="this.year" required>
           </div>
       </form>
     </div>
