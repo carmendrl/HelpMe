@@ -122,11 +122,16 @@ class IncludedProfessorAttributes{
   }
 
 
-  private createCoursesArray(courseData : CourseResponseData[]) : Course[]{
+  private createCoursesArray(courseData : CourseResponseData[], includedResponse : any[]) : Course[]{
     let courses = new Array <Course>();
+    let course = new CourseResponseData;
 
     for(let data of courseData){
-      courses.push(this.buildCreateCourse(data));
+
+    var professor : IncludedProfessorResponseData = includedResponse.find(function(element){
+        return element["type"]==="professors" && element["id"]=== course.relationships.instructor["id"]})
+
+      courses.push(this.buildCreateCourse(data, professor));
     }
     return courses;
   }

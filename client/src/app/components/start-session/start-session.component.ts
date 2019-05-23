@@ -17,10 +17,14 @@ export class StartSessionComponent implements OnInit {
   closeResult: string;
   description: string;
   private courseId:number;
-  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private course: CourseService) {
+  private startCourse : Course[];
+
+  constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService) {
   }
 
   ngOnInit() {
+    this.courseService.coursesList().subscribe(
+      courses => this.startCourse = courses);
   }
 
   OnSubmit(){
