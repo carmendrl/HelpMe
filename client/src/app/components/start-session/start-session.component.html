@@ -1,12 +1,12 @@
 <h2>Start a session</h2>
-<form #thisForm="ngForm" (ngSubmit)="onSubmit()" >
+<form #thisForm="ngForm" (submit)="onSubmit()" > <!-- was: (ngSubmit) -->
   <div class="row form-group">
     <div class="col-12 col-sm-2">
       <label for="course">Select course</label>
     </div>
 
     <div class="col-12 col-sm-8">
-      <select class="form-control" name="course">
+      <select [(ngModel)] = "courseId" class="form-control" name="course">
         <option>CSCI 150</option>
         <option>CSCI 495</option>
       </select>
@@ -28,6 +28,50 @@
       <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
     </div>
   </div>
+<!--modal-->
+  <ng-template #content let-modal let-d="dismiss">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-create-session">Create Course</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!---form-->
+      <form class="needs-validation" novalidate>
+        <div class="form-group">
+          Title:
+          <input type="text" class="form-control" required><br>
+          <!-- make sure they put something in the field-->
+
+          Subject:
+          <input type="text" class="form-control" required><br>
+
+          Number:
+          <input type="number" class="form-control" required><br>
+
+          Semester:<br>
+          <input type="radio" name="semester" value="Fall(08)">Fall(08)<br>
+          <input type="radio" name="semester" value="Spring(01)">Spring(01) <br>
+          <input type="radio" name="semester" value="May(05)">May(05)<br>
+          <input type="radio" name="semester" value="June(06)">June(06)<br>
+          <input type="radio" name="semester" value="July(07)" >July(07)<br><br>
+          Year:
+          <input type="text" placeholder="2019" class="form-control" required>
+          </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>
+<!--end modal-->
+<!--button that opens modal-->
+  <button class="btn btn-primary" (click)="open(content)">Create Course</button>
+
+  <hr>
+
+  <pre>{{closeResult}}</pre>
 
   <div *ngIf="generatedCoded > 0" class="alert alert-success">
     <p>
