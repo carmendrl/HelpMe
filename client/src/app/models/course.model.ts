@@ -1,7 +1,10 @@
 import { User } from './user.model';
+import { Entity } from './entity.model';
 
-export class Course {
-  constructor (private _subject? : string, private _number? : string, private _title? : string, private _semester? : string, private _professor? : User ) {}
+export class Course extends Entity{
+  constructor (private _subject? : string, private _number? : string, private _title? : string, private _semester? : string, private _professor? : User, _id?:number ) {
+    super(_id);
+  }
 
   get subject() : string {
     return this._subject;
