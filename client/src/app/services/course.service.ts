@@ -54,7 +54,7 @@ class CourseResponse{
   class IncludedProfessorResponse{
     constructor (private data: IncludedProfessorResponseData){
     }
-    get Id() : string { return this.data.id }
+    get Id() : number { return this.data.id }
     get Type() : string { return this.data.type }
     get Email() : string { return this.data.attributes["email"]}
     get Username() : string {return this.data.attributes["username"]}
@@ -65,7 +65,7 @@ class CourseResponse{
   }
 
   class IncludedProfessorResponseData{
-    public id : string;
+    public id : number;
     public type : string;
     public attributes: IncludedProfessorAttributes;
 }
@@ -137,7 +137,7 @@ class IncludedProfessorAttributes{
     let c = new CourseResponse(b);
     let p = new IncludedProfessorResponse(a);
 
-    let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
     let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor);
 
     return course;
