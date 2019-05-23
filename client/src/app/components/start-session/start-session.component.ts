@@ -76,9 +76,9 @@ private sessionStarted: boolean;
 
 
   createNewSession(){
-    //debugger
+    debugger
     let yearSemester = this.semester + this.year;
-    this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester)
+    this.startCourse.push(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
   }
 
   open(content) {

@@ -164,7 +164,7 @@ class IncludedProfessorAttributes{
   }
 
 
- createNewCourse(subject: string, num: string, title: string, semester: string){
+ createNewCourse(subject: string, num: string, title: string, semester: string): Course{
     debugger
     let newCourse = new Course();
     newCourse.subject= subject;
@@ -173,6 +173,7 @@ class IncludedProfessorAttributes{
     newCourse.semester=semester;
     //let professor=this.getCurrentUser();
     this.postNewCourse(newCourse);
+    return newCourse;
   }
 
   private postNewCourse(c: Course){
