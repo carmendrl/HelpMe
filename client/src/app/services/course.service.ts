@@ -137,7 +137,7 @@ class IncludedProfessorAttributes{
     let c = new CourseResponse(b);
     let p = new IncludedProfessorResponse(a);
 
-    let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
     let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor);
 
     return course;
