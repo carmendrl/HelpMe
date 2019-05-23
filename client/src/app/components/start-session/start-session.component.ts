@@ -1,9 +1,15 @@
 import { Component, OnInit } from '@angular/core';
+
+import { Course } from '../../models/course.model';
+
+import { CourseService } from '../../services/course.service';
+
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { Router } from '@angular/router';
 import { CourseService } from'./../services/course.service';
+
 
 
 @Component({
@@ -12,6 +18,8 @@ import { CourseService } from'./../services/course.service';
   styleUrls: ['./start-session.component.scss']
 })
 
+private startCourses : Course[];
+
 export class StartSessionComponent implements OnInit {
   closeResult: string;
   description: string;
@@ -19,7 +27,13 @@ export class StartSessionComponent implements OnInit {
   constructor(private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private course: CourseService) {
   }
 
+
+  constructor() { }
+private courseService : CourseService
   ngOnInit() {
+    this.courseService.coursesList().subscribe(
+      courses => this.startCourses = courses
+    );
   }
 
   OnSubmit(){
