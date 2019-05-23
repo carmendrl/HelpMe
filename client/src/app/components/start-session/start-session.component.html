@@ -7,8 +7,8 @@
 
     <div class="col-12 col-sm-8">
       <select [(ngModel)] = "courseId" class="form-control" name="course">
-        <option>CSCI 150</option>
-        <option>CSCI 495</option>
+        <option *ngFor="let course of courses" [ngValue]="course"> {{course.subjectAndNumber}} </option>
+        <!-- <option>CSCI 495</option> -->
       </select>
     </div>
   </div>
