@@ -52,7 +52,7 @@ class CourseResponse{
 
   class professorResponse{
     constructor(private data : professorResponseData){
-
+      
     }
 
   }
@@ -67,7 +67,8 @@ class CourseResponse{
     public email: string;
     public username: string;
     public role: string;
-    public first-name
+    public first_name: string;
+    public last_name: string;
   }
 
 
