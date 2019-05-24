@@ -148,19 +148,19 @@ class IncludedProfessorAttributes{
     return course;
   }
 
-  private getCurrentUser() : Observable<User>{
-    let url : string=`${this.apiHost}/users`;
-    return this.httpClient.get(url).pipe(
-      map(r => this.formatProfessor(r["data"])),
-      catchError(this.handleError<User>(`labSessions`))
-    );
-  }
 
-  private formatProfessor(d: IncludedProfessorResponse) : User{
 
+  private getProfAndId(d: CourseResponseData): any[]{
+    debugger
     //let p = new IncludedProfessorResponse(d)
-    let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-    return prof;
+    // let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    // return prof;
+    let info = new Array<any>();
+    let course = new CourseResponse(d);
+    info.push(course.Id);
+    info.push(course.ReId);
+    return info;
+
   }
 
 
@@ -176,13 +176,14 @@ class IncludedProfessorAttributes{
     return newCourse;
   }
 
-  private postNewCourse(c: Course){
+//returns the course Id and the professor's id
+  private postNewCourse(c: Course) : Observable<any[]> {
     debugger
     let url : string=`${this.apiHost}/courses`;
     let body= this.buildCourseBodyFromC(c);
-    this.httpClient.post(url, body).pipe(
-      map(r => true ),
-      catchError(error => this.handleCreateAccountError(error))
+    return this.httpClient.post(url, body).pipe(
+      map(r => this.getProfAndId(r["data"])),
+      catchError(this.handleError<any[]>('post new course'))
     );
   }
   private buildCourseBodyFromC (c: Course) {
