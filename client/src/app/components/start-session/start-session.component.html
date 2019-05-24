@@ -1,3 +1,4 @@
+<body onload="myFunction">
 <h2>Start a session</h2>
 <form #thisForm="ngForm" (ngSubmit)="startSession()">
   <div class="row form-group">
@@ -77,7 +78,7 @@
           <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
           <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
           Year:
-          <input type="text" class="form-control" name="year" [(ngModel)]="this.year" required>
+          <input type="text" id="date" class="form-control" name="year" placeholder={{this.todayYear}} [(ngModel)]="this.year" required>
           </div>
       </form>
     </div>
@@ -86,3 +87,5 @@
     </div>
   </ng-template>
 <!--end modal-->
+
+</body>

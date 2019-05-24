@@ -5,13 +5,15 @@ import {Course} from '../../models/course.model';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
-import { CourseService } from'../../services/course.service';
+import { CourseService } from '../../services/course.service';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-start-session',
   templateUrl: './start-session.component.html',
-  styleUrls: ['./start-session.component.scss']
+  styleUrls: ['./start-session.component.scss'],
+  providers: [DatePipe]
 })
 
 
@@ -28,11 +30,12 @@ export class StartSessionComponent implements OnInit {
   private generatedCode: string;
   private generatedId:number;
   private sessionStarted: boolean;
+  private todayYear: number;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
   private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService){
-
+      this.getYear();
   }
 
   ngOnInit() {
@@ -74,7 +77,7 @@ export class StartSessionComponent implements OnInit {
 
   createNewCourseFromForm(){
     debugger
-    let yearSemester = this.semester + this.year;
+    let yearSemester = this.year + this.semester;
     this.startCourse.unshift(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
   }
 
@@ -97,4 +100,11 @@ export class StartSessionComponent implements OnInit {
       return  `with: ${reason}`;
     }
   }
+
+  private getYear(){
+    debugger
+    let date = new Date();
+    this.todayYear= date.getFullYear();
+}
+
 }
