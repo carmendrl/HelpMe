@@ -102,7 +102,7 @@ export class StartSessionComponent implements OnInit {
   }
 
   private getYear(){
-    debugger
+    //debugger
     let date = new Date();
     this.todayYear= date.getFullYear();
 }

@@ -172,7 +172,8 @@ class IncludedProfessorAttributes{
     newCourse.title=title;
     newCourse.semester=semester;
     //let professor=this.getCurrentUser();
-    this.postNewCourse(newCourse);
+    let courseIdAndProfId = new Observable<any[]>();
+    courseIdAndProfId = this.postNewCourse(newCourse);
     return newCourse;
   }
 
