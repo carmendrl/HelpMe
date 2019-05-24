@@ -75,7 +75,7 @@ export class StartSessionComponent implements OnInit {
   createNewCourseFromForm(){
     debugger
     let yearSemester = this.semester + this.year;
-    this.startCourse.push(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
+    this.startCourse.unshift(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
   }
 
   open(content) {
