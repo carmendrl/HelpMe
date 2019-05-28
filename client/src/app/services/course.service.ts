@@ -169,10 +169,11 @@ class IncludedProfessorAttributes{
        semester: semester
      };
      return this.httpClient.post(url, body).pipe(
-       map(r => this.createNewCourse(r["data"], r["included"])), //add r["included"]
+       map(r => this.createNewCourse(r["data"])), //add r["included"]
        catchError(this.handleError<Course>(`post new course`))
      );
    }
+
 
 
   private handleCreateAccountError (error) : Observable<boolean> {
