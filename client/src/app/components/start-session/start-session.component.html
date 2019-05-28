@@ -1,14 +1,16 @@
+<body onload="myFunction">
 <h2>Start a session</h2>
-<form #thisForm="ngForm" (submit)="onSubmit()" > <!-- was: (ngSubmit) -->
+<form #thisForm="ngForm" (ngSubmit)="startSession()">
   <div class="row form-group">
     <div class="col-12 col-sm-2">
       <label for="course">Select course</label>
     </div>
 
     <div class="col-12 col-sm-8">
+
       <select [(ngModel)] = "courseId" class="form-control" name="course">
-        <option *ngFor="let course of courses" [ngValue]="course"> {{course.subjectAndNumber}} </option>
-        <!-- <option>CSCI 495</option> -->
+        <option *ngFor="let course of startCourse; let i=index" [selected]="i==0"[ngValue]="course.id"> {{course.subjectAndNumber}} </option>
+
       </select>
     </div>
   </div>
@@ -28,26 +30,47 @@
       <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
     </div>
   </div>
-<!--modal-->
-  <ng-template #content let-modal let-d="dismiss">
+
+  <div *ngIf=sessionStarted class="alert alert-success">
+    <p>
+      Session code is <strong>{{generatedCode}}</strong>
+      <a [routerLink]="['/session-view/', generatedId]">Go to session</a>
+    </p>
+        <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
+        <span (click)="copySessionLink()"  class="btn btn-primary">Copy Session Link</span>
+  </div>
+
+
+  <!--button that opens modal-->
+    <a class="btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
+
+  <hr>
+
+
+
+</form>
+
+<!-- modal-->
+  <ng-template #content let-modal let-d="dismiss" let-c="close">
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-create-session">Create Course</h4>
+      <h4 class="modal-title" id="modal-create-session" aria-labelledBy="modal-create-course">Create Course</h4>
       <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <div class="modal-body">
-      <!---form-->
-      <form class="needs-validation" novalidate>
+      <app-create-course-form></app-create-course-form>
+      <!--form-->
+      <!--<form class="needs-validation" novalidate>
         <div class="form-group">
           Title:
-          <input type="text" class="form-control" [(ngModel)]="this.title" required><br>
+          <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
 
           Subject:
-          <input type="text" class="form-control" [(ngModel)]="this.subject" required><br>
+          <input type="text" class="form-control" name="subject" [(ngModel)]="this.subject" required><br>
 
           Number:
-          <input type="number" class="form-control" [(ngModel)]="this.number" required><br>
+          <input type="text" class="form-control" name="number" [(ngModel)]="this.number" required><br>
 
           Semester:<br>
           <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall(08)<br>
@@ -56,30 +79,12 @@
           <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
           <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
           Year:
-          <input type="text" placeholder="2019" class="form-control" [(ngModel)]="this.year" required>
+          <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
           </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-    </div>
+      </form>-->
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Save click');saveCourse()">Save</button>
+      </div> -->
   </ng-template>
 <!--end modal-->
-<!--button that opens modal-->
-  <button class="btn btn-primary" (click)="open(content)">Create Course</button>
-
-  <hr>
-
-  <pre>{{closeResult}}</pre>
-
-  <div *ngIf="generatedCoded > 0" class="alert alert-success">
-    <p>
-      Session code is <strong>{{generatedCode}}</strong>
-      <a [routerLink]="['/session-view/', generatedCode]">Go to session</a>
-    </p>
-    <p>
-      Code has been copied to clipboard
-    </p>
-  </div>
-
-</form>

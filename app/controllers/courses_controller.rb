@@ -10,7 +10,7 @@ class CoursesController < ApplicationController
     if current_user.professor?
       permitted_params = course_params.merge!({ instructor_id: current_user.id })
       course = Course.create!(permitted_params)
-      render json: course
+      render json: course, include: ['instructor']
     else
       render_cannot_perform_operation("Must be a professor to create a course.")
     end

@@ -13,12 +13,20 @@ export class FacultyDashboardComponent implements OnInit {
 
   private pastSessions : LabSession[];
 
-  constructor(private labSessionService : LabSessionService) { }
+  constructor(private labSessionService : LabSessionService) {
+  this.pastSessions = new Array<LabSession>();
+}
 
   ngOnInit() {
     this.labSessionService.labSessions().subscribe(
-      sessions => this.pastSessions = sessions
+      sessions =>
+        this.pastSessions.concat(sessions));
+
+    this.labSessionService.newLabSession$.subscribe(
+      session =>
+        this.pastSessions.unshift(session)
     );
   }
+
 
 }

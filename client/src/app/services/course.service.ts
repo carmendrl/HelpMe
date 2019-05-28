@@ -9,6 +9,7 @@ import { User } from '../models/user.model';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 
 class CourseResponse{
@@ -19,8 +20,8 @@ class CourseResponse{
     get Subject():string {return this.data.attributes["subject"]}
     get Number(): string {return this.data.attributes["number"]}
     get Semester(): string {return this.data.attributes["semester"]}
-    get ReId() : number {return this.data.relationships.instructor["id"]}
-    get ReType() :string {return this.data.relationships.instructor["type"]}
+    get ReId() : number {return this.data.relationships.instructor.data["id"]}
+    get ReType() :string {return this.data.relationships.instructor.data["type"]}
   }
 
   class CourseResponseData{
@@ -41,11 +42,11 @@ class CourseResponse{
     public instructor: CourseResponseRelationshipInstructorData;
   }
 
-  // class CourseResponseRelationshipInstructorData{
-  //   public data: CourseResponseRelationshipInstructorDataDetails;
-  // }
-
   class CourseResponseRelationshipInstructorData{
+    public data: CourseResponseRelationshipInstructorDataDetails;
+  }
+
+  class CourseResponseRelationshipInstructorDataDetails{
     public id:  number;
     public type: string;
   }
@@ -109,33 +110,35 @@ class IncludedProfessorAttributes{
   @Injectable()
   export class CourseService {
     private apiHost : string;
+    public _newCourse$: Subject<Course>;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
             this.apiHost = host;
+            this._newCourse$ = new Subject<Course>();
   }
 
 
   coursesList() : Observable<Course[]>{
+
     let url : string =`${this.apiHost}/courses`;
-    return this.httpClient.get(url).pipe(map(r => this.createCoursesArray(r["data"]))
+
+    return this.httpClient.get(url).pipe(
+      map(r => this.createCoursesArray(r["data"], r["included"]))
     );
+
   }
 
 
-  private createCoursesArray(courseData : CourseResponseData[], includedResponse : any[]) : Course[]{
+  private createCoursesArray(courseDatas : CourseResponseData[], includedResponse : any[]) : Course[]{
     let courses = new Array <Course>();
-    let course = new CourseResponseData;
-
-    for(let data of courseData){
-
+    for(let courseData of courseDatas){
     var professor : IncludedProfessorResponseData = includedResponse.find(function(element){
-        return element["type"]==="professors" && element["id"]=== course.relationships.instructor["id"]})
+        return element["type"]==="professors" && element["id"]=== courseData.relationships.instructor.data["id"]})
 
-      courses.push(this.buildCreateCourse(data, professor));
+      courses.push(this.buildCreateCourse(courseData, professor));
     }
     return courses;
   }
-
 
 
   private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
@@ -143,36 +146,48 @@ class IncludedProfessorAttributes{
     let p = new IncludedProfessorResponse(a);
 
     let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
-    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor);
+    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
 
     return course;
   }
 
-  private getCurrentUser() : User{
-    let url : string=`${this.apiHost}/users`;
-    return this.httpClient.get(url).pipe(
-      map(r => this.formatProfessor(r["data"])),
-      catchError(this.handleError<User>(`labSessions`))
-    );
-  }
-
-  private formatProfessor(d: IncludedProfessorResponse) : User{
-    debugger
-    //let p = new IncludedProfessorResponse(d)
-    let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-    return prof;
-  }
 
 
- createNewCourse(subject: string, num: number, title: string, semester: string){
-    let newCourse = new Course();
-    newCourse.subject(subject);
-    newCourse.number(num);
-    newCourse.title(title);
-    newCourse.semester(semester);
-    newCourse.professor(getCurrentUser());
+  createNewCourse(d : CourseResponseData, i : IncludedProfessorResponseData): Course{ //add i:IncludedProfessorResponseData
+     debugger
+     let c = new CourseResponse(d);
 
-  }
+     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
+     debugger
+     let p = new IncludedProfessorResponse(i[0]);
+
+     let user = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
+     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, user, c.Id);
+     debugger
+    this._newCourse$.next(newCourse);
+
+     return newCourse;
+   }
+
+ //returns the course
+    postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
+     debugger
+     let url : string=`${this.apiHost}/courses`;
+     let body= {
+       title: title,
+       subject: subject,
+       number: num,
+       semester: semester
+     };
+     return this.httpClient.post(url, body).pipe(
+       map(r => this.createNewCourse(r["data"], r["included"])),
+       catchError(this.handleError<Course>(`post new course`))
+     );
+   }
+
+   get newCourse$() : Observable<Course>{
+     return this._newCourse$;
+   }
 
 
   private handleCreateAccountError (error) : Observable<boolean> {

@@ -11,6 +11,7 @@ import { User } from '../models/user.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
 
 
 class LabsessionResponseAttributes {
@@ -60,7 +61,7 @@ class LabsessionResponseData {
 
 class LabsessionResponse {
   constructor (private data : LabsessionResponseData) {
-	}
+  }
   get Type() : string { return this.data.type }
   get Id() : number { return this.data.id }
   get Description() : string { return this.data.attributes["description"] }
@@ -78,14 +79,14 @@ class LabsessionResponse {
 class IncludedCourseResponse{
   constructor (private data: IncludedCourseResponseData){
   }
-get Id(): number {return this.data.id}
-get Type(): string {return this.data.type}
-get Title(): string {return this.data.attributes["title"]}
-get Subject():string {return this.data.attributes["subject"]}
-get Number(): string {return this.data.attributes["number"]}
-get Semester(): string {return this.data.attributes["semester"]}
-get ProfId() :number {return this.data.relationships.instructor.data["id"]}
-get ProfType() :string {return this.data.relationships.instructor.data["type"]}
+  get Id(): number {return this.data.id}
+  get Type(): string {return this.data.type}
+  get Title(): string {return this.data.attributes["title"]}
+  get Subject():string {return this.data.attributes["subject"]}
+  get Number(): string {return this.data.attributes["number"]}
+  get Semester(): string {return this.data.attributes["semester"]}
+  get ProfId() :number {return this.data.relationships.instructor.data["id"]}
+  get ProfType() :string {return this.data.relationships.instructor.data["type"]}
 
 }
 
@@ -104,7 +105,7 @@ class IncludedCourseResponseAttributes{
 }
 
 class IncludedCourseResponseInstructor{
-public instructor:  IncludedCourseResponseInstructorData;
+  public instructor:  IncludedCourseResponseInstructorData;
 }
 
 class IncludedCourseResponseInstructorData{
@@ -112,8 +113,8 @@ class IncludedCourseResponseInstructorData{
 }
 
 class IncludedCourseResponseInstructorDataDetails{
-public id:  number;
-public type: string;
+  public id:  number;
+  public type: string;
 
 }
 
@@ -147,97 +148,111 @@ class IncludedProfessorAttributes{
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
+  public _newLabSession$: Subject<LabSession>;
 
-  constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService,@Inject(API_SERVER) host : string) {
+  constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
+    this._newLabSession$ = new Subject<LabSession>();
   }
 
   labSessions() : Observable<LabSession[]> {
-        let url : string =`${this.apiHost}/lab_sessions`;
-        return this.httpClient.get(url).pipe(
-          map(r => this.createLabsessionsArray(r["data"], r["included"] )),
-          catchError(this.handleError<LabSession[]>(`labSessions`))
-        );
+    let url : string =`${this.apiHost}/lab_sessions`;
+    return this.httpClient.get(url).pipe(
+      map(r => this.createLabsessionsArray(r["data"], r["included"] )),
+      catchError(this.handleError<LabSession[]>(`labSessions`))
+    );
   }
 
   private createLabsessionsArray(dataResponses: LabsessionResponseData[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
 
     //loop through the labsessions and push them onto an array after reformating
-     for(let dataResponse of dataResponses){
+    for(let dataResponse of dataResponses){
 
-       //search for the course information
-       var course: IncludedCourseResponseData = includedResponses.find(function(element) {
-         return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
-       });
+      //search for the course information
+      var course: IncludedCourseResponseData = includedResponses.find(function(element) {
+        return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
+      });
 
 
-       //search for the professor information
-       var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
-         return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
-       });
-       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
+      //search for the professor information
+      var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
+        return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+      });
+      sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
 
-     }
+    }
     return sessions;
   }
 
 
-    private buildCreateLabsessionFromJson(s: LabsessionResponseData, a: IncludedCourseResponseData, b: IncludedProfessorResponseData ) : LabSession {
-        let l = new LabsessionResponse(s);
-        let c = new IncludedCourseResponse (a);
-        let d = new IncludedProfessorResponse (b);
+  private buildCreateLabsessionFromJson(s: LabsessionResponseData, a: IncludedCourseResponseData, b: IncludedProfessorResponseData ) : LabSession {
+    let l = new LabsessionResponse(s);
+    let c = new IncludedCourseResponse (a);
+    let d = new IncludedProfessorResponse (b);
 
-        let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-        let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof);
-        let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
-        return session;
-    }
-
-
-
-    createNewLabSession(description:String, courseId:number) : Observable<LabSession> {
-          let url : string =`${this.apiHost}/lab_sessions`;
-          let body = {
-            description: description,
-            course_id: courseId
-          };
-          return this.httpClient.post<LabsessionResponseData>(url, body).pipe(
-            map(r => this.createNewLabSessionFromResponse(new LabsessionResponse(r["data"]))  ),
-            catchError(this.handleError<LabSession>(`labSessions`))
-          );
-    }
-
-    createNewLabSessionFromResponse(l: LabsessionResponse){
-      let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course());
-      return session
-      //just return the token? - how are dates set?
-    }
+    let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof, c.Id);
+    let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
+    return session;
+  }
 
 
 
+  createNewLabSession(description:String, courseId:number): Observable<LabSession> {
+    debugger
+    let url : string =`${this.apiHost}/lab_sessions/`;
+    let body = {
+      description: description,
+      course_id: courseId
+    };
+    return this.httpClient.post(url, body).pipe(
+      //tap(r => debugger),
+      map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
+      catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
+    );
 
+  }
 
-   private handleCreateAccountError (error) : Observable<boolean> {
-      if (error instanceof HttpErrorResponse) {
-        let httpError = <HttpErrorResponse> error;
-        let errorMessage : string = "The account was not created for the following reasons:";
-        let reasons = error.error.errors.full_messages.join(", ");
-        console.log(reasons);
-      }
-      return of(false);
-    }
+  createNewLabSessionFromJson(r: LabsessionResponseData, includedResponses:any[]): LabSession{
+    debugger
+    var course: IncludedCourseResponseData = includedResponses.find(function(element) {
+      return element["type"] === "courses" && element["id"]=== r.attributes["course-id"];
+    });
 
+    //search for the professor information
+    var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
+      return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+    });
 
-    private handleError<T> (operation = 'operation', result?: T) {
-  return (error: any): Observable<T> => {
+    let l = new LabsessionResponse(r);
+    let c = new IncludedCourseResponse (course);
+    let d = new IncludedProfessorResponse (prof);
 
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
-
-
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
-  };
+    let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
+    let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
+    this._newLabSession$.next(session);
+    return session;
 }
+
+    get newLabSession$() : Observable<LabSession> {
+      return this._newLabSession$;
+}
+
+
+
+
+  private handleError<T> (operation = 'operation', result?: T) {
+    debugger
+    return (error: any): Observable<T> => {
+
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+
+
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
 }
