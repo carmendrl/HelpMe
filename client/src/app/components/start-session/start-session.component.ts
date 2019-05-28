@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {DOCUMENT} from '@angular/common';
+import {NgForm} from '@angular/forms';
 import {Course} from '../../models/course.model';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSession } from '../../models/lab_session.model';
@@ -51,7 +52,6 @@ export class StartSessionComponent implements OnInit {
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
       debugger
-
       this.sessionStarted = true;
   }
 
