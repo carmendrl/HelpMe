@@ -9,6 +9,7 @@ import { User } from '../models/user.model';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 
 class CourseResponse{
@@ -109,9 +110,11 @@ class IncludedProfessorAttributes{
   @Injectable()
   export class CourseService {
     private apiHost : string;
+    public _newCourse$: Subject<Course>;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
             this.apiHost = host;
+            this._newCourse$ = new Subject<Course>();
   }
 
 
@@ -169,11 +172,16 @@ class IncludedProfessorAttributes{
   createNewCourse(d : CourseResponseData, i : IncludedProfessorResponseData): Course{ //add i:IncludedProfessorResponseData
      debugger
      let c = new CourseResponse(d);
+
+     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
+     debugger
      let p = new IncludedProfessorResponse(i[0]);
 
      let user = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
      let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, user, c.Id);
      debugger
+    this._newCourse$.next(newCourse);
+
      return newCourse;
    }
 
@@ -192,6 +200,21 @@ class IncludedProfessorAttributes{
        catchError(this.handleError<Course>(`post new course`))
      );
    }
+
+   get newCourse$() : Observable<Course>{
+     return this._newCourse$;
+   }
+
+
+  private handleCreateAccountError (error) : Observable<boolean> {
+    if (error instanceof HttpErrorResponse) {
+      let httpError = <HttpErrorResponse> error;
+      let errorMessage : string = "The account was not created for the following reasons:";
+      let reasons = error.error.errors.full_messages.join(", ");
+      console.log(reasons);
+    }
+    return of(false);
+  }
 
       private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
