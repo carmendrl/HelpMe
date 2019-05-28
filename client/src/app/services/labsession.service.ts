@@ -147,6 +147,7 @@ class IncludedProfessorAttributes{
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
+  private newLabSession: Subject<LabSession>;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
@@ -229,6 +230,10 @@ export class LabSessionService {
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
     this.newLabSession.next(session);
     return session;
+
+get newLabSession() : Observable<LabSession> {
+  return this.newLabSession;
+}
 
 
   }
