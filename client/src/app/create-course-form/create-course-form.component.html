@@ -1,25 +1,40 @@
-<!---form-->
-  <form class="needs-validation" novalidate>
-    <div class="form-group">
-      Title:
-      <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
+<!--button that opens modal-->
+  <a class="btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
 
-      Subject:
-      <input type="text" class="form-control" name="subject" [(ngModel)]="this.subject" required><br>
-
-      Number:
-      <input type="text" class="form-control" name="number" [(ngModel)]="this.number" required><br>
-
-      Semester:<br>
-      <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall(08)<br>
-      <input type="radio" name="semester" value="01" [(ngModel)]="this.semester">Spring(01) <br>
-      <input type="radio" name="semester" value="05" [(ngModel)]="this.semester">May(05)<br>
-      <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
-      <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
-      Year:
-      <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
+<hr>
+<!-- modal-->
+  <ng-template #content let-modal let-d="dismiss" let-c="close">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-create-session" aria-labelledBy="modal-create-course">Create Course</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-  </form>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="createNewCourseFromForm()">Save</button>
-  </div>
+    <div class="modal-body">
+      <!--form-->
+      <form class="needs-validation" novalidate>
+        <div class="form-group">
+          Title:
+          <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
+
+          Subject:
+          <input type="text" class="form-control" name="subject" [(ngModel)]="this.subject" required><br>
+
+          Number:
+          <input type="text" class="form-control" name="number" [(ngModel)]="this.number" required><br>
+
+          Semester:<br>
+          <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall(08)<br>
+          <input type="radio" name="semester" value="01" [(ngModel)]="this.semester">Spring(01) <br>
+          <input type="radio" name="semester" value="05" [(ngModel)]="this.semester">May(05)<br>
+          <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
+          <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
+          Year:
+          <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
+          </div>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Save click');createNewCourseFromForm()">Save</button>
+      </div>
+  </ng-template>
