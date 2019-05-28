@@ -30,6 +30,7 @@ export class StartSessionComponent implements OnInit {
   private generatedCode: string;
   private generatedId:number;
   private sessionStarted: boolean;
+  private newSession: LabSession;
 
   private todayYear: number;
 
@@ -49,7 +50,8 @@ export class StartSessionComponent implements OnInit {
   startSession(){
     debugger
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
-      r => {this.generatedCode = r[0]; this.generatedId=r[1]});
+      r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
+
       this.sessionStarted = true;
   }
 
