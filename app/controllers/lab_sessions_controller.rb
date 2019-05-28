@@ -12,7 +12,7 @@ class LabSessionsController < ApplicationController
 
   def create
     lab_session = current_user.lab_sessions.create!(session_params)
-    render json: lab_session
+    render json: lab_session, include: [:course]
   end
 
   def update
