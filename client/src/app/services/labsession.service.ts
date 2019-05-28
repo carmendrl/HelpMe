@@ -207,7 +207,7 @@ export class LabSessionService {
     };
     return this.httpClient.post(url, body).pipe(
       //tap(r => debugger),
-      map(r => this.createNewLabSessionFromJson(r["data"])),
+      map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
       catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
     );
 
@@ -224,8 +224,8 @@ export class LabSessionService {
     });
 
     let l = new LabsessionResponse(r);
-    let c = new IncludedCourseResponse (a);
-    let d = new IncludedProfessorResponse (b);
+    let c = new IncludedCourseResponse (course);
+    let d = new IncludedProfessorResponse (prof);
 
     let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
