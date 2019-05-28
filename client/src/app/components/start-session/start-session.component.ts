@@ -42,51 +42,51 @@ export class StartSessionComponent implements OnInit {
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-    courses => {this.startCourse = courses; this.selectedCourse = this.startCourse[0]});
-    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
-  }
-
-  startSession(){
-    debugger
-    this.courseId = this.selectedCourse.id;
-    this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
-      r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
-      debugger
-      this.sessionStarted = true;
-  }
-
-  copySessionCode(){
-
-    let selBox = this.document.createElement('textarea');
-    selBox.value=this.generatedCode;
-    this.document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    this.document.execCommand('copy');
-    this.document.body.removeChild(selBox);
-
-  }
-  copySessionLink(){
-
-    let selBox = this.document.createElement('textarea');
-    let url ="www.YouDidIT....."+this.generatedId+".....com";
-    selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
-    this.document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    this.document.execCommand('copy');
-    this.document.body.removeChild(selBox);
-
-  }
-
-
-  saveCourse(){
-    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
-}
-  createNewCourseFromForm(){
-    debugger
-    let yearSemester = this.todayYear + this.semester;
-    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
-      r => this.startCourse.unshift(r));
+      courses => {this.startCourse = courses; this.selectedCourse = this.startCourse[0]});
+      this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
     }
-  }
+
+    startSession(){
+      debugger
+      this.courseId = this.selectedCourse.id;
+      this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
+        r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
+        debugger
+        this.sessionStarted = true;
+      }
+
+      copySessionCode(){
+
+        let selBox = this.document.createElement('textarea');
+        selBox.value=this.generatedCode;
+        this.document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        this.document.execCommand('copy');
+        this.document.body.removeChild(selBox);
+
+      }
+      copySessionLink(){
+
+        let selBox = this.document.createElement('textarea');
+        let url ="www.YouDidIT....."+this.generatedId+".....com";
+        selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
+        this.document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        this.document.execCommand('copy');
+        this.document.body.removeChild(selBox);
+
+      }
+
+
+      saveCourse(){
+        this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+      }
+      createNewCourseFromForm(){
+        debugger
+        let yearSemester = this.todayYear + this.semester;
+        this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
+          r => this.startCourse.unshift(r));
+        }
+      }
