@@ -28,6 +28,7 @@ export class StartSessionComponent implements OnInit {
   private generatedCode: string;
   private generatedId:number;
   private sessionStarted: boolean;
+  private newCourse: Course;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -42,6 +43,7 @@ export class StartSessionComponent implements OnInit {
   }
 
   startSession(){
+    debugger
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {this.generatedCode = r[0]; this.generatedId=r[1]});
       this.sessionStarted = true;
@@ -74,8 +76,9 @@ export class StartSessionComponent implements OnInit {
 
   createNewCourseFromForm(){
     debugger
-    let yearSemester = this.semester + this.year;
-    this.startCourse.unshift(this.courseService.createNewCourse(this.subject, this.number, this.title, yearSemester));
+    let yearSemester = this.year + this.semester;
+    //this.startCourse.unshift(this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester));
+    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(r => this.startCourse.unshift(r);
   }
 
   open(content) {

@@ -150,51 +150,30 @@ class IncludedProfessorAttributes{
 
 
 
-  private getProfAndId(d: CourseResponseData): any[]{
-    debugger
-    //let p = new IncludedProfessorResponse(d)
-    // let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-    // return prof;
-    let info = new Array<any>();
-    let course = new CourseResponse(d);
-    info.push(course.Id);
-    info.push(course.ReId);
-    return info;
+  createNewCourse(d:CourseResponseData ): Course{ //add i:IncludedProfessorResponseData
+     debugger
+     let c = new CourseResponse(d);
+     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
+     debugger;
+     return newCourse;
+   }
 
-  }
+ //returns the course Id and the professor's id
+    postNewCourse(subject: string, num: string, title: string, semester: string) : Observable<Course> {
+     debugger
+     let url : string=`${this.apiHost}/courses`;
+     let body= {
+       title: title,
+       subject: subject,
+       number: num,
+       semester: semester
+     };
+     return this.httpClient.post(url, body).pipe(
+       map(r => this.createNewCourse(r["data"], r["included"])), //add r["included"]
+       catchError(this.handleError<Course>(`post new course`))
+     );
+   }
 
-
- createNewCourse(subject: string, num: string, title: string, semester: string): Course{
-    debugger
-    let newCourse = new Course();
-    newCourse.subject= subject;
-    newCourse.number= num;
-    newCourse.title=title;
-    newCourse.semester=semester;
-    //let professor=this.getCurrentUser();
-    this.postNewCourse(newCourse);
-    return newCourse;
-  }
-
-//returns the course Id and the professor's id
-  private postNewCourse(c: Course) : Observable<any[]> {
-    debugger
-    let url : string=`${this.apiHost}/courses`;
-    let body= this.buildCourseBodyFromC(c);
-    return this.httpClient.post(url, body).pipe(
-      map(r => this.getProfAndId(r["data"])),
-      catchError(this.handleError<any[]>('post new course'))
-    );
-  }
-  private buildCourseBodyFromC (c: Course) {
-    return {
-      subject: c.subject,
-      number: c.number,
-      title: c.title,
-      semester: c.semester,
-      type: 'courses'
-    }
-  }
 
   private handleCreateAccountError (error) : Observable<boolean> {
     if (error instanceof HttpErrorResponse) {
