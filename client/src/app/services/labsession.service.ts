@@ -11,6 +11,7 @@ import { User } from '../models/user.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
 
 
 class LabsessionResponseAttributes {
@@ -147,10 +148,11 @@ class IncludedProfessorAttributes{
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
-  private newLabSession: Subject<LabSession>;
+  public newLabSession: Subject<LabSession>;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
+    this.newLabSession = new Subject<LabSession>();
   }
 
   labSessions() : Observable<LabSession[]> {
@@ -206,7 +208,7 @@ export class LabSessionService {
     return this.httpClient.post(url, body).pipe(
       //tap(r => debugger),
       map(r => this.createNewLabSessionFromJson(r["data"])),
-      catchError(this.handleError<any[]>(`accesssingTokenAndId`))
+      catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
     );
 
   }
@@ -216,13 +218,13 @@ export class LabSessionService {
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course(), l.Id, l.Token);
     this.newLabSession.next(session);
     return session;
+}
 
-get newLabSession() : Observable<LabSession> {
-  return this.newLabSession;
+    get getNewLabSession() : Observable<LabSession> {
+      return this.newLabSession;
 }
 
 
-  }
 
 
   private handleError<T> (operation = 'operation', result?: T) {

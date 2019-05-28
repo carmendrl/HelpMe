@@ -4,7 +4,7 @@ import { User } from './user.model';
 import { Entity } from './entity.model';
 
 export class LabSession extends Entity {
-  constructor (private _description: string, private _startDate : Date, private _endDate : Date, private _course: Course, _id? : number, _token?:string) {
+  constructor (private _description: string, private _startDate : Date, private _endDate : Date, private _course: Course, _id? : number, private _token?: string) {
     super(_id);
   }
 
