@@ -31,7 +31,6 @@ export class StartSessionComponent implements OnInit {
   private generatedId:number;
   private sessionStarted: boolean;
   private newSession: LabSession;
-
   private todayYear: number;
 
 
@@ -51,6 +50,7 @@ export class StartSessionComponent implements OnInit {
     debugger
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
+      debugger
 
       this.sessionStarted = true;
   }
@@ -83,7 +83,8 @@ export class StartSessionComponent implements OnInit {
   createNewCourseFromForm(){
     debugger
     let yearSemester = this.todayYear + this.semester;
-    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(r => this.startCourse.unshift(r));
+    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
+      r => this.startCourse.unshift(r));
   }
 
   open(content) {

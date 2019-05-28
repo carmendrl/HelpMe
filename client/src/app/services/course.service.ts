@@ -161,7 +161,7 @@ class IncludedProfessorAttributes{
      return newCourse;
    }
 
- //returns the course Id and the professor's id
+ //returns the course 
     postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
      debugger
      let url : string=`${this.apiHost}/courses`;
@@ -172,22 +172,10 @@ class IncludedProfessorAttributes{
        semester: semester
      };
      return this.httpClient.post(url, body).pipe(
-       map(r => this.createNewCourse(r["data"], r["included"])), //add r["included"]
+       map(r => this.createNewCourse(r["data"], r["included"])),
        catchError(this.handleError<Course>(`post new course`))
      );
    }
-
-
-
-  private handleCreateAccountError (error) : Observable<boolean> {
-    if (error instanceof HttpErrorResponse) {
-      let httpError = <HttpErrorResponse> error;
-      let errorMessage : string = "The account was not created for the following reasons:";
-      let reasons = error.error.errors.full_messages.join(", ");
-      console.log(reasons);
-    }
-    return of(false);
-  }
 
       private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
