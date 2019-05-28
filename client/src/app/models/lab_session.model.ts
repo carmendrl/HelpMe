@@ -4,7 +4,7 @@ import { User } from './user.model';
 import { Entity } from './entity.model';
 
 export class LabSession extends Entity {
-  constructor (private _description: string, private _startDate : Date, private _endDate : Date, private _course: Course, _id? : number) {
+  constructor (private _description: string, private _startDate : Date, private _endDate : Date, private _course: Course, _id? : number, _token?:string) {
     super(_id);
   }
 
@@ -29,4 +29,10 @@ export class LabSession extends Entity {
   }
 
   get professor() : User { return this._course.professor }
+
+  get token() : string {return this._token;}
+  set token(token : string) {
+    this._token = token;
+  }
+
 }

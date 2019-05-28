@@ -197,7 +197,7 @@ export class LabSessionService {
 
 
 
-  createNewLabSession(description:String, courseId:number): Observable<any[]> {
+  createNewLabSession(description:String, courseId:number): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions/`;
     let body = {
       description: description,
@@ -205,25 +205,24 @@ export class LabSessionService {
     };
     return this.httpClient.post(url, body).pipe(
       //tap(r => debugger),
-      map(r => this.accessTokenAndIDFromNewSession(r["data"])  ),
+      map(r => this.createNewLabSessionFromJson(r["data"])),
       catchError(this.handleError<any[]>(`accesssingTokenAndId`))
     );
 
   }
 
-  accessTokenAndIDFromNewSession(l: LabsessionResponseData): any[]{
-    let info = new Array<any>();
-    let session = new LabsessionResponse(l);
-    info.push(session.Token);
-    info.push(session.Id);
-    return info;
-  }
+  createNewLabSessionFromJson(r: LabsessionResponseData): LabSession{
+    let l = new LabsessionResponse(r);
+    let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course(), l.Id, l.Token);
+    this.newLabSession.next(session);
+    return session;
 
 get newLabSession() : Observable<LabSession> {
   return this.newLabSession;
 }
 
 
+  }
 
 
   private handleError<T> (operation = 'operation', result?: T) {
