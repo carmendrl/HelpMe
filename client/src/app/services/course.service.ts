@@ -157,7 +157,7 @@ class IncludedProfessorAttributes{
      debugger
      let c = new CourseResponse(d);
 
-     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
+     //let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
      debugger
      let p = new IncludedProfessorResponse(i[0]);
 
