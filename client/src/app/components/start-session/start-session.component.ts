@@ -26,7 +26,11 @@ export class StartSessionComponent implements OnInit {
   private generatedId:number;
   private sessionStarted: boolean;
   private newSession: LabSession;
+
   private newCourse: Course;
+
+=======
+  private todayYear: number;
 
 
 
@@ -45,6 +49,7 @@ export class StartSessionComponent implements OnInit {
     debugger
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
+      debugger
 
       this.sessionStarted = true;
   }
@@ -73,13 +78,22 @@ export class StartSessionComponent implements OnInit {
 
   }
 
+<<<<<<< HEAD
   saveCourse(){
     this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+
+  createNewCourseFromForm(){
+    debugger
+    let yearSemester = this.todayYear + this.semester;
+    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
+      r => this.startCourse.unshift(r));
+>>>>>>> cc54e4c31c8db267cb5b55a4ffb04aeccb9edd9d
   }
 
 
 
   open(content) {
+    this.sessionStarted =false;
     this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

@@ -148,11 +148,11 @@ class IncludedProfessorAttributes{
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
-  public newLabSession: Subject<LabSession>;
+  public _newLabSession$: Subject<LabSession>;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
-    this.newLabSession = new Subject<LabSession>();
+    this._newLabSession$ = new Subject<LabSession>();
   }
 
   labSessions() : Observable<LabSession[]> {
@@ -200,6 +200,7 @@ export class LabSessionService {
 
 
   createNewLabSession(description:String, courseId:number): Observable<LabSession> {
+    debugger
     let url : string =`${this.apiHost}/lab_sessions/`;
     let body = {
       description: description,
@@ -214,6 +215,7 @@ export class LabSessionService {
   }
 
   createNewLabSessionFromJson(r: LabsessionResponseData, includedResponses:any[]): LabSession{
+    debugger
     var course: IncludedCourseResponseData = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r.attributes["course-id"];
     });
@@ -230,12 +232,12 @@ export class LabSessionService {
     let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
-    this.newLabSession.next(session);
+    this._newLabSession$.next(session);
     return session;
 }
 
-    get getNewLabSession() : Observable<LabSession> {
-      return this.newLabSession;
+    get newLabSession$() : Observable<LabSession> {
+      return this._newLabSession$;
 }
 
 
