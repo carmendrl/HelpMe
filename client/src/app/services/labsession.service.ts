@@ -231,11 +231,10 @@ export class LabSessionService {
     this.newLabSession.next(session);
     return session;
 
-get newLabSession() : Observable<LabSession> {
-  return this.newLabSession;
-}
+  }
 
-
+  get newLabSession() : Observable<LabSession> {
+    return this.newLabSession;
   }
 
 
