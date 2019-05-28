@@ -41,7 +41,7 @@ export class StartSessionComponent implements OnInit {
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-      courses => this.startCourse = courses; this.selectedCourse = this.startCourse[0]});
+    courses => {this.startCourse = courses; this.selectedCourse = this.startCourse[0]});
     this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
   }
 
@@ -87,15 +87,5 @@ export class StartSessionComponent implements OnInit {
     let yearSemester = this.todayYear + this.semester;
     this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
       r => this.startCourse.unshift(r));
-
-
-
-
-
-
-
-
-
-
-
-}
+    }
+  }
