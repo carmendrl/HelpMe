@@ -29,7 +29,6 @@ export class StartSessionComponent implements OnInit {
 
   private newCourse: Course;
 
-=======
   private todayYear: number;
 
 
@@ -78,7 +77,7 @@ export class StartSessionComponent implements OnInit {
 
   }
 
-<<<<<<< HEAD
+
   saveCourse(){
     this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
 
@@ -87,7 +86,7 @@ export class StartSessionComponent implements OnInit {
     let yearSemester = this.todayYear + this.semester;
     this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
       r => this.startCourse.unshift(r));
->>>>>>> cc54e4c31c8db267cb5b55a4ffb04aeccb9edd9d
+
   }
 
 
