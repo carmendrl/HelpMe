@@ -134,6 +134,22 @@ class IncludedProfessorAttributes{
 
       courses.push(this.buildCreateCourse(courseData, professor));
     }
+    courses= courses.sort(function(a, b){
+      if(a.subject > b.subject){
+        return 1;
+      }
+      else if(a.subject === b.subject){
+        if(a.number > b.number){
+          return 1;
+        }
+        else{
+          return -1;
+        }
+      }
+      else{
+        return -1;
+      }
+    });
     return courses;
   }
 
@@ -161,7 +177,7 @@ class IncludedProfessorAttributes{
      return newCourse;
    }
 
- //returns the course 
+ //returns the course
     postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
      debugger
      let url : string=`${this.apiHost}/courses`;
