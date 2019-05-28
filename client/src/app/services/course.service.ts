@@ -150,16 +150,19 @@ class IncludedProfessorAttributes{
 
 
 
-  createNewCourse(d:CourseResponseData ): Course{ //add i:IncludedProfessorResponseData
+  createNewCourse(d : CourseResponseData, i : IncludedProfessorResponseData): Course{ //add i:IncludedProfessorResponseData
      debugger
      let c = new CourseResponse(d);
-     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
+     let p = new IncludedProfessorResponse(i);
+
+     let user = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
+     let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, user, c.Id);
      debugger;
      return newCourse;
    }
 
  //returns the course Id and the professor's id
-    postNewCourse(subject: string, num: string, title: string, semester: string) : Observable<Course> {
+    postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
      debugger
      let url : string=`${this.apiHost}/courses`;
      let body= {
@@ -169,7 +172,7 @@ class IncludedProfessorAttributes{
        semester: semester
      };
      return this.httpClient.post(url, body).pipe(
-       map(r => this.createNewCourse(r["data"])), //add r["included"]
+       map(r => this.createNewCourse(r["data"], r["included"])), //add r["included"]
        catchError(this.handleError<Course>(`post new course`))
      );
    }
