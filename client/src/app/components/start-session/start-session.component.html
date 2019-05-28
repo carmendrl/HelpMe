@@ -50,7 +50,7 @@
 
 </form>
 
-<!--modal-->
+<!-- modal-->
   <ng-template #content let-modal let-d="dismiss" let-c="close">
     <div class="modal-header">
       <h4 class="modal-title" id="modal-create-session" aria-labelledBy="modal-create-course">Create Course</h4>
@@ -78,7 +78,7 @@
           <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June(06)<br>
           <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July(07)<br><br>
           Year:
-          <input type="text" id="date" class="form-control" name="year" placeholder={{this.todayYear}} [(ngModel)]="this.year" required>
+          <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
           </div>
       </form>
     </div>
@@ -86,6 +86,6 @@
       <button type="button" class="btn btn-outline-dark" (click)="c('Save click');createNewCourseFromForm()">Save</button>
     </div>
   </ng-template>
-<!--end modal-->
+<!--end modal -->
 
 </body>
