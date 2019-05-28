@@ -5,6 +5,7 @@ import {Course} from '../../models/course.model';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { CourseService } from '../../services/course.service';
+import {NgbModal, ModalDismissReasons, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -29,19 +30,20 @@ export class StartSessionComponent implements OnInit {
   private newCourse: Course;
 
   private todayYear: number;
+  private coursesPresent: boolean = false;
 
 
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService){
+  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService, private modalService: NgbModal){
   }
 
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-      courses => this.startCourse = courses);
-    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});  
+      courses => {this.startCourse = courses; this.coursesPresent=true});
+    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
   }
 
   startSession(){
@@ -75,6 +77,28 @@ export class StartSessionComponent implements OnInit {
     this.document.execCommand('copy');
     this.document.body.removeChild(selBox);
 
+  }
+
+  open(content) {
+    //this.sessionStarted =false;
+    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+    console.log("Testing Modal");
+    //this.courseService.newCourse$.subscribe(c => modal.close(c));
+  }
+
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
+    }
   }
 
 

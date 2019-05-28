@@ -9,9 +9,9 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-		"preinstall": "npm install -g node-gyp",
-		"postinstall": "sed -i -e 's/ErrorObservable;/ErrorObservable<any>;/' node_modules/angular2-jsonapi/dist/services/json-api-datastore.service.d.ts",
-		"heroku-postbuild": "ng build"
+    "preinstall": "npm install -g node-gyp",
+    "postinstall": "sed -i -e 's/ErrorObservable;/ErrorObservable<any>;/' node_modules/angular2-jsonapi/dist/services/json-api-datastore.service.d.ts",
+    "heroku-postbuild": "ng build"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +51,5 @@
     "tslint": "~5.7.0",
     "typescript": "~3.2.2"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
