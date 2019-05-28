@@ -9,6 +9,7 @@ import { User } from '../models/user.model';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 
 class CourseResponse{
@@ -109,9 +110,11 @@ class IncludedProfessorAttributes{
   @Injectable()
   export class CourseService {
     private apiHost : string;
+    public _newCourse$: Subject<Course>;
 
   constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
             this.apiHost = host;
+            this._newCourse$ = new Subject<Course>();
   }
 
 
@@ -154,7 +157,8 @@ class IncludedProfessorAttributes{
      debugger
      let c = new CourseResponse(d);
      let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, new User(), c.Id);
-     debugger;
+     debugger
+     this._newCourse$.next(newCourse);
      return newCourse;
    }
 
@@ -174,6 +178,9 @@ class IncludedProfessorAttributes{
      );
    }
 
+   get newCourse$() : Observable<Course>{
+     return this._newCourse$;
+   }
 
 
   private handleCreateAccountError (error) : Observable<boolean> {

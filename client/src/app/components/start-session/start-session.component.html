@@ -59,8 +59,9 @@
       </button>
     </div>
     <div class="modal-body">
-      <!---form-->
-      <form class="needs-validation" novalidate>
+      <app-create-course-form></app-create-course-form>
+      <!--form-->
+      <!--<form class="needs-validation" novalidate>
         <div class="form-group">
           Title:
           <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
@@ -80,12 +81,10 @@
           Year:
           <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
           </div>
-      </form>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="c('Save click');createNewCourseFromForm()">Save</button>
-    </div>
+      </form>-->
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Save click');saveCourse()">Save</button>
+      </div> -->
   </ng-template>
-<!--end modal -->
-
-</body>
+<!--end modal-->

@@ -6,14 +6,13 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { CourseService } from '../../services/course.service';
-import { DatePipe } from '@angular/common';
+
 
 
 @Component({
   selector: 'app-start-session',
   templateUrl: './start-session.component.html',
   styleUrls: ['./start-session.component.scss'],
-  providers: [DatePipe]
 })
 
 
@@ -21,24 +20,19 @@ export class StartSessionComponent implements OnInit {
   closeResult: string;
   private description: string;
   private courseId:number;
-  subject: string;
-  number: string;
-  title: string;
-  semester: string;
   private year: string;
   private startCourse : Course[];
   private generatedCode: string;
   private generatedId:number;
   private sessionStarted: boolean;
   private newSession: LabSession;
+  private newCourse: Course;
 
-  private todayYear: number;
 
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
   private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService){
-      this.getYear();
   }
 
   ngOnInit() {
@@ -79,12 +73,11 @@ export class StartSessionComponent implements OnInit {
 
   }
 
-
-  createNewCourseFromForm(){
-    debugger
-    let yearSemester = this.todayYear + this.semester;
-    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(r => this.startCourse.unshift(r));
+  saveCourse(){
+    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
   }
+
+
 
   open(content) {
     this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
@@ -106,10 +99,7 @@ export class StartSessionComponent implements OnInit {
     }
   }
 
-  private getYear(){
-    //debugger
-    let date = new Date();
-    this.todayYear= date.getFullYear();
-}
+
+
 
 }
