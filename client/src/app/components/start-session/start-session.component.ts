@@ -87,6 +87,7 @@ export class StartSessionComponent implements OnInit {
   }
 
   open(content) {
+    this.sessionStarted =false;
     this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
