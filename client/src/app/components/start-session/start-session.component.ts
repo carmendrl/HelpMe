@@ -48,6 +48,7 @@ export class StartSessionComponent implements OnInit {
 
   startSession(){
     debugger
+    this.courseId = this.selectedCourse.id;
     this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
       debugger

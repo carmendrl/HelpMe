@@ -9,7 +9,7 @@
     <div class="col-12 col-sm-8">
 
       <select [(ngModel)] = "selectedCourse" class="form-control" name="selectedCourse">
-        <option *ngFor="let course of startCourse" [ngValue]="course.id"> {{course.subjectAndNumber}} </option>
+        <option *ngFor="let course of startCourse" [ngValue]="course"> {{course.subjectAndNumber}} </option>
 <!-- "let course of startCourse";let i=index" [selected]="i==0" -->
       </select>
     </div>
