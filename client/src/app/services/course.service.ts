@@ -153,11 +153,11 @@ class IncludedProfessorAttributes{
   createNewCourse(d : CourseResponseData, i : IncludedProfessorResponseData): Course{ //add i:IncludedProfessorResponseData
      debugger
      let c = new CourseResponse(d);
-     let p = new IncludedProfessorResponse(i);
+     let p = new IncludedProfessorResponse(i[0]);
 
      let user = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
      let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, user, c.Id);
-     debugger;
+     debugger
      return newCourse;
    }
 
