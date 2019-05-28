@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import {DOCUMENT} from '@angular/common';
 import {NgForm} from '@angular/forms';
 import {Course} from '../../models/course.model';
-import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { CourseService } from '../../services/course.service';
@@ -32,17 +31,19 @@ export class StartSessionComponent implements OnInit {
 
   private todayYear: number;
 
+  private selectedCourse : Course;
 
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private modalService: NgbModal, private courseService: CourseService){
+  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService){
   }
 
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-      courses => this.startCourse = courses);
+    courses => {this.startCourse = courses; this.selectedCourse = this.startCourse[0]});
+    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
   }
 
   startSession(){
@@ -80,39 +81,11 @@ export class StartSessionComponent implements OnInit {
 
   saveCourse(){
     this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
-
+}
   createNewCourseFromForm(){
     debugger
     let yearSemester = this.todayYear + this.semester;
     this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
       r => this.startCourse.unshift(r));
-
-  }
-
-
-
-  open(content) {
-    this.sessionStarted =false;
-    this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-    console.log("Testing Modal");
-  }
-
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
     }
   }
-
-
-
-
-}
