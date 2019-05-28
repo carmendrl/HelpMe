@@ -24,8 +24,7 @@ export class FacultyDashboardComponent implements OnInit {
   getNewSession() {
     debugger
     this.labSessionService.newLabSession.subscribe(
-      session => this.pastSessions.unshift(session)
-    );
+      session => this.pastSessions.unshift(session));
   }
 
 }

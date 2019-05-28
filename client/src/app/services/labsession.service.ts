@@ -213,9 +213,23 @@ export class LabSessionService {
 
   }
 
-  createNewLabSessionFromJson(r: LabsessionResponseData): LabSession{
+  createNewLabSessionFromJson(r: LabsessionResponseData, includedResponses:any[]): LabSession{
+    var course: IncludedCourseResponseData = includedResponses.find(function(element) {
+      return element["type"] === "courses" && element["id"]=== r.attributes["course-id"];
+    });
+
+    //search for the professor information
+    var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
+      return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+    });
+
     let l = new LabsessionResponse(r);
-    let session = new LabSession(l.Description, l.StartDate, l.EndDate, new Course(), l.Id, l.Token);
+    let c = new IncludedCourseResponse (a);
+    let d = new IncludedProfessorResponse (b);
+
+    let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+    let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
+    let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
     this.newLabSession.next(session);
     return session;
 }
