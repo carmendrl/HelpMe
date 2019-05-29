@@ -6,7 +6,6 @@ import {Course} from '../../models/course.model';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { CourseService } from '../../services/course.service';
-import {NgbModal, ModalDismissReasons, NgbModalOptions, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -29,18 +28,18 @@ export class StartSessionComponent implements OnInit {
   private newCourse: Course;
   private todayYear: number;
   private selectedCourse : Course;
-  private addedCourse = false;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService, private modalService: NgbModal){
+  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService){
   }
 
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-      courses => this.startCourse = courses);
-      this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c);this.selectedCourse=c;});
+      courses => {this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
+      this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+      }
     }
 
   startSession(){
