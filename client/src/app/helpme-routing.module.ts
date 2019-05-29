@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { SessionViewComponent } from './components/session-view/session-view.component';
 
 const routes : Routes = [
   {
@@ -13,6 +14,10 @@ const routes : Routes = [
   {
     'path': 'dashboard',
     'component': DashboardComponent
+  },
+  {
+    'path':'lab_sessions/:id',
+    'component': SessionViewComponent
   },
   {
     'path': '',

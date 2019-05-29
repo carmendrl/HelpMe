@@ -24,7 +24,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { StartSessionComponent } from './components/start-session/start-session.component';
 import { CourseService } from './services/course.service';
-import { CreateCourseFormComponent } from './create-course-form/create-course-form.component';
+import { CreateCourseFormComponent } from './components/create-course-form/create-course-form.component';
+import { SessionViewComponent } from './components/session-view/session-view.component';
 const Server = '/api';
 
 @NgModule({
@@ -40,6 +41,7 @@ const Server = '/api';
     FacultyDashboardComponent,
     StartSessionComponent,
     CreateCourseFormComponent,
+    SessionViewComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule

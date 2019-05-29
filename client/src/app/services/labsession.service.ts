@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
+import { SessionViewComponent } from '../components/session-view/session-view.component';
 
 
 class LabsessionResponseAttributes {
@@ -145,10 +146,64 @@ class IncludedProfessorAttributes{
   public lastName: string;
 }
 
+//session response after joining a session
+// class sessionResponseAll{
+//   public data: sessionResponseData;
+// }
+class sessionResponseData{
+  public id: number;
+  public type: string;
+  public attributes: sessionAttributes;
+  public relationships: sessionRelationships;
+}
+
+class sessionAttributes{
+
+  public created_at: string;
+}
+
+class sessionRelationships{
+  public lab_session: joinLabsession
+  public user: userResponse;
+}
+
+class joinLabsession{
+  public data: labsessionRelationshipData;
+}
+
+class labsessionRelationshipData{
+  public id: number;
+  public type: string;
+}
+
+class userResponse{
+  public data: userResponseData;
+}
+
+class userResponseData{
+  public id: number;
+  public type: string;
+}
+
+// getter for join session
+class sessionResponse{
+  constructor(private response: sessionResponseData){
+
+  }
+  get Id(): number {return this.response.id}
+  get Type(): string {return this.response.type}
+  get Time(): string {return this.response.attributes["created-at"]}
+  get SessionId(): number {return this.response.relationships["lab-sesssion"].data["id"]}
+  get SessionType(): string {return this.response.relationships.lab_session.data["type"]}
+  get UserId(): number {return this.response.relationships.user.data["id"]}
+  get UserType(): string {return this.response.relationships.user.data["type"]}
+}
+
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
+  public sessionId;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
@@ -229,7 +284,7 @@ export class LabSessionService {
     let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
-    debugger
+    //debugger
     this._newLabSession$.next(session);
     return session;
 }
@@ -238,9 +293,36 @@ export class LabSessionService {
       return this._newLabSession$;
 }
 
+  joinASession(token: String): Observable<number>{
+    let url = `${this.apiHost}/lab_sessions/join/${token}`;
+    let body = {
+      token: token
+    }
+    this.sessionId = this.httpClient.post(url, body).pipe(
+      map(r => this.extractSessionId(r["data"])),
+      catchError(this.handleError<number>(`joining a lab session`))
+    );
+    return this.sessionId;
+    debugger
+  }
 
+  private extractSessionId(r: sessionResponseData): number {
+    debugger
+    let s = new sessionResponse(r);
+    var id = s.SessionId;
+    debugger
+    return id;
+  }
 
+  getSession(): Observable<LabSession>{
+    let url = `${this.apiHost}/lab_sessions/${this.sessionId}`;
+    return this.httpClient.get<LabSession>(url).pipe(
+      catchError(this.handleError<LabSession>(`getSession id=${this.sessionId}`))
+    );
+    debugger
+  }
 
+//handles errors
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
