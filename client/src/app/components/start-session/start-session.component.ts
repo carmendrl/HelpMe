@@ -26,15 +26,10 @@ export class StartSessionComponent implements OnInit {
   private generatedId:number;
   private sessionStarted: boolean;
   private newSession: LabSession;
-
   private newCourse: Course;
-
   private todayYear: number;
-  //private coursesPresent: boolean;
-
   private selectedCourse : Course;
   private addedCourse = false;
-
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -43,62 +38,46 @@ export class StartSessionComponent implements OnInit {
 
   ngOnInit() {
     this.sessionStarted = false;
-    debugger
     this.courseService.coursesList().subscribe(
       courses => this.startCourse = courses);
-      //this.numOfCourses();
-      debugger
-    this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c);this.selectedCourse=c;});
-  }
+      this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c);this.selectedCourse=c;});
+    }
 
-
-
-
-
-    startSession(){
-      debugger
-      this.labSessionService.createNewLabSession(this.description, this.selectedCourse.id).subscribe(
+  startSession(){
+    this.labSessionService.createNewLabSession(this.description, this.selectedCourse.id).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
       this.sessionStarted = true;
-   }
+    }
 
+    copySessionCode(){
+      let selBox = this.document.createElement('textarea');
+      selBox.value=this.generatedCode;
+      this.document.body.appendChild(selBox);
+      selBox.focus();
+      selBox.select();
+      this.document.execCommand('copy');
+      this.document.body.removeChild(selBox);
+    }
 
-
-  copySessionCode(){
-
-    let selBox = this.document.createElement('textarea');
-    selBox.value=this.generatedCode;
-    this.document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    this.document.execCommand('copy');
-    this.document.body.removeChild(selBox);
-
-  }
-  copySessionLink(){
-
-    let selBox = this.document.createElement('textarea');
-    let url ="www.YouDidIT....."+this.generatedId+".....com";
-    selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
-    this.document.body.appendChild(selBox);
-    selBox.focus();
-    selBox.select();
-    this.document.execCommand('copy');
-    this.document.body.removeChild(selBox);
-
-  }
+    copySessionLink(){
+      let selBox = this.document.createElement('textarea');
+      let url ="www.YouDidIT....."+this.generatedId+".....com";
+      selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
+      this.document.body.appendChild(selBox);
+      selBox.focus();
+      selBox.select();
+      this.document.execCommand('copy');
+      this.document.body.removeChild(selBox);
+    }
 
   open(content) {
-    //this.sessionStarted =false;
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
     console.log("Testing Modal");
-    //this.courseService.newCourse$.subscribe(c => modal.close(c));
   }
-
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
@@ -110,16 +89,8 @@ export class StartSessionComponent implements OnInit {
     }
   }
 
-
-
-      saveCourse(){
-        this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
-        this.addedCourse = true;
-      }
-      // createNewCourseFromForm(){
-      //   debugger
-      //   let yearSemester = this.todayYear + this.semester;
-      //   this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
-      //     r => this.startCourse.unshift(r));
-      //   }
-      }
+  saveCourse(){
+    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+    this.addedCourse = true;
+  }
+}
