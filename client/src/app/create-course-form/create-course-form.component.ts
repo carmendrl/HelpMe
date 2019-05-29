@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Course } from'../models/course.model';
 import { CourseService } from '../services/course.service';
 import { DatePipe } from '@angular/common';
-
 
 @Component({
   selector: 'app-create-course-form',
@@ -16,17 +15,20 @@ export class CreateCourseFormComponent implements OnInit {
   number: string;
   title: string;
   semester: string;
+  saved: boolean = false;
+  closeResult: string;
 
 
-  constructor(private courseService: CourseService) {  this.getYear(); }
+  constructor(private courseService: CourseService,) {  this.getYear(); }
 
   ngOnInit() {
   }
 
   createNewCourseFromForm(){
     debugger
+    this.saved = true;
     let yearSemester = this.todayYear + this.semester;
-    return this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe();
+    this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe();
     }
 
 
@@ -36,5 +38,7 @@ export class CreateCourseFormComponent implements OnInit {
     let date = new Date();
     this.todayYear= date.getFullYear();
 }
+
+
 
 }
