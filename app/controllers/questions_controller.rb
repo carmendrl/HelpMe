@@ -80,7 +80,7 @@ class QuestionsController < ApplicationController
 		#  Find all of the questions that this user has asked, either as the original asker, or through the
 		#  "Me Too!" mechanism
 		questions = Question.joins(:askers).where("user_id = '#{current_user.id}'")
-		render json: questions
+		render json: questions, include: [:lab_session]
 	end
 
   private
