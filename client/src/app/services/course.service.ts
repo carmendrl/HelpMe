@@ -148,7 +148,6 @@ export class CourseService {
 
     //returns the course
     postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
-      debugger
       let url : string=`${this.apiHost}/courses`;
       let body= {
         title: title,
