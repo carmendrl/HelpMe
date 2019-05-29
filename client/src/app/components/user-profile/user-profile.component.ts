@@ -29,7 +29,7 @@ export class UserProfileComponent implements OnInit {
 			let email : string = user.EmailAddress;
 			debugger
 			let matches = email.match(/(.*)\+.*@hope\.edu$/i);
-			if (matches.length > 1) {
+			if (matches && matches.length > 1) {
 				email = `${matches[1]}@hope.edu`;
 			}
 			let hashedEmail : string = <string> Md5.hashStr(email);
