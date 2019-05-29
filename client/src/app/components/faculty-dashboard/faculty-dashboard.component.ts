@@ -20,7 +20,7 @@ export class FacultyDashboardComponent implements OnInit {
   ngOnInit() {
     this.labSessionService.labSessions().subscribe(
       sessions =>
-        this.pastSessions.concat(sessions));
+        this.pastSessions = this.pastSessions.concat(sessions)) ;
 
     this.labSessionService.newLabSession$.subscribe(
       session =>

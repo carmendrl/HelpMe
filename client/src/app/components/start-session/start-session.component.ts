@@ -1,6 +1,7 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import {DOCUMENT} from '@angular/common';
+import {NgForm} from '@angular/forms';
 import {Course} from '../../models/course.model';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
@@ -32,6 +33,7 @@ export class StartSessionComponent implements OnInit {
   private todayYear: number;
   private coursesPresent: boolean = false;
 
+  private selectedCourse : Course;
 
 
 
@@ -46,14 +48,14 @@ export class StartSessionComponent implements OnInit {
     this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
   }
 
-  startSession(){
-    debugger
-    this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
-      r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
+    startSession(){
       debugger
-
+      this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
+      r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
       this.sessionStarted = true;
-  }
+   }
+
+
 
   copySessionCode(){
 
@@ -104,14 +106,38 @@ export class StartSessionComponent implements OnInit {
 
 
 
+      copySessionCode(){
+
+        let selBox = this.document.createElement('textarea');
+        selBox.value=this.generatedCode;
+        this.document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        this.document.execCommand('copy');
+        this.document.body.removeChild(selBox);
+
+      }
+      copySessionLink(){
+
+        let selBox = this.document.createElement('textarea');
+        let url ="www.YouDidIT....."+this.generatedId+".....com";
+        selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
+        this.document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        this.document.execCommand('copy');
+        this.document.body.removeChild(selBox);
+
+      }
 
 
-
-
-
-
-
-
-
-
-}
+      saveCourse(){
+        this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+      }
+      createNewCourseFromForm(){
+        debugger
+        let yearSemester = this.todayYear + this.semester;
+        this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
+          r => this.startCourse.unshift(r));
+        }
+      }

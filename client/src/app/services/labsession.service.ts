@@ -232,6 +232,7 @@ export class LabSessionService {
     let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
+    debugger
     this._newLabSession$.next(session);
     return session;
 }
