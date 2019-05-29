@@ -28,6 +28,7 @@ export class StartSessionComponent implements OnInit {
   private newCourse: Course;
   private todayYear: number;
   private selectedCourse : Course;
+  private coursesRetrieved: boolean = false;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -37,7 +38,7 @@ export class StartSessionComponent implements OnInit {
   ngOnInit() {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
-      courses => {this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
+      courses => {this.coursesRetrieved=true; this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
       this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c});
     }
 

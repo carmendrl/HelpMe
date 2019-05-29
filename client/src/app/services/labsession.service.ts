@@ -18,7 +18,7 @@ import { SessionViewComponent } from '../components/session-view/session-view.co
 class LabsessionResponseAttributes {
   public description : string;
   public token : string;
-  public activeStatus : boolean;
+  public active : boolean;
   public course_id : number;
   public start_date: Date;
   public end_date: Date;
@@ -54,8 +54,8 @@ class LabsessionResponseCourseData {
 
 
 class LabsessionResponseData {
+  public id: number;
   public type : string;
-  public id : number;
   public attributes: LabsessionResponseAttributes;
   public relationships : LabsessionResponseRelationships;
 }
@@ -68,9 +68,9 @@ class LabsessionResponse {
   get Description() : string { return this.data.attributes["description"] }
   get Token() : string { return this.data.attributes["token"] }
   get ActiveStatus() : boolean { return this.data.attributes["active"] }
-  get StartDate() : Date { return this.data.attributes["start-date"]}
-  get EndDate() : Date { return this.data.attributes["end-date"]}
-  get CourseId() : number { return this.data.attributes["course-id"]}
+  get StartDate() : Date { return this.data.attributes["start_date"]}
+  get EndDate() : Date { return this.data.attributes["end_date"]}
+  get CourseId() : number { return this.data.attributes["course_id"]}
   get Rdata() : string[] { return this.data.relationships.questions["data"]}
   get userId() : number {return this.data.relationships.users.data["id"]}
   get userType() : string { return this.data.relationships.users.data["type"]}
@@ -127,8 +127,8 @@ class IncludedProfessorResponse{
   get Email() : string { return this.data.attributes["email"]}
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
-  get FirstName() : string {return this.data.attributes["first-name"]}
-  get LastName() : string {return this.data.attributes["last-name"]}
+  get FirstName() : string {return this.data.attributes["first_name"]}
+  get LastName() : string {return this.data.attributes["last_name"]}
 
 }
 
@@ -192,8 +192,8 @@ class sessionResponse{
   }
   get Id(): number {return this.response.id}
   get Type(): string {return this.response.type}
-  get Time(): string {return this.response.attributes["created-at"]}
-  get SessionId(): number {return this.response.relationships["lab-sesssion"].data["id"]}
+  get Time(): string {return this.response.attributes["created_at"]}
+  get SessionId(): number {return this.response.relationships.lab_session.data["id"]}
   get SessionType(): string {return this.response.relationships.lab_session.data["type"]}
   get UserId(): number {return this.response.relationships.user.data["id"]}
   get UserType(): string {return this.response.relationships.user.data["type"]}
@@ -226,7 +226,7 @@ export class LabSessionService {
 
       //search for the course information
       var course: IncludedCourseResponseData = includedResponses.find(function(element) {
-        return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course-id"];
+        return element["type"] === "courses" && element["id"]=== dataResponse.attributes["course_id"];
       });
 
 
@@ -269,7 +269,7 @@ export class LabSessionService {
 
   createNewLabSessionFromJson(r: LabsessionResponseData, includedResponses:any[]): LabSession{
     var course: IncludedCourseResponseData = includedResponses.find(function(element) {
-      return element["type"] === "courses" && element["id"]=== r.attributes["course-id"];
+      return element["type"] === "courses" && element["id"]=== r.attributes["course_id"];
     });
 
     //search for the professor information

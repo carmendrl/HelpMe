@@ -60,8 +60,8 @@ class IncludedProfessorResponse{
   get Email() : string { return this.data.attributes["email"]}
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
-  get FirstName() : string {return this.data.attributes["first-name"]}
-  get LastName() : string {return this.data.attributes["last-name"]}
+  get FirstName() : string {return this.data.attributes["first_name"]}
+  get LastName() : string {return this.data.attributes["last_name"]}
 
 }
 
@@ -75,8 +75,8 @@ class IncludedProfessorAttributes{
   public email: string;
   public username: string;
   public role: string;
-  public firstNmae: string;
-  public lastName: string;
+  public first_name: string;
+  public last_name: string;
 }
 
 @Injectable()

@@ -58,6 +58,8 @@
       <app-create-course-form></app-create-course-form>
     </div>
   </ng-template>
-  <div *ngIf="startCourse.length===0">
+
+
+  <div *ngIf="coursesRetrieved && startCourse.length===0">
     <app-create-course-form></app-create-course-form>
   </div>
