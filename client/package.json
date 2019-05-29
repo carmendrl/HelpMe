@@ -10,7 +10,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "preinstall": "npm install -g node-gyp",
-    "postinstall": "sed -i -e 's/ErrorObservable;/ErrorObservable<any>;/' node_modules/angular2-jsonapi/dist/services/json-api-datastore.service.d.ts",
     "heroku-postbuild": "ng build"
   },
   "private": true,
