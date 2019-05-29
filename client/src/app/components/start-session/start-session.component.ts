@@ -20,7 +20,6 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions, NgbModalRef} from '@ng-b
 export class StartSessionComponent implements OnInit {
   closeResult: string;
   private description: string;
-  private courseId:number;
   private year: string;
   private startCourse : Course[];
   private generatedCode: string;
@@ -58,7 +57,7 @@ export class StartSessionComponent implements OnInit {
 
     startSession(){
       debugger
-      this.labSessionService.createNewLabSession(this.description, this.courseId).subscribe(
+      this.labSessionService.createNewLabSession(this.description, this.selectedCourse.id).subscribe(
       r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
       this.sessionStarted = true;
    }
