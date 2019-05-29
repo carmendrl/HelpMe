@@ -31,9 +31,10 @@ export class StartSessionComponent implements OnInit {
   private newCourse: Course;
 
   private todayYear: number;
-  private coursesPresent: boolean = false;
+  //private coursesPresent: boolean;
 
   private selectedCourse : Course;
+  private addedCourse = false;
 
 
 
@@ -43,10 +44,17 @@ export class StartSessionComponent implements OnInit {
 
   ngOnInit() {
     this.sessionStarted = false;
+    debugger
     this.courseService.coursesList().subscribe(
-      courses => {this.startCourse = courses; this.coursesPresent=true});
-    this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+      courses => this.startCourse = courses);
+      //this.numOfCourses();
+      debugger
+    this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c);this.selectedCourse=c;});
   }
+
+
+
+
 
     startSession(){
       debugger
@@ -105,39 +113,14 @@ export class StartSessionComponent implements OnInit {
 
 
 
-
-      copySessionCode(){
-
-        let selBox = this.document.createElement('textarea');
-        selBox.value=this.generatedCode;
-        this.document.body.appendChild(selBox);
-        selBox.focus();
-        selBox.select();
-        this.document.execCommand('copy');
-        this.document.body.removeChild(selBox);
-
-      }
-      copySessionLink(){
-
-        let selBox = this.document.createElement('textarea');
-        let url ="www.YouDidIT....."+this.generatedId+".....com";
-        selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
-        this.document.body.appendChild(selBox);
-        selBox.focus();
-        selBox.select();
-        this.document.execCommand('copy');
-        this.document.body.removeChild(selBox);
-
-      }
-
-
       saveCourse(){
         this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+        this.addedCourse = true;
       }
-      createNewCourseFromForm(){
-        debugger
-        let yearSemester = this.todayYear + this.semester;
-        this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
-          r => this.startCourse.unshift(r));
-        }
+      // createNewCourseFromForm(){
+      //   debugger
+      //   let yearSemester = this.todayYear + this.semester;
+      //   this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe(
+      //     r => this.startCourse.unshift(r));
+      //   }
       }

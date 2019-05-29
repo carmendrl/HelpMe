@@ -89,6 +89,6 @@
 <!--end modal-->
 
 <!-- If no courses add course form comes up-->
-<div *ngIf="coursesPresent">
+<div *ngIf="startCourse.length===0">
   <app-create-course-form></app-create-course-form>
 </div>
