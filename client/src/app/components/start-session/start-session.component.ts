@@ -42,7 +42,7 @@ export class StartSessionComponent implements OnInit {
     this.sessionStarted = false;
     this.courseService.coursesList().subscribe(
       courses => {this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
-      this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
+      this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c});
     }
 
     startSession(){
@@ -80,5 +80,5 @@ export class StartSessionComponent implements OnInit {
       saveCourse(){
         this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
       }
-    
+
       }
