@@ -200,14 +200,12 @@ export class LabSessionService {
 
 
   createNewLabSession(description:String, courseId:number): Observable<LabSession> {
-    debugger
     let url : string =`${this.apiHost}/lab_sessions/`;
     let body = {
       description: description,
       course_id: courseId
     };
     return this.httpClient.post(url, body).pipe(
-      //tap(r => debugger),
       map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
       catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
     );
@@ -215,7 +213,6 @@ export class LabSessionService {
   }
 
   createNewLabSessionFromJson(r: LabsessionResponseData, includedResponses:any[]): LabSession{
-    debugger
     var course: IncludedCourseResponseData = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r.attributes["course-id"];
     });
@@ -245,7 +242,6 @@ export class LabSessionService {
 
 
   private handleError<T> (operation = 'operation', result?: T) {
-    debugger
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
