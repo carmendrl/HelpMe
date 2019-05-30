@@ -271,15 +271,27 @@ private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedDat
 }
 
 
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  getSessionQuestions() : Observable<Question[]>{
+    this.sessionId = this.labsessionService.sessionId;
+    let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
+    return this.httpClient.get(url).pipe(
+      map(r => this.createQuestionsArray(r['data'])),
+      catchError(this.handleError<Question[]>(`getSessionQuestions id=${this.sessionId}`))
+    );
   }
+
+  //handles errors
+    private handleError<T> (operation = 'operation', result?: T) {
+      return (error: any): Observable<T> => {
+
+        // TODO: send the error to remote logging infrastructure
+        console.error(error); // log to console instead
+
+
+        // Let the app keep running by returning an empty result.
+        return of(result as T);
+      };
+    }
+
+
 }
