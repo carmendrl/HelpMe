@@ -2,6 +2,8 @@ import { Injectable, Inject } from '@angular/core';
 import { Question } from '../models/question.model';
 import { ModelFactoryService } from './model-factory.service';
 import { LabSession } from '../models/lab_session.model';
+import { User } from '../models/user.model';
+import { Course } from '../models/course.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -13,10 +15,14 @@ class QuestionResponse{
   get Id(): number {return this.data.id}
   get Type(): string {return this.data.type}
   get Text(): string {return this.data.attributes["text"]}
-  get CreatedAt(): Date {return this.data.attributes["createdAt"]}
+  get CreatedAt(): Date {return this.data.attributes["created_at"]}
   get Status(): string {return this.data.attributes["status"]}
-  get ReId(): number {return this.data.relationships.data["id"]}
-  get ReType(): number {return this.data.relationships.data["type"]}
+  get AskerId(): number {return this.data.relationships.original_asker.data["id"]}
+  get AskerType(): string {return this.data.relationships.original_asker.data["type"]}
+  get AskedById(): number {return this.data.relationships.asked_by.data["id"]}
+  get AskedByType(): string {return this.data.relationships.asked_by.data["type"]}
+  get LabId(): number {return this.data.relationships.lab_session.data["id"]}
+  get LabType(): string {return this.data.relationships.lab_session.data["type"]}
 }
 
 class QuestionResponseData{
@@ -28,12 +34,35 @@ class QuestionResponseData{
 
 class QuestionResponseAttributes{
   public text : string;
-  public createdAt : Date;
+  public created_at : Date;
   public status : string;
 }
 
 class QuestionResponseRelationships{
-  public data: QuestionLabSessionData;
+  public original_asker: OriginalAsker;
+  public asked_by: AskedBy;
+  public lab_session: QuestionLabSession;
+}
+
+class OriginalAsker{
+  public data:QuestionOGAskerData;
+}
+
+class QuestionOGAskerData{
+  public id: number;
+  public type: string;
+}
+class AskedBy{
+  public data:QuestionAskedByData[];
+}
+
+class QuestionAskedByData{
+  public id: number;
+  public type: string;
+}
+
+class QuestionLabSession{
+  public data:QuestionLabSessionData;
 }
 
 class QuestionLabSessionData{
@@ -42,21 +71,21 @@ class QuestionLabSessionData{
 }
 
 class QuestionIncludedResponse{
-  constructor(private data: QuestionResponseIncludedData){}
-  get Id(): number {return this.data.id}
-  get Type(): string {return this.data.type}
-  get Description(): string {return this.data.attributes["description"]}
-  get Token(): string {return this.data.attributes["token"]}
-  get Active(): boolean {return this.data.attributes["active"]}
-  get CourseId(): number {return this.data.attributes["courseId"]}
-  get StartDate(): Date {return this.data.attributes["startDate"]}
-  get EndDate(): Date {return this.data.attributes["endDate"]}
-  get QId(): number {return this.data.relationships.questions.data["id"]}
-  get QType(): string {return this.data.relationships.questions.data["type"]}
-  get UId(): number {return this.data.relationships.users.data["id"]}
-  get UType(): string {return this.data.relationships.users.data["type"]}
-  get CId(): number {return this.data.relationships.course.data["id"]}
-  get CType(): string {return this.data.relationships.course.data["type"]}
+  constructor(private included: QuestionResponseIncludedData){}
+  get Id(): number {return this.included.id}
+  get Type(): string {return this.included.type}
+  get Description(): string {return this.included.attributes["description"]}
+  get Token(): string {return this.included.attributes["token"]}
+  get Active(): boolean {return this.included.attributes["active"]}
+  get Course_Id(): number {return this.included.attributes["course_id"]}
+  get StartDate(): Date {return this.included.attributes["start_date"]}
+  get EndDate(): Date {return this.included.attributes["end_date"]}
+  get QId(): number {return this.included.relationships.questions.data["id"]}
+  get QType(): string {return this.included.relationships.questions.data["type"]}
+  get UId(): number {return this.included.relationships.users.data["id"]}
+  get UType(): string {return this.included.relationships.users.data["type"]}
+  get CId(): number {return this.included.relationships.course.data["id"]}
+  get CType(): string {return this.included.relationships.course.data["type"]}
 }
 
 class QuestionResponseIncludedData{
@@ -64,15 +93,18 @@ class QuestionResponseIncludedData{
   public type: string;
   public attributes: QuestionIncludedAttributes;
   public relationships: QuestionIncludedRelationship;
+  public courseId: number;
+  public courseType: string;
 }
+
 
 class QuestionIncludedAttributes{
   public description: string;
   public token: string;
   public active: boolean;
-  public courseId: number;
-  public startDate: Date;
-  public endDate: Date;
+  public course_id: number;
+  public start_date: Date;
+  public end_date: Date;
 }
 
 class QuestionIncludedRelationship{
@@ -108,6 +140,77 @@ class CourseData{
   public type: string;
 }
 
+
+class IncludedCourseResponse{
+  constructor (private data: IncludedCourseResponseData){
+  }
+  get Id(): number {return this.data.id}
+  get Type(): string {return this.data.type}
+  get Title(): string {return this.data.attributes["title"]}
+  get Subject():string {return this.data.attributes["subject"]}
+  get Number(): string {return this.data.attributes["number"]}
+  get Semester(): string {return this.data.attributes["semester"]}
+  get ProfId() :number {return this.data.relationships.instructor.data["id"]}
+  get ProfType() :string {return this.data.relationships.instructor.data["type"]}
+
+}
+
+class IncludedCourseResponseData{
+  public type : string;
+  public id : number;
+  public attributes: IncludedCourseResponseAttributes;
+  public relationships : IncludedCourseResponseInstructor;
+}
+
+class IncludedCourseResponseAttributes{
+  public title: string;
+  public subject: string;
+  public number: string;
+  public semester: string;
+}
+
+class IncludedCourseResponseInstructor{
+  public instructor:  IncludedCourseResponseInstructorData;
+}
+
+class IncludedCourseResponseInstructorData{
+  public data:IncludedCourseResponseInstructorDataDetails;
+}
+
+class IncludedCourseResponseInstructorDataDetails{
+  public id:  number;
+  public type: string;
+
+}
+
+
+class IncludedProfessorResponse{
+  constructor (private data: IncludedProfessorResponseData){
+  }
+  get Id() : number { return this.data.id }
+  get Type() : string { return this.data.type }
+  get Email() : string { return this.data.attributes["email"]}
+  get Username() : string {return this.data.attributes["username"]}
+  get Role() : string {return this.data.attributes["role"]}
+  get FirstName() : string {return this.data.attributes["first-name"]}
+  get LastName() : string {return this.data.attributes["last-name"]}
+
+}
+
+class IncludedProfessorResponseData{
+  public id : number;
+  public type : string;
+  public attributes: IncludedProfessorAttributes;
+}
+
+class IncludedProfessorAttributes{
+  public email: string;
+  public username: string;
+  public role: string;
+  public firstNmae: string;
+  public lastName: string;
+}
+
 @Injectable()
 export class QuestionService {
   private apiHost : string;
@@ -117,75 +220,63 @@ export class QuestionService {
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string) {
 
     this.apiHost = host;
-    this.userQuestions = new Array<Question> ();
+    //this.userQuestions = new Array<Question> ();
 
-    // let question1 = new Question();
-    // question1.text = "How do I center an image on a page?";
-    // question1.answer = "You can use the max-auto Bootstrap class";
-    // question1.session = _modelFactory.labSession1;
-    // question1.date = new Date("January 9, 2018");
-    //
-    // let question2 = new Question();
-    // question2.text = "How come the template {user.name} doesn't work?";
-    // question2.answer = "In Angular templates two curly braces are used instead of one";
-    // question2.session = _modelFactory.labSession2;
-    // question2.date = new Date("January 11, 2018");
-    //
-    // this.userQuestions.push(question1);
-    // this.userQuestions.push(question2);
   }
 
-// theQuestions() : Observable<Question[]>{
-//   debugger
-//   let url :string = `${this.apiHost}/user/questions/`;
-//   return this.httpClient.get(url).pipe(
-//     map(r=>this.createArray(r["data"])),
-//     catchError(this.handleError<Question[]>(`questions`))
-//   );
-// }
-
-private createArray(questionDatas : QuestionResponseData[]) : Question[]{
+private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
   debugger
-  for(let questionData of questionDatas){
-    this.userQuestions.push(this.buildQuestion(questionData));
+  let userQuestions = new Array<Question> ();
+
+  for(let object of questions){
+    var course: IncludedCourseResponseData = includedResponse.find(function(element) {debugger
+      return element["type"] === "courses" && element["id"]=== object.attributes["course_id"];
+    });
+debugger
+    var session : QuestionResponseIncludedData = includedResponse.find(function(element){
+      return element["type"]==="lab-sessions" && element["id"]=== object.relationships.lab_session.data["id"]})
+debugger
+      var prof : IncludedProfessorResponseData = includedResponse.find(function(element) {
+        return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+      });
+
+    userQuestions.push(this.buildQuestion(object, session, prof, course));
+    debugger
   }
-  return this.userQuestions;
+  return userQuestions;
 }
 
 
-private buildQuestion (a : QuestionResponseData) : Question{
+private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedData, c : IncludedProfessorResponseData, t :IncludedCourseResponseData) : Question{
   let q = new QuestionResponse(a);
+  let s = new QuestionIncludedResponse(b);
+  let d = new IncludedProfessorResponse (c);
+  let h = new IncludedCourseResponse (t);
 
-  let question = new Question(q.CreatedAt, q.Text, q.Status, this._modelFactory.labSession1, q.Id);
+  let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+  let course = new Course (h.Subject, h.Number, h.Title, h.Semester, prof, h.Id);
+  let session = new LabSession (s.Description, s.StartDate, s.EndDate, course);
+  let question = new Question(q.CreatedAt, q.Text, q.Status, session, q.Id);
 
   return question;
 }
 
-postNewQuestion(text : string): Observable<Question>{
-  let url :string = `${this.apiHost}/lab_sessions/:lab_session_id/questions`;
-  let body={
-    text: text
-  };
-  return this.httpClient.post(url, body).pipe(
-    map(r=>this.buildQuestion(r["data"])),
-    catchError(this.handleError<Question>(`accessingSession`))
-  );
-}
-
-// getSessionid(text: string){
-//   let url : string = `${this.apiHost}/lab_sessions/:lab_session_id/questions`;
+//  extractCourseInfo(a : QuestionResponseData): Observable<Course>{
+//    debugger
+//   let id = new QuestionResponse(a); //relationships.data["id"] //ReId
 //
+//   let url : string = `${this.apiHost}/courses/{{id.ReId}}`;
+//   return this.httpClient.get<Course>(url);
 // }
 
 
-
   get myQuestions() : Observable<Question[]> {
-    // let url :string = `${this.apiHost}/user/questions`;
-    // return this.httpClient.get(url).pipe(
-    //   map(r=>this.createArray(r["data"])),
-    //   catchError(this.handleError<Question[]>(`questions`))
-    return Observable.of(this.userQuestions);
-//  );
+    debugger
+    let url :string = `${this.apiHost}/user/questions`;
+    return this.httpClient.get(url).pipe(
+      map(r=>this.createArray(r["data"], r["included"]))
+ );
+// return Observable.of(this.userQuestions);
 }
 
 
