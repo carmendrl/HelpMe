@@ -27,6 +27,7 @@ export class SessionViewComponent implements OnInit {
     this.questionService.getSessionQuestions().subscribe(
       questions => this.questions = questions
     )
+    debugger
   }
 
 }
