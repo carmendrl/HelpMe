@@ -235,7 +235,7 @@ questionList() : Observable<Question[]> {
 
 private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
   let userQuestions = new Array<Question> ();
-
+debugger
   for(let object of questions){
     let lab_session_id = object.relationships["lab_session"].data['id'];
     let lab_session = includedResponse.find( e => e["type"] == 'lab_sessions' && e["id"] == lab_session_id);
@@ -252,9 +252,11 @@ private createArray(questions : QuestionResponseData[], includedResponse : any[]
       });
 
     userQuestions.push(this.buildQuestion(object, session, prof, course));
-
+debugger
   }
+  debugger
   return userQuestions;
+  debugger
 }
 
 
