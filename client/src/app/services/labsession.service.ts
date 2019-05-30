@@ -14,7 +14,7 @@ import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 
-
+//Beginning of Labsession Response Hierarchy
 class LabsessionResponseAttributes {
   public description : string;
   public token : string;
@@ -60,6 +60,7 @@ class LabsessionResponseData {
   public relationships : LabsessionResponseRelationships;
 }
 
+//getters for Labsession response
 class LabsessionResponse {
   constructor (private data : LabsessionResponseData) {
   }
@@ -76,7 +77,7 @@ class LabsessionResponse {
   get userType() : string { return this.data.relationships.users.data["type"]}
 }
 
-
+//getters for Course
 class IncludedCourseResponse{
   constructor (private data: IncludedCourseResponseData){
   }
@@ -91,6 +92,7 @@ class IncludedCourseResponse{
 
 }
 
+//start of included Course hierarchy
 class IncludedCourseResponseData{
   public type : string;
   public id : number;
@@ -119,6 +121,7 @@ class IncludedCourseResponseInstructorDataDetails{
 
 }
 
+//getters for Included Professor
 class IncludedProfessorResponse{
   constructor (private data: IncludedProfessorResponseData){
   }
@@ -132,6 +135,7 @@ class IncludedProfessorResponse{
 
 }
 
+//Start of Included Professor hierarchy
 class IncludedProfessorResponseData{
   public id : number;
   public type : string;
@@ -147,9 +151,7 @@ class IncludedProfessorAttributes{
 }
 
 //session response after joining a session
-// class sessionResponseAll{
-//   public data: sessionResponseData;
-// }
+//start of sesssion response hierarchy
 class sessionResponseData{
   public id: number;
   public type: string;
@@ -199,6 +201,8 @@ class sessionResponse{
   get UserType(): string {return this.response.relationships.user.data["type"]}
 }
 
+
+//start of LabSessionService class
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
@@ -210,6 +214,7 @@ export class LabSessionService {
     this._newLabSession$ = new Subject<LabSession>();
   }
 
+//returns a list of all the labsessions
   labSessions() : Observable<LabSession[]> {
     let url : string =`${this.apiHost}/lab_sessions`;
     return this.httpClient.get(url).pipe(
@@ -293,12 +298,12 @@ export class LabSessionService {
       return this._newLabSession$;
 }
 
+//allows a user to join a session with a token and returns a session id
   joinASession(token: String): Observable<number>{
     let url: string = `${this.apiHost}/lab_sessions/join/${token}`;
     let body = {
       token: token
     };
-    debugger
     return this.httpClient.post(url, body).pipe(
       map(r => this.extractSessionId(r["data"])),
       catchError(this.handleError<number>(`joining a lab session`))
