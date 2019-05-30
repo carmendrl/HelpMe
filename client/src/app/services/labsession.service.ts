@@ -242,6 +242,15 @@ export class LabSessionService {
       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
 
     }
+    debugger
+    sessions= sessions.sort(function(a, b){
+      if(a.startDate> b.startDate){
+        return 1;
+      }
+      else{
+        return -1;
+      }
+    });
     return sessions;
   }
 
@@ -259,11 +268,13 @@ export class LabSessionService {
 
 
 
-  createNewLabSession(description:String, courseId:number): Observable<LabSession> {
+  createNewLabSession(description:String, courseId:number, startDate: string, endDate: string): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions`;
     let body = {
       description: description,
-      course_id: courseId
+      course_id: courseId,
+      start_date: startDate,
+      end_date: endDate
     };
     return this.httpClient.post(url, body).pipe(
       map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
@@ -289,7 +300,6 @@ export class LabSessionService {
     let professor = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
     let inclCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
     let session = new LabSession(l.Description, l.StartDate, l.EndDate, inclCourse, l.Id, l.Token);
-    //debugger
     this._newLabSession$.next(session);
     return session;
 }
