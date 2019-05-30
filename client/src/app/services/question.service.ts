@@ -224,24 +224,35 @@ export class QuestionService {
 
   }
 
+questionList() : Observable<Question[]> {
+    let url :string = `${this.apiHost}/user/questions`;
+    return this.httpClient.get(url).pipe(
+      map(r=>this.createArray(r["data"], r["included"])),
+      catchError(this.handleError<Question[]>(`questions`))
+    );
+    // return Observable.of(this.userQuestions);
+  }
+
 private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
-  debugger
   let userQuestions = new Array<Question> ();
 
   for(let object of questions){
-    var course: IncludedCourseResponseData = includedResponse.find(function(element) {debugger
-      return element["type"]==="courses" && element["id"]=== object.attributes["course_id"];
+    let lab_session_id = object.relationships["lab_session"].data['id'];
+    let lab_session = includedResponse.find( e => e["type"] == 'lab_sessions' && e["id"] == lab_session_id);
+    let course_id = lab_session['relationships']['course']["data"]["id"];
+    var course: IncludedCourseResponseData = includedResponse.find(function(element) {
+      return element["type"]==="courses" && element["id"]=== course_id;
     });
-debugger
+
     var session : QuestionResponseIncludedData = includedResponse.find(function(element){
-      return element["type"]==="lab-sessions" && element["id"]=== object.relationships.lab_session.data["id"]})
-debugger
+      return element["type"]==="lab_sessions" && element["id"]=== lab_session_id})
+
       var prof : IncludedProfessorResponseData = includedResponse.find(function(element) {
         return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
       });
 
     userQuestions.push(this.buildQuestion(object, session, prof, course));
-    debugger
+
   }
   return userQuestions;
 }
@@ -259,24 +270,6 @@ private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedDat
   let question = new Question(q.CreatedAt, q.Text, q.Status, session, q.Id);
 
   return question;
-}
-
-//  extractCourseInfo(a : QuestionResponseData): Observable<Course>{
-//    debugger
-//   let id = new QuestionResponse(a); //relationships.data["id"] //ReId
-//
-//   let url : string = `${this.apiHost}/courses/{{id.ReId}}`;
-//   return this.httpClient.get<Course>(url);
-// }
-
-
-  get myQuestions() : Observable<Question[]> {
-    debugger
-    let url :string = `${this.apiHost}/user/questions`;
-    return this.httpClient.get(url).pipe(
-      map(r=>this.createArray(r["data"], r["included"]))
- );
-// return Observable.of(this.userQuestions);
 }
 
 

@@ -24,17 +24,17 @@ export class StudentDashboardComponent implements OnInit {
       sessions => this.sessions = sessions
     );
 
-    this.questionService.myQuestions.subscribe (
+    this.questionService.questionList().subscribe (
       questions => this.myQuestions = questions
     );
+
   }
 
   joinSess(){
-    debugger
+
     this.labSessionService.joinASession(this.token).subscribe(
       sessionId => this.router.navigateByUrl(`/lab_sessions/${sessionId}`)
     );
-    debugger
 
 
   }
