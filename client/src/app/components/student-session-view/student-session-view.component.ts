@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { QuestionService } from '../../services/question.service';
 import { SessionViewComponent } from '../session-view/session-view.component';
 
 @Component({
@@ -9,7 +10,7 @@ import { SessionViewComponent } from '../session-view/session-view.component';
 })
 export class StudentSessionViewComponent extends SessionViewComponent implements OnInit {
 
-  constructor(userService: UserService) { super(userService); }
+  constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
 
   ngOnInit() {
   }

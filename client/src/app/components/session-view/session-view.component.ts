@@ -6,6 +6,7 @@ import { LabSession } from '../../models/lab_session.model';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-session-view',
@@ -14,13 +15,18 @@ import { Question } from '../../models/question.model';
 })
 export class SessionViewComponent implements OnInit {
   @Input() session: LabSession;
-  constructor(private userService : UserService) { }
+  public questions: Question[];
+
+  constructor(private userService : UserService, private questionService: QuestionService) { }
 
   ngOnInit() {
+    this.getSessionQuestions();
   }
 
-  getSessionQuestions(): Questions[]{
-    
+  getSessionQuestions(){
+    this.questionService.getSessionQuestions().subscribe(
+      questions => this.questions = questions
+    )
   }
 
 }
