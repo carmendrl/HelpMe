@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { Question } from '../models/question.model';
 import { ModelFactoryService } from './model-factory.service';
 import { LabSession } from '../models/lab_session.model';
+import { LabSessionService } from './labsession.service';
 import { User } from '../models/user.model';
 import { Course } from '../models/course.model';
 import { Observable } from 'rxjs/Observable';
@@ -214,8 +215,9 @@ export class QuestionService {
   private apiHost : string;
   private userQuestions : Question[];
   private _modelFactory: ModelFactoryService;
+  private sessionId : number;
 
-  constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string) {
+  constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
 
     this.apiHost = host;
     //this.userQuestions = new Array<Question> ();
@@ -277,10 +279,11 @@ private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedDat
     this.sessionId = this.labsessionService.sessionId;
     let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
     return this.httpClient.get(url).pipe(
-      map(r => this.createQuestionsArray(r['data'])),
+      map(r => this.createArray(r['data'], r['included'])),
       catchError(this.handleError<Question[]>(`getSessionQuestions id=${this.sessionId}`))
     );
   }
+
 
   //handles errors
     private handleError<T> (operation = 'operation', result?: T) {
