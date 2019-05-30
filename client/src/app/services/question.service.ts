@@ -93,8 +93,6 @@ class QuestionResponseIncludedData{
   public type: string;
   public attributes: QuestionIncludedAttributes;
   public relationships: QuestionIncludedRelationship;
-  public courseId: number;
-  public courseType: string;
 }
 
 
@@ -230,7 +228,7 @@ private createArray(questions : QuestionResponseData[], includedResponse : any[]
 
   for(let object of questions){
     var course: IncludedCourseResponseData = includedResponse.find(function(element) {debugger
-      return element["type"] === "courses" && element["id"]=== object.attributes["course_id"];
+      return element["type"]==="courses" && element["id"]=== object.attributes["course_id"];
     });
 debugger
     var session : QuestionResponseIncludedData = includedResponse.find(function(element){
