@@ -78,6 +78,9 @@ export class StartSessionComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
     console.log("Testing Modal");
+    // this.courseService.newCourse$.subscribe(
+    //   course => this.modalService.dismissAll()
+    // );
   }
 
   private getDismissReason(reason: any): string {

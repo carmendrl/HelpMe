@@ -14,11 +14,7 @@ export class SessionViewComponent implements OnInit {
   constructor(private route: ActivatedRoute, private location: Location, private labsessionService: LabSessionService) { }
 
   ngOnInit() {
-    this.getSession();
   }
 
-  getSession(){
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.labsessionService.getSession().subscribe(session => this.session = session);
-  }
+
 }

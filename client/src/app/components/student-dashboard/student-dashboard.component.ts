@@ -30,13 +30,13 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   joinSess(){
+    debugger
     this.labSessionService.joinASession(this.token).subscribe(
-      sessionId => this.sessionId = sessionId
+      sessionId => this.router.navigateByUrl(`/lab_sessions/${sessionId}`)
     );
-    this.router.navigateByUrl(`/lab_sessions/${this.sessionId}`);
+    debugger
+
 
   }
-  // gotoSession(){
-  //   this.router.navigateByUrl(`/lab_sessions/${this.sessionId}`);
-  // }
+
 }
