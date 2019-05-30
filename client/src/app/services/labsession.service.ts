@@ -242,7 +242,6 @@ export class LabSessionService {
       sessions.push(this.buildCreateLabsessionFromJson(dataResponse, course, prof));
 
     }
-    debugger
     sessions= sessions.sort(function(a, b){
       if(a.startDate> b.startDate){
         return 1;
@@ -287,12 +286,10 @@ export class LabSessionService {
     var course: IncludedCourseResponseData = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r.attributes["course_id"];
     });
-
     //search for the professor information
     var prof : IncludedProfessorResponseData = includedResponses.find(function(element) {
       return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
     });
-
     let l = new LabsessionResponse(r);
     let c = new IncludedCourseResponse (course);
     let d = new IncludedProfessorResponse (prof);

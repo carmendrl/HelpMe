@@ -6,6 +6,7 @@ import { LabSession } from '../../models/lab_session.model';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-session-view',
@@ -20,7 +21,13 @@ export class SessionViewComponent implements OnInit {
   }
 
   getSessionQuestions(): Questions[]{
-    
+
   }
+
+//want to make this abstract method but must make this an abstract createNewLabSession
+//to make this an abstract class can't have a constructor because can't instantiate
+//an abstract class
+  sortQuestions(questions: Question[], user:User)
+  {}; //may switch to specific user attribute such as type or id
 
 }
