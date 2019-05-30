@@ -218,85 +218,73 @@ export class QuestionService {
   private sessionId : number;
 
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
-
     this.apiHost = host;
-    //this.userQuestions = new Array<Question> ();
-
   }
 
-questionList() : Observable<Question[]> {
+  questionList() : Observable<Question[]> {
     let url :string = `${this.apiHost}/user/questions`;
     return this.httpClient.get(url).pipe(
       map(r=>this.createArray(r["data"], r["included"])),
       catchError(this.handleError<Question[]>(`questions`))
     );
-    // return Observable.of(this.userQuestions);
   }
 
-private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
-  let userQuestions = new Array<Question> ();
-debugger
-  for(let object of questions){
-    let lab_session_id = object.relationships["lab_session"].data['id'];
-    let lab_session = includedResponse.find( e => e["type"] == 'lab_sessions' && e["id"] == lab_session_id);
-    let course_id = lab_session['relationships']['course']["data"]["id"];
-    var course: IncludedCourseResponseData = includedResponse.find(function(element) {
-      return element["type"]==="courses" && element["id"]=== course_id;
-    });
+  private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
+    let userQuestions = new Array<Question> ();
 
-    var session : QuestionResponseIncludedData = includedResponse.find(function(element){
-      return element["type"]==="lab_sessions" && element["id"]=== lab_session_id})
-
-      var prof : IncludedProfessorResponseData = includedResponse.find(function(element) {
-        return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+    for(let object of questions){
+      let lab_session_id = object.relationships["lab_session"].data['id'];
+      let lab_session = includedResponse.find( e => e["type"] == 'lab_sessions' && e["id"] == lab_session_id);
+      let course_id = lab_session['relationships']['course']["data"]["id"];
+      var course: IncludedCourseResponseData = includedResponse.find(function(element) {
+        return element["type"]==="courses" && element["id"]=== course_id;
       });
 
-    userQuestions.push(this.buildQuestion(object, session, prof, course));
-debugger
-  }
-  debugger
-  return userQuestions;
-  debugger
-}
+      var session : QuestionResponseIncludedData = includedResponse.find(function(element){
+        return element["type"]==="lab_sessions" && element["id"]=== lab_session_id})
+
+        var prof : IncludedProfessorResponseData = includedResponse.find(function(element) {
+          return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+        });
+
+        userQuestions.push(this.buildQuestion(object, session, prof, course));
+      }
+      return userQuestions
+    }
 
 
-private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedData, c : IncludedProfessorResponseData, t :IncludedCourseResponseData) : Question{
-  let q = new QuestionResponse(a);
-  let s = new QuestionIncludedResponse(b);
-  let d = new IncludedProfessorResponse (c);
-  let h = new IncludedCourseResponse (t);
+    private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedData, c : IncludedProfessorResponseData, t :IncludedCourseResponseData) : Question{
+      let q = new QuestionResponse(a);
+      let s = new QuestionIncludedResponse(b);
+      let d = new IncludedProfessorResponse (c);
+      let h = new IncludedCourseResponse (t);
 
-  let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-  let course = new Course (h.Subject, h.Number, h.Title, h.Semester, prof, h.Id);
-  let session = new LabSession (s.Description, s.StartDate, s.EndDate, course);
-  let question = new Question(q.CreatedAt, q.Text, q.Status, session, q.Id);
+      let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
+      let course = new Course (h.Subject, h.Number, h.Title, h.Semester, prof, h.Id);
+      let session = new LabSession (s.Description, s.StartDate, s.EndDate, course);
+      let question = new Question(q.CreatedAt, q.Text, q.Status, session, q.Id);
 
-  return question;
-}
+      return question;
+    }
 
+    getSessionQuestions() : Observable<Question[]>{
+      this.sessionId = this.labsessionService.sessionId;
+      let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
+      return this.httpClient.get(url).pipe(
+        map(r => this.createArray(r['data'], r['included'])),
+        catchError(this.handleError<Question[]>(`getSessionQuestions id=${this.sessionId}`))
+      );
+    }
 
-  getSessionQuestions() : Observable<Question[]>{
-    this.sessionId = this.labsessionService.sessionId;
-    let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
-    return this.httpClient.get(url).pipe(
-      map(r => this.createArray(r['data'], r['included'])),
-      catchError(this.handleError<Question[]>(`getSessionQuestions id=${this.sessionId}`))
-    );
-  }
-
-
-  //handles errors
+    //handles errors
     private handleError<T> (operation = 'operation', result?: T) {
       return (error: any): Observable<T> => {
 
         // TODO: send the error to remote logging infrastructure
         console.error(error); // log to console instead
 
-
         // Let the app keep running by returning an empty result.
         return of(result as T);
       };
     }
-
-
-}
+  }
