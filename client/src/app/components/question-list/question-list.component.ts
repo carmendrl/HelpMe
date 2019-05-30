@@ -15,7 +15,7 @@ export class QuestionListComponent implements OnInit {
   private filterApplied: boolean;
 
   @Input() private questions : Question[];
-  private filteredQuestions : Question[];
+  @Input() private filteredQuestions : Question[];
 
   constructor() { }
 
@@ -50,7 +50,7 @@ export class QuestionListComponent implements OnInit {
   }
 
   private includeQuestion (question : Question) : boolean {
-    
+
     //  Look at question text, course, Date
     let regEx : RegExp = new RegExp(`${this.filterText}`, 'i');
     if (regEx.test(question.text)) return true;

@@ -5,13 +5,13 @@ import { Entity } from './entity.model';
 export class Question extends Entity{
   private _tags : Set<string>;
 
-  constructor (private _date?: Date, private _text? : string, 
+  constructor (private _date?: Date, private _text? : string,
                private _answer? : string, private _session? : LabSession,
-               _id? : number) {
+               _id? : number) { 
     super (_id);
     this._tags = new Set<string> ();
   }
-  
+
   get date() : Date {
     return this._date;
   }

@@ -7,6 +7,7 @@ class QuestionSerializer < ActiveModel::Serializer
   has_many :askers, if: :show_askers?, key: :asked_by
   has_one :claimed_by, if: :claimed?
   has_one :assigned_to, if: :assigned?
+  has_one :lab_session
 
   def show_askers?
     current_user.professor? && object.askers.any?

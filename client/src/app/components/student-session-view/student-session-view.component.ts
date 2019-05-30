@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { QuestionService } from '../../services/question.service';
 import { SessionViewComponent } from '../session-view/session-view.component';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
@@ -14,8 +15,8 @@ export class StudentSessionViewComponent extends SessionViewComponent implements
   private myQs: Question[];
   private allOtherQs:  Question[];
 
-  constructor(userService: UserService) { super(userService); }
-  
+  constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
+
   ngOnInit() {
   }
 

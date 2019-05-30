@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-session-view',
@@ -15,13 +16,19 @@ import { User } from '../../models/user.model';
 })
 export class SessionViewComponent implements OnInit {
   @Input() session: LabSession;
-  constructor(private userService : UserService) { }
+  public questions: Question[];
+
+  constructor(private userService : UserService, private questionService: QuestionService) { }
 
   ngOnInit() {
+    this.getSessionQuestions();
   }
 
-  getSessionQuestions(): Questions[]{
 
+  getSessionQuestions(){
+    this.questionService.getSessionQuestions().subscribe(
+      questions => this.questions = questions
+    );
   }
 
 //want to make this abstract method but must make this an abstract createNewLabSession
