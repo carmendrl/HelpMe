@@ -11,7 +11,7 @@ import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
-
+//getters for Course Responses
 class CourseResponse{
   constructor (private data: CourseResponseData){}
   get Id(): number {return this.data.id}
@@ -23,7 +23,7 @@ class CourseResponse{
   get ReId() : number {return this.data.relationships.instructor.data["id"]}
   get ReType() :string {return this.data.relationships.instructor.data["type"]}
 }
-
+//start of course response hierarchy
 class CourseResponseData{
   public id : number;
   public type : string;
@@ -51,7 +51,7 @@ class CourseResponseRelationshipInstructorDataDetails{
   public type: string;
 }
 
-
+//getters for included professor response
 class IncludedProfessorResponse{
   constructor (private data: IncludedProfessorResponseData){
   }
@@ -60,11 +60,12 @@ class IncludedProfessorResponse{
   get Email() : string { return this.data.attributes["email"]}
   get Username() : string {return this.data.attributes["username"]}
   get Role() : string {return this.data.attributes["role"]}
-  get FirstName() : string {return this.data.attributes["first-name"]}
-  get LastName() : string {return this.data.attributes["last-name"]}
+  get FirstName() : string {return this.data.attributes["first_name"]}
+  get LastName() : string {return this.data.attributes["last_name"]}
 
 }
 
+//start of included professor response hierarchy
 class IncludedProfessorResponseData{
   public id : number;
   public type : string;
@@ -75,10 +76,12 @@ class IncludedProfessorAttributes{
   public email: string;
   public username: string;
   public role: string;
-  public firstNmae: string;
-  public lastName: string;
+  public first_name: string;
+  public last_name: string;
 }
 
+
+//start of CourseService class
 @Injectable()
 export class CourseService {
   private apiHost : string;
@@ -89,6 +92,7 @@ export class CourseService {
     this._newCourse$ = new Subject<Course>();
   }
 
+//returns a list of all the courses
   coursesList() : Observable<Course[]>{
     let url : string =`${this.apiHost}/courses`;
 
@@ -165,6 +169,7 @@ export class CourseService {
       return this._newCourse$;
     }
 
+//handles errors
     private handleCreateAccountError (error) : Observable<boolean> {
       if (error instanceof HttpErrorResponse) {
         let httpError = <HttpErrorResponse> error;

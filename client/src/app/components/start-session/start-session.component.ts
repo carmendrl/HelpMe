@@ -34,6 +34,7 @@ export class StartSessionComponent implements OnInit {
   private start_time: {hour:number, minute:number, second:number};
   private end_time: {hour:number, minute:number, second:number};
   private startBeforeEnd: boolean;
+  private coursesRetrieved: boolean = false;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -45,7 +46,7 @@ export class StartSessionComponent implements OnInit {
     this.sessionStarted = false;
     this.startBeforeEnd =true;
     this.courseService.coursesList().subscribe(
-      courses => {this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
+      courses => {this.coursesRetrieved=true; this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
       this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c});
     }
 
@@ -125,6 +126,9 @@ export class StartSessionComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
     console.log("Testing Modal");
+    // this.courseService.newCourse$.subscribe(
+    //   course => this.modalService.dismissAll()
+    // );
   }
 
   private getDismissReason(reason: any): string {

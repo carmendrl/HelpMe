@@ -1,0 +1,15 @@
+<ng-template #notLoggedIn>
+	<p>You aren't currently logged in.  Fill in the form below and click <strong>Log in</strong> to log in.</p>
+	<app-login></app-login>
+</ng-template>
+
+<div *ngIf="userService.CurrentUser$ | async as user; else notLoggedIn">
+  <div [ngSwitch]="user.Type">
+    <div *ngSwitchCase="'professors'">
+      <app-faculty-session-view></app-faculty-session-view>
+    </div>
+    <div *ngSwitchCase="'students'">
+      <app-student-session-view></app-student-session-view>
+    </div>
+  </div>
+</div>
