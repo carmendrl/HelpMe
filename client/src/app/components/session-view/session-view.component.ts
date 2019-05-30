@@ -5,6 +5,7 @@ import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from '../../services/user.service';
+import { Question } from '../../models/question.model';
 
 @Component({
   selector: 'app-session-view',
@@ -18,5 +19,8 @@ export class SessionViewComponent implements OnInit {
   ngOnInit() {
   }
 
+  getSessionQuestions(): Questions[]{
+    
+  }
 
 }
