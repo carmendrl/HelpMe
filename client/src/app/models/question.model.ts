@@ -98,7 +98,7 @@ static createFromJSon(o:Object){
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];
   question.id= o["id"];
-  question.faq=;
+  question.faq= false;
 
   return question;
 
