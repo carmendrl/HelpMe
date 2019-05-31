@@ -33,15 +33,16 @@ export class QuestionService {
 
   private createArray(questionsData: any[], includedResponse : any[]) : Question[]{
     let userQuestions = new Array<Question> ();
+    
 
     for(let object of questionsData){
+
       let lab_session_id = object["relationships"]["lab_session"]["data"]["id"];
       let lab_session = includedResponse.find( e => e["type"] == "lab_sessions" && e["id"] == lab_session_id);
       let course_id = lab_session["relationships"]["course"]["data"]["id"];
       var course: Object = includedResponse.find(function(element) {
         return element["type"]==="courses" && element["id"]=== course_id;
       });
-
       var session : Object = includedResponse.find(function(element){
         return element["type"]==="lab_sessions" && element["id"]=== lab_session_id});
 
@@ -51,7 +52,6 @@ export class QuestionService {
         var answer: Object = includedResponse.find(function(element) {
           return element["type"]==="answers" && element["id"]=== object["relationships"]["answer"]["data"]["id"];
         });
-
         userQuestions.push(this.buildQuestion(object, session, prof, course, answer));
       }
       return userQuestions;
@@ -59,18 +59,20 @@ export class QuestionService {
 
 
     private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object, aData : Object) : Question{
-let prof = User.createFromJSon(profData);
-let c = Course.createFromJSon(cData);
-c.professor =prof ;
-let s = LabSession.createFromJSon(sData);
-s.course = c;
-let a = Answer.createFromJSon(aData);
-a.session=s;
-      let q = Question.createFromJSon(qData); //still need to add asker user
-  q.session=s;
-  q.answer=a;
 
-  return q;
+      let prof = User.createFromJSon(profData);
+      let c = Course.createFromJSon(cData);
+      c.professor =prof ;
+      let s = LabSession.createFromJSon(sData);
+      s.course = c;
+      let q = Question.createFromJSon(qData); //still need to add asker user
+      q.session=s;
+      if(aData != undefined){
+          let a = Answer.createFromJSon(aData);
+          a.session=s;
+          q.answer=a;
+      }
+      return q;
 
     }
 
