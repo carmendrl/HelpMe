@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionViewComponent } from '../session-view/session-view.component';
@@ -11,6 +11,7 @@ import { User } from '../../models/user.model';
   styleUrls: ['./student-session-view.component.scss']
 })
 export class StudentSessionViewComponent extends SessionViewComponent implements OnInit {
+  @Input() private allQuestions : Question[]
   private faQs: Question[];
   private myQs: Question[];
   private allOtherQs:  Question[];
@@ -18,7 +19,7 @@ export class StudentSessionViewComponent extends SessionViewComponent implements
   constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
 
   ngOnInit() {
-    this.sortQuestions(super.questions);
+    this.sortQuestions(this.allQuestions);
   }
 
   sortQuestions(questions: Question[]){ //need to add some sport of user identification

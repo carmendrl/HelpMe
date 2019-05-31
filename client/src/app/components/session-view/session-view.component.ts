@@ -16,22 +16,16 @@ import { QuestionService } from '../../services/question.service';
 })
 export class SessionViewComponent implements OnInit {
   @Input() session: LabSession;
-  public questions: Question[];
+  questions: Question[];
 
   constructor(private userService : UserService, private questionService: QuestionService) { }
 
   ngOnInit() {
-    this.getSessionQuestions();
-  }
-
-
-  getSessionQuestions(){
     this.questionService.getSessionQuestions().subscribe(
       questions => this.questions = questions
     );
-    // this.questions;
-    // debugger
   }
+
 
 //want to make this abstract method but must make this an abstract createNewLabSession
 //to make this an abstract class can't have a constructor because can't instantiate

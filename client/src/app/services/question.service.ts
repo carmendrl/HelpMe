@@ -34,7 +34,7 @@ export class QuestionService {
   private createArray(questionsData: any[], includedResponse : any[]) : Question[]{
     let userQuestions = new Array<Question> ();
 
-
+    debugger
     for(let object of questionsData){
 
       let lab_session_id = object["relationships"]["lab_session"]["data"]["id"];
@@ -79,6 +79,7 @@ export class QuestionService {
     }
 
     getSessionQuestions() : Observable<Question[]>{
+      debugger
       this.sessionId = this.labsessionService.sessionId;
       let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
       return this.httpClient.get(url).pipe(
