@@ -36,7 +36,7 @@ export class LabSessionService {
     );
   }
 
-  private createLabsessionsArray(objects: Object[], includedResponses: Object[]) : LabSession[]{
+  private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
 
     //loop through the labsessions and push them onto an array after reformating
@@ -68,16 +68,9 @@ export class LabSessionService {
 
 
   private buildCreateLabsessionFromJson(s: Object, a: Object, b: Object ) : LabSession {
-    // let l = new LabsessionResponse(s);
-    // let c = new IncludedCourseResponse (a);
-    // let d = new IncludedProfessorResponse (b);
-
-    // let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-    // let course = new Course(c.Subject, c.Number, c.Title, c.Semester, prof, c.Id);
-    // let session = new LabSession(l.Description, l.StartDate, l.EndDate, course);
-    let prof = User.createFromJson(s);
-    let course = Course.createFromJson(a);
-    let session = LabSession.createFromJson(b);
+    let prof = User.createFromJSon(b);
+    let course = Course.createFromJSon(a);
+    let session = LabSession.createFromJson(s);
     course.professor = prof;
     session.course = course;
 
@@ -109,9 +102,9 @@ export class LabSessionService {
     var prof : Object = includedResponses.find(function(element) {
       return element["type"]==="professors" && element["id"]=== course["relationships"]["instructor"]["data"]["id"];
     });
-  
-    let professor = User.createFromJson(prof);
-    let newCourse = Course.createFromJson(course);
+
+    let professor = User.createFromJSon(prof);
+    let newCourse = Course.createFromJSon(course);
     let session = LabSession.createFromJson(r);
     newCourse.professor = professor;
     session.course = newCourse;
