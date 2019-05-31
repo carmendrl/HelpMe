@@ -47,7 +47,7 @@ export class User extends Entity{
     this._password = newPassword;
   }
 
-  public static createFromJSon(o : Object){
+ static createFromJSon(o : Object){
      let user = new User();
 
      user.Type = o["type"];
