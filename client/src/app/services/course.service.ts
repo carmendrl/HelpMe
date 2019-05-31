@@ -68,7 +68,8 @@ export class CourseService {
       return course;
     }
 
-    createNewCourse(o : Object, i : Object): Course{
+    createNewCourse(o : Object[], i : Object[]): Course{
+
       let newCourse = Course.createFromJSon(o);
       let prof = User.createFromJSon(i);
 
