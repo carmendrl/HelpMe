@@ -23,8 +23,8 @@
         <td>{{session.professor.FullName}}</td>
         <td>{{session.description}}</td>
         <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace">Copy Code</span>
-           <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span> 
-           <a href="#">View</a></td>
+           <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
+           <span (click)="viewSession(session)"  class="btn btn-primary actionSpace">View</span>
       </tr>
     </tbody>
   </table>
