@@ -46,4 +46,18 @@ export class User extends Entity{
   set Password(newPassword : string) {
     this._password = newPassword;
   }
+
+  public static createFromJSon(o : Object){
+     let user = new User();
+
+     user.Type = o["data"]["type"];
+     user.id = o["data"]["id"];
+     user.EmailAddress = o["data"]["attributes"]["email"];
+     user.Username = o["data"]["attributes"]["username"];
+     user.FirstName = o["data"]["attributes"]["first_name"];
+     user.LastName = o["data"]["attributes"]["last_name"];
+
+     return user;
+   }
+
 }

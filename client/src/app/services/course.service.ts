@@ -12,73 +12,73 @@ import { map, tap, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
 //getters for Course Responses
-class CourseResponse{
-  constructor (private data: CourseResponseData){}
-  get Id(): number {return this.data.id}
-  get Type(): string {return this.data.type}
-  get Title(): string {return this.data.attributes["title"]}
-  get Subject():string {return this.data.attributes["subject"]}
-  get Number(): string {return this.data.attributes["number"]}
-  get Semester(): string {return this.data.attributes["semester"]}
-  get ReId() : number {return this.data.relationships.instructor.data["id"]}
-  get ReType() :string {return this.data.relationships.instructor.data["type"]}
-}
-//start of course response hierarchy
-class CourseResponseData{
-  public id : number;
-  public type : string;
-  public attributes : CourseResponseAttributes;
-  public relationships : CourseResponseRelationshipInstructor;
-}
-
-class CourseResponseAttributes {
-  public title : string;
-  public subject : string;
-  public number : string;
-  public semester : string;
-}
-
-class CourseResponseRelationshipInstructor{
-  public instructor: CourseResponseRelationshipInstructorData;
-}
-
-class CourseResponseRelationshipInstructorData{
-  public data: CourseResponseRelationshipInstructorDataDetails;
-}
-
-class CourseResponseRelationshipInstructorDataDetails{
-  public id:  number;
-  public type: string;
-}
+// class CourseResponse{
+//   constructor (private data: CourseResponseData){}
+//   get Id(): number {return this.data.id}
+//   get Type(): string {return this.data.type}
+//   get Title(): string {return this.data.attributes["title"]}
+//   get Subject():string {return this.data.attributes["subject"]}
+//   get Number(): string {return this.data.attributes["number"]}
+//   get Semester(): string {return this.data.attributes["semester"]}
+//   get ReId() : number {return this.data.relationships.instructor.data["id"]}
+//   get ReType() :string {return this.data.relationships.instructor.data["type"]}
+// }
+// //start of course response hierarchy
+// class CourseResponseData{
+//   public id : number;
+//   public type : string;
+//   public attributes : CourseResponseAttributes;
+//   public relationships : CourseResponseRelationshipInstructor;
+// }
+//
+// class CourseResponseAttributes {
+//   public title : string;
+//   public subject : string;
+//   public number : string;
+//   public semester : string;
+// }
+//
+// class CourseResponseRelationshipInstructor{
+//   public instructor: CourseResponseRelationshipInstructorData;
+// }
+//
+// class CourseResponseRelationshipInstructorData{
+//   public data: CourseResponseRelationshipInstructorDataDetails;
+// }
+//
+// class CourseResponseRelationshipInstructorDataDetails{
+//   public id:  number;
+//   public type: string;
+// }
 
 //getters for included professor response
-class IncludedProfessorResponse{
-  constructor (private data: IncludedProfessorResponseData){
-  }
-  get Id() : number { return this.data.id }
-  get Type() : string { return this.data.type }
-  get Email() : string { return this.data.attributes["email"]}
-  get Username() : string {return this.data.attributes["username"]}
-  get Role() : string {return this.data.attributes["role"]}
-  get FirstName() : string {return this.data.attributes["first_name"]}
-  get LastName() : string {return this.data.attributes["last_name"]}
-
-}
-
-//start of included professor response hierarchy
-class IncludedProfessorResponseData{
-  public id : number;
-  public type : string;
-  public attributes: IncludedProfessorAttributes;
-}
-
-class IncludedProfessorAttributes{
-  public email: string;
-  public username: string;
-  public role: string;
-  public first_name: string;
-  public last_name: string;
-}
+// class IncludedProfessorResponse{
+//   constructor (private data: IncludedProfessorResponseData){
+//   }
+//   get Id() : number { return this.data.id }
+//   get Type() : string { return this.data.type }
+//   get Email() : string { return this.data.attributes["email"]}
+//   get Username() : string {return this.data.attributes["username"]}
+//   get Role() : string {return this.data.attributes["role"]}
+//   get FirstName() : string {return this.data.attributes["first_name"]}
+//   get LastName() : string {return this.data.attributes["last_name"]}
+//
+// }
+//
+// //start of included professor response hierarchy
+// class IncludedProfessorResponseData{
+//   public id : number;
+//   public type : string;
+//   public attributes: IncludedProfessorAttributes;
+// }
+//
+// class IncludedProfessorAttributes{
+//   public email: string;
+//   public username: string;
+//   public role: string;
+//   public first_name: string;
+//   public last_name: string;
+// }
 
 
 //start of CourseService class
@@ -101,13 +101,13 @@ export class CourseService {
     );
   }
 
-  private createCoursesArray(courseDatas : CourseResponseData[], includedResponse : any[]) : Course[]{
+  private createCoursesArray(objects : Object[], i: any[]) : Course[]{
     let courses = new Array <Course>();
-    for(let courseData of courseDatas){
-      var professor : IncludedProfessorResponseData = includedResponse.find(function(element){
-        return element["type"]==="professors" && element["id"]=== courseData.relationships.instructor.data["id"]})
+    for(let object of objects){
+      var professor : Object = i.find(function(element){
+        return element["type"]==="professors" && element["id"]=== object["relationships"]["instructor"]["data"]["id"]})
 
-        courses.push(this.buildCreateCourse(courseData, professor));
+        courses.push(this.buildCreateCourse(object, professor));
       }
       courses= courses.sort(function(a, b){
         if(a.subject > b.subject){
@@ -128,23 +128,20 @@ export class CourseService {
       return courses;
     }
 
-    private buildCreateCourse(b : CourseResponseData, a: IncludedProfessorResponseData) : Course{
-      let c = new CourseResponse(b);
-      let p = new IncludedProfessorResponse(a);
+    private buildCreateCourse(o : Object, i: Object) : Course{
+      let course = Course.createFromJSon(o);
+      let prof = User.createFromJSon(i);
 
-      let professor = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
-      let course = new Course(c.Subject, c.Number, c.Title, c.Semester, professor, c.Id);
+      course.professor = prof;
 
       return course;
     }
 
-    createNewCourse(d : CourseResponseData, i : IncludedProfessorResponseData): Course{
+    createNewCourse(o : Object, i : Object): Course{
+      let newCourse = Course.createFromJSon(o);
+      let prof = User.createFromJSon(i);
 
-      let c = new CourseResponse(d);
-      let p = new IncludedProfessorResponse(i[0]);
-
-      let user = new User(p.Email, p.Username, p.FirstName, p.LastName, p.Type, p.Id);
-      let newCourse = new Course(c.Subject, c.Number, c.Title, c.Semester, user, c.Id);
+      newCourse.professor = prof;
       this._newCourse$.next(newCourse);
 
       return newCourse;
