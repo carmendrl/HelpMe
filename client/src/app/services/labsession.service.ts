@@ -70,7 +70,7 @@ export class LabSessionService {
   private buildCreateLabsessionFromJson(s: Object, a: Object, b: Object ) : LabSession {
     let prof = User.createFromJSon(b);
     let course = Course.createFromJSon(a);
-    let session = LabSession.createFromJson(s);
+    let session = LabSession.createFromJSon(s);
     course.professor = prof;
     session.course = course;
 
@@ -105,7 +105,7 @@ export class LabSessionService {
 
     let professor = User.createFromJSon(prof);
     let newCourse = Course.createFromJSon(course);
-    let session = LabSession.createFromJson(r);
+    let session = LabSession.createFromJSon(r);
     newCourse.professor = professor;
     session.course = newCourse;
 

@@ -35,7 +35,7 @@ export class LabSession extends Entity {
     this._token = token;
   }
 
-  static createFromJson(o : Object): LabSession{
+  static createFromJSon(o : Object): LabSession{
     let session = new LabSession();
     session.description = o["attributes"]["description"];
     session.startDate = o["attributes"]["start_date"];
