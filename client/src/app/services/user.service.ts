@@ -13,36 +13,13 @@ import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
 
 
-class UserResponseAttributes {
-  public email : string;
-  public username : string;
-  public lastName : string;
-  public firstName : string;
-}
-
-class UserResponseData {
-  public type : string;
-  public id : string;
-  public attributes: UserResponseAttributes;
-}
-
-class UserResponse {
-  constructor (private data : UserResponseData) {
-	}
-  get Type() : string { return this.data.type }
-  get Id() : string { return this.data.id }
-  get Email() : string { return this.data.attributes.email }
-  get Username() : string { return this.data.attributes.username }
-  get FirstName () : string { return this.data.attributes["first-name"] }
-  get LastName () : string { return this.data.attributes["last-name"] }
-}
-
 @Injectable()
 export class UserService {
   private _currentUser$: Subject<User>;
   private apiHost : string;
 
   private noUser : User;
+
   constructor (private httpClient : HttpClient, @Inject(API_SERVER) host : string) {
       this._currentUser$ = new ReplaySubject<User> (1);
       this.apiHost = host;
@@ -61,10 +38,10 @@ export class UserService {
       password: password
     };
 
-    return this.httpClient.post<UserResponseData>(url, body).pipe(
+    return this.httpClient.post(url, body).pipe(
       //timeout(5000), //possible other way to have login delay messsage possibly displayed.
       //delay(20000), //This is here to test for login delay messages
-      tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
+      tap(r => this.updateLoggedInUserFromResponse(r["data"])),
       map(r => {
         return true
       }),
@@ -84,8 +61,8 @@ export class UserService {
   createAccount(user : User) : Observable<boolean> {
     let url : string = `${this.apiHost}/users`;
     let body = this.buildCreateAccountBodyFromUser (user);
-    return this.httpClient.post<UserResponseData>(url, body).pipe(
-      tap(r => this.updateLoggedInUserFromResponse(new UserResponse(r["data"]))),
+    return this.httpClient.post(url, body).pipe(
+      tap(r => this.updateLoggedInUserFromResponse(r["data"])),
       map(r => true ),
       catchError(error => this.handleCreateAccountError(error))
     );
@@ -103,14 +80,8 @@ export class UserService {
     }
   }
 
-  private updateLoggedInUserFromResponse(r : UserResponse) {
-      let user = new User();
-      user.Type = r.Type;
-      user.FirstName = r.FirstName;
-      user.LastName = r.LastName;
-      user.Username = r.Username;
-      user.EmailAddress = r.Email;
-      this._currentUser$.next(user);
+  private updateLoggedInUserFromResponse(o : Object) {
+      this._currentUser$.next(User.createFromJSon(o));
   }
 
   private handleCreateAccountError (error) : Observable<boolean> {

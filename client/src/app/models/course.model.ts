@@ -60,7 +60,24 @@ export class Course extends Entity{
     return this._professor;
   }
 
+  set professor(professor: User){
+    this._professor = professor;
+  }
+
   get subjectAndNumber () : string {
     return `${this.subject} ${this.number}`;
   }
+
+  static createFromJSon(o: Object){
+  let course = new Course();
+
+  course.id = o["id"];
+  course.title = o["attributes"]["title"];
+  course.subject = o["attributes"]["subject"];
+  course.number = o["attributes"]["number"];
+  course.semester = o["attributes"]["semester"];
+
+  return course;
+  }
+
 }
