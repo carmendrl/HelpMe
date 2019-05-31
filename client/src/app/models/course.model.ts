@@ -71,11 +71,11 @@ export class Course extends Entity{
   static createFromJSon(o: Object){
   let course = new Course();
 
-  course.id = o["data"]["id"];
-  course.title = o["data"]["attributes"]["title"];
-  course.subject = o["data"]["attributes"]["subject"];
-  course.number = o["data"]["attributes"]["number"];
-  course.semester = o["data"]["attributes"]["semester"];
+  course.id = o["id"];
+  course.title = o["attributes"]["title"];
+  course.subject = o["attributes"]["subject"];
+  course.number = o["attributes"]["number"];
+  course.semester = o["attributes"]["semester"];
 
   return course;
   }

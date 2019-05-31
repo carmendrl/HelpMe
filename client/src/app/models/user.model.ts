@@ -50,12 +50,12 @@ export class User extends Entity{
   public static createFromJSon(o : Object){
      let user = new User();
 
-     user.Type = o["data"]["type"];
-     user.id = o["data"]["id"];
-     user.EmailAddress = o["data"]["attributes"]["email"];
-     user.Username = o["data"]["attributes"]["username"];
-     user.FirstName = o["data"]["attributes"]["first_name"];
-     user.LastName = o["data"]["attributes"]["last_name"];
+     user.Type = o["type"];
+     user.id = o["id"];
+     user.EmailAddress = o["attributes"]["email"];
+     user.Username = o["attributes"]["username"];
+     user.FirstName = o["attributes"]["first_name"];
+     user.LastName = o["attributes"]["last_name"];
 
      return user;
    }
