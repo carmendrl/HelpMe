@@ -18,9 +18,10 @@ export class StudentSessionViewComponent extends SessionViewComponent implements
   constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
 
   ngOnInit() {
+    this.sortQuestions(super.questions);
   }
 
-  sortQuestions(questions: Question[], user:User ){ //need to add some sport of user identification
+  sortQuestions(questions: Question[]){ //need to add some sport of user identification
     for (let question of questions){
       //faq of question is assumed to be a boolean
       if (true){//questions.faq){

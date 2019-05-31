@@ -52,6 +52,10 @@ export class QuestionService {
         var answer: Object = includedResponse.find(function(element) {
           return element["type"]==="answers" && element["id"]=== object["relationships"]["answer"]["data"]["id"];
         });
+<<<<<<< HEAD
+=======
+        debugger
+>>>>>>> 5885f430d5e276b486b57dddba07e180dca12d05
         userQuestions.push(this.buildQuestion(object, session, prof, course, answer));
       }
       return userQuestions;
@@ -59,6 +63,7 @@ export class QuestionService {
 
 
     private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object, aData : Object) : Question{
+<<<<<<< HEAD
 
       let prof = User.createFromJSon(profData);
       let c = Course.createFromJSon(cData);
@@ -72,6 +77,20 @@ export class QuestionService {
           a.session=s;
           q.answer=a;
       }
+=======
+      let prof = User.createFromJSon(profData);
+      let c = Course.createFromJSon(cData);
+      c.professor =prof ;
+      let s = LabSession.createFromJSon(sData);
+      s.course = c;
+      let a = Answer.createFromJSon(aData);
+      debugger
+      a.session=s;
+      let q = Question.createFromJSon(qData); //still need to add asker user
+      q.session=s;
+      q.answer=a;
+
+>>>>>>> 5885f430d5e276b486b57dddba07e180dca12d05
       return q;
 
     }

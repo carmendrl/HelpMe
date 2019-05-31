@@ -148,9 +148,7 @@ export class StartSessionComponent implements OnInit {
     }
   }
 
-      saveCourse(){
-        this.courseService.newCourse$.subscribe(c => {this.newCourse = c; this.startCourse.unshift(c)});
-      }
+    
 
 
     }

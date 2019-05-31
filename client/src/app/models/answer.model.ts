@@ -44,11 +44,11 @@ export class Answer extends Entity{
   }
 
   static createFromJSon(o: Object){
-  let answer = new Answer();
+    let answer = new Answer();
 
-  answer.date = o["attributes"]["date"];
-  answer.text = o["attributes"]["text"];
-  answer.id = o["id"];
+    answer.date = o["attributes"]["created_at"];
+    answer.text = o["attributes"]["text"];
+    answer.id = o["id"];
 
 //lab session and user should be in the included part.
   return answer;
