@@ -15,13 +15,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.0.0",
-    "@angular/cli": "^7.3.9",
+    "@angular/cli": "^8.0.1",
     "@angular/common": "^8.0.0",
     "@angular/compiler": "^8.0.0",
     "@angular/compiler-cli": "^8.0.0",
     "@angular/core": "^8.0.0",
     "@angular/forms": "^8.0.0",
-    "@angular/http": "^5.0.2",
     "@angular/language-service": "^8.0.0",
     "@angular/platform-browser": "^8.0.0",
     "@angular/platform-browser-dynamic": "^8.0.0",
@@ -50,10 +49,11 @@
     "tslib": "^1.9.0",
     "tslint": "~5.7.0",
     "typescript": "~3.4.5",
-    "zone.js": "^0.9.1",
+    "zone.js": "~0.9.1",
     "rxjs-compat": "^6.0.0-rc.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.0"
+    "@angular-devkit/build-angular": "~0.800.0",
+    "codelyzer": "^5.0.1"
   }
 }
