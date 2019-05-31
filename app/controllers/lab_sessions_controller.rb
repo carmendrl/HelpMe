@@ -34,7 +34,7 @@ class LabSessionsController < ApplicationController
   private
 
   def session_params
-    params.permit(:description, :token, :active, :course_id)
+    params.permit(:description, :token, :active, :course_id, :start_date, :end_date)
   end
 
   def find_lab_session!

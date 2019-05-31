@@ -27,7 +27,7 @@ export class UserProfileComponent implements OnInit {
 
 	gravatarImageUrl (user: User) : string {
 			let email : string = user.EmailAddress;
-			debugger
+			//debugger
 			let matches = email.match(/(.*)\+.*@hope\.edu$/i);
 			if (matches && matches.length > 1) {
 				email = `${matches[1]}@hope.edu`;
