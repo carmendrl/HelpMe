@@ -92,13 +92,13 @@ export class Question extends Entity{
     }
   }
 
-static createFromJSON(o:Object){
-  new question = new Question();
+static createFromJSon(o:Object){
+  let question = new Question();
 
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];
   question.id= o["id"];
-  question.faQ=;
+  question.faq= false;
 
   return question;
 
