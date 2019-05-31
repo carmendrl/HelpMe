@@ -29,6 +29,8 @@ export class SessionViewComponent implements OnInit {
     this.questionService.getSessionQuestions().subscribe(
       questions => this.questions = questions
     );
+    // this.questions;
+    // debugger
   }
 
 //want to make this abstract method but must make this an abstract createNewLabSession

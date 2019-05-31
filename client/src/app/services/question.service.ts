@@ -55,6 +55,7 @@ export class QuestionService {
 
         userQuestions.push(this.buildQuestion(object, session, prof, course, answer));
       }
+      debugger
       return userQuestions;
     }
 
