@@ -11,6 +11,7 @@ export class Question extends Entity{
                _id? : number, private _faQ? : boolean, private _user? : User) {
     super (_id);
     this._tags = new Set<string> ();
+    this._faQ = false;
   }
 
   get date() : Date {

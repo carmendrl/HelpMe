@@ -4,6 +4,7 @@ class QuestionSerializer < ActiveModel::Serializer
   attribute :status
 
   has_one :original_asker, if: :professor?
+  has_one :answer, if: :answered?
   has_many :askers, if: :show_askers?, key: :asked_by
   has_one :claimed_by, if: :claimed?
   has_one :assigned_to, if: :assigned?
@@ -23,5 +24,9 @@ class QuestionSerializer < ActiveModel::Serializer
 
   def assigned?
     object.assigned?
+  end
+
+  def answered?
+    object.answered?
   end
 end
