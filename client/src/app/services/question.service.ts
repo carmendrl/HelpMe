@@ -5,6 +5,7 @@ import { LabSession } from '../models/lab_session.model';
 import { LabSessionService } from './labsession.service';
 import { User } from '../models/user.model';
 import { Course } from '../models/course.model';
+import { Answer } from '../models/answer.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
@@ -256,16 +257,16 @@ export class QuestionService {
 
 
     private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object, aData : Object) : Question{
-let prof = User.createFromJson(profData);
-let c = Course.createFromJSON(cData);
-c.professor(prof);
-let s = LabSession.createFromJSON(sData);
-s.course(h);
-let a = Answer.createFromJSON(aData);
-a.session(s);
-      let q = Question.createFromJSON(qData); //still need to add asker user
-  q.session(s);
-  q.answer(a);
+let prof = User.createFromJSon(profData);
+let c = Course.createFromJSon(cData);
+c.professor =prof ;
+let s = LabSession.createFromJSon(sData);
+s.course = c;
+let a = Answer.createFromJSon(aData);
+a.session=s;
+      let q = Question.createFromJSon(qData); //still need to add asker user
+  q.session=s;
+  q.answer=a;
 
   return q;
 
