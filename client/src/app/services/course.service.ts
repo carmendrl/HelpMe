@@ -68,18 +68,20 @@ export class CourseService {
       return course;
     }
 
-    createNewCourse(o : Object, i : Object): Course{
+    createNewCourse(o : Object): Course{ //, i: Object
+      debugger
       let newCourse = Course.createFromJSon(o);
-      let prof = User.createFromJSon(i);
+      let prof = User.createFromJSon(o); //(i)
 
       newCourse.professor = prof;
       this._newCourse$.next(newCourse);
-
+debugger
       return newCourse;
     }
 
     //returns the course
     postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
+debugger
       let url : string=`${this.apiHost}/courses`;
       let body= {
         title: title,
@@ -88,7 +90,7 @@ export class CourseService {
         semester: semester
       };
       return this.httpClient.post(url, body).pipe(
-        map(r => this.createNewCourse(r["data"], r["included"])),
+        map(r => this.createNewCourse(r["data"])), // r["included"]
         catchError(this.handleError<Course>(`post new course`))
       );
     }
