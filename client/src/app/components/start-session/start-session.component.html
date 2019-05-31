@@ -7,12 +7,16 @@
         <label for="course">Select course</label>
       </div>
 
-      <div class="col-12 col-sm-8">
+      <div class="inline-block col-12 col-sm-8">
         <select [(ngModel)] = "selectedCourse" class="form-control" name="selectedCourse">
           <option *ngFor="let course of startCourse" [selected]= "course" [ngValue]="course"> {{course.subjectAndNumber}} </option>
         </select>
-      </div>
 
+      </div>
+      <div>
+        <!--button that opens modal-->
+        <a class="inline-block btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
+        </div>
     </div>
 
 
@@ -113,12 +117,7 @@
       </p>
     </div>
 
-    <!--button that opens modal-->
-    <a class="btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
-
-    <hr>
-
-  </form>
+</form>
 
   <!-- modal-->
   <ng-template #content let-modal let-d="dismiss" let-c="close">

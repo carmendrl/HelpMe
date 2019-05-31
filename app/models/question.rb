@@ -40,6 +40,9 @@ class Question < ApplicationRecord
     assigned_to.present?
   end
 
+  def answered?
+    answer.present?
+  end
   def update_status!
     if answer.present?
       self.status = :answered

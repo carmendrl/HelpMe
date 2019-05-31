@@ -4,7 +4,7 @@ class QuestionsController < ApplicationController
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
-    render json: sess.questions.order(created_at: :asc), each_serializer: QuestionSerializer
+    render json: sess.questions.order(created_at: :asc), each_serializer: QuestionSerializer, include: [:lab_session, 'lab_session.course', 'lab_session.users', :answer]
   end
 
   def show
@@ -80,7 +80,7 @@ class QuestionsController < ApplicationController
 		#  Find all of the questions that this user has asked, either as the original asker, or through the
 		#  "Me Too!" mechanism
 		questions = Question.joins(:askers).where("user_id = '#{current_user.id}'")
-		render json: questions, include: [:lab_session, 'lab_session.course', 'lab_session.users']
+		render json: questions, include: [:lab_session, 'lab_session.course', 'lab_session.users', :answer]
 	end
 
   private

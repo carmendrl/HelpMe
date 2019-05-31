@@ -23,7 +23,7 @@ export class FacultySessionViewComponent extends SessionViewComponent implements
 
   sortQuestions(questions: Question[], user:User ){ //need to add some sport of user identification
     for (let question of questions){
-      if(question.answer != ""){
+      if(question.answer){
         //faq of question is assumed to be a boolean
         if (true){//questions.faq){
           this.faQs.push(question);
