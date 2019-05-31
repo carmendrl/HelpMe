@@ -21,8 +21,7 @@ export class StartSessionComponent implements OnInit {
   private year: string;
   private startCourse : Course[];
   private generatedCode: string;
-  private generatedId:number;
-  private sessionStarted: boolean;
+  private newSessionDescription:string;
   private newSession: LabSession;
   private newCourse: Course;
   private todayYear: number;
@@ -43,7 +42,6 @@ export class StartSessionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.sessionStarted = false;
     this.startBeforeEnd =true;
     this.courseService.coursesList().subscribe(
       courses => {this.coursesRetrieved=true; this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
@@ -57,8 +55,7 @@ export class StartSessionComponent implements OnInit {
     this.compareStartEnd();
       if(this.startBeforeEnd){
     this.labSessionService.createNewLabSession(this.description, this.selectedCourse.id, this.fullStartDate, this.fullEndDate).subscribe(
-      r => {this.newSession = r; this.generatedId= this.newSession.id; this.generatedCode= this.newSession.token});
-      this.sessionStarted = true;
+      r => {this.newSession = r; this.generatedCode=this.newSession.token; this.newSessionDescription=this.newSession.description});
     }
     }
 
@@ -96,7 +93,7 @@ export class StartSessionComponent implements OnInit {
 
     copySessionCode(){
       let selBox = this.document.createElement('textarea');
-      selBox.value=this.generatedCode;
+      selBox.value=this.newSession.token;
       this.document.body.appendChild(selBox);
       selBox.focus();
       selBox.select();
@@ -106,7 +103,7 @@ export class StartSessionComponent implements OnInit {
 
     copySessionLink(){
       let selBox = this.document.createElement('textarea');
-      let url ="www.YouDidIT....."+this.generatedId+".....com";
+      let url ="www.YouDidIT....."+this.newSession.id+".....com";
       selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
       this.document.body.appendChild(selBox);
       selBox.focus();
@@ -115,9 +112,6 @@ export class StartSessionComponent implements OnInit {
       this.document.body.removeChild(selBox);
     }
 
-    sessionStartedFalse(){
-      this.sessionStarted =false;
-    }
 
   open(content) {
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
@@ -127,6 +121,19 @@ export class StartSessionComponent implements OnInit {
     });
     console.log("Testing Modal");
     // this.courseService.newCourse$.subscribe(
+    //   course => this.modalService.dismissAll()
+    // );
+  }
+
+  open2(content2) {
+    if(this.startBeforeEnd){
+    let modal= this.modalService.open(content2, <NgbModalOptions>{ariaLabelledBy: 'modal-create-new-session'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+    //this.courseService.newCourse$.subscribe(
     //   course => this.modalService.dismissAll()
     // );
   }

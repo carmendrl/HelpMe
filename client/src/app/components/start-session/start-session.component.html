@@ -1,6 +1,6 @@
 <body onload="myFunction">
   <h2>Start a session</h2>
-  <form #thisForm="ngForm" (ngSubmit)="startSession()">
+  <form #thisForm="ngForm" (ngSubmit)="startSession(); open2(content2)">
     <div class="row form-group">
 
       <div class="col-12 col-sm-2">
@@ -35,23 +35,23 @@
         <label for="start_date">Start Date</label>
       </div>
 
-        <div class="form-inline dateDiv" >
-          <div class="form-group" >
-            <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd"
-              name="dp" [(ngModel)]="start_date" ngbDatepicker #d="ngbDatepicker" maxlength ="10" required>
-              <div class ="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
-              </div>
+      <div class="form-inline dateDiv" >
+        <div class="form-group" >
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+            name="dp" [(ngModel)]="start_date" ngbDatepicker #d="ngbDatepicker" maxlength ="10" required>
+            <div class ="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
             </div>
           </div>
         </div>
-
-        <div class="col-12 col-sm-2">
-          <ngb-timepicker  name ="start_time" [(ngModel)]="start_time" [meridian]="true" [spinners]="false" required></ngb-timepicker>
-        </div>
-
       </div>
+
+      <div class="col-12 col-sm-2">
+        <ngb-timepicker  name ="start_time" [(ngModel)]="start_time" [meridian]="true" [spinners]="false" required></ngb-timepicker>
+      </div>
+
+    </div>
 
 
     <div class="row form-group">
@@ -60,17 +60,17 @@
         <label>End Date</label>
       </div>
 
-        <div class="form-inline  dateDiv" >
-          <div class="form-group" >
-            <div class="input-group">
-              <input class="form-control" placeholder="yyyy-mm-dd"
-              name="p" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
-              <div class ="input-group-append">
-                <button class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
-              </div>
+      <div class="form-inline  dateDiv" >
+        <div class="form-group" >
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+            name="p" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
+            <div class ="input-group-append">
+              <button class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
             </div>
           </div>
         </div>
+      </div>
 
       <div class="col-12 col-sm-2" >
         <ngb-timepicker name ="end_time" [(ngModel)]="end_time"  [meridian]="true" [spinners]="false" required></ngb-timepicker>
@@ -85,15 +85,27 @@
       </div>
     </div>
 
-    <div *ngIf=sessionStarted class="alert alert-success">
-      <p>
-        Session code is <strong>{{generatedCode}}</strong>
-        <a [routerLink]="['/session-view/', generatedId]">Go to session</a>
-      </p>
-      <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
-      <span (click)="copySessionLink()"  class="btn btn-primary">Copy Session Link</span>
-      <span (click)="thisForm.reset(); sessionStartedFalse()"  class="btn btn-primary">Create New Session</span>
-    </div>
+    <ng-template #content2 let-modal let-d="dismiss" let-c="close">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-new-session" aria-labelledBy="modal-create-new-session"> "{{newSessionDescription}}"  Successfully Created!</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <p>
+          Session code is <strong>{{generatedCode}}</strong>
+        </p>
+        <p>
+          <a [routerLink]="['/session-view/']">Go to session</a>
+        </p>
+        <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
+        <span (click)="copySessionLink()"  class="btn btn-primary spanSpace">Copy Session Link</span>
+
+      </div>
+    </ng-template>
+
 
     <div *ngIf=!(startBeforeEnd) class="alert alert-danger">
       <p>
