@@ -214,7 +214,6 @@ class IncludedProfessorAttributes{
 export class QuestionService {
   private apiHost : string;
   private userQuestions : Question[];
-  private _modelFactory: ModelFactoryService;
   private sessionId : number;
 
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
@@ -229,42 +228,47 @@ export class QuestionService {
     );
   }
 
-  private createArray(questions : QuestionResponseData[], includedResponse : any[]) : Question[]{
+  private createArray(questionsData: any[], includedResponse : any[]) : Question[]{
     let userQuestions = new Array<Question> ();
 
-    for(let object of questions){
-      let lab_session_id = object.relationships["lab_session"].data['id'];
-      let lab_session = includedResponse.find( e => e["type"] == 'lab_sessions' && e["id"] == lab_session_id);
-      let course_id = lab_session['relationships']['course']["data"]["id"];
-      var course: IncludedCourseResponseData = includedResponse.find(function(element) {
+    for(let object of questionsData){
+      let lab_session_id = object["relationships"]["lab_session"]["data"]["id"];
+      let lab_session = includedResponse.find( e => e["type"] == "lab_sessions" && e["id"] == lab_session_id);
+      let course_id = lab_session["relationships"]["course"]["data"]["id"];
+      var course: Object = includedResponse.find(function(element) {
         return element["type"]==="courses" && element["id"]=== course_id;
       });
 
-      var session : QuestionResponseIncludedData = includedResponse.find(function(element){
-        return element["type"]==="lab_sessions" && element["id"]=== lab_session_id})
+      var session : Object = includedResponse.find(function(element){
+        return element["type"]==="lab_sessions" && element["id"]=== lab_session_id});
 
-        var prof : IncludedProfessorResponseData = includedResponse.find(function(element) {
-          return element["type"]==="professors" && element["id"]=== course.relationships.instructor.data["id"];
+        var prof : Object = includedResponse.find(function(element) {
+          return element["type"]==="professors" && element["id"]=== course["relationships"]["instructor"]["data"]["id"];
+        });
+        var answer: Object = includedResponse.find(function(element) {
+          return element["type"]==="answers" && element["id"]=== object["relationships"]["answer"]["data"]["id"];
         });
 
-        userQuestions.push(this.buildQuestion(object, session, prof, course));
+        userQuestions.push(this.buildQuestion(object, session, prof, course, answer));
       }
-      return userQuestions
+      return userQuestions;
     }
 
 
-    private buildQuestion (a : QuestionResponseData, b : QuestionResponseIncludedData, c : IncludedProfessorResponseData, t :IncludedCourseResponseData) : Question{
-      let q = new QuestionResponse(a);
-      let s = new QuestionIncludedResponse(b);
-      let d = new IncludedProfessorResponse (c);
-      let h = new IncludedCourseResponse (t);
+    private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object, aData : Object) : Question{
+let prof = User.createFromJson(profData);
+let c = Course.createFromJSON(cData);
+c.professor(prof);
+let s = LabSession.createFromJSON(sData);
+s.course(h);
+let a = Answer.createFromJSON(aData);
+a.session(s);
+      let q = Question.createFromJSON(qData); //still need to add asker user
+  q.session(s);
+  q.answer(a);
 
-      let prof = new User(d.Email, d.Username, d.FirstName, d.LastName, d.Type,d.Id);
-      let course = new Course (h.Subject, h.Number, h.Title, h.Semester, prof, h.Id);
-      let session = new LabSession (s.Description, s.StartDate, s.EndDate, course);
-      let question = new Question(q.CreatedAt, q.Text, q.Status, session, q.Id);
+  return q;
 
-      return question;
     }
 
     getSessionQuestions() : Observable<Question[]>{
