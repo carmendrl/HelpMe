@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import { Router } from '@angular/router';
+import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 
 @Component({
@@ -11,7 +13,7 @@ export class SessionListComponent implements OnInit {
 
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
-  constructor(@Inject(DOCUMENT) public document: Document) { }
+  constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
 
   ngOnInit() {
   }
@@ -38,5 +40,8 @@ export class SessionListComponent implements OnInit {
     this.document.body.removeChild(selBox);
   }
 
+  viewSession(s:LabSession){
+    this.router.navigateByUrl(`/lab_sessions/${s.id}`);
+  }
 
 }
