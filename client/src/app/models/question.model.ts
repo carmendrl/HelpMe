@@ -1,15 +1,17 @@
 import { LabSession } from './lab_session.model';
-
+import { User } from './user.model';
 import { Entity } from './entity.model';
+import { Answer } from './answer.model';
 
 export class Question extends Entity{
   private _tags : Set<string>;
 
   constructor (private _date?: Date, private _text? : string,
-               private _answer? : string, private _session? : LabSession,
-               _id? : number) { 
+               private _answer? : Answer, private _session? : LabSession,
+               _id? : number, private _faQ? : boolean, private _user? : User) {
     super (_id);
     this._tags = new Set<string> ();
+    this._faQ = false;
   }
 
   get date() : Date {
@@ -28,11 +30,11 @@ export class Question extends Entity{
     this._text = text;
   }
 
-  get answer() : string {
+  get answer() : Answer {
     return this._answer;
   }
 
-  set answer(answer : string) {
+  set answer(answer : Answer) {
     this._answer = answer;
   }
 
@@ -44,8 +46,25 @@ export class Question extends Entity{
     this._session = session;
   }
 
+  get faq() : boolean {
+    return this._faQ;
+  }
+
+  set faq(b : boolean){
+    this._faQ = b;
+  }
+
   get tags() : Set<string> {
     return this._tags;
+  }
+
+  //user who answered the question
+  get user(): User {
+    return this._user;
+  }
+
+  set user(user : User) {
+    this._user = user;
   }
 
   public addTag (tag : string) : boolean {
