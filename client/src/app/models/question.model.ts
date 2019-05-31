@@ -91,4 +91,18 @@ export class Question extends Entity{
       return false;
     }
   }
+
+static createFromJSON(o:Object){
+  new question = new Question();
+
+  question.date = o["attributes"]["created_at"];
+  question.text =o["attributes"]["text"];
+  question.id= o["id"];
+  question.faQ=;
+
+  return question;
+
+}
+
+
 }

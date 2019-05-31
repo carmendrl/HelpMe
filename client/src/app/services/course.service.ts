@@ -27,7 +27,8 @@ export class CourseService {
     let url : string =`${this.apiHost}/courses`;
 
     return this.httpClient.get(url).pipe(
-      map(r => this.createCoursesArray(r["data"], r["included"]))
+      map(r => this.createCoursesArray(r["data"], r["included"])),
+      catchError(this.handleError<Course[]>(`courses`))
     );
   }
 
