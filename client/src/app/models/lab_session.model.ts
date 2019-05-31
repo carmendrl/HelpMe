@@ -37,6 +37,7 @@ export class LabSession extends Entity {
 
   static createFromJSon(o : Object): LabSession{
     let session = new LabSession();
+    session.id=o["id"];
     session.description = o["attributes"]["description"];
     session.startDate = o["attributes"]["start_date"];
     session.endDate = o["attributes"]["end_date"];
