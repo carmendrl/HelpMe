@@ -131,7 +131,7 @@ export class LabSessionService {
 
   private extractSessionId(r: Object): number {
     //let s = new sessionResponse(r);
-    this.sessionId = r["data"]["relationships"]["lab_session"]["data"]["id"];
+    this.sessionId = r["relationships"]["lab_session"]["data"]["id"];
     return this.sessionId;
   }
 
