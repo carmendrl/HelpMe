@@ -38,6 +38,16 @@ export class Question extends Entity{
     this._answer = answer;
   }
 
+  get answerText():string{
+    //handles if answer is undefined
+    if(this._answer === undefined){
+      return "";
+    }
+    else{
+      return this._answer.text; 
+    }
+  }
+
   get session() : LabSession {
     return this._session;
   }
