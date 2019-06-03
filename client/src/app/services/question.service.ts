@@ -48,9 +48,13 @@ export class QuestionService {
         var prof : Object = includedResponse.find(function(element) {
           return element["type"]==="professors" && element["id"]=== course["relationships"]["instructor"]["data"]["id"];
         });
-        var answer: Object = includedResponse.find(function(element) {
+
+        if (object["relationships"]["answer"] != undefined) { var answer: Object = includedResponse.find(function(element) {
           return element["type"]==="answers" && element["id"]=== object["relationships"]["answer"]["data"]["id"];
         });
+      }else{
+        var answer: Object = undefined;
+      }
 
         userQuestions.push(this.buildQuestion(object, session, prof, course, answer));
       }
