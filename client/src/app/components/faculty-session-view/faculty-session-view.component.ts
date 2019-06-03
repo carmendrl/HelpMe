@@ -4,6 +4,8 @@ import { QuestionService } from '../../services/question.service';
 import { SessionViewComponent } from '../session-view/session-view.component';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -16,7 +18,7 @@ export class FacultySessionViewComponent extends SessionViewComponent implements
   private faQs: Question[];
   private otherAnsweredQs:  Question[];
 
-  constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
+  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); }
 
   ngOnInit() {
   }
