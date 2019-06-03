@@ -15,26 +15,14 @@ import { QuestionService } from '../../services/question.service';
   styleUrls: ['./session-view.component.scss']
 })
 export class SessionViewComponent implements OnInit {
-  private session: LabSession;
-  @Input() questions: Question[];
-  private sessionId: number;
+  
 
-  constructor(private userService : UserService, private questionService: QuestionService, private route: ActivatedRoute, private location: Location) { }
+  constructor(private userService : UserService) { }
 
   ngOnInit() {
-    this.sessionId = +this.route.snapshot.paramMap.get('lab_session_id');
-    this.questionService.getSessionQuestions(this.sessionId).subscribe(questions => this.questions = questions);
-      debugger
-    // this.questionService.getSessionQuestions().subscribe(
-    //   questions => this.questions = questions
-    // );
+
   }
 
 
-//want to make this abstract method but must make this an abstract createNewLabSession
-//to make this an abstract class can't have a constructor because can't instantiate
-//an abstract class
-  sortQuestions(questions: Question[], user:User)
-  {}; //may switch to specific user attribute such as type or id
 
 }
