@@ -25,6 +25,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   }
 
   sortQuestions(questions: Question[]){ //need to add some sport of user identification
+    debugger
     for (let question of questions){
       //faq of question is assumed to be a boolean
       if (question.faq){//questions.faq){
