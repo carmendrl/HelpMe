@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
 	    resources :questions do
 	      member do
-	        get "claim"
+	        post "claim"
 	        post "assign"
 
 	        # Tags

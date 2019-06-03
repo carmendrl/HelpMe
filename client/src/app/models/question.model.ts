@@ -8,7 +8,7 @@ export class Question extends Entity{
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
-               _id? : number, private _faQ? : boolean, private _user? : User, private _status? : string) {
+               _id? : number, private _faQ? : boolean, private _asker? : User, private _status? : string, private _otherAskers?: User[], private _claimedBy?:User) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -58,13 +58,35 @@ export class Question extends Entity{
     return this._tags;
   }
 
-  //user who answered the question
-  get user(): User {
-    return this._user;
+  //user who asked the question
+  get asker(): User {
+    return this._asker;
   }
 
-  set user(user : User) {
-    this._user = user;
+  set asker(user : User) {
+    this._asker = user;
+  }
+
+  //users who clicked "me too"
+  get otherAskers(): User[] {
+    return this._otherAskers;
+  }
+
+  set otherAskers(users : User[]) {
+    this._otherAskers = users;
+  }
+
+  get totalAskers(): number {
+    return this._otherAskers.length;
+  }
+
+  //user who claimed the question (teacher/ta)
+  get claimedBy(): User {
+    return this._claimedBy;
+  }
+
+  set claimedBy(user : User) {
+    this._claimedBy= user;
   }
 
   public addTag (tag : string) : boolean {
@@ -106,8 +128,15 @@ static createFromJSon(o:Object){
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];
   question.id= o["id"];
-  question.faq= false;
+  question.faq= o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
+  question.asker=o["relationships"]["original_asker"]["data"];
+  // if(o["relationships"]["claimed_by"]["data"] != undefined){
+  //   question.claimedBy=o["relationships"]["claimed_by"]["data"];
+  // }
+  // if(o["relationships"]["asked_by"]["data"] != undefined){
+  //   question.otherAskers=o["relationships"]["asked_by"]["data"];
+  // }
 
   return question;
 

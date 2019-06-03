@@ -25,14 +25,14 @@ export class StudentSessionViewComponent extends SessionViewComponent implements
   sortQuestions(questions: Question[]){ //need to add some sport of user identification
     for (let question of questions){
       //faq of question is assumed to be a boolean
-      if (true){//questions.faq){
+      if (question.faq){//questions.faq){
         this.faQs.push(question);
       }
       //how this is implemented this depends on how the assinged/claimed/pending variables look
       //as a part of the question model
       //right now assuming that queestions would have the the id of the user that
       //asked the question and would be compared to the current user's id.
-      else if(true){//question.askedId === user.id){ //assinged or claimed by me
+      else if(true){//question.asker.id === user.id){ //assinged or claimed by me
         this.myQs.push(question);
       }
       else{
