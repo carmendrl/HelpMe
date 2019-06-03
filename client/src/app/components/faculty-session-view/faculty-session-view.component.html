@@ -1,11 +1,12 @@
 <!-- unclaimed questions -->
-<form class="form-inline">
-  <label for="SearchUnclaimed">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchUnclaimed" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
+<br>
 <div class="results">
-  <p class="table-caption">Unclaimed Questions</p>
+  <span class="table-caption qTitle">Unclaimed Questions</span>
+  <form class="form-inline searchRight">
+    <label for="SearchUnclaimed">Search</label>
+    <input type="text" class="form-control ml-2" name="SearchUnclaimed" placeholder="search"/>
+    <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
+  </form>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -20,8 +21,8 @@
       <tr *ngFor="let unclaimedQ of unclaimedQs">
         <td>{{unclaimedQ.text}}</td>
         <td>{{unclaimedQ.asker.FullName}}</td>
-        <td></td>
-        <td></td>
+        <td>{{unclaimedQ.tags}}</td>
+        <td>{{unclaimedQ.date}}</td>
         <td><span (click)="claim()" class="btn btn-primary actionSpace">Claim</span>
           <span (click)="assign()" class="btn btn-primary actionSpace">Assign</span>
           <span (click)="delete()" class="btn btn-primary actionSpace">Delete</span>
@@ -31,14 +32,16 @@
   </table>
 </div>
 
+<br>
+
 <!-- my questions -->
-<form class="form-inline">
-  <label for="SearchMyQuestions">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
 <div class="results">
-  <p class="table-caption">My Questions</p>
+  <span class="table-caption qTitle">My Questions</span>
+  <form class="form-inline searchRight">
+    <label for="SearchMyQuestions">Search</label>
+    <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="search"/>
+    <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
+  </form>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -53,9 +56,9 @@
       <tr *ngFor="let q of myQs">
         <td>{{q.text}}</td>
         <td>{{q.asker.FullName}}</td>
-        <td></td>
-        <td></td>
-        <td><span (click)="addAnswer()" class="btn btn-primary actionSpace">Add Answer</span>
+        <td>{{q.tags}}</td>
+        <td>{{q.date}}</td>
+        <td><span (click)="addAnswer()" class="btn btn-primary">Add Answer</span>
           <span (click)="assign()" class="btn btn-primary actionSpace">Assign</span>
           <span (click)="addToFaq()" class="btn btn-primary actionSpace">Add to FAQ</span>
           <span (click)="delete()" class="btn btn-primary actionSpace">Delete</span>
@@ -65,14 +68,16 @@
   </table>
 </div>
 
+<br>
+
 <!-- frequently asked questions -->
-<form class="form-inline">
-  <label for="SearchAllQuestions">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchAllQuestions" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
 <div class="results">
-  <p class="table-caption">Frequently Asked Questions</p>
+  <span class="table-caption qTitle">Frequently Asked Questions</span>
+  <form class="form-inline searchRight">
+    <label for="SearchfaQs">Search</label>
+    <input type="text" class="form-control ml-2" name="SearchfaQs" placeholder="search"/>
+    <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
+  </form>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -85,22 +90,23 @@
       <tr *ngFor="let q of faQs">
         <td>{{q.text}}</td>
         <td>{{q.answerText}}</td>
-        <td><span (click)="removeFromFaq()" class="btn btn-primary actionSpace">Remove from FAQ</span>
+        <td><span (click)="removeFromFaq()" class="btn btn-primary">Remove from FAQ</span>
           <span (click)="edit()" class="btn btn-primary actionSpace">Edit</span>
         </td>
       </tbody>
     </table>
   </div>
 
+<br>
 
   <!-- other answered questions -->
-  <form class="form-inline">
-    <label for="SearchAllQuestions">Search</label>
-    <input type="text" class="form-control ml-2" name="SearchAllQuestions" placeholder="search"/>
-    <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-  </form>
   <div class="results">
-    <p class="table-caption">Other Answered Questions</p>
+    <span class="table-caption qTitle">Other Answered Questions</span>
+    <form class="form-inline searchRight">
+      <label for="SearchAnsweredQuestions">Search</label>
+      <input type="text" class="form-control ml-2" name="SearchAnsweredQuestions" placeholder="search"/>
+      <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
+    </form>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -113,7 +119,7 @@
         <tr *ngFor="let otherQ of otherAnsweredQs">
           <td>{{otherQ.text}}</td>
           <td>{{otherQ.answerText}}</td>
-          <td><td><span (click)="addToFaq()" class="btn btn-primary actionSpace">Add to FAQ</span>
+          <td><td><span (click)="addToFaq()" class="btn btn-primary">Add to FAQ</span>
             <span (click)="edit()" class="btn btn-primary actionSpace">Edit</span></td>
           </tr>
         </tbody>
