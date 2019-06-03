@@ -28,6 +28,9 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
+
+import { UserManagementModule } from './user-management/user-management.module';
+
 const Server = '/api';
 
 @NgModule({
@@ -45,10 +48,10 @@ const Server = '/api';
     CreateCourseFormComponent,
     SessionViewComponent,
     StudentSessionViewComponent,
-    FacultySessionViewComponent,
+    FacultySessionViewComponent
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule
   ],
   providers: [
     UserService,
