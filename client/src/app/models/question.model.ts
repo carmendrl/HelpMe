@@ -8,7 +8,9 @@ export class Question extends Entity{
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
-               _id? : number, private _faQ? : boolean, private _asker? : User, private _status? : string, private _otherAskers?: User[], private _claimedBy?:User) {
+               _id? : number, private _faQ? : boolean, private _asker? : User,
+               private _status? : string, private _otherAskers?: User[],
+               private _claimedBy?:User) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
