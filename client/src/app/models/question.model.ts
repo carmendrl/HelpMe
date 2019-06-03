@@ -124,6 +124,7 @@ export class Question extends Entity{
 
 static createFromJSon(o:Object){
   let question = new Question();
+  debugger
 
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];
@@ -131,12 +132,12 @@ static createFromJSon(o:Object){
   question.faq= o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
   question.asker=o["relationships"]["original_asker"]["data"];
-  // if(o["relationships"]["claimed_by"]["data"] != undefined){
-  //   question.claimedBy=o["relationships"]["claimed_by"]["data"];
-  // }
-  // if(o["relationships"]["asked_by"]["data"] != undefined){
-  //   question.otherAskers=o["relationships"]["asked_by"]["data"];
-  // }
+  if(o["relationships"]["claimed_by"]!= undefined){
+    question.claimedBy=o["relationships"]["claimed_by"]["data"];
+  }
+  if(o["relationships"]["asked_by"] != undefined){
+    question.otherAskers=o["relationships"]["asked_by"]["data"];
+  }
 
   return question;
 
