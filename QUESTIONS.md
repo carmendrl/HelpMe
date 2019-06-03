@@ -314,7 +314,7 @@ This gets all of the questions that were asked by the currently logged in user.
 Success Response Code 204 (No Content)
 
 #### Claiming a Question
-#### `GET /lab_sessions/:lab_session_id/questions/:id/claim`
+#### `POST /lab_sessions/:lab_session_id/questions/:id/claim`
 
 In order to claim a question, issue an authorized get request with the specified ids.
 

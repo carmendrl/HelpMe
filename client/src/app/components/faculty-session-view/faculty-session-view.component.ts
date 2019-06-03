@@ -4,6 +4,8 @@ import { QuestionService } from '../../services/question.service';
 import { SessionViewComponent } from '../session-view/session-view.component';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -16,16 +18,15 @@ export class FacultySessionViewComponent extends SessionViewComponent implements
   private faQs: Question[];
   private otherAnsweredQs:  Question[];
 
-  constructor(userService: UserService, questionService: QuestionService) { super(userService, questionService); }
+  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); }
 
   ngOnInit() {
   }
 
   sortQuestions(questions: Question[], user:User ){ //need to add some sport of user identification
     for (let question of questions){
-      if(question.answer != ""){
-        //faq of question is assumed to be a boolean
-        if (true){//questions.faq){
+      if(question.isAnswered){
+        if (question.faq){
           this.faQs.push(question);
         }
         else{
@@ -36,7 +37,7 @@ export class FacultySessionViewComponent extends SessionViewComponent implements
       //as a part of the question model
       //right now assuming that queestions would have the the id of the user that
       //claimed/got assigned the question and would be compared to the current user's id.
-      else if(true){//question.assignedId === user.id){ //assinged or claimed by me
+      else if(true){//question.status === "claimed"){ //assinged to or claimed by me
         this.myQs.push(question);
       }
       else{
