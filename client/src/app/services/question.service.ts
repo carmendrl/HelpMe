@@ -77,13 +77,12 @@ export class QuestionService {
 
     }
 
-    getSessionQuestions(id : number) : Observable<Question[]>{
+    getSessionQuestions(id : string) : Observable<Question[]>{
 
-      this.sessionId = id;
-      let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
+      let url: string = `${this.apiHost}/lab_sessions/${id}/questions`;
       return this.httpClient.get(url).pipe(
         map(r => this.createArray(r['data'], r['included'])),
-        catchError(this.handleError<Question[]>(`getSessionQuestions id=${this.sessionId}`))
+        catchError(this.handleError<Question[]>(`getSessionQuestions id=${id}`))
       );
     }
 

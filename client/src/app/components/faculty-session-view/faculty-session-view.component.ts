@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
-import { SessionViewComponent } from '../session-view/session-view.component';
+import { SessionView } from '../../session-view';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
@@ -12,18 +12,18 @@ import { Location } from '@angular/common';
   templateUrl: './faculty-session-view.component.html',
   styleUrls: ['./faculty-session-view.component.scss']
 })
-export class FacultySessionViewComponent extends SessionViewComponent implements OnInit{
+export class FacultySessionViewComponent extends SessionView implements OnInit{
   private unclaimedQs: Question[];
   private myQs: Question[];
   private faQs: Question[];
   private otherAnsweredQs:  Question[];
 
-  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); }
+  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); this.unclaimedQs = new Array<Question>(); this.myQs = new Array<Question>(); this.faQs = new Array<Question>(); this.otherAnsweredQs = new Array<Question>(); }
 
   ngOnInit() {
   }
 
-  sortQuestions(questions: Question[], user:User ){ //need to add some sport of user identification
+  sortQuestions(questions: Question[]){ //need to add some sport of user identification
     for (let question of questions){
       if(question.answer){
         //faq of question is assumed to be a boolean
