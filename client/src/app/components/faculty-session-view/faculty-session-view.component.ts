@@ -23,7 +23,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   ngOnInit() {
   }
 
-  sortQuestions(questions: Question[]){ //need to add some sport of user identification
+  sortQuestions(questions: Question[]){
     for (let question of questions){
       if(question.isAnswered){
         if (question.faq){
@@ -37,7 +37,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       //as a part of the question model
       //right now assuming that queestions would have the the id of the user that
       //claimed/got assigned the question and would be compared to the current user's id.
-      else if(true){//question.status === "claimed"){ //assinged to or claimed by me
+      else if(question.claimedBy.id === this.currentUser.id ){//question.status === "claimed"){ //assinged to or claimed by me
         this.myQs.push(question);
       }
       else{
