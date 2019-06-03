@@ -8,7 +8,7 @@ export class Question extends Entity{
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
-               _id? : number, private _faQ? : boolean, private _user? : User) {
+               _id? : number, private _faQ? : boolean, private _user? : User, private _status? : string) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -92,6 +92,14 @@ export class Question extends Entity{
     }
   }
 
+  get status() : string{
+    return this._status;
+  }
+
+  set status(status : string){
+    this._status = status;
+  }
+
 static createFromJSon(o:Object){
   let question = new Question();
 
@@ -99,6 +107,7 @@ static createFromJSon(o:Object){
   question.text =o["attributes"]["text"];
   question.id= o["id"];
   question.faq= false;
+  question.status = o["attributes"]["status"];
 
   return question;
 
