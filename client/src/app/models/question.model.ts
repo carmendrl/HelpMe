@@ -116,7 +116,7 @@ export class Question extends Entity{
   }
 
   get isAnswered() : boolean {
-    if (this._answer) {
+    if (this._answer != undefined) {
       return true;
     }
     else {
