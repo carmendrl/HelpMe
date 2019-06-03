@@ -43,4 +43,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
     }
   }
 
+  meToo(question: Question) : void {
+    this.myQs.push(question);
+  }
+
 }
