@@ -90,6 +90,26 @@ export class QuestionService {
       );
     }
 
+    //deletes a question
+    delete(question: Question, lId: number, qId: number){
+      let url: string = `${this.apiHost}/lab_sessions/${lId}/questions/${qId}`
+      this.httpClient.delete(url).pipe(
+        catchError(this.handleError(`delete question id=${qId}`))
+      );
+    }
+
+    updateQuestion(question: Question){
+      let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
+      let body = {
+        lab_session_id : question.session.id,
+        question_id : question.id
+      };
+      this.httpClient.put(url, body).pipe(
+        catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
+      );
+    }
+
+
     //handles errors
     private handleError<T> (operation = 'operation', result?: T) {
       return (error: any): Observable<T> => {

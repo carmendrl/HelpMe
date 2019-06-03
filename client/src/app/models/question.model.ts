@@ -46,7 +46,7 @@ export class Question extends Entity{
       return "";
     }
     else{
-      return this._answer.text; 
+      return this._answer.text;
     }
   }
 
@@ -136,7 +136,7 @@ export class Question extends Entity{
 
 static createFromJSon(o:Object){
   let question = new Question();
-  debugger
+  //debugger
 
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];

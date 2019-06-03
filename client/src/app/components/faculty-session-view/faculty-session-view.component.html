@@ -23,9 +23,9 @@
         <td>{{unclaimedQ.asker.FullName}}</td>
         <td>{{unclaimedQ.tags}}</td>
         <td>{{unclaimedQ.date}}</td>
-        <td><span (click)="claim()" class="btn btn-primary actionSpace">Claim</span>
-          <span (click)="assign()" class="btn btn-primary actionSpace">Assign</span>
-          <span (click)="delete()" class="btn btn-primary actionSpace">Delete</span>
+        <td><span (click)="claim(unclaimedQ)" class="btn btn-primary actionSpace">Claim</span>
+          <span (click)="assign(unclaimedQ)" class="btn btn-primary actionSpace">Assign</span>
+          <span (click)="delete(unclaimedQ)" class="btn btn-primary actionSpace">Delete</span>
         </td>
       </tr>
     </tbody>
