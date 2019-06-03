@@ -18,7 +18,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private myQs: Question[];
   private allOtherQs:  Question[];
 
-  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); this.faQs = new Array<Question>(); this.myQs = new Array<Question>(); this.allOtherQs = new Array<Question>(); }
+  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); this.faQs = new Array<Question>(); this.myQs = new Array<Question>(); this.allOtherQs = new Array<Question>();}
 
   ngOnInit() {
 
@@ -35,7 +35,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       //as a part of the question model
       //right now assuming that queestions would have the the id of the user that
       //asked the question and would be compared to the current user's id.
-      else if(true){//question.asker.id === user.id){ //assinged or claimed by me
+      else if(question.asker.id === this.currentUser.id){ //assinged or claimed by me
         this.myQs.push(question);
       }
       else{
