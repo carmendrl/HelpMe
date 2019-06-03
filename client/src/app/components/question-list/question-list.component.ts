@@ -20,7 +20,6 @@ export class QuestionListComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.copyAllQuestionsToFilteredQuestions();
     this.filterApplied = false;
     this.filterText = "";
   }
