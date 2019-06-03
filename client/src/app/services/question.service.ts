@@ -77,9 +77,9 @@ export class QuestionService {
 
     }
 
-    getSessionQuestions() : Observable<Question[]>{
+    getSessionQuestions(id : number) : Observable<Question[]>{
 
-      this.sessionId = this.labsessionService.sessionId;
+      this.sessionId = id;
       let url: string = `${this.apiHost}/lab_sessions/${this.sessionId}/questions`;
       return this.httpClient.get(url).pipe(
         map(r => this.createArray(r['data'], r['included'])),

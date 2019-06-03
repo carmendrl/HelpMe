@@ -15,15 +15,19 @@ import { QuestionService } from '../../services/question.service';
   styleUrls: ['./session-view.component.scss']
 })
 export class SessionViewComponent implements OnInit {
-  @Input() session: LabSession;
-  questions: Question[];
+  private session: LabSession;
+  @Input() questions: Question[];
+  private sessionId: number;
 
-  constructor(private userService : UserService, private questionService: QuestionService) { }
+  constructor(private userService : UserService, private questionService: QuestionService, private route: ActivatedRoute, private location: Location) { }
 
   ngOnInit() {
-    this.questionService.getSessionQuestions().subscribe(
-      questions => this.questions = questions
-    );
+    this.sessionId = +this.route.snapshot.paramMap.get('lab_session_id');
+    this.questionService.getSessionQuestions(this.sessionId).subscribe(questions => this.questions = questions);
+      debugger
+    // this.questionService.getSessionQuestions().subscribe(
+    //   questions => this.questions = questions
+    // );
   }
 
 
