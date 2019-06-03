@@ -4,7 +4,7 @@
   <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
 </form>
 <div class="results">
-  <p class="table-caption">{{super.session.description}} Frequently Asked Questions</p>
+  <p class="table-caption">Frequently Asked Questions</p>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -15,7 +15,7 @@
     <tbody>
         <tr *ngFor="let faQ of faQs">
           <td>{{faQ.text}}</td>
-          <td>{{faQ.answer.text}}</td>
+          <td>{{faQ.answerText}}</td>
         </tr>
       </tbody>
     </table>
@@ -38,9 +38,9 @@
       </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let faQ of myQs">
-          <td>{{myQ.text}}</td>
-          <td>{{myQ.answer.text}}</td>
+        <tr *ngFor="let Q of myQs">
+          <td>{{Q.text}}</td>
+          <td>{{Q.answerText}}</td>
         </tr>
       </tbody>
     </table>
@@ -65,7 +65,7 @@
     <tbody>
         <tr *ngFor="let allOtherQ of allOtherQs">
           <td>{{allOtherQ.text}}</td>
-          <td>{{allOtherQ.answer.text}}</td>
+          <td>{{allOtherQ.answerText}}</td>
         </tr>
       </tbody>
     </table>
