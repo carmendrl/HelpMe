@@ -91,21 +91,24 @@ export class QuestionService {
     }
 
     //deletes a question
-    delete(question: Question, lId: number, qId: number){
-      let url: string = `${this.apiHost}/lab_sessions/${lId}/questions/${qId}`
-      this.httpClient.delete(url).pipe(
-        catchError(this.handleError(`delete question id=${qId}`))
+    deleteAQuestion(question: Question): Observable<boolean>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
+      //let temp = question;
+      return this.httpClient.delete(url).pipe(
+        map(r => true),
+        catchError(this.handleError<boolean>(`delete question id=${question.id}`))
       );
+      //return temp;
     }
 
-    updateQuestion(question: Question){
+    updateQuestion(question: Question, text: string, faQ: boolean): Observable<Question>{
       let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
       let body = {
-        lab_session_id : question.session.id,
-        question_id : question.id
+        text : text,
+        faq : faQ
       };
-      debugger
-      this.httpClient.put(url, body).pipe(
+      return this.httpClient.put(url, body).pipe(
+        map(r => {question.text = text; question.faq = faQ;return question;}),
         catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
       );
     }
@@ -117,6 +120,35 @@ export class QuestionService {
           catchError(this.handleError<Question>(`claim id=${question.id}`))
       );
     }
+
+    answerAQuestion(question: Question, text: string): Observable<Answer>{
+      let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
+      let body = { text: text };
+      return this.httpClient.post(url, body).pipe(
+        map(r => question.answer = (Answer.createFromJSon(r["data"]))),
+        catchError(this.handleError<Answer>(`answer created`))
+      );
+    }
+
+    editAnAnswer(question: Question, text: string): Observable<Question>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer/${question.answer.id}`;
+      let body = {
+        text : text
+      };
+      return this.httpClient.put(url, body).pipe(
+        map(r => {question.answer.text = text; return question;}),
+        catchError(this.handleError<Question>(`answer edited id=${question.answer.id}`))
+      );
+    }
+
+    addMeToo(question: Question, meToo: boolean) : Observable<Question>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
+      return this.httpClient.post(url, {}).pipe(
+        map(r => {question.meToo = meToo; return question;}),
+        catchError(this.handleError<Question>(`meToo status changed=${question.answer.id}`))
+      );
+    }
+
 
     //handles errors
     private handleError<T> (operation = 'operation', result?: T) {

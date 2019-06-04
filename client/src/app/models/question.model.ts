@@ -10,7 +10,7 @@ export class Question extends Entity{
                private _answer? : Answer, private _session? : LabSession,
                _id? : number, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User) {
+               private _claimedBy?:User, private _meToo?:boolean) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -101,6 +101,13 @@ export class Question extends Entity{
     this._claimedBy= user;
   }
 
+  get meToo(): boolean {
+    return this._meToo;
+  }
+
+  set meToo(b: boolean){
+    this._meToo = b;
+  }
   public addTag (tag : string) : boolean {
     if (this._tags.has(tag)) return false;
 
