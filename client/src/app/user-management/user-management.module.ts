@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UserManageRoutingModule } from './user-management-routing.module';
 import { NewUserComponent } from './components/new-user/new-user.component';
 import { PromoteUserComponent } from './components/promote-user/promote-user.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [NewUserComponent, PromoteUserComponent],
@@ -12,7 +13,7 @@ import { PromoteUserComponent } from './components/promote-user/promote-user.com
 		NewUserComponent
 	],
   imports: [
-    CommonModule, FormsModule, UserManageRoutingModule
+    CommonModule, FormsModule, UserManageRoutingModule, NgbModule.forRoot()
   ]
 })
 export class UserManagementModule { }

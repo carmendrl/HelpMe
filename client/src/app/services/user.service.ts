@@ -8,10 +8,30 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { of } from 'rxjs/observable/of';
 import { Observer } from 'rxjs/Observer';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
+import { timer, from} from 'rxjs';
 
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
 
+export class PromoteUserResponse {
+	constructor (private _success : boolean, private _errorMessage? : string) {}
+
+	get Successful () : boolean {
+		return this._success;
+	}
+
+	set Successful (wasSuccessful : boolean) {
+		this._success = wasSuccessful;
+	}
+
+	get ErrorMessage () : string {
+		return this._errorMessage;
+	}
+
+	set ErrorMessage (message : string) {
+		this._errorMessage = message;
+	}
+}
 
 @Injectable()
 export class UserService {
@@ -67,6 +87,39 @@ export class UserService {
       catchError(error => this.handleCreateAccountError(error))
     );
   }
+
+	findUserByEmail (email : string) : Observable<User[]> {
+			let me = new User();
+			me.FirstName = 'Ryan';
+			me.LastName = 'McFall';
+			me.EmailAddress = "mcfall@hope.edu";
+			me.id = "1234-abcd";
+
+			let chuck = new User();
+			chuck.FirstName = 'Charles';
+			chuck.LastName = 'Cusack';
+			chuck.EmailAddress = 'cusack@hope.edu';
+			chuck.id = "5678-efgh";
+
+			let bill = new User();
+			bill.id = "02d67be7-6999-4eb7-b216-ca1163d8f70c"
+			bill.FirstName = "Bill";
+			bill.LastName = "Gates";
+			bill.EmailAddress = "billg@microsoft.com";
+
+			let users = [me, chuck, bill];
+
+			return of(users.filter(element => element.EmailAddress.startsWith(email)));
+			//return of(users);
+	}
+
+	requestPromotion ( user : User) : Observable<PromoteUserResponse> {
+		let url : string = `${this.apiHost}/system/users/${user.id}/request_promotion`;
+		console.log(`Url for request promotion is ${url}`);
+		return this.httpClient.post(url, {}).pipe(
+			map (r => new PromoteUserResponse(true))
+		);
+	}
 
   private buildCreateAccountBodyFromUser ( u : User) {
     return {

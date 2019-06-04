@@ -1,5 +1,5 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
-  before_action :authenticate_user!, only: [:show, :promote, :demote]
+  before_action :authenticate_user!, only: [:show, :promote, :demote, :request_promotion]
 #  before_filter :sign_up_params!
   def show
     render json: User.find(params[:user_id])
@@ -28,6 +28,21 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
       render_cannot_perform_operation("Must be a professor to demote a student.")
     end
   end
+
+	def request_promotion
+		user = User.find(params[:user_id])
+		if current_user.professor?
+			promotion_code = PromotionRequest.create(
+				:user => user,
+				:promoted_by => current_user,
+				:expires_on => DateTime.current + 7
+			)
+
+			render json: promotion_code
+		else
+			render_cannot_perform_operation("My be a professor to create a promotion to professor request")
+		end
+	end
 
   protected
 

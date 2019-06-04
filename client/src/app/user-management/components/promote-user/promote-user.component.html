@@ -1,3 +1,49 @@
+<h2>Promote a user to be a professor</h2>
+
 <p>
-  promote-user works!
+  Enter the email address of the user to be promoted
 </p>
+
+<form (submit)="promoteUser()" #thisForm="ngForm">
+	<div class="form-group row no-gutters">
+		<label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+		<input type="email" name="emailAddress" [ngbTypeahead]="findUsers.bind(this)"
+		       [resultFormatter]="formatUserForTypeAhead"
+					 [inputFormatter]="formatUserForTypeAhead"
+					 [(ngModel)]="selectedUser" placeholder="Email Address"
+					 class="form-control col-md-6" email required>
+	</div>
+
+	<button *ngIf="status =='' " type="submit"
+	        [disabled]="submitShouldBeDisabled()"
+	        class="btn btn-primary" (click)="promoteSelectedUser()">Promote User</button>
+
+</form>
+
+<div id="status" *ngIf="status != ''">
+	<div [ngSwitch]="status">
+		<p *ngSwitchCase="'promoting'">
+			Promoting {{emailAddress}} ...
+		</p>
+
+		<div *ngSwitchCase="'successful'">
+			<p>
+			Request successfully processed. An email confirmation has been sent to {{selectedUser.FullName}} at {{selectedUser.EmailAddress}}.
+			{{selectedUser.FirstName}} will need to follow the link in the email to confirm the requestPromotion
+			within 7 days hours to complete the promotion process.
+			</p>
+
+			<span class="btn btn-primary" [routerLink]="['/dashboard']">Return to Dashboard</span>
+		</div>
+
+		<div *ngSwitchCase="'error'">
+			<p class="alert alert-danger">
+				{{errorMessage}}
+			</p>
+			<p>
+				An error occurred attempting to promote {{emailAddress}} to a professor.
+				If this problem persists, please contact an administrator.
+			</p>
+		</div>
+	</div>
+</div>

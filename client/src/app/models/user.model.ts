@@ -39,6 +39,9 @@ export class User extends Entity{
   }
 
   get FullName() : string {
+		if (!this.FirstName && !this.LastName) {
+			return "";
+		}
     return `${this._firstName} ${this._lastName}`;
   }
 
