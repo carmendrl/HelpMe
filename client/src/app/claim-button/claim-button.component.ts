@@ -24,9 +24,6 @@ export class ClaimButtonComponent implements OnInit {
 
   assign(question: Question){ // how will we want to enter the person it is being assigned to?
     this.questionService.claimAQuestion(question).subscribe();
-    this.newList.push(question);//move
-    let index = this.previousList.indexOf(question);//delete from unclaimedlist
-    this.previousList.splice(index,1);
 
   }
 }

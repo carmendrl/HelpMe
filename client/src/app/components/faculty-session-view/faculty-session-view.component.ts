@@ -34,8 +34,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       sortQuestions(questions: Question[]){
         //clears the array
+        debugger
         this.faQs.length = 0;
-        this.otherAnsweredQs.length = 0;
+        this.otherQs.length = 0;
         this.unclaimedQs.length = 0;
         this.myQs.length= 0;
 
