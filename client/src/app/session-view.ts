@@ -14,7 +14,7 @@ export abstract class SessionView  {
   private questionSubscription : Subscription;
   private timerSubscription : Subscription;
 
-<<<<<<< HEAD
+
   constructor(private userService : UserService, private questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
@@ -22,13 +22,6 @@ export abstract class SessionView  {
     );
     this.refreshData();
   }
-=======
-    constructor(private userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location) {
-      this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
-      this.userService.CurrentUser$.subscribe(
-        u => this.currentUser = u
-      );
->>>>>>> 3b1e7df010d3e900b7e0546af89ca0db11662d9f
 
   //want to make this abstract method but must make this an abstract createNewLabSession
   //to make this an abstract class can't have a constructor because can't instantiate
