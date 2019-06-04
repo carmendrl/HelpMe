@@ -1,5 +1,5 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
-  before_action :authenticate_user!, only: [:show, :promote, :demote, :request_promotion]
+  before_action :authenticate_user!, only: [:show, :promote, :demote, :request_promotion, :find_user]
 #  before_filter :sign_up_params!
   def show
     render json: User.find(params[:user_id])
@@ -43,11 +43,43 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 		end
 	end
 
+	def find_user
+		#find_params
+		query = params[:q].downcase
+		collection = User
+
+    if (params[:type])
+			if (params[:type] == 'student')
+				puts "Looking for a student"
+				collection = Student
+			else
+				puts "Looking for a professor"
+				collection = Professor
+			end
+		end
+
+		email_results = collection.where("lower(email) like ?", "%#{query}%")
+		first_name_results = collection.where("lower(first_name) like ?", "%#{query}%")
+		last_name_results = collection.where("lower(last_name) like ?", "%#{query}%")
+
+		all_results = email_results.or(first_name_results).or(last_name_results)
+
+		# if (params[:type])
+		# 	all_results = all_results.where(:type => params[:type])
+		# end
+
+		render json: all_results
+	end
+
   protected
 
   def render_create_success
     render json: @resource
   end
+
+  def find_params
+		params.permit(:q, :type)
+	end
 
   def sign_up_params
     params.permit(:first_name, :last_name, :email, :password, :password_confirmation, :username, :type)

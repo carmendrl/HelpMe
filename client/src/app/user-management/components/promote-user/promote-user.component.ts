@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { User } from '../../../models/user.model';
 import { UserService, PromoteUserResponse } from '../../../services/user.service';
 
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, mergeMap, filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-promote-user',
@@ -26,7 +26,7 @@ export class PromoteUserComponent implements OnInit {
 		return value$.pipe(
 			debounceTime(200),
 			distinctUntilChanged(),
-			mergeMap(searchTerm => this.userService.findUserByEmail(searchTerm))
+			mergeMap(searchTerm => searchTerm.length < 2 ? of([]) : this.userService.findUserByEmail(searchTerm, 'student'))
 		);
 	}
 

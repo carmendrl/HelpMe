@@ -91,29 +91,15 @@ export class UserService {
     );
   }
 
-	findUserByEmail (email : string) : Observable<User[]> {
-			let me = new User();
-			me.FirstName = 'Ryan';
-			me.LastName = 'McFall';
-			me.EmailAddress = "mcfall@hope.edu";
-			me.id = "1234-abcd";
-
-			let chuck = new User();
-			chuck.FirstName = 'Charles';
-			chuck.LastName = 'Cusack';
-			chuck.EmailAddress = 'cusack@hope.edu';
-			chuck.id = "5678-efgh";
-
-			let bill = new User();
-			bill.id = "02d67be7-6999-4eb7-b216-ca1163d8f70c"
-			bill.FirstName = "Bill";
-			bill.LastName = "Gates";
-			bill.EmailAddress = "billg@microsoft.com";
-
-			let users = [me, chuck, bill];
-
-			return of(users.filter(element => element.EmailAddress.startsWith(email)));
-			//return of(users);
+	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
+		let url : string = `${this.apiHost}/system/users/find?q=${email}`;
+		if (user_type) {
+			url = `${url}&type=${user_type}`;
+		}
+		
+		return this.httpClient.get(url).pipe(
+			map(r => r["data"].map (o => User.createFromJSon(o)))
+		)
 	}
 
 	requestPromotion ( user : User) : Observable<PromoteUserResponse> {
