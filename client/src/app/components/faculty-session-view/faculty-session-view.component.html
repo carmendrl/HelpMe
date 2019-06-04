@@ -1,11 +1,11 @@
 <section>
   <h2>Unclaimed Questions</h2>
-  <app-question-list [view]= "20" [myqList] = "myQs"[questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"></app-question-list>
+  <app-question-list [view]= "20" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"></app-question-list>
 </section>
 
 <section>
   <h2>My Questions</h2>
-  <app-question-list [view]= "21" [faqList]="faQs" [allOtherList]="otherQs" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
+  <app-question-list [view]= "21" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
 </section>
 
 <section>
@@ -15,5 +15,5 @@
 
 <section>
   <h2>Other Questions</h2>
-  <app-question-list [view]= "23" [faqList]="faQs" [questions]="otherQs" [filteredQuestions]="otherQs"></app-question-list>
+  <app-question-list [view]= "23" [questions]="otherQs" [filteredQuestions]="otherQs"></app-question-list>
 </section>
