@@ -54,7 +54,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
   claim(question: Question){
     question.claimedBy = this.currentUser; //set
-    this.questionService.updateQuestion(question);//post
+    this.questionService.claimAQuestion(question).subscribe();//post
     this.myQs.push(question);//move
     let index = this.unclaimedQs.indexOf(question);
     //delete this.unclaimedQs[index];//remove from unclaimed questions

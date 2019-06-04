@@ -104,11 +104,19 @@ export class QuestionService {
         lab_session_id : question.session.id,
         question_id : question.id
       };
+      debugger
       this.httpClient.put(url, body).pipe(
         catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
       );
     }
 
+    claimAQuestion(question: Question): Observable<Question>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/claim`;
+      return this.httpClient.post(url, {}).pipe(
+          map(r => question.claimedBy = r["data"]["relationships"]["claimed_by"]["data"]),
+          catchError(this.handleError<Question>(`claim id=${question.id}`))
+      );
+    }
 
     //handles errors
     private handleError<T> (operation = 'operation', result?: T) {
