@@ -28,6 +28,12 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
+import { AnswerButtonComponent } from './answer-button/answer-button.component';
+import { EditButtonComponent } from './edit-button/edit-button.component';
+import { FaqButtonComponent } from './faq-button/faq-button.component';
+import { ClaimButtonComponent } from './claim-button/claim-button.component';
+import { DeleteButtonComponent } from './delete-button/delete-button.component';
+import { MeTooButtonComponent } from './me-too-button/me-too-button.component';
 const Server = '/api';
 
 @NgModule({
@@ -46,6 +52,12 @@ const Server = '/api';
     SessionViewComponent,
     StudentSessionViewComponent,
     FacultySessionViewComponent,
+    AnswerButtonComponent,
+    EditButtonComponent,
+    FaqButtonComponent,
+    ClaimButtonComponent,
+    DeleteButtonComponent,
+    MeTooButtonComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule

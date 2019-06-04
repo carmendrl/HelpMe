@@ -1,73 +1,14 @@
-<!-- frequently asked questions -->
-<form class="form-inline" style="float:right">
-  <input type="text" class="form-control ml-2" name="SearchFAQs" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
-<div class="results">
-  <p class="table-caption">Frequently Asked Questions</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Question Text</th>
-        <th>Answer</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let faQ of faQs">
-          <td>{{faQ.text}}</td>
-          <td>{{faQ.answerText}}</td>
-        </tr>
-      </tbody>
-    </table>
-  <button class="inline-block btn btn-primary">Ask a new Question</button>
-</div>
-<hr>
-<!-- my questions -->
-<form class="form-inline" style="float:right">
-  <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
-<!-- frequently asked questions -->
-<div class="results">
-  <p class="table-caption">My Questions</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Question Text</th>
-        <th>Answer</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let Q of myQs">
-          <td>{{Q.text}}</td>
-          <td>{{Q.answerText}}</td>
-        </tr>
-      </tbody>
-    </table>
-</div>
-<hr>
-<!--all questions-->
+<section>
+  <h2>Frequently Asked Questions</h2>
+  <app-question-list [view]= "10" [questions]="faQs" [filteredQuestions]="faQs"></app-question-list>
+</section>
 
-<form class="form-inline" style="float:right">
-  <input type="text" class="form-control ml-2" name="SearchAllQuestions" placeholder="search"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
-<!-- frequently asked questions -->
-<div class="results">
-  <p class="table-caption">All Questions</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Question Text</th>
-        <th>Answer</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let allOtherQ of allOtherQs">
-          <td>{{allOtherQ.text}}</td>
-          <td>{{allOtherQ.answerText}}</td>
-        </tr>
-      </tbody>
-    </table>
-</div>
-<hr>
+<section>
+  <h2>My Questions</h2>
+  <app-question-list [view]= "11" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
+</section>
+
+<section>
+  <h2>All Questions</h2>
+  <app-question-list [view]= "12" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
+</section>

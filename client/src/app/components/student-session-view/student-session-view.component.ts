@@ -18,10 +18,14 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private myQs: Question[];
   private allOtherQs:  Question[];
 
-  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); this.faQs = new Array<Question>(); this.myQs = new Array<Question>(); this.allOtherQs = new Array<Question>();}
+  constructor(userService: UserService, questionService: QuestionService,
+    route: ActivatedRoute, location: Location) {
+      super(userService, questionService, route, location);
+      this.faQs = new Array<Question>();
+      this.myQs = new Array<Question>();
+      this.allOtherQs = new Array<Question>();}
 
   ngOnInit() {
-
   }
 
   sortQuestions(questions: Question[]){ //need to add some sport of user identification
@@ -47,5 +51,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   meToo(question: Question) : void {
     this.myQs.push(question);
   }
+
+
+
 
 }

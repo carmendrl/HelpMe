@@ -1,3 +1,16 @@
+<!-- The number variable "view" is important when determining what elements will be
+visible when.
+0=student dashboard
+10=StudentSessionView FAQs
+11=StudentSessionView My questions
+12=StudentSessionView All Questions
+20=FacultySessionView unclaimedQs
+21=FacultySessionView My questions
+22=FacultySessionViewb  FAQs
+23=FacultySessionView other questions
+-->
+
+
 <form class="form-inline">
   <label for="SearchMyQuestions">Search</label>
   <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
@@ -5,27 +18,43 @@
 </form>
 
 <div class="results">
-<p class="table-caption">Matching Questions</p>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Course</th>
-      <th>Question</th>
-      <th>Answer</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor = "let question of filteredQuestions">
-      <td>{{question.date | date:'EEE LLL dd'}}</td>
-      <td>{{question.session.course.subjectAndNumber}}</td>
-      <td>{{question.text}}</td>
-      <td><a href="#">{{question.answerText}}</a></td>
-    </tr>
-  </tbody>
-</table>
-<div *ngIf="filterApplied">
-  {{filteredQuestions.length}} of {{questions.length}} questions displayed
-  <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
-</div>
+  <p class="table-caption">Matching Questions</p>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th><div *ngIf="view === 0">Date</div></th>
+        <th><div *ngIf="view === 0">Course</div></th>
+        <th>Question</th>
+        <th><div *ngIf="view === 20 || view === 21">Asked By</div></th>
+        <th><div *ngIf="view === 20 || view === 21" >Tags</div></th>
+        <th><div *ngIf="view === 20 || view === 21">Time in queue</div></th>
+        <th><div *ngIf="view != 20 || view != 21">Answer</div></th>
+        <th><div *ngIf="view != 0 && view != 10">Action</div></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor = "let question of filteredQuestions">
+        <td><div *ngIf="view === 0">{{question.date | date:'EEE LLL dd'}}</div></td>
+        <td><div *ngIf="view === 0">{{question.session.course.subjectAndNumber}}</div></td>
+        <td>{{question.text}}</td>
+        <td><div *ngIf="view === 20 || view === 21">{{question.asker.FullName}}</div></td>
+        <td><div *ngIf="view === 20 || view === 21">{{question.tags}}</div></td>
+        <td><div *ngIf="view === 20 || view === 21">{{question.date | date:'EEE LLL dd'}}</div></td>
+        <td><div *ngIf="view != 20 || view != 21"><a href="#">{{question.answerText}}</a></div></td>
+        <td><div *ngIf="view != 0 && view != 10">
+          <app-answer-button *ngIf="view != 20 && question.answer === undefined"></app-answer-button>
+          <app-edit-button *ngIf="view != 20 && view != 21 && question.answer != undefined "></app-edit-button>
+          <app-claim-button *ngIf="view === 20 || view === 21"></app-claim-button>
+          <app-faq-button *ngIf="view != 11 && view != 12 && view != 20"></app-faq-button>
+          <app-delete-button *ngIf="view === 20 || view === 21"></app-delete-button>
+          <app-me-too-button *ngIf="view === 12"></app-me-too-button>
+
+        </div></td>
+      </tr>
+    </tbody>
+  </table>
+  <div *ngIf="filterApplied">
+    {{filteredQuestions.length}} of {{questions.length}} questions displayed
+    <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
+  </div>
 </div>
