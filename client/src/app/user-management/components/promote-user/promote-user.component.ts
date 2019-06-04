@@ -15,7 +15,7 @@ export class PromoteUserComponent implements OnInit {
 
 	private selectedUser : User = new User();
 	private status : string = "";
-  private string : errorMessage = "";
+  private errorMessages : string[] = [];
 
   constructor(private userService : UserService) { }
 
@@ -51,7 +51,7 @@ export class PromoteUserComponent implements OnInit {
 				}
 				else {
 					this.status = "error";
-					this.errorMessage = response.ErrorMessage;
+					response.ErrorMessages.forEach (e => this.errorMessages.push(e));
 				}
 			}
 		);

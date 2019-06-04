@@ -31,14 +31,13 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 
 	def request_promotion
 		user = User.find(params[:user_id])
-		if current_user.professor?
-			promotion_code = PromotionRequest.create(
-				:user => user,
-				:promoted_by => current_user,
-				:expires_on => DateTime.current + 7
-			)
 
-			render json: promotion_code
+		if current_user.professor?
+				promotion_code = PromotionRequest.create!(
+					:user => user,
+					:promoted_by => current_user
+				)
+				render json: promotion_code
 		else
 			render_cannot_perform_operation("My be a professor to create a promotion to professor request")
 		end

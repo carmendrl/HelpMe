@@ -14,7 +14,9 @@ import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
 
 export class PromoteUserResponse {
-	constructor (private _success : boolean, private _errorMessage? : string) {}
+	constructor (private _success : boolean, private _errorMessages? : string[]) {
+		this._errorMessages = new Array<string> ();
+	}
 
 	get Successful () : boolean {
 		return this._success;
@@ -24,12 +26,13 @@ export class PromoteUserResponse {
 		this._success = wasSuccessful;
 	}
 
-	get ErrorMessage () : string {
-		return this._errorMessage;
+	get ErrorMessages () : string[] {
+		return this._errorMessages;
 	}
 
-	set ErrorMessage (message : string) {
-		this._errorMessage = message;
+
+	addError (message : string) {
+		this._errorMessages.push(message);
 	}
 }
 
@@ -117,8 +120,18 @@ export class UserService {
 		let url : string = `${this.apiHost}/system/users/${user.id}/request_promotion`;
 		console.log(`Url for request promotion is ${url}`);
 		return this.httpClient.post(url, {}).pipe(
-			map (r => new PromoteUserResponse(true))
+			map (r => new PromoteUserResponse(true)),
+			catchError (r => this.handlePromotionRequestError(r))
 		);
+	}
+
+	private handlePromotionRequestError (error) : Observable<PromoteUserResponse> {
+		if (error instanceof HttpErrorResponse) {
+			let response : PromoteUserResponse = new PromoteUserResponse(false);
+      error.error.error.errors.forEach (err => response.addError(err.message))
+			return of(response);
+    }
+		return of(new PromoteUserResponse(true));
 	}
 
   private buildCreateAccountBodyFromUser ( u : User) {

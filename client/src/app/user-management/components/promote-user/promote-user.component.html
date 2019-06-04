@@ -37,12 +37,27 @@
 		</div>
 
 		<div *ngSwitchCase="'error'">
-			<p class="alert alert-danger">
-				{{errorMessage}}
-			</p>
+			<div class="alert alert-danger">
+				<p>
+					The following errors occurred attempting to promote {{selectedUser.FullName}}
+					to a professor
+					{{errorMessage}}
+				</p>
+
+				<p>
+					Blah
+				</p>
+
+				<ul>
+					<li *ngFor = "let e of ErrorMessages">
+						{{e}}
+					<li>
+				</ul>
+			</div>
+
+
 			<p>
-				An error occurred attempting to promote {{emailAddress}} to a professor.
-				If this problem persists, please contact an administrator.
+				If you are unsure of why this error occurred, please contact an administrator.
 			</p>
 		</div>
 	</div>
