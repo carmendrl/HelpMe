@@ -24,6 +24,12 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   }
 
   sortQuestions(questions: Question[]){
+    //clears the array
+    this.faQs.length = 0;
+    this.otherAnsweredQs.length = 0;
+    this.unclaimedQs.length = 0;
+    this.myQs.length= 0;
+
     for (let question of questions){
       if(question.isAnswered){
         if (question.faq){
