@@ -18,6 +18,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private myQs: Question[];
   private faQs: Question[];
   private otherQs:  Question[];
+  private currentQuestion: Question;
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location) {
@@ -43,7 +44,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
       //how this is implemented this depends on how the assinged/claimed/pending variables look
       //as a part of the question model
-      //right now assuming that queestions would have the the id of the user that
+      //right now assuming that quesstions would have the the id of the user that
       //claimed/got assigned the question and would be compared to the current user's id.
       else if(question.claimedBy != undefined){
         if(question.claimedBy.id === this.currentUser.id){
@@ -61,4 +62,12 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
   }
 
+
+  assign(question: Question, user: User){
+    question.claimedBy = user;
+  }
+
+  delete(question: Question){
+
+  }
 }
