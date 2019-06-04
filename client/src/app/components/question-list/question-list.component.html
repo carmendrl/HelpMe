@@ -28,7 +28,7 @@ visible when.
         <th><div *ngIf="view === 20 || view === 21">Asked By</div></th>
         <th><div *ngIf="view === 20 || view === 21" >Tags</div></th>
         <th><div *ngIf="view === 20 || view === 21">Time in queue</div></th>
-        <th><div *ngIf="view != 20 || view != 21">Answer</div></th>
+        <th><div *ngIf="view != 20 && view != 21">Answer</div></th>
         <th><div *ngIf="view != 0 && view != 10">Action</div></th>
       </tr>
     </thead>
@@ -38,14 +38,17 @@ visible when.
         <td><div *ngIf="view === 0">{{question.session.course.subjectAndNumber}}</div></td>
         <td>{{question.text}}</td>
         <td><div *ngIf="view === 20 || view === 21">{{question.asker.FullName}}</div></td>
-        <td><div *ngIf="view === 20 || view === 21">{{question.tags}}</div></td>
+        <td><div *ngIf="view === 20 || view === 21">
+          <ul *ngFor = "let t of question.tags" class="noStyle">
+            <li>{{t}}</li>
+          </ul></div></td>
         <td><div *ngIf="view === 20 || view === 21">{{question.date | date:'EEE LLL dd'}}</div></td>
-        <td><div *ngIf="view != 20 || view != 21"><a href="#">{{question.answerText}}</a></div></td>
+        <td><div *ngIf="view != 20 && view != 21"><a href="#">{{question.answerText}}</a></div></td>
         <td><div *ngIf="view != 0 && view != 10">
           <app-answer-button *ngIf="view != 20 && question.answer === undefined" [currentQuestion]="question"></app-answer-button>
           <app-edit-button *ngIf="view != 20 && view != 21 && question.answer != undefined " [currentQuestion]="question"></app-edit-button>
           <app-claim-button *ngIf="view === 20 || view === 21"[currentQuestion]="question" ></app-claim-button>
-          <app-faq-button *ngIf="view != 11 && view != 12 && view != 20 && view != 21" [currentQuestion]="question" [currentFaq]="question.faq"></app-faq-button>
+          <app-faq-button *ngIf="view != 11 && view != 12 && view != 20 && view != 21" [currentQuestion]="question"></app-faq-button>
           <app-delete-button *ngIf="view === 20 || view === 21" [currentQuestion]="question" ></app-delete-button>
           <app-me-too-button *ngIf="view === 12" [currentQuestion]="question"></app-me-too-button>
 
