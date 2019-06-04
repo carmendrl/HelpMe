@@ -16,6 +16,14 @@ export class QuestionListComponent implements OnInit {
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
+  @Input() private faqList: Question[];
+  @Input() private myqList: Question[];
+  @Input() private allOtherList: Question[];
+  @Input() private unclaimedList: Question[];
+
+//helps determine what parts of the table are visible for each view
+  @Input() private view : number;
+
 
   constructor() { }
 

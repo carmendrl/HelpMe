@@ -7,7 +7,7 @@ export class User extends Entity{
     private _firstName? : string,
     private _lastName?: string,
     private _type? : string,
-    _id? : number,
+    _id? : string,
     private _password? : string)
   {
     super (_id);

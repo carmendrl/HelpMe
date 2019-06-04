@@ -1,10 +1,10 @@
 export abstract class Entity {
-  
 
-  constructor (private _id? : number) { }
 
-  get id() : number { return this._id }
-  set id(id : number) {
+  constructor (private _id? : string) { }
+
+  get id() : string { return this._id }
+  set id(id : string) {
     this._id = id;
   }
 }

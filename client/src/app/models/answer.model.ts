@@ -6,7 +6,7 @@ export class Answer extends Entity{
 
 
   constructor (private _date?: Date, private _text? : string,
-  private _session?: LabSession, _id?: number, private _user?: User){
+  private _session?: LabSession, _id?: string, private _user?: User){
     super(_id);
   }
 

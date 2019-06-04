@@ -28,9 +28,14 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
-
-import { UserManagementModule } from './user-management/user-management.module';
-
+import { AnswerButtonComponent } from './components/answer-button/answer-button.component';
+import { EditButtonComponent } from './components/edit-button/edit-button.component';
+import { FaqButtonComponent } from './components/faq-button/faq-button.component';
+import { ClaimButtonComponent } from './components/claim-button/claim-button.component';
+import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
+import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
+import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
+import { UserManagementModule } from "./user-management/user-management.module";
 const Server = '/api';
 
 @NgModule({
@@ -48,7 +53,15 @@ const Server = '/api';
     CreateCourseFormComponent,
     SessionViewComponent,
     StudentSessionViewComponent,
-    FacultySessionViewComponent
+    FacultySessionViewComponent,
+    AnswerButtonComponent,
+    EditButtonComponent,
+    FaqButtonComponent,
+    ClaimButtonComponent,
+    DeleteButtonComponent,
+    MeTooButtonComponent,
+    AssignModalComponent,
+
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule
