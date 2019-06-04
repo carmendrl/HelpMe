@@ -88,7 +88,6 @@ export class QuestionService {
     }
 
     getSessionQuestions(id : string) : Observable<Question[]>{
-
       let url: string = `${this.apiHost}/lab_sessions/${id}/questions`;
       return this.httpClient.get(url).pipe(
         map(r => this.createArray(r['data'], r['included'])),

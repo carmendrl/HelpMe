@@ -143,7 +143,6 @@ export class Question extends Entity{
 
 static createFromJSon(o:Object){
   let question = new Question();
-  //debugger
 
   question.date = o["attributes"]["created_at"];
   question.text =o["attributes"]["text"];

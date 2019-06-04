@@ -29,7 +29,12 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
       }
 
-      sortQuestions(questions: Question[]){ //need to add some sport of user identification
+      sortQuestions(questions: Question[]){
+        //clears the array
+        this.faQs.length = 0;
+        this.myQs.length = 0;
+        this.allOtherQs.length = 0;
+        
         for (let question of questions){
           if(question.id != undefined){
             //faq of question is assumed to be a boolean
