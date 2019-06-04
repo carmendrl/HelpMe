@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { QuestionService } from '../services/question.service';
-import { Question } from '../models/question.model';
+import { QuestionService } from '../../services/question.service';
+import { Question } from '../../models/question.model';
 
 @Component({
   selector: 'app-me-too-button',
