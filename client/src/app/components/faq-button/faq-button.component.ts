@@ -9,6 +9,7 @@ import { Question } from '../../models/question.model';
 })
 export class FaqButtonComponent implements OnInit {
   @Input() private currentQuestion: Question;
+  @Input() private currentFaq: boolean; 
 
   constructor(private questionService: QuestionService) { }
 
@@ -17,15 +18,9 @@ export class FaqButtonComponent implements OnInit {
 
   addFaQ(){
     this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, true).subscribe();
-    // this.nextList.push(question);
-    // let index = this.currentList.indexOf(question);
-    // this.currentList.splice(index,1);
   }
 
   removeFaQ(question: Question){
     this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, false).subscribe();
-    // this.nextList.push(question);
-    // let index = this.currentList.indexOf(question);
-    // this.currentList.splice(index,1);
   }
 }
