@@ -8,24 +8,17 @@ import { Question } from '../models/question.model';
   styleUrls: ['./me-too-button.component.scss']
 })
 export class MeTooButtonComponent implements OnInit {
-  @Input() private currentList: Question[];
-  @Input() private nextList: Question[];
+  @Input() private currentQuestion : Question;
 
   constructor(private questionService: QuestionService) { }
 
   ngOnInit() {
   }
 
-  addMeToo(question: Question){
-    this.questionService.addMeToo(question, true).subscribe();
-    this.nextList.push(question);
-    let index = this.currentList.indexOf(question);
-    this.currentList.splice(index,1);
+  addMeToo(){
+    this.questionService.addMeToo(this.currentQuestion, true).subscribe();
   }
-  removeMeToo(question: Question){
-    this.questionService.addMeToo(question, false).subscribe();
-    this.nextList.push(question);
-    let index = this.currentList.indexOf(question);
-    this.currentList.splice(index,1);
+  removeMeToo(){
+    this.questionService.addMeToo(this.currentQuestion, false).subscribe();
   }
 }

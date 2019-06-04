@@ -8,13 +8,14 @@ import { Question } from '../models/question.model';
   styleUrls: ['./answer-button.component.scss']
 })
 export class AnswerButtonComponent implements OnInit {
+  @Input() private currentQuestion : Question;
 
   constructor(private questionService: QuestionService) { }
 
   ngOnInit() {
   }
 
-  answer(question: Question, text: string){
-    this.questionService.answerAQuestion(question, text).subscribe();
+  answer(text: string){
+    this.questionService.answerAQuestion(this.currentQuestion, text).subscribe();
   }
 }
