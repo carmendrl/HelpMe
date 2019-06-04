@@ -160,6 +160,14 @@ export class QuestionService {
       );
     }
 
+    assignQuestion(user: User, question: Question): Observable<Question>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
+      return this.httpClient.put(url, {}).pipe(
+        map(r => {question.claimedBy = user; return question;}),
+        tap(r => this.updatedQuestion$.next(r)),
+        catchError(this.handleError<Question>(`assigned =${question.id}`))
+      )
+    }
 
     //handles errors
     private handleError<T> (operation = 'operation', result?: T) {

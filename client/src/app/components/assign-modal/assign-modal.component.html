@@ -1,4 +1,6 @@
-<ng-template #content2 let-modal let-d="dismiss" let-c="close">
+<span (click)="openAssign(content)" class="btn btn-primary actionSpace">Assign</span>
+<!--modal-->
+<ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
     <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
@@ -6,6 +8,22 @@
     </button>
   </div>
   <div class="modal-body">
-    
+    <label>Search</label>
+
+    <form (submit)="assignUser()" #thisForm="ngForm">
+      <div class="form-group row no-gutters">
+        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+        <input type="email" name="emailAddress" [ngbTypeahead]="findUsers.bind(this)"
+        [resultFormatter]="formatUserForTypeAhead"
+        [inputFormatter]="formatUserForTypeAhead"
+        [(ngModel)]="selectedUser" placeholder="Email Address"
+        class="form-control col-md-6" email required>
+      </div>
+
+      <button type="submit"
+      [disabled]="submitShouldBeDisabled()"
+      class="btn btn-primary" (click)="assignSelectedUser();d('Cross click');thisForm.reset();">Assign User</button>
+
+    </form>
   </div>
 </ng-template>
