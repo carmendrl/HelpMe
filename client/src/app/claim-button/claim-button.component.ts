@@ -9,8 +9,7 @@ import { Question } from '../models/question.model';
 })
 export class ClaimButtonComponent implements OnInit {
 
-  @Input() private newList : Question[];
-  @Input() private previousList : Question[];
+  @Input() private currentQuestion : Question;
 
   constructor(private questionService: QuestionService) { }
 
@@ -18,11 +17,8 @@ export class ClaimButtonComponent implements OnInit {
     // this.claim();
   }
 
-  claim(question: Question){
-    this.questionService.claimAQuestion(question).subscribe();
-    this.newList.push(question);//move
-    let index = this.previousList.indexOf(question);//delete from unclaimedlist
-    this.previousList.splice(index,1);
+  claim(){
+    this.questionService.claimAQuestion(this.currentQuestion).subscribe();
 
   }
 

@@ -5,10 +5,10 @@
 
 <section>
   <h2>My Questions</h2>
-  <app-question-list [view]= "11" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
+  <app-question-list [view]= "11" [faqList]="faQs" [allOtherList]="allOtherQs" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
 </section>
 
 <section>
   <h2>All Questions</h2>
-  <app-question-list [view]= "12" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
+  <app-question-list [view]= "12" [faqList]="faQs" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
 </section>

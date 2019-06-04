@@ -28,46 +28,49 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.faQs = new Array<Question>();
       this.otherQs = new Array<Question>(); }
 
-  ngOnInit() {
-  }
+      ngOnInit() {
+        this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
+      }
 
-  sortQuestions(questions: Question[]){
-    debugger
-    for (let question of questions){
-      if(question.isAnswered){
-        if (question.faq){
-          this.faQs.push(question);
-        }
-        else{
-          this.otherQs.push(question);
+      sortQuestions(questions: Question[]){
+        debugger
+        for (let question of questions){
+          if(question.id != undefined){
+            if(question.isAnswered){
+              if (question.faq){
+                this.faQs.push(question);
+              }
+              else{
+                this.otherQs.push(question);
+              }
+            }
+            //how this is implemented this depends on how the assinged/claimed/pending variables look
+            //as a part of the question model
+            //right now assuming that quesstions would have the the id of the user that
+            //claimed/got assigned the question and would be compared to the current user's id.
+            else if(question.claimedBy != undefined){
+              if(question.claimedBy.id === this.currentUser.id){
+                this.myQs.push(question);
+              }
+              else{
+                question.answer = new Answer();
+                question.answer.text="This question was claimed by" + question.claimedBy.id;
+                this.otherQs.push(question);
+              }
+            }
+            else{
+              this.unclaimedQs.push(question);
+            }
+          }
         }
       }
-      //how this is implemented this depends on how the assinged/claimed/pending variables look
-      //as a part of the question model
-      //right now assuming that quesstions would have the the id of the user that
-      //claimed/got assigned the question and would be compared to the current user's id.
-      else if(question.claimedBy != undefined){
-        if(question.claimedBy.id === this.currentUser.id){
-          this.myQs.push(question);
-        }
-        else{
-          question.answer = new Answer();
-          question.answer.text="This question was claimed by" + question.claimedBy.id;
-          this.otherQs.push(question);
-        }
+
+
+      assign(question: Question, user: User){
+        question.claimedBy = user;
       }
-      else{
-        this.unclaimedQs.push(question);
+
+      delete(question: Question){
+
       }
     }
-  }
-
-
-  assign(question: Question, user: User){
-    question.claimedBy = user;
-  }
-
-  delete(question: Question){
-
-  }
-}

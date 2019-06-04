@@ -11,6 +11,7 @@ import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { API_SERVER } from '../app.config';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
@@ -18,11 +19,16 @@ export class QuestionService {
   private apiHost : string;
   private userQuestions : Question[];
   private sessionId : number;
+  public updatedQuestion$ : Subject<Question>;
 
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
     this.apiHost = host;
+    this.updatedQuestion$ = new Subject<Question>();
   }
 
+  get getUpdatedQuestion$() : Observable<Question> {
+    return this.updatedQuestion$;
+  }
   questionList() : Observable<Question[]> {
     let url :string = `${this.apiHost}/user/questions`;
     return this.httpClient.get(url).pipe(
@@ -95,6 +101,7 @@ export class QuestionService {
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
       //let temp = question;
       return this.httpClient.delete(url).pipe(
+        tap(r => {question.id = undefined; this.updatedQuestion$.next(question)}),
         map(r => true),
         catchError(this.handleError<boolean>(`delete question id=${question.id}`))
       );
@@ -109,6 +116,7 @@ export class QuestionService {
       };
       return this.httpClient.put(url, body).pipe(
         map(r => {question.text = text; question.faq = faQ;return question;}),
+        tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
       );
     }
@@ -117,6 +125,7 @@ export class QuestionService {
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/claim`;
       return this.httpClient.post(url, {}).pipe(
           map(r => question.claimedBy = r["data"]["relationships"]["claimed_by"]["data"]),
+          tap(r => this.updatedQuestion$.next(r)),
           catchError(this.handleError<Question>(`claim id=${question.id}`))
       );
     }
@@ -126,6 +135,7 @@ export class QuestionService {
       let body = { text: text };
       return this.httpClient.post(url, body).pipe(
         map(r => question.answer = (Answer.createFromJSon(r["data"]))),
+        tap(r => this.updatedQuestion$.next(question)),
         catchError(this.handleError<Answer>(`answer created`))
       );
     }
@@ -137,6 +147,7 @@ export class QuestionService {
       };
       return this.httpClient.put(url, body).pipe(
         map(r => {question.answer.text = text; return question;}),
+        tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`answer edited id=${question.answer.id}`))
       );
     }
@@ -145,6 +156,7 @@ export class QuestionService {
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
       return this.httpClient.post(url, {}).pipe(
         map(r => {question.meToo = meToo; return question;}),
+        tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`meToo status changed=${question.answer.id}`))
       );
     }

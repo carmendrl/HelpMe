@@ -25,34 +25,36 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();}
 
-  ngOnInit() {
-  }
-
-  sortQuestions(questions: Question[]){ //need to add some sport of user identification
-    debugger
-    for (let question of questions){
-      //faq of question is assumed to be a boolean
-      if (question.faq){//questions.faq){
-        this.faQs.push(question);
+      ngOnInit() {
+        this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
       }
-      //how this is implemented this depends on how the assinged/claimed/pending variables look
-      //as a part of the question model
-      //right now assuming that queestions would have the the id of the user that
-      //asked the question and would be compared to the current user's id.
-      else if(question.asker.id === this.currentUser.id){ //assinged or claimed by me
+
+      sortQuestions(questions: Question[]){ //need to add some sport of user identification
+        for (let question of questions){
+          if(question.id != undefined){
+            //faq of question is assumed to be a boolean
+            if (question.faq){//questions.faq){
+              this.faQs.push(question);
+            }
+            //how this is implemented this depends on how the assinged/claimed/pending variables look
+            //as a part of the question model
+            //right now assuming that queestions would have the the id of the user that
+            //asked the question and would be compared to the current user's id.
+            else if(question.asker.id === this.currentUser.id){ //assinged or claimed by me
+              this.myQs.push(question);
+            }
+            else{
+              this.allOtherQs.push(question);
+            }
+          }
+        }
+      }
+
+      meToo(question: Question) : void {
         this.myQs.push(question);
       }
-      else{
-        this.allOtherQs.push(question);
-      }
+
+
+
+
     }
-  }
-
-  meToo(question: Question) : void {
-    this.myQs.push(question);
-  }
-
-
-
-
-}

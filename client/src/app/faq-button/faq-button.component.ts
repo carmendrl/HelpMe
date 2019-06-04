@@ -8,25 +8,24 @@ import { Question } from '../models/question.model';
   styleUrls: ['./faq-button.component.scss']
 })
 export class FaqButtonComponent implements OnInit {
-  @Input() private currentList: Question[];
-  @Input() private nextList: Question[];
+  @Input() private currentQuestion: Question;
 
   constructor(private questionService: QuestionService) { }
 
   ngOnInit() {
   }
 
-  addFaQ(question: Question){
-    this.questionService.updateQuestion(question, question.text, true).subscribe();
-    this.nextList.push(question);
-    let index = this.currentList.indexOf(question);
-    this.currentList.splice(index,1);
+  addFaQ(){
+    this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, true).subscribe();
+    // this.nextList.push(question);
+    // let index = this.currentList.indexOf(question);
+    // this.currentList.splice(index,1);
   }
 
   removeFaQ(question: Question){
-    this.questionService.updateQuestion(question, question.text, false).subscribe();
-    this.nextList.push(question);
-    let index = this.currentList.indexOf(question);
-    this.currentList.splice(index,1);
+    this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, false).subscribe();
+    // this.nextList.push(question);
+    // let index = this.currentList.indexOf(question);
+    // this.currentList.splice(index,1);
   }
 }
