@@ -8,19 +8,15 @@ import { Question } from '../models/question.model';
   styleUrls: ['./edit-button.component.scss']
 })
 export class EditButtonComponent implements OnInit {
-  @Input() currentList: Question[];
-  @Input() nextList: Question[];
+  @Input() private currentQuestion : Question;
 
   constructor(private questionService: QuestionService) { }
 
   ngOnInit() {
   }
 
-  editAnswer(question: Question, text: string){
-    this.questionService.editAnAnswer(question, text).subscribe();
-    this.nextList.push(question);
-    let index = this.currentList.indexOf(question);
-    this.currentList.splice(index,1);
+  editAnswer(text: string){
+    this.questionService.editAnAnswer(this.currentQuestion, text).subscribe();
   }
 
 }

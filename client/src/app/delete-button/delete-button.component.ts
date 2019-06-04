@@ -8,7 +8,7 @@ import { Question } from '../models/question.model';
   styleUrls: ['./delete-button.component.scss']
 })
 export class DeleteButtonComponent implements OnInit {
-
+@Input() private currentQuestion : Question;
 
   constructor(private questionService: QuestionService) { }
 
@@ -16,7 +16,7 @@ export class DeleteButtonComponent implements OnInit {
   }
 
   delete(question: Question){
-    this.questionService.deleteAQuestion(question).subscribe();
+    this.questionService.deleteAQuestion(this.currentQuestion).subscribe();
 
   }
 }
