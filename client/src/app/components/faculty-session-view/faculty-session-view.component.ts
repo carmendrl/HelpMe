@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
 import { Question } from '../../models/question.model';
+import { Answer } from '../../models/answer.model';
 import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
@@ -16,9 +17,16 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private unclaimedQs: Question[];
   private myQs: Question[];
   private faQs: Question[];
-  private otherAnsweredQs:  Question[];
+  private otherQs:  Question[];
+  private currentQuestion: Question;
 
-  constructor(userService: UserService, questionService: QuestionService, route: ActivatedRoute, location: Location) { super(userService, questionService, route, location); this.unclaimedQs = new Array<Question>(); this.myQs = new Array<Question>(); this.faQs = new Array<Question>(); this.otherAnsweredQs = new Array<Question>(); }
+  constructor(userService: UserService, questionService: QuestionService,
+    route: ActivatedRoute, location: Location) {
+      super(userService, questionService, route, location);
+      this.unclaimedQs = new Array<Question>();
+      this.myQs = new Array<Question>();
+      this.faQs = new Array<Question>();
+      this.otherQs = new Array<Question>(); }
 
   ngOnInit() {
   }
@@ -36,19 +44,21 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           this.faQs.push(question);
         }
         else{
-          this.otherAnsweredQs.push(question);
+          this.otherQs.push(question);
         }
       }
       //how this is implemented this depends on how the assinged/claimed/pending variables look
       //as a part of the question model
-      //right now assuming that queestions would have the the id of the user that
+      //right now assuming that quesstions would have the the id of the user that
       //claimed/got assigned the question and would be compared to the current user's id.
       else if(question.claimedBy != undefined){
         if(question.claimedBy.id === this.currentUser.id){
           this.myQs.push(question);
         }
         else{
-          this.otherAnsweredQs.push(question);
+          question.answer = new Answer();
+          question.answer.text="This question was claimed by" + question.claimedBy.id;
+          this.otherQs.push(question);
         }
       }
       else{
@@ -57,4 +67,12 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
   }
 
+
+  assign(question: Question, user: User){
+    question.claimedBy = user;
+  }
+
+  delete(question: Question){
+
+  }
 }
