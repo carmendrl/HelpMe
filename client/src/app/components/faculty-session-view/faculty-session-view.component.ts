@@ -34,7 +34,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       sortQuestions(questions: Question[]){
         //clears the array
-        debugger
+        //debugger
         this.faQs.length = 0;
         this.otherQs.length = 0;
         this.unclaimedQs.length = 0;
@@ -60,7 +60,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
               }
               else{
                 question.answer = new Answer();
-                question.answer.text="This question was claimed by" + question.claimedBy.id;
+                question.answer.text="This question was claimed by " + question.claimedBy.FullName;
                 this.otherQs.push(question);
               }
             }

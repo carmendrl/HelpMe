@@ -2,7 +2,7 @@ import { User } from './user.model';
 import { Entity } from './entity.model';
 
 export class Course extends Entity{
-  constructor (private _subject? : string, private _number? : string, private _title? : string, private _semester? : string, private _professor? : User, _id?:number ) {
+  constructor (private _subject? : string, private _number? : string, private _title? : string, private _semester? : string, private _professor? : User, _id? : string ) {
     super(_id);
   }
 

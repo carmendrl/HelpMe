@@ -4,7 +4,7 @@ import { User } from './user.model';
 import { Entity } from './entity.model';
 
 export class LabSession extends Entity {
-  constructor (private _description?: string, private _startDate? : Date, private _endDate? : Date, private _course?: Course, _id? : number, private _token?: string) {
+  constructor (private _description?: string, private _startDate? : Date, private _endDate? : Date, private _course?: Course, _id? : string, private _token?: string, private _members?: User[]) {
     super(_id);
   }
 
@@ -34,6 +34,15 @@ export class LabSession extends Entity {
   set token(token : string) {
     this._token = token;
   }
+
+  get members() : User[]{
+    return this._members;
+  }
+
+  set members(members: User[]){
+    this._members= members;
+  }
+
 
   static createFromJSon(o : Object): LabSession{
     let session = new LabSession();

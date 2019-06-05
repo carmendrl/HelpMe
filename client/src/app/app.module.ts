@@ -28,13 +28,13 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
-import { AnswerButtonComponent } from './answer-button/answer-button.component';
-import { EditButtonComponent } from './edit-button/edit-button.component';
-import { FaqButtonComponent } from './faq-button/faq-button.component';
-import { ClaimButtonComponent } from './claim-button/claim-button.component';
-import { DeleteButtonComponent } from './delete-button/delete-button.component';
-import { MeTooButtonComponent } from './me-too-button/me-too-button.component';
-
+import { AnswerButtonComponent } from './components/answer-button/answer-button.component';
+import { EditButtonComponent } from './components/edit-button/edit-button.component';
+import { FaqButtonComponent } from './components/faq-button/faq-button.component';
+import { ClaimButtonComponent } from './components/claim-button/claim-button.component';
+import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
+import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
+import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
 const Server = '/api';
 
 @NgModule({
@@ -59,6 +59,7 @@ const Server = '/api';
     ClaimButtonComponent,
     DeleteButtonComponent,
     MeTooButtonComponent,
+    AssignModalComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule

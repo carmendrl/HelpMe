@@ -20,7 +20,7 @@ import { SessionViewComponent } from '../components/session-view/session-view.co
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
-  public sessionId: number;
+  public sessionId: string;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
@@ -79,7 +79,7 @@ export class LabSessionService {
 
 
 
-  createNewLabSession(description:String, courseId:number, startDate: string, endDate: string): Observable<LabSession> {
+  createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions`;
     let body = {
       description: description,
@@ -118,24 +118,24 @@ export class LabSessionService {
 }
 
 //allows a user to join a session with a token and returns a session id
-  joinASession(token: String): Observable<number>{
+  joinASession(token: String): Observable<string>{
     let url: string = `${this.apiHost}/lab_sessions/join/${token}`;
     let body = {
       token: token
     };
     return this.httpClient.post(url, body).pipe(
       map(r => this.extractSessionId(r["data"])),
-      catchError(this.handleError<number>(`joining a lab session`))
+      catchError(this.handleError<string>(`joining a lab session`))
     );
   }
 
-  private extractSessionId(r: Object): number {
+  private extractSessionId(r: Object): string {
     //let s = new sessionResponse(r);
     this.sessionId = r["relationships"]["lab_session"]["data"]["id"];
     return this.sessionId;
   }
 
-  getSession(id: number): Observable<LabSession>{
+  getSession(id: string): Observable<LabSession>{
     let url = `${this.apiHost}/lab_sessions/${this.sessionId}`;
     return this.httpClient.get<LabSession>(url).pipe(
       catchError(this.handleError<LabSession>(`getSession id=${this.sessionId}`))
