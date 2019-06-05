@@ -32,6 +32,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showFAQButton: boolean = false;
   @Input() private showDeleteButton: boolean = false;
   @Input() private showMeTooButton: boolean = false;
+  @Input() private showStep: boolean = false;
 
   constructor() { }
 
