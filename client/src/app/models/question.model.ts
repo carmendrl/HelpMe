@@ -14,6 +14,7 @@ export class Question extends Entity{
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
+    this._otherAskers = Array<User>();
   }
 
   get date() : Date {
@@ -127,7 +128,7 @@ export class Question extends Entity{
   get isAnswered() : boolean {
     if (this._answer != undefined) {
       return true;
-    } 
+    }
     else {
       return false;
     }
@@ -153,18 +154,18 @@ static createFromJSon(o:Object){
   let question = new Question();
 
   question.date = o["attributes"]["created_at"];
-  question.text =o["attributes"]["text"];
-  question.id= o["id"];
-  question.faq= o["attributes"]["faq"];
+  question.text = o["attributes"]["text"];
+  question.id = o["id"];
+  question.faq = o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
-  question.asker=o["relationships"]["original_asker"]["data"];
+  question.asker = o["relationships"]["original_asker"]["data"];
   if(o["relationships"]["claimed_by"]!= undefined){
-    question.claimedBy=o["relationships"]["claimed_by"]["data"];
+    question.claimedBy = o["relationships"]["claimed_by"]["data"];
   }
   if(o["relationships"]["asked_by"] != undefined){
-    question.otherAskers=o["relationships"]["asked_by"]["data"];
+    question.otherAskers = o["relationships"]["asked_by"]["data"];
   }
-
+  question.step = o["attributes"]["step"];
   return question;
 
 }

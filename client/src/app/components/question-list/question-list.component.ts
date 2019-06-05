@@ -34,6 +34,8 @@ export class QuestionListComponent implements OnInit {
   @Input() private showFAQButton: boolean = false;
   @Input() private showDeleteButton: boolean = false;
   @Input() private showMeTooButton: boolean = false;
+  @Input() private showStep: boolean = true;
+  @Input() private showNumberOfAskers: boolean = false;
 
   constructor(private questionService: QuestionService) { }
 
@@ -87,6 +89,7 @@ export class QuestionListComponent implements OnInit {
     return this.timeDifference = moment(question.date).fromNow();
   }
 
+
   //methods for select element in drop down menu
   performAction(question: Question){
     debugger
@@ -106,7 +109,7 @@ export class QuestionListComponent implements OnInit {
       this.questionService.deleteAQuestion(question).subscribe();
     }
     else if(this.selectedAction ==="assign"){
-      
+
     }
     else if(this.selectedAction ==="answer"){
 
@@ -116,5 +119,12 @@ export class QuestionListComponent implements OnInit {
     }
 
   }
+
+  // gravatarImageUrl() : string {
+  //     //debugger
+  //
+  //
+  //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+  // }
 
 }

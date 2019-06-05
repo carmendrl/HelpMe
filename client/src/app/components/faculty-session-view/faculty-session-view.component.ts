@@ -7,6 +7,7 @@ import { Answer } from '../../models/answer.model';
 import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -22,8 +23,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentDate: Date;
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location) {
-      super(userService, questionService, route, location);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
+      super(userService, questionService, route, location, notifierService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();

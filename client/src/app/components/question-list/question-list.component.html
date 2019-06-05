@@ -2,7 +2,9 @@
 are input into this model from the student dashboard, student view, and faculty view.
 -->
 
-
+<!-- <head>
+  <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+</head> -->
 <form class="form-inline">
   <label for="SearchMyQuestions">Search</label>
   <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
@@ -16,6 +18,8 @@ are input into this model from the student dashboard, student view, and faculty 
       <tr>
         <th><div *ngIf="showDate">Date</div></th>
         <th><div *ngIf="showCourse">Course</div></th>
+        <th><div *ngIf="showStep">Step</div></th>
+        <th><div *ngIf="showNumberOfAskers">Number of Askers</div></th>
         <th>Question</th>
         <th><div *ngIf="showAskedBy">Asked By</div></th>
         <th><div *ngIf="showTags" >Tags</div></th>
@@ -28,7 +32,10 @@ are input into this model from the student dashboard, student view, and faculty 
       <tr *ngFor = "let question of filteredQuestions">
         <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
         <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
-        <td>{{question.text}}</td>
+        <td><div *ngIf="showStep">{{question.step}}</div></td>
+        <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
+        <td><div *ngIf="showNumberOfAskers">{{question.otherAskers.length}}</div></td>
+        <td><i [ngClass]="question.otherAskers.length>2 ? 'popular' : 'notPopular'" [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : ''"></i> {{question.text}}</td>
         <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
         <td><div *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
