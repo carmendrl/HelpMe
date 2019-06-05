@@ -189,7 +189,6 @@ export class QuestionService {
           text : text,
           step: step
         };
-        debugger
         return this.httpClient.post(url, body).pipe(
           map(r => Question.createFromJSon(r["data"])),
           catchError(this.handleError<Question>(`question created`))

@@ -10,7 +10,7 @@ import { QuestionService } from '../../services/question.service';
 })
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
-  private possibleMatches: Question[];
+  private possibleMatches: Question[] = new Array<Question>();
   private step: number;
   private questionMessage: string;
   @Input() session: string;
