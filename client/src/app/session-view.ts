@@ -6,6 +6,7 @@ import { Location } from '@angular/common';
 import { Question } from './models/question.model';
 import { User } from './models/user.model';
 import { Observable, interval, Subscription, timer } from 'rxjs';
+import { NotifierService } from 'angular-notifier';
 
 export abstract class SessionView  {
   questions: Question[];
@@ -14,14 +15,16 @@ export abstract class SessionView  {
   private questionSubscription : Subscription;
   private timerSubscription : Subscription;
   sessionId: string;
+  private readonly notifier: NotifierService;
 
-  constructor(private userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location) {
+  constructor(private userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, notifierService: NotifierService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
     );
     this.sessionId = this.route.snapshot.paramMap.get('id');
     this.refreshData();
+    this.notifier = notifierService;
   }
 
   //want to make this abstract method but must make this an abstract createNewLabSession
@@ -46,4 +49,9 @@ export abstract class SessionView  {
       this.timerSubscription.unsubscribe();
     }
   }
+
+  showNotification(){
+    this.notifier.notify( 'info', 'New answer posted!' );
+  }
+
 }

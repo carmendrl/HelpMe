@@ -6,6 +6,7 @@ import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-student-session-view',
@@ -19,8 +20,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private allOtherQs:  Question[];
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location) {
-      super(userService, questionService, route, location);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
+      super(userService, questionService, route, location, notifierService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();}
@@ -34,7 +35,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.faQs.length = 0;
         this.myQs.length = 0;
         this.allOtherQs.length = 0;
-        
+
         for (let question of questions){
           if(question.id != undefined){
             //faq of question is assumed to be a boolean
