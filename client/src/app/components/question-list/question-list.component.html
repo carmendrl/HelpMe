@@ -1,13 +1,5 @@
-<!-- The number variable "view" is important when determining what elements will be
-visible when.
-0=student dashboard
-10=StudentSessionView FAQs
-11=StudentSessionView My questions
-12=StudentSessionView All Questions
-20=FacultySessionView unclaimedQs
-21=FacultySessionView My questions
-22=FacultySessionViewb  FAQs
-23=FacultySessionView other questions
+<!-- To determine what elements should be shown when, boolean variables such as "showDate"
+are input into this model from the student dashboard, student view, and faculty view. 
 -->
 
 
@@ -22,36 +14,48 @@ visible when.
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><div *ngIf="view === 0">Date</div></th>
-        <th><div *ngIf="view === 0">Course</div></th>
+        <th><div *ngIf="showDate">Date</div></th>
+        <th><div *ngIf="showCourse">Course</div></th>
         <th>Question</th>
-        <th><div *ngIf="view === 20 || view === 21">Asked By</div></th>
-        <th><div *ngIf="view === 20 || view === 21" >Tags</div></th>
-        <th><div *ngIf="view === 20 || view === 21">Time in queue</div></th>
-        <th><div *ngIf="view != 20 && view != 21">Answer</div></th>
-        <th><div *ngIf="view != 0 && view != 10">Action</div></th>
+        <th><div *ngIf="showAskedBy">Asked By</div></th>
+        <th><div *ngIf="showTags" >Tags</div></th>
+        <th><div *ngIf="showTimeInQueue">Time in queue</div></th>
+        <th><div *ngIf="showAnswer">Answer</div></th>
+        <th><div *ngIf="showAction">Action</div></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor = "let question of filteredQuestions">
-        <td><div *ngIf="view === 0">{{question.date | date:'EEE LLL dd'}}</div></td>
-        <td><div *ngIf="view === 0">{{question.session.course.subjectAndNumber}}</div></td>
+        <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
+        <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
         <td>{{question.text}}</td>
-        <td><div *ngIf="view === 20 || view === 21">{{question.asker.FullName}}</div></td>
-        <td><div *ngIf="view === 20 || view === 21">
+        <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
+        <td><div *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
             <li>{{t}}</li>
           </ul></div></td>
-        <td><div *ngIf="view === 20 || view === 21">{{question.date | date:'EEE LLL dd'}}</div></td>
-        <td><div *ngIf="view != 20 && view != 21"><a href="#">{{question.answerText}}</a></div></td>
-        <td><div *ngIf="view != 0 && view != 10">
-          <app-answer-button *ngIf="view != 20 && question.answer === undefined" [currentQuestion]="question"></app-answer-button>
-          <app-edit-button *ngIf="view != 20 && view != 21 && question.answer != undefined " [currentQuestion]="question"></app-edit-button>
-          <app-claim-button *ngIf="view === 20 || view === 21"[currentQuestion]="question" ></app-claim-button>
-          <app-faq-button *ngIf="view != 11 && view != 12 && view != 20 && view != 21" [currentQuestion]="question"></app-faq-button>
-          <app-delete-button *ngIf="view === 20 || view === 21" [currentQuestion]="question" ></app-delete-button>
-          <app-me-too-button *ngIf="view === 12" [currentQuestion]="question"></app-me-too-button>
+        <td><div *ngIf="showTimeInQueue">{{timeDiff(question)}}</div></td>
+        <td><div *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></div></td>
+        <!-- If we change container to fluid,
+         then these class d-*_block may have to changed accordingly-->
+        <td><div *ngIf="showAction" class="d-none d-lg-block d-xl-block">
+          <app-answer-button *ngIf="showAnswerButton && question.answer === undefined" [currentQuestion]="question"></app-answer-button>
+          <app-edit-button *ngIf="showEditButton && question.answer != undefined " [currentQuestion]="question"></app-edit-button>
+          <app-claim-button *ngIf="showClaimButton" [currentQuestion]="question" ></app-claim-button>
+          <app-faq-button *ngIf="showFAQButton" [faqStatus]= "question.faq" [currentQuestion]="question"></app-faq-button>
+          <app-delete-button *ngIf="showDeleteButton" [currentQuestion]="question" ></app-delete-button>
+          <app-me-too-button *ngIf="showMeTooButton" [currentQuestion]="question"></app-me-too-button>
 
+        </div></td>
+        <td><div *ngIf="showAction" class="d-block d-lg-none">
+          <select>
+          <option *ngIf="showAnswerButton && question.answer === undefined" value="app-answer-button" ><app-answer-button [currentQuestion]="question"></app-answer-button></option>
+          <option *ngIf="showEditButton && question.answer != undefined" value="app-edit-button"><app-edit-button *ngIf="showEditButton && question.answer != undefined " [currentQuestion]="question"></app-edit-button></option>
+          <option *ngIf="showClaimButton"><app-claim-button [currentQuestion]="question" value="app-claim-button"></app-claim-button></option>
+          <option *ngIf="showFAQButton"><app-faq-button [faqStatus]= "question.faq" [currentQuestion]="question" value="app-faq-button"></app-faq-button></option>
+          <option *ngIf="showDeleteButton"><app-delete-button [currentQuestion]="question" value="app-delete-button"></app-delete-button></option>
+          <option *ngIf="showMeTooButton"><app-me-too-button [currentQuestion]="question"value="app-me-too-button"></app-me-too-button></option>
+</select>
         </div></td>
       </tr>
     </tbody>

@@ -16,7 +16,6 @@ export class StudentDashboardComponent implements OnInit {
   private myQuestions : Question[];
   private sessionId: number;
   private token: string;
-  private view: number; //This is important when question-list is determining what elements to display. It will hold the value 0.
 
   constructor(private labSessionService : LabSessionService, private questionService: QuestionService,
     private router : Router) { }
@@ -29,7 +28,6 @@ export class StudentDashboardComponent implements OnInit {
     this.questionService.questionList().subscribe (
       questions => this.myQuestions = questions
     );
-    this.view = 0;
 
   }
 
