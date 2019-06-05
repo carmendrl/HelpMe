@@ -86,7 +86,7 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.permit(:text, :lab_session_id, :claimed_by_id, :faq)
+    params.permit(:text, :lab_session_id, :claimed_by_id, :faq, :step)
   end
 
   def find_question!
