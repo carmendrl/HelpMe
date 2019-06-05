@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import { Question } from '../../models.question.model';
+import { Question } from '../../models/question.model';
+import { QuestionService } from '../../services/question.service';
 
 @Component({
   selector: 'app-ask-question',
@@ -10,7 +11,11 @@ import { Question } from '../../models.question.model';
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
   private possibleMatches: Question[];
-  constructor(private modalService: NgbModal) { }
+  private step: number;
+  private questionMessage: string;
+  @Input() session: string;
+
+  constructor(private modalService: NgbModal, private questionService: QuestionService) { }
 
   ngOnInit() {
   }
@@ -33,4 +38,8 @@ export class AskQuestionComponent implements OnInit {
     }
   }
 
+  createQuestion(){
+    debugger
+    this.questionService.askQuestion(this.questionMessage, this.session).subscribe();
+  }
 }

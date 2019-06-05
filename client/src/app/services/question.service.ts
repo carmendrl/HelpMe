@@ -182,11 +182,13 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, labsession:LabSession) : Observable<Question>{
-        let url: string = `${this.apiHost}/lab_sessions/${labsession.id}/questions`;
+      askQuestion(text:string, session: string) : Observable<Question>{
+        let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
+        debugger
         let body = {
           text : text
         };
+        debugger
         return this.httpClient.post(url, body).pipe(
           map(r => Question.createFromJSon(r["data"])),
           catchError(this.handleError<Question>(`question created`))

@@ -13,14 +13,15 @@ export abstract class SessionView  {
   private data : any;
   private questionSubscription : Subscription;
   private timerSubscription : Subscription;
-
+  sessionId: string;
 
   constructor(private userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
     );
-    //this.refreshData();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
+    this.refreshData();
   }
 
   //want to make this abstract method but must make this an abstract createNewLabSession
@@ -34,7 +35,7 @@ export abstract class SessionView  {
   }
 
   private subscribeToData(){
-    this.timerSubscription = timer(2000).subscribe(() => this.refreshData());
+    this.timerSubscription = timer(3000).subscribe(() => this.refreshData());
   }
 
   public ngOnDestroy(){
