@@ -3,6 +3,7 @@ class QuestionSerializer < ActiveModel::Serializer
   attribute :created_at
   attribute :status
   attribute :faq
+  attribute :step
 
   has_one :original_asker
   has_one :answer, if: :answered?
