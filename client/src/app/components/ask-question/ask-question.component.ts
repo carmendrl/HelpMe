@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { Question } from '../../models.question.model';
 
 @Component({
   selector: 'app-ask-question',
@@ -8,6 +9,7 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 })
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
+  private possibleMatches: Question[];
   constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
