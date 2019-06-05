@@ -162,17 +162,15 @@ export class QuestionService {
       }
 
     editAnAnswer(question: Question, text: string): Observable<Question>{
-      debugger
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
       let body = {
         text : text
-      };debugger
+      };
       return this.httpClient.put(url, body).pipe(
         map(r => {question.answer.text = text; return question;}),
         tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`answer edited`))
       );
-      debugger
     }
 
       addMeToo(question: Question, meToo: boolean) : Observable<Question>{
@@ -181,6 +179,17 @@ export class QuestionService {
           map(r => {question.meToo = meToo; return question;}),
           tap(r => this.updatedQuestion$.next(r)),
           catchError(this.handleError<Question>(`meToo status changed=${question.answer.id}`))
+        );
+      }
+
+      askQuestion(text:string, labsession:LabSession) : Observable<Question>{
+        let url: string = `${this.apiHost}/lab_sessions/${labsession.id}/questions`;
+        let body = {
+          text : text
+        };
+        return this.httpClient.post(url, body).pipe(
+          map(r => Question.createFromJSon(r["data"])),
+          catchError(this.handleError<Question>(`question created`))
         );
       }
 
