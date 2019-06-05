@@ -186,7 +186,8 @@ export class QuestionService {
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
         debugger
         let body = {
-          text : text
+          text : text,
+          step: step
         };
         debugger
         return this.httpClient.post(url, body).pipe(

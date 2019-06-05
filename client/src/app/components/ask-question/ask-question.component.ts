@@ -39,7 +39,6 @@ export class AskQuestionComponent implements OnInit {
   }
 
   createQuestion(){
-    debugger
-    this.questionService.askQuestion(this.questionMessage, this.session).subscribe();
+    this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe();
   }
 }
