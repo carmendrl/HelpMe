@@ -103,7 +103,7 @@ export class QuestionListComponent implements OnInit {
       this.questionService.claimAQuestion(question).subscribe();
     }
     else if(this.selectedAction ==="meToo"){
-      this.questionService.addMeToo(question, true).subscribe();
+      this.questionService.addMeToo(this.currentQuestion, true, this.currentUser).subscribe();
     }
     else if(this.selectedAction ==="delete"){
       this.questionService.deleteAQuestion(question).subscribe();
