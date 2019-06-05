@@ -36,6 +36,7 @@ import { DeleteButtonComponent } from './components/delete-button/delete-button.
 import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
+import { NotifierModule } from 'angular-notifier';
 const Server = '/api';
 
 @NgModule({
@@ -64,7 +65,7 @@ const Server = '/api';
     AskQuestionComponent,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule //Might need to add the custom options later,
   ],
   providers: [
     UserService,
