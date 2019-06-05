@@ -34,6 +34,7 @@ import { FaqButtonComponent } from './faq-button/faq-button.component';
 import { ClaimButtonComponent } from './claim-button/claim-button.component';
 import { DeleteButtonComponent } from './delete-button/delete-button.component';
 import { MeTooButtonComponent } from './me-too-button/me-too-button.component';
+
 const Server = '/api';
 
 @NgModule({

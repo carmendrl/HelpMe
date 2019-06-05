@@ -20,10 +20,12 @@ export class QuestionService {
   private userQuestions : Question[];
   private sessionId : number;
   public updatedQuestion$ : Subject<Question>;
+  //public _newAnswer$ : Subject<Answer>;
 
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
     this.apiHost = host;
     this.updatedQuestion$ = new Subject<Question>();
+  //  this._newAnswer$ = new Subject<Answer>();
   }
 
   get getUpdatedQuestion$() : Observable<Question> {
@@ -140,15 +142,17 @@ export class QuestionService {
     }
 
     editAnAnswer(question: Question, text: string): Observable<Question>{
-      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer/${question.answer.id}`;
+      debugger
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
       let body = {
         text : text
-      };
+      };debugger
       return this.httpClient.put(url, body).pipe(
         map(r => {question.answer.text = text; return question;}),
         tap(r => this.updatedQuestion$.next(r)),
-        catchError(this.handleError<Question>(`answer edited id=${question.answer.id}`))
+        catchError(this.handleError<Question>(`answer edited`))
       );
+      debugger
     }
 
     addMeToo(question: Question, meToo: boolean) : Observable<Question>{
@@ -160,6 +164,9 @@ export class QuestionService {
       );
     }
 
+    // get _newAnswer$() : Observable<Answer>{
+    //   return this._newAnswer$;
+    // }
 
     //handles errors
     private handleError<T> (operation = 'operation', result?: T) {
