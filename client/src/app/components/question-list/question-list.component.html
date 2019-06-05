@@ -16,8 +16,8 @@ are input into this model from the student dashboard, student view, and faculty 
       <tr>
         <th><div *ngIf="showDate">Date</div></th>
         <th><div *ngIf="showCourse">Course</div></th>
-        <th>Question</th>
         <th><div *ngIf="showStep">Step</div></th>
+        <th>Question</th>
         <th><div *ngIf="showAskedBy">Asked By</div></th>
         <th><div *ngIf="showTags" >Tags</div></th>
         <th><div *ngIf="showTimeInQueue">Time in queue</div></th>
@@ -29,8 +29,8 @@ are input into this model from the student dashboard, student view, and faculty 
       <tr *ngFor = "let question of filteredQuestions">
         <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
         <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
-        <td>{{question.text}}</td>
         <td><div *ngIf="showStep">{{question.step}}</div></td>
+        <td>{{question.text}}</td>
         <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
         <td><div *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
