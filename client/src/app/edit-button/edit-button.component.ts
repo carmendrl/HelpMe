@@ -1,14 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
-<<<<<<< HEAD:client/src/app/edit-button/edit-button.component.ts
 import { QuestionService } from '../services/question.service';
 import { Question } from '../models/question.model';
 import { Observable } from 'rxjs/Observable';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../models/answer.model';
-=======
-import { QuestionService } from '../../services/question.service';
-import { Question } from '../../models/question.model';
->>>>>>> 1fcd28184acafb2982707da6f5094b01f3b1432a:client/src/app/components/edit-button/edit-button.component.ts
 
 @Component({
   selector: 'app-edit-button',

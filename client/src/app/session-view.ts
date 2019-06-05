@@ -34,7 +34,7 @@ export abstract class SessionView  {
   }
 
   private subscribeToData(){
-    this.timerSubscription = timer(3000).subscribe(() => this.refreshData());
+    this.timerSubscription = timer(2000).subscribe(() => this.refreshData());
   }
 
   public ngOnDestroy(){
