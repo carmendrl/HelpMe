@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Question } from '../../models/question.model';
+import { QuestionService } from '../../services/question.service';
 
 import * as moment from 'moment';
 
@@ -14,6 +15,7 @@ export class QuestionListComponent implements OnInit {
   private filterText : string;
   private filterApplied: boolean;
   private timeDifference:string;
+  private selectedAction: string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -33,7 +35,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showDeleteButton: boolean = false;
   @Input() private showMeTooButton: boolean = false;
 
-  constructor() { }
+  constructor(private questionService: QuestionService) { }
 
   ngOnInit() {
     this.filterApplied = false;
@@ -84,4 +86,35 @@ export class QuestionListComponent implements OnInit {
   private timeDiff(question: Question) : string{
     return this.timeDifference = moment(question.date).fromNow();
   }
+
+  //methods for select element in drop down menu
+  performAction(question: Question){
+    debugger
+    if(this.selectedAction ==="addFaQ"){
+      this.questionService.updateQuestion(question, question.text, true).subscribe();
+    }
+    else if(this.selectedAction ==="removeFaQ"){
+      this.questionService.updateQuestion(question, question.text, false).subscribe();
+    }
+    else if(this.selectedAction ==="claim"){
+      this.questionService.claimAQuestion(question).subscribe();
+    }
+    else if(this.selectedAction ==="meToo"){
+      this.questionService.addMeToo(question, true).subscribe();
+    }
+    else if(this.selectedAction ==="delete"){
+      this.questionService.deleteAQuestion(question).subscribe();
+    }
+    else if(this.selectedAction ==="assign"){
+      
+    }
+    else if(this.selectedAction ==="answer"){
+
+    }
+    else if(this.selectedAction ==="edit"){
+
+    }
+
+  }
+
 }

@@ -22,8 +22,4 @@ export class ClaimButtonComponent implements OnInit {
 
   }
 
-  assign(question: Question){ // how will we want to enter the person it is being assigned to?
-    this.questionService.claimAQuestion(this.currentQuestion).subscribe();
-
-  }
 }

@@ -49,14 +49,21 @@ are input into this model from the student dashboard, student view, and faculty 
 
         </div></td>
         <td><div *ngIf="showAction" class="d-block d-lg-none">
-          <select>
-          <option *ngIf="showAnswerButton && question.answer === undefined" value="app-answer-button" ><app-answer-button [currentQuestion]="question"></app-answer-button></option>
-          <option *ngIf="showEditButton && question.answer != undefined" value="app-edit-button"><app-edit-button *ngIf="showEditButton && question.answer != undefined " [currentQuestion]="question"></app-edit-button></option>
-          <option *ngIf="showClaimButton"><app-claim-button [currentQuestion]="question" value="app-claim-button"></app-claim-button></option>
-          <option *ngIf="showFAQButton"><app-faq-button [faqStatus]= "question.faq" [currentQuestion]="question" value="app-faq-button"></app-faq-button></option>
-          <option *ngIf="showDeleteButton"><app-delete-button [currentQuestion]="question" value="app-delete-button"></app-delete-button></option>
-          <option *ngIf="showMeTooButton"><app-me-too-button [currentQuestion]="question"value="app-me-too-button"></app-me-too-button></option>
+          <form #thisForm (ngSubmit)="performAction(question)">
+            <div class="form-group">
+          <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+          <option *ngIf="showAnswerButton && question.answer === undefined" value="answer"><app-answer-button [currentQuestion]="question"></app-answer-button></option>
+          <option *ngIf="showEditButton && question.answer != undefined" value="edit"><app-edit-button [currentQuestion]="question"></app-edit-button></option>
+          <option *ngIf="showClaimButton" value="claim">Claim</option>
+          <option *ngIf="showAssignModal" value="assign"><app-assign-modal [currentQuestion]="question"></app-assign-modal></option>
+          <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+          <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+          <option *ngIf="showDeleteButton" value="delete">Delete</option>
+          <option *ngIf="showMeTooButton"value="meToo">Me Too</option>
 </select>
+</div>
+<button type="submit" class ="btn btn-primary">Submit</button>
+</form>
         </div></td>
       </tr>
     </tbody>

@@ -18,6 +18,7 @@ export class MeTooButtonComponent implements OnInit {
   addMeToo(){
     this.questionService.addMeToo(this.currentQuestion, true).subscribe();
   }
+  //curently unused function (as no button appears for a user to unmetoo a question)
   removeMeToo(){
     this.questionService.addMeToo(this.currentQuestion, false).subscribe();
   }

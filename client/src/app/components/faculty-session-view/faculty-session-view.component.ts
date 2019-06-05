@@ -33,8 +33,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
+        this.questionService.getUpdatedQuestion$.subscribe(r => {this.sortQuestions(this.questions);});
       }
+
 
       sortQuestions(questions: Question[]){
         this.currentDate=new Date();
