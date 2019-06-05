@@ -19,6 +19,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private faQs: Question[];
   private otherQs:  Question[];
   private currentQuestion: Question;
+  private currentDate: Date;
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location) {
@@ -26,15 +27,18 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();
-      this.otherQs = new Array<Question>(); }
+      this.otherQs = new Array<Question>();
+      this.currentDate = new Date();
+
+    }
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
       }
 
       sortQuestions(questions: Question[]){
+        this.currentDate=new Date();
         //clears the array
-        //debugger
         this.faQs.length = 0;
         this.otherQs.length = 0;
         this.unclaimedQs.length = 0;

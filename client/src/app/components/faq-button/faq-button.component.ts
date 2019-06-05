@@ -9,7 +9,7 @@ import { Question } from '../../models/question.model';
 })
 export class FaqButtonComponent implements OnInit {
   @Input() private currentQuestion: Question;
-  @Input() private currentFaq: boolean; 
+  @Input() private faqStatus: boolean; 
 
   constructor(private questionService: QuestionService) { }
 

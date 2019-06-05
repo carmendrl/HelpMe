@@ -15,7 +15,6 @@ export class EditButtonComponent implements OnInit {
   @Input() private currentQuestion : Question;
   closeResult: string;
   saved : boolean = false;
-  text : string;
 
   constructor(private questionService: QuestionService, private modalService: NgbModal) { }
 
@@ -44,7 +43,7 @@ export class EditButtonComponent implements OnInit {
   editAnswerFromForm(){
     debugger
     this.saved = true;
-    this.questionService.editAnAnswer(this.currentQuestion, this.text).subscribe();
+    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text).subscribe();
     debugger
   }
 }
