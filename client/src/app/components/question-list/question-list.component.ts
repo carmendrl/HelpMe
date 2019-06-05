@@ -13,14 +13,25 @@ export class QuestionListComponent implements OnInit {
 
   private filterText : string;
   private filterApplied: boolean;
+  private timeDifference:string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
-
-
-//helps determine what parts of the table are visible for each view
-  @Input() private view : number;
-
+  @Input() private currentDate: Date;
+  @Input() private showDate: boolean = false;
+  @Input() private showCourse: boolean = false;
+  @Input() private showAskedBy: boolean = false;
+  @Input() private showTags: boolean = false;
+  @Input() private showTimeInQueue: boolean = false;
+  @Input() private showAnswer: boolean = true;
+  @Input() private showAction: boolean = true;
+  @Input() private showAnswerButton: boolean = false;
+  @Input() private showEditButton: boolean = false;
+  @Input() private showClaimButton: boolean = false;
+  @Input() private showAssignModal: boolean = false;
+  @Input() private showFAQButton: boolean = false;
+  @Input() private showDeleteButton: boolean = false;
+  @Input() private showMeTooButton: boolean = false;
 
   constructor() { }
 
@@ -68,5 +79,9 @@ export class QuestionListComponent implements OnInit {
     if (regEx.test(fullDate)) return true;
 
     return false;
+  }
+
+  private timeDiff(question: Question) : string{
+    return this.timeDifference = moment(question.date).fromNow();
   }
 }
