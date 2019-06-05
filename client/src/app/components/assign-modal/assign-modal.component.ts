@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
@@ -24,16 +24,16 @@ export class AssignModalComponent implements OnInit {
 
   }
 
-  findUsers (value$ : Observable<string>) {
-      return value$.pipe(
-           debounceTime(200),
-           distinctUntilChanged(),
-           mergeMap(searchTerm => this.userService.findUserByEmail(searchTerm, this.currentQuestion))
-         );
-  }
+  findUsers (value$ : Observable<string>){
+  		return value$.pipe(
+  			debounceTime(200),
+  			distinctUntilChanged(),
+  			mergeMap(searchTerm => searchTerm.length < 2 ? of([]) : this.userService.findUserByEmail(searchTerm,this.currentQuestion))
+  		);
+    }
 
   formatUserForTypeAhead (user : User) : string {
-		if (user.FullName === "") {
+		if (user.id=== undefined || user.FullName === "") {
 			return "";
 		}
 
@@ -51,10 +51,9 @@ export class AssignModalComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
     console.log("Testing Modal");
-
   }
 
-  assignSelectedUser(user: User){
+  assignSelectedUser(){
     this.questionService.assignQuestion(this.selectedUser, this.currentQuestion).subscribe();
   }
 

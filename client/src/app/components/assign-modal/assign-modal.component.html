@@ -10,13 +10,13 @@
   <div class="modal-body">
     <label>Search</label>
 
-    <form (submit)="assignUser()" #thisForm="ngForm">
+    <form  #thisForm="ngForm">
       <div class="form-group row no-gutters">
         <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
-        <input type="email" name="emailAddress" [ngbTypeahead]="findUsers.bind(this)"
+        <input type="email" name="emailAddress" placeholder="Email Address" [ngbTypeahead]="findUsers.bind(this)"
         [resultFormatter]="formatUserForTypeAhead"
         [inputFormatter]="formatUserForTypeAhead"
-        [(ngModel)]="selectedUser" placeholder="Email Address"
+        [(ngModel)]="selectedUser"
         class="form-control col-md-6" email required>
       </div>
 

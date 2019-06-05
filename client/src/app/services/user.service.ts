@@ -50,7 +50,7 @@ export class UserService {
 			// bill.FirstName = "Bill";
 			// bill.LastName = "Gates";
 			// bill.EmailAddress = "billg@microsoft.com";
-      let url: string = `lab_sessions/${question.session.id}`;
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}`;
       return this.httpClient.get(url).pipe(
         map(r => this.createUserArray(r["included"]))
         // catchError(this.handleError<User[]>(`retrieving users`))
@@ -71,7 +71,6 @@ export class UserService {
       users.push(this.buildCreateUserFromJson(object));
 
     }
-    debugger
     return users;
   }
 

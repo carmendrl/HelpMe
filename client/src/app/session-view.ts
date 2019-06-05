@@ -20,7 +20,7 @@ export abstract class SessionView  {
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
     );
-    this.refreshData();
+    //this.refreshData();
   }
 
   //want to make this abstract method but must make this an abstract createNewLabSession
