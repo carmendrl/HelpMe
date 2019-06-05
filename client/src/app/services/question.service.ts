@@ -182,7 +182,7 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, session: string) : Observable<Question>{
+      askQuestion(text:string, session: string, step: number) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
         debugger
         let body = {

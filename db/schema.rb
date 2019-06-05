@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 20190605110400) do
     t.uuid "claimed_by_id"
     t.string "status", default: "pending", null: false
     t.boolean "faq", default: false, null: false
-    t.boolean "step", default: false, null: false
+    t.integer "step"
   end
 
   create_table "questions_tags", id: false, force: :cascade do |t|
