@@ -14,6 +14,7 @@ export class Question extends Entity{
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
+    this._otherAskers = Array<User>();
   }
 
   get date() : Date {
