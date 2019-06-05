@@ -1,22 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { QuestionService } from '../../services/question.service';
-import { Question } from '../../models/question.model';
+import { QuestionService } from '../services/question.service';
+import { Question } from '../models/question.model';
 import { Observable } from 'rxjs/Observable';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import { Answer } from '../../models/answer.model';
-
-
+import { Answer } from '../models/answer.model';
 
 @Component({
-  selector: 'app-answer-button',
-  templateUrl: './answer-button.component.html',
-  styleUrls: ['./answer-button.component.scss']
+  selector: 'app-edit-button',
+  templateUrl: './edit-button.component.html',
+  styleUrls: ['./edit-button.component.scss']
 })
-export class AnswerButtonComponent implements OnInit {
+export class EditButtonComponent implements OnInit {
   @Input() private currentQuestion : Question;
-    closeResult: string;
-    saved : boolean = false;
-    text : string;
+  closeResult: string;
+  saved : boolean = false;
+  text : string;
 
   constructor(private questionService: QuestionService, private modalService: NgbModal) { }
 
@@ -25,11 +23,11 @@ export class AnswerButtonComponent implements OnInit {
 
   open(content){
     debugger
-    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer'}).result.then((result) => {
+    let modal = this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-edit-answer'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    });debugger
   }
 
   private getDismissReason(reason: any): string {
@@ -42,10 +40,10 @@ export class AnswerButtonComponent implements OnInit {
     }
   }
 
-  createAnswerFromForm(){
+  editAnswerFromForm(){
     debugger
     this.saved = true;
-    this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe();
+    this.questionService.editAnAnswer(this.currentQuestion, this.text).subscribe();
+    debugger
   }
-
 }

@@ -35,6 +35,7 @@ import { ClaimButtonComponent } from './components/claim-button/claim-button.com
 import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
 import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
+import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 const Server = '/api';
 
 @NgModule({
@@ -60,6 +61,7 @@ const Server = '/api';
     DeleteButtonComponent,
     MeTooButtonComponent,
     AssignModalComponent,
+    AskQuestionComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule

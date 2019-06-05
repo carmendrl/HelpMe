@@ -28,6 +28,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showAnswerButton: boolean = false;
   @Input() private showEditButton: boolean = false;
   @Input() private showClaimButton: boolean = false;
+  @Input() private showAssignModal: boolean = false;
   @Input() private showFAQButton: boolean = false;
   @Input() private showDeleteButton: boolean = false;
   @Input() private showMeTooButton: boolean = false;
