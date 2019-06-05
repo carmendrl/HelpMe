@@ -33,6 +33,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showDeleteButton: boolean = false;
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
+  @Input() private showNumberOfAskers: boolean = false;
 
   constructor() { }
 
@@ -85,4 +86,11 @@ export class QuestionListComponent implements OnInit {
   private timeDiff(question: Question) : string{
     return this.timeDifference = moment(question.date).fromNow();
   }
+
+  // gravatarImageUrl() : string {
+  //     //debugger
+  //
+  //
+  //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+  // }
 }

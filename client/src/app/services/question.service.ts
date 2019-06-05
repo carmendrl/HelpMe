@@ -173,12 +173,12 @@ export class QuestionService {
       );
     }
 
-      addMeToo(question: Question, meToo: boolean) : Observable<Question>{
+      addMeToo(question: Question, meToo: boolean, user: User) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => {question.meToo = meToo; return question;}),
+          map(r => {question.meToo = meToo; question.otherAskers.push(user); debugger; return question;}),
           tap(r => this.updatedQuestion$.next(r)),
-          catchError(this.handleError<Question>(`meToo status changed=${question.answer.id}`))
+          catchError(this.handleError<Question>(`meToo status changed=${question.id}`))
         );
       }
 
