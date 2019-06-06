@@ -15,6 +15,7 @@
       <div class="form-group">
         Answer:
         <!-- <input type="text" class="form-control" name="text" [(ngModel)]="currentQuestion.answer.text" required><br> -->
+        <!-- <quill-editor format="html" name="editAnswer" [(ngModel)]="currentQuestion.answer.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor> -->
         <quill-editor name="editAnswer" [(ngModel)]="currentQuestion.answer.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
 
       </div>
