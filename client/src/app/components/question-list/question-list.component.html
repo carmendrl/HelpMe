@@ -34,8 +34,8 @@ are input into this model from the student dashboard, student view, and faculty 
         <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
         <td><div *ngIf="showStep">{{question.step}}</div></td>
         <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
-        <td><div *ngIf="showNumberOfAskers">{{question.otherAskers.length}}</div></td>
-        <td><i [ngClass]="question.otherAskers.length>2 ? 'popular' : 'notPopular'" [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : ''"></i> {{question.text}}</td>
+        <td><div *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'popular' : 'notPopular'" [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : ''"></i></div></td>
+        <td> {{question.text}}</td>
         <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
         <td><div *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
