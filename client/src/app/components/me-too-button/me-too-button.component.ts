@@ -19,8 +19,7 @@ export class MeTooButtonComponent implements OnInit {
 
   ngOnInit() {
     this.userService.CurrentUser$.subscribe(
-      u => this.currentUser = u
-    );
+      u => this.currentUser = u);
   }
 
   addMeToo(){
