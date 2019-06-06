@@ -53,7 +53,7 @@ export abstract class SessionView  {
   }
 
   showNotification(){
-    debugger
+    //debugger
     this.notifier.notify( 'info', 'New answer posted!' );
   }
 
