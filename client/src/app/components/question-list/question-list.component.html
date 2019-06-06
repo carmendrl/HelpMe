@@ -2,7 +2,9 @@
 are input into this model from the student dashboard, student view, and faculty view.
 -->
 
-
+<!-- <head>
+  <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+</head> -->
 <form class="form-inline">
   <label for="SearchMyQuestions">Search</label>
   <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
@@ -31,9 +33,9 @@ are input into this model from the student dashboard, student view, and faculty 
         <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
         <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
         <td><div *ngIf="showStep">{{question.step}}</div></td>
-        <td><div *ngIf="showNumberOfAskers && question.otherAskers.length<=2">{{question.otherAskers.length}}</div></td>
-        <td><div *ngIf="showNumberOfAskers && question.otherAskers.length>2" class="popular"><i class="far fa-grimace"></i>{{question.otherAskers.length}}</div></td>
-        <td>{{question.text}}</td>
+        <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
+        <td><div *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></div></td>
+        <td> {{question.text}}</td>
         <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
         <td><div *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
