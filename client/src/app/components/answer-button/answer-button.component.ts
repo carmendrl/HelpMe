@@ -17,6 +17,8 @@ export class AnswerButtonComponent implements OnInit {
     closeResult: string;
     saved : boolean = false;
     text : string;
+    blured = false;
+    focused = false;
 
   constructor(private questionService: QuestionService, private modalService: NgbModal) { }
 
@@ -48,4 +50,22 @@ export class AnswerButtonComponent implements OnInit {
     this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe();
   }
 
+    created(event) {
+      // tslint:disable-next-line:no-console
+      console.log(event)
+    }
+
+    focus($event) {
+      // tslint:disable-next-line:no-console
+      console.log('focus', $event)
+      this.focused = true
+      this.blured = false
+    }
+
+    blur($event) {
+      // tslint:disable-next-line:no-console
+      console.log('blur', $event)
+      this.focused = false
+      this.blured = true
+    }
 }

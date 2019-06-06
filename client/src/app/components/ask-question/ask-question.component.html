@@ -13,7 +13,7 @@
       <label>Step/ Question #</label>
       <input name="step" type="number" id="step" class="form-control" [(ngModel)]="step"/><br>
       <label>Your Question</label>
-      <textarea name="questionMessage" rows="5" id="questionText" class="form-control" [(ngModel)]="questionMessage"></textarea><br>
+       <quill-editor  format="text" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
       <label>Tags  </label>
         <!-- list all the current tags and allow then to be removed individually-->
         <div class="form-inline">

@@ -15,19 +15,22 @@ export class EditButtonComponent implements OnInit {
   @Input() private currentQuestion : Question;
   closeResult: string;
   saved : boolean = false;
+  blured = false;
+  focused = false;
 
-  constructor(private questionService: QuestionService, private modalService: NgbModal) { }
+  constructor(private questionService: QuestionService, private modalService: NgbModal) {
+  }
 
   ngOnInit() {
   }
 
   open(content){
-    debugger
+    //debugger
     let modal = this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-edit-answer'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });debugger
+    });//debugger
   }
 
   private getDismissReason(reason: any): string {
@@ -44,6 +47,25 @@ export class EditButtonComponent implements OnInit {
     debugger
     this.saved = true;
     this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text).subscribe();
-    debugger
+    //debugger
+  }
+
+  created(event) {
+    // tslint:disable-next-line:no-console
+    console.log(event)
+  }
+
+  focus($event) {
+    // tslint:disable-next-line:no-console
+    console.log('focus', $event)
+    this.focused = true
+    this.blured = false
+  }
+
+  blur($event) {
+    // tslint:disable-next-line:no-console
+    console.log('blur', $event)
+    this.focused = false
+    this.blured = true
   }
 }

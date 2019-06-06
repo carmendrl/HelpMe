@@ -14,7 +14,7 @@
     <form class="needs-validation" novalidate>
       <div class="form-group">
         Answer:
-        <input type="text" class="form-control" name="text" [(ngModel)]="this.text" required><br>
+        <quill-editor  format="text" name="editAnswer"[(ngModel)]="this.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
