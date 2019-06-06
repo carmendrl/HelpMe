@@ -18,8 +18,9 @@
     <div ngbDropdownMenu>
       <button class="dropdown-item">Edit Profile</button>
       <button class="dropdown-item" (click)="logout()">Log out</button>
-			<a class="dropdown-item" *ngIf="user.Type !== 'student'" [routerLink]="['/users/promote']">Make a user a prof</a>
+			<a class="dropdown-item" *ngIf="user.Type !== 'students'" [routerLink]="['/users/promote']">Make a user a prof</a>
     </div>
   </div>
+
 
 </div>
