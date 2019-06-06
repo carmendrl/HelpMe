@@ -25,6 +25,7 @@ export abstract class SessionView  {
     this.sessionId = this.route.snapshot.paramMap.get('id');
     this.refreshData();
     this.notifier = notifierService;
+  //  this.showNotification();
   }
 
   //want to make this abstract method but must make this an abstract createNewLabSession
@@ -33,7 +34,8 @@ export abstract class SessionView  {
   abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
 
   private refreshData(){
-    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {this.data = data; this.sortQuestions(this.data); this.subscribeToData();
+    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {this.data = data; this.sortQuestions(this.data);
+      this.subscribeToData();this.showNotification();
     });
   }
 
@@ -51,6 +53,7 @@ export abstract class SessionView  {
   }
 
   showNotification(){
+    debugger
     this.notifier.notify( 'info', 'New answer posted!' );
   }
 
