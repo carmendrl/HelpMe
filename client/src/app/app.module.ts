@@ -37,6 +37,7 @@ import { MeTooButtonComponent } from './components/me-too-button/me-too-button.c
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 import { NotifierModule } from 'angular-notifier';
+import { QuillModule } from 'ngx-quill';
 const Server = '/api';
 
 @NgModule({
@@ -65,7 +66,7 @@ const Server = '/api';
     AskQuestionComponent,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule //Might need to add the custom options later,
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule, QuillModule //Might need to add the custom options later,
   ],
   providers: [
     UserService,

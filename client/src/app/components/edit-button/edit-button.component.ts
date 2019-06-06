@@ -15,8 +15,11 @@ export class EditButtonComponent implements OnInit {
   @Input() private currentQuestion : Question;
   closeResult: string;
   saved : boolean = false;
+  blured = false;
+  focused = false;
 
-  constructor(private questionService: QuestionService, private modalService: NgbModal) { }
+  constructor(private questionService: QuestionService, private modalService: NgbModal) {
+  }
 
   ngOnInit() {
   }
@@ -45,5 +48,24 @@ export class EditButtonComponent implements OnInit {
     this.saved = true;
     this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text).subscribe();
     debugger
+  }
+
+  created(event) {
+    // tslint:disable-next-line:no-console
+    console.log(event)
+  }
+
+  focus($event) {
+    // tslint:disable-next-line:no-console
+    console.log('focus', $event)
+    this.focused = true
+    this.blured = false
+  }
+
+  blur($event) {
+    // tslint:disable-next-line:no-console
+    console.log('blur', $event)
+    this.focused = false
+    this.blured = true
   }
 }
