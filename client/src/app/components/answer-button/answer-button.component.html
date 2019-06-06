@@ -1,1 +1,25 @@
-<span (click)="addAnswer()" class="btn btn-primary actionSpace">Add Answer</span>
+<!-- ADD AN ANSWER -->
+<span (click)="open(content)" class="btn btn-primary actionSpace">Add Answer</span>
+
+<!-- modal -->
+<ng-template #content let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- form -->
+    <form class="needs-validation" novalidate>
+      <div class="form-group">
+        Answer:
+        <quill-editor  format="text" name="editAnswer"[(ngModel)]="this.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
+      </div>
+    </form>
+
+  </div>
+</ng-template>
