@@ -37,6 +37,16 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
       }
 
+      checkNotification(data : any){
+        // for (let q of this.myQs){
+        //   if(q.id === data.id){
+        //     if(q.answer != undefined){
+        //       this.notifier.notify('info', 'Your question has been answered!');
+        //     }
+        //   }
+        // }
+      }
+
       sortQuestions(questions: Question[]){
         this.currentDate=new Date();
         //clears the array

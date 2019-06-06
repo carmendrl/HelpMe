@@ -36,8 +36,49 @@ import { DeleteButtonComponent } from './components/delete-button/delete-button.
 import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
-import { NotifierModule } from 'angular-notifier';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
 const Server = '/api';
+//Custom angular notifier options
+const customNotifierOptions: NotifierOptions = {
+  position: {
+		horizontal: {
+			position: 'left',
+			distance: 12
+		},
+		vertical: {
+			position: 'bottom',
+			distance: 12,
+			gap: 10
+		}
+	},
+  theme: 'material',
+  behaviour: {
+    autoHide: 5000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease'
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease'
+    },
+    overlap: 150
+  }
+};
 
 @NgModule({
   declarations: [
@@ -65,47 +106,7 @@ const Server = '/api';
     AskQuestionComponent,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule.withConfig({
-      //custom notifier config
-      position: {
-        horizontal: {
-          position: 'left',
-          distance: 12
-        },
-        vertical: {
-          position: 'bottom',
-          distance: 12,
-          gap: 10
-        }
-      },
-      theme: 'material',
-      behaviour: {
-        autoHide: 5000,
-        onClick: false,
-        onMouseover: 'pauseAutoHide',
-        showDismissButton: true,
-        stacking: 4
-      },
-      animations: {
-        enabled: true,
-        show: {
-          preset: 'slide',
-          speed: 300,
-          easing: 'ease'
-        },
-        hide: {
-          preset: 'fade',
-          speed: 300,
-          easing: 'ease',
-          offset: 50
-        },
-        shift: {
-          speed: 300,
-          easing: 'ease'
-        },
-        overlap: 150
-      }
-   }) //Might need to change later,
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions),
   ],
 
   providers: [
