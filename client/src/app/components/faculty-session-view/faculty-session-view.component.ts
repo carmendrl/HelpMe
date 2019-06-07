@@ -41,16 +41,17 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       checkNotification(datas : Question[]){
         for (let data of datas){
-          for (let q of this.unclaimedQs){
+          if(this.data){
+          for (let q of this.data){
             if (q.id === data.id){
-              if (q.claimedBy != this.user){
-                if (data.claimedBy === this.user){
+              if (q.claimedBy.id!= this.user.id){
+                if (data.claimedBy.id === this.user.id){
                   this.notifier.notify('info', 'You have been assigned a question!');
                 }
               }
             }
           }
-        }
+        }}
       if (this.data && datas.length > this.data.length){
         this.notifier.notify('info', 'A new question has been posted!');
       }
@@ -80,7 +81,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             //as a part of the question model
             //right now assuming that quesstions would have the the id of the user that
             //claimed/got assigned the question and would be compared to the current user's id.
-            else if(question.claimedBy != undefined){
+            else if(question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
               }
