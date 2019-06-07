@@ -11,13 +11,13 @@ import { NotifierService } from 'angular-notifier';
 export abstract class SessionView  {
   questions: Question[];
   currentUser: User;
-  private data : any;
+  protected data : any;
   private questionSubscription : Subscription;
   private timerSubscription : Subscription;
   sessionId: string;
-  private readonly notifier: NotifierService;
+  protected readonly notifier: NotifierService;
 
-  constructor(private userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, notifierService: NotifierService) {
+  constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
@@ -32,8 +32,13 @@ export abstract class SessionView  {
   //an abstract class
   abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
 
+  abstract checkNotification( data : any );//allows different notifications depending on the specific user
+
   private refreshData(){
-    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {this.data = data; this.sortQuestions(this.data); this.subscribeToData();
+    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {
+      this.checkNotification(data);
+      this.data = data; this.sortQuestions(this.data);
+      this.subscribeToData();
     });
   }
 
@@ -50,8 +55,5 @@ export abstract class SessionView  {
     }
   }
 
-  showNotification(){
-    this.notifier.notify( 'info', 'New answer posted!' );
-  }
 
 }

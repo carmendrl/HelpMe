@@ -21,6 +21,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private otherQs:  Question[];
   private currentQuestion: Question;
   private currentDate: Date;
+  private user: User;
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {
@@ -30,15 +31,34 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.faQs = new Array<Question>();
       this.otherQs = new Array<Question>();
       this.currentDate = new Date();
+      this.userService.CurrentUser$.subscribe(r => this.user = r);
 
     }
 
       ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => {this.sortQuestions(this.questions);});
+        this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
       }
+
+      checkNotification(datas : Question[]){
+        for (let data of datas){
+          for (let q of this.unclaimedQs){
+            if (q.id === data.id){
+              if (q.claimedBy != this.user){
+                if (data.claimedBy === this.user){
+                  this.notifier.notify('info', 'You have been assigned a question!');
+                }
+              }
+            }
+          }
+        }
+      if (this.data && datas.length > this.data.length){
+        this.notifier.notify('info', 'A new question has been posted!');
+      }
+    }
 
 
       sortQuestions(questions: Question[]){
+        this.checkNotification(questions);
         this.currentDate=new Date();
         //clears the array
         this.faQs.length = 0;

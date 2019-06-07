@@ -20,17 +20,22 @@ export class QuestionService {
   private userQuestions : Question[];
   private sessionId : number;
   public updatedQuestion$ : Subject<Question>;
-  //public _newAnswer$ : Subject<Answer>;
+  public newAnswer$ : Subject<Answer>;
 
   constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
     this.apiHost = host;
     this.updatedQuestion$ = new Subject<Question>();
-    //  this._newAnswer$ = new Subject<Answer>();
+    this.newAnswer$ = new Subject<Answer>();
   }
 
   get getUpdatedQuestion$() : Observable<Question> {
     return this.updatedQuestion$;
   }
+
+  get getNewAnswer$() : Observable<Answer> {
+    return this.newAnswer$;
+  }
+
   questionList() : Observable<Question[]> {
     let url :string = `${this.apiHost}/user/questions`;
     return this.httpClient.get(url).pipe(
@@ -174,7 +179,7 @@ export class QuestionService {
         let body = { text: text };
         return this.httpClient.post(url, body).pipe(
           map(r => question.answer = (Answer.createFromJSon(r["data"]))),
-          tap(r => this.updatedQuestion$.next(question)),
+          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r)}),
           catchError(this.handleError<Answer>(`answer created`))
         );
       }
@@ -212,14 +217,15 @@ export class QuestionService {
         );
       }
 
-      assignQuestion(user: User, question: Question): Observable<Question>{
-        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
-        return this.httpClient.post(url, {user_id: user.id}).pipe(
-          map(r => {question.claimedBy = user; return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
-          catchError(this.handleError<Question>(`assigned =${question.id}`))
-        )
-      }
+
+    assignQuestion(user: User, question: Question): Observable<Question>{
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
+      return this.httpClient.post(url, {user_id: user.id}).pipe(
+        map(r => {question.claimedBy = user; return question;}),
+        tap(r => this.updatedQuestion$.next(r)),
+        catchError(this.handleError<Question>(`assigned =${question.id}`))
+      )
+    }
 
       //handles errors
       private handleError<T> (operation = 'operation', result?: T) {
@@ -232,4 +238,5 @@ export class QuestionService {
           return of(result as T);
         };
       }
+
     }

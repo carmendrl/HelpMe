@@ -13,6 +13,8 @@ export class AskQuestionComponent implements OnInit {
   private possibleMatches: Question[] = new Array<Question>();
   private step: number;
   private questionMessage: string;
+  blured = false;
+  focused = false;
   @Input() session: string;
 
   constructor(private modalService: NgbModal, private questionService: QuestionService) { }
@@ -41,4 +43,30 @@ export class AskQuestionComponent implements OnInit {
   createQuestion(){
     this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe();
   }
+
+
+    created(event) {
+      // tslint:disable-next-line:no-console
+      console.log(event)
+    }
+
+    focus($event) {
+      // tslint:disable-next-line:no-console
+      console.log('focus', $event)
+      this.focused = true
+      this.blured = false
+    }
+
+    blur($event) {
+      // tslint:disable-next-line:no-console
+      console.log('blur', $event)
+      this.focused = false
+      this.blured = true
+    }
+
+    reset(){
+      this.step = undefined;
+      this.questionMessage = "";
+
+    }
 }

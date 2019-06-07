@@ -29,6 +29,21 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
+        this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
+      }
+
+      checkNotification(datas : any){
+      for (let data of datas){
+        for (let q of this.myQs){
+          if(q.id === data.id){
+            if(q.answer === undefined){
+              if(data.answer != undefined){
+                this.notifier.notify('info', 'Your question has been answered!');
+                }
+              }
+            }
+          }
+        }
       }
 
       sortQuestions(questions: Question[]){
