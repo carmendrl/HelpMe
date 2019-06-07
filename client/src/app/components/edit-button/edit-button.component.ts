@@ -25,12 +25,11 @@ export class EditButtonComponent implements OnInit {
   }
 
   open(content){
-    //debugger
     let modal = this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-edit-answer'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });//debugger
+    });
   }
 
   private getDismissReason(reason: any): string {
@@ -44,10 +43,8 @@ export class EditButtonComponent implements OnInit {
   }
 
   editAnswerFromForm(){
-    debugger
     this.saved = true;
     this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text).subscribe();
-    //debugger
   }
 
   created(event) {

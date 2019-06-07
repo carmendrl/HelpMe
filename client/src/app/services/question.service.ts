@@ -81,8 +81,19 @@ export class QuestionService {
         }else{
           var claimer: Object = undefined;
         }
+        if (object["relationships"]["askers"] != undefined) {
+          var askers = new Array<Object>();
+          for (let d of object["relationships"]["askers"]["data"]){
+            var a: Object =includedResponse.find(function(element) {
+              return element["id"]=== d["id"];
+            });
+            askers.push(a);
+          }
+        }else{
+          var askers: Object[] = undefined;
+        }
 
-        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer));
+        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers));
       }
 
       return userQuestions;
@@ -90,7 +101,7 @@ export class QuestionService {
 
 
     private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object,
-      aData : Object, askerData:Object, claimerData: Object) : Question{
+      aData : Object, askerData:Object, claimerData: Object, askersData:Object[]) : Question{
 
         let prof = User.createFromJSon(profData);
         let c = Course.createFromJSon(cData);
@@ -109,6 +120,13 @@ export class QuestionService {
         if(claimerData != undefined){
           let claimer = User.createFromJSon(claimerData);
           q.claimedBy = claimer;
+        }
+        if(askersData != undefined){
+          q.otherAskers = new Array<User>();
+          for (let a of askersData){
+            let otherAsker = User.createFromJSon(a);
+            q.otherAskers.push(otherAsker);
+          }
         }
         return q;
 
@@ -166,22 +184,22 @@ export class QuestionService {
         );
       }
 
-    editAnAnswer(question: Question, text: string): Observable<Question>{
-      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
-      let body = {
-        text : text
-      };
-      return this.httpClient.put(url, body).pipe(
-        map(r => {question.answer.text = text; return question;}),
-        tap(r => this.updatedQuestion$.next(r)),
-        catchError(this.handleError<Question>(`answer edited`))
-      );
-    }
+      editAnAnswer(question: Question, text: string): Observable<Question>{
+        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
+        let body = {
+          text : text
+        };
+        return this.httpClient.put(url, body).pipe(
+          map(r => {question.answer.text = text; return question;}),
+          tap(r => this.updatedQuestion$.next(r)),
+          catchError(this.handleError<Question>(`answer edited`))
+        );
+      }
 
       addMeToo(question: Question, meToo: boolean, user: User) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => {question.meToo = meToo; question.otherAskers.push(user); debugger; return question;}),
+          map(r => {question.meToo = meToo; question.otherAskers.push(user); return question;}),
           tap(r => this.updatedQuestion$.next(r)),
           catchError(this.handleError<Question>(`meToo status changed=${question.id}`))
         );
@@ -189,7 +207,6 @@ export class QuestionService {
 
       askQuestion(text:string, session: string, step: number) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
-        debugger
         let body = {
           text : text,
           step: step

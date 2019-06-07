@@ -56,14 +56,21 @@ are input into this model from the student dashboard, student view, and faculty 
 
         </div></td>
         <td><div *ngIf="showAction" class="d-block d-lg-none">
-          <select>
-          <option *ngIf="showAnswerButton && question.answer === undefined" value="app-answer-button" ><app-answer-button [currentQuestion]="question"></app-answer-button></option>
-          <option *ngIf="showEditButton && question.answer != undefined" value="app-edit-button"><app-edit-button *ngIf="showEditButton && question.answer != undefined " [currentQuestion]="question"></app-edit-button></option>
-          <option *ngIf="showClaimButton"><app-claim-button [currentQuestion]="question" value="app-claim-button"></app-claim-button></option>
-          <option *ngIf="showFAQButton"><app-faq-button [faqStatus]= "question.faq" [currentQuestion]="question" value="app-faq-button"></app-faq-button></option>
-          <option *ngIf="showDeleteButton"><app-delete-button [currentQuestion]="question" value="app-delete-button"></app-delete-button></option>
-          <option *ngIf="showMeTooButton"><app-me-too-button [currentQuestion]="question"value="app-me-too-button"></app-me-too-button></option>
+          <form #thisForm (ngSubmit)="performAction(question)">
+            <div class="form-group">
+          <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+          <option *ngIf="showAnswerButton && question.answer === undefined" value="answer"><app-answer-button [currentQuestion]="question"></app-answer-button></option>
+          <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+          <option *ngIf="showClaimButton" value="claim">Claim</option>
+          <option *ngIf="showAssignModal" value="assign">Assign</option>
+          <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+          <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+          <option *ngIf="showDeleteButton" value="delete">Delete</option>
+          <option *ngIf="showMeTooButton"value="meToo">Me Too</option>
 </select>
+</div>
+<button type="submit" class ="btn btn-primary">Submit</button>
+</form>
         </div></td>
       </tr>
     </tbody>
@@ -73,3 +80,87 @@ are input into this model from the student dashboard, student view, and faculty 
     <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
   </div>
 </div>
+
+
+<!-- Modals -->
+
+<!-- Edit modal -->
+<ng-template #editContent  let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-edit-answer" aria-labelledBy="modal-edit-answer">Edit an answer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- form -->
+    <form class="needs-validation" novalidate>
+      <div class="form-group">
+        Answer:
+        <input type="text" class="form-control" name="text" [(ngModel)]="editText" required><br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(); d('Cross click')">Save</button>
+      </div>
+    </form>
+
+  </div>
+</ng-template>
+
+
+<!-- Answer Modal -->
+<ng-template #answerContent let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- form -->
+    <form class="needs-validation" novalidate>
+      <div class="form-group">
+        Answer:
+        <input type="text" class="form-control" name="text" [(ngModel)]="answerText" required><br>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
+      </div>
+    </form>
+
+  </div>
+</ng-template>
+
+
+
+
+<!--assign modal-->
+<ng-template #assignContent let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <label>Search</label>
+
+    <form  #thisForm="ngForm">
+      <div class="form-group row no-gutters">
+        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+        <input type="email" name="emailAddress" placeholder="Email Address" [ngbTypeahead]="findUsers.bind(this)"
+        [resultFormatter]="formatUserForTypeAhead"
+        [inputFormatter]="formatUserForTypeAhead"
+        [(ngModel)]="selectedUser"
+        class="form-control col-md-6" email required>
+      </div>
+
+      <button type="submit"
+      [disabled]="submitShouldBeDisabled()"
+      class="btn btn-primary" (click)="assignSelectedUser();d('Cross click');thisForm.reset();">Assign User</button>
+
+    </form>
+  </div>
+</ng-template>
+
+<p #trialContent>This is trial content</p>

@@ -18,6 +18,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private faQs: Question[];
   private myQs: Question[];
   private allOtherQs:  Question[];
+  private isMeTooUser: boolean;
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {
@@ -52,16 +53,20 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.allOtherQs.length = 0;
 
         for (let question of questions){
+
+          this.isMeTooUser=false;
+          for (let a of question.otherAskers){
+            if(a.id === this.currentUser.id){
+              this.isMeTooUser = true;
+            }
+          }
+
           if(question.id != undefined){
-            //faq of question is assumed to be a boolean
-            if (question.faq){//questions.faq){
+            if (question.faq){
               this.faQs.push(question);
             }
-            //how this is implemented this depends on how the assinged/claimed/pending variables look
-            //as a part of the question model
-            //right now assuming that queestions would have the the id of the user that
-            //asked the question and would be compared to the current user's id.
-            else if(question.asker.id === this.currentUser.id){ //assinged or claimed by me
+
+            else if(this.isMeTooUser){ //assinged or claimed by me
               this.myQs.push(question);
             }
             else{
@@ -70,12 +75,5 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
         }
       }
-
-      meToo(question: Question) : void {
-        this.myQs.push(question);
-      }
-
-
-
 
     }

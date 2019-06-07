@@ -26,7 +26,6 @@ export class AnswerButtonComponent implements OnInit {
   }
 
   open(content){
-    debugger
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -45,7 +44,6 @@ export class AnswerButtonComponent implements OnInit {
   }
 
   createAnswerFromForm(){
-    debugger
     this.saved = true;
     this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe();
   }

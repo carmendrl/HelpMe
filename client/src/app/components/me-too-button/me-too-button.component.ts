@@ -19,13 +19,13 @@ export class MeTooButtonComponent implements OnInit {
 
   ngOnInit() {
     this.userService.CurrentUser$.subscribe(
-      u => this.currentUser = u
-    );
+      u => this.currentUser = u);
   }
 
   addMeToo(){
     this.questionService.addMeToo(this.currentQuestion, true, this.currentUser).subscribe();
   }
+  //curently unused function (as no button appears for a user to unmetoo a question)
   removeMeToo(){
     this.questionService.addMeToo(this.currentQuestion, false, this.currentUser).subscribe();
   }

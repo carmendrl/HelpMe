@@ -163,8 +163,11 @@ static createFromJSon(o:Object){
   if(o["relationships"]["claimed_by"]!= undefined){
     question.claimedBy = o["relationships"]["claimed_by"]["data"];
   }
-  if(o["relationships"]["asked_by"] != undefined){
-    question.otherAskers = o["relationships"]["asked_by"]["data"];
+  if(o["relationships"]["askers"] != undefined){
+    let askers: User[]  = o["relationships"]["askers"]["data"];
+    for (let a of askers){
+      question.otherAskers.push(a)
+    }
   }
   question.step = o["attributes"]["step"];
   return question;
