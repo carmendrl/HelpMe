@@ -3,7 +3,7 @@
 <ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-ask-question" aria-labelledBy="modal-ask-question">Ask a Question</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');this.reset();">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -11,15 +11,15 @@
 
     <form  #thisForm="ngForm">
       <label>Step/ Question #</label>
-      <input name="step" type="number" id="step" class="form-control" [(ngModel)]="step"/><br>
+      <input name="step" type="number" id="step" class="form-control" [(ngModel)]="step" required><br>
       <label>Your Question</label>
-       <quill-editor  format="text" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
+       <quill-editor  format="text" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor>
       <label>Tags  </label>
         <!-- list all the current tags and allow then to be removed individually-->
         <div class="form-inline">
       <input type="text" id="tags" class="form-control"/><br>
       <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br>
-      <button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');thisForm.reset();">Submit Question</button>
+      <button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
       <button type="button" class="btn btn-primary actionSpace">Cancel</button>
     </form>
     <section>

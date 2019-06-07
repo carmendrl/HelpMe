@@ -63,4 +63,10 @@ export class AskQuestionComponent implements OnInit {
       this.focused = false
       this.blured = true
     }
+
+    reset(){
+      this.step = undefined;
+      this.questionMessage = "";
+
+    }
 }
