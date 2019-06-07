@@ -23,7 +23,7 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if @question.askers.count == 1 # The only person is the current user
+    if current_user.professor? || @question.askers.count == 1 # The only person is the current user
       @question.destroy!
       head :no_content, status: 204
     else
