@@ -1,5 +1,7 @@
 import { CreateCourse } from './createCourse.po';
 import { browser } from 'protractor';
+import { StartSessionComponent } from './components/start-session.component';
+import { CreateCourseFormComponent } from './components/create-course-component.component'
 
 describe('create course modal opens', function () {
   let page: CreateCourse;
