@@ -103,7 +103,7 @@ export class StartSessionComponent implements OnInit {
 
     copySessionLink(){
       let selBox = this.document.createElement('textarea');
-      let url ="www.YouDidIT....."+this.newSession.id+".....com";
+      let url =`localhost:4200/lab_sessions/${this.newSession.id}`;
       selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
       this.document.body.appendChild(selBox);
       selBox.focus();
