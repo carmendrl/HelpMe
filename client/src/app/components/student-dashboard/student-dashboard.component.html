@@ -4,11 +4,15 @@
 
 <section>
   <h2>Join a session</h2><br>
-  <form class="form-inline">
-    <label>Enter a Session Code:</label>
-    <input type="text" class="form-control ml-2" id="joinSession" name="token" [(ngModel)]="this.token">
-    <button class="btn btn-primary form-control ml-1" (click)="joinSess()">Join</button>
+  <form #thisForm="ngForm" (ngSubmit)="joinSess()" class="form-inline">
+    <label>Enter a 6-digit Session Code:</label>
+    <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="joinSession" name="token" [(ngModel)]="token" required>
+    <button type="submit"  [disabled]="!(thisForm.valid)" class="btn btn-primary form-control ml-1">Join</button>
   </form>
+ <br>
+  <div *ngIf="invalidId" class="alert alert-danger">
+    Token is invalid.
+  </div>
 </section>
 
 <section>
@@ -18,5 +22,5 @@
 
 <section>
   <h2>My Questions</h2>
-  <app-question-list [view]= "view" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
+  <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
 </section>

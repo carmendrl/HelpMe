@@ -10,10 +10,12 @@ export class Question extends Entity{
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: number) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
+    this._otherAskers = new Array<User>();
+    this._claimedBy = new User();
   }
 
   get date() : Date {
@@ -141,22 +143,33 @@ export class Question extends Entity{
     this._status = status;
   }
 
+  get step() : number{
+    return this._step;
+  }
+
+  set step(step : number){
+    this._step = step;
+  }
+
 static createFromJSon(o:Object){
   let question = new Question();
 
   question.date = o["attributes"]["created_at"];
-  question.text =o["attributes"]["text"];
-  question.id= o["id"];
-  question.faq= o["attributes"]["faq"];
+  question.text = o["attributes"]["text"];
+  question.id = o["id"];
+  question.faq = o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
-  question.asker=o["relationships"]["original_asker"]["data"];
+  question.asker = o["relationships"]["original_asker"]["data"];
   if(o["relationships"]["claimed_by"]!= undefined){
-    question.claimedBy=o["relationships"]["claimed_by"]["data"];
+    question.claimedBy = o["relationships"]["claimed_by"]["data"];
   }
-  if(o["relationships"]["asked_by"] != undefined){
-    question.otherAskers=o["relationships"]["asked_by"]["data"];
+  if(o["relationships"]["askers"] != undefined){
+    let askers: User[]  = o["relationships"]["askers"]["data"];
+    for (let a of askers){
+      question.otherAskers.push(a)
+    }
   }
-
+  question.step = o["attributes"]["step"];
   return question;
 
 }

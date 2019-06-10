@@ -37,7 +37,7 @@
       <input type="password" name="confirmpassword" [(ngModel)]="confirmPassword" placeholder="Confirm password" class="form-control col-md-6" required>
     </div>
 
-    <div *ngIf="newUser.Password !== confirmPassword" class="alert alert-danger">
+    <div *ngIf="newUser.Password !== confirmPassword && confirmPassword.length > 0" class="alert alert-danger">
       Passwords do not match
     </div>
 

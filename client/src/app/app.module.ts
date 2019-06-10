@@ -6,7 +6,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { API_SERVER } from './app.config';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { ModelFactoryService } from './services/model-factory.service';
@@ -28,15 +28,55 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
-import { AnswerButtonComponent } from './components/answer-button/answer-button.component';
-import { EditButtonComponent } from './components/edit-button/edit-button.component';
-import { FaqButtonComponent } from './components/faq-button/faq-button.component';
-import { ClaimButtonComponent } from './components/claim-button/claim-button.component';
-import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
-import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
+import { AnswerModalComponent } from './components/answer-modal/answer-modal.component';
+import { EditModalComponent } from './components/edit-modal/edit-modal.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
 import { UserManagementModule } from "./user-management/user-management.module";
+import { AskQuestionComponent } from './components/ask-question/ask-question.component';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { QuillModule } from 'ngx-quill';
 const Server = '/api';
+//Custom angular notifier options
+const customNotifierOptions: NotifierOptions = {
+  position: {
+		horizontal: {
+			position: 'left',
+			distance: 12
+		},
+		vertical: {
+			position: 'bottom',
+			distance: 12,
+			gap: 10
+		}
+	},
+  theme: 'material',
+  behaviour: {
+    autoHide: 5000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease'
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease'
+    },
+    overlap: 150
+  }
+};
 
 @NgModule({
   declarations: [
@@ -54,24 +94,21 @@ const Server = '/api';
     SessionViewComponent,
     StudentSessionViewComponent,
     FacultySessionViewComponent,
-    AnswerButtonComponent,
-    EditButtonComponent,
-    FaqButtonComponent,
-    ClaimButtonComponent,
-    DeleteButtonComponent,
-    MeTooButtonComponent,
+    AnswerModalComponent,
+    EditModalComponent,
     AssignModalComponent,
 
-  ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule
   ],
+
   providers: [
     UserService,
     LabSessionService,
     QuestionService,
     CourseService,
     ModelFactoryService,
+    NgbActiveModal,
     {
       provide: HTTP_INTERCEPTORS, useClass: AddAuthorizationInterceptorService, multi: true
     },
@@ -82,6 +119,7 @@ const Server = '/api';
 	exports: [
 		LoginComponent
 	],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent]
 })
 export class AppModule { }

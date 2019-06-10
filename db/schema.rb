@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20190604080000) do
   enable_extension "pgcrypto"
 
   create_table "answers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "text", default: ""
+    t.text "text", default: ""
     t.uuid "answerer_id"
     t.uuid "question_id"
     t.datetime "created_at", null: false
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20190604080000) do
     t.uuid "claimed_by_id"
     t.string "status", default: "pending", null: false
     t.boolean "faq", default: false, null: false
+    t.string "step"
   end
 
   create_table "questions_tags", id: false, force: :cascade do |t|

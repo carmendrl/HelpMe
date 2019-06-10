@@ -13,6 +13,7 @@ import { timer, from} from 'rxjs';
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
 import { PromotionRequest } from '../user-management/models/promotion-request.model';
+import { Question } from '../models/question.model';
 
 export class PromoteUserResponse {
 	constructor (private _success : boolean, private _errorMessages? : string[]) {
@@ -53,6 +54,54 @@ export class UserService {
   get CurrentUser$() : Observable<User> {
     return this._currentUser$;
   }
+
+  findUserByEmail (email : string, question: Question) : Observable<User[]> {
+			// let me = new User();
+			// me.FirstName = 'Ryan';
+			// me.LastName = 'McFall';
+			// me.EmailAddress = "mcfall@hope.edu";
+			// me.id = "1234-abcd";
+      //
+			// let chuck = new User();
+			// chuck.FirstName = 'Charles';
+			// chuck.LastName = 'Cusack';
+			// chuck.EmailAddress = 'cusack@hope.edu';
+			// chuck.id = "5678-efgh";
+      //
+			// let bill = new User();
+			// bill.id = "02d67be7-6999-4eb7-b216-ca1163d8f70c"
+			// bill.FirstName = "Bill";
+			// bill.LastName = "Gates";
+			// bill.EmailAddress = "billg@microsoft.com";
+      let url: string = `${this.apiHost}/lab_sessions/${question.session.id}`;
+      return this.httpClient.get(url).pipe(
+        map(r => this.createUserArray(r["included"]))
+        // catchError(this.handleError<User[]>(`retrieving users`))
+      );
+
+			// let users = [me, chuck, bill];
+      //
+			// return of(users.filter(element => element.EmailAddress.startsWith(email)));
+			//return of(users);
+	}
+
+  createUserArray(objects:any[]): User[]{
+    let users = new Array<User>();
+
+    //loop through the labsessions and push them onto an array after reformating
+    for(let object of objects){
+
+      users.push(this.buildCreateUserFromJson(object));
+
+    }
+    return users;
+  }
+
+    private buildCreateUserFromJson(s: Object) : User {
+      let user = User.createFromJSon(s);
+
+      return user;
+    }
 
   login (emailAddress : string, password : string) : Observable<boolean> {
     let url : string =`${this.apiHost}/users/sign_in`;

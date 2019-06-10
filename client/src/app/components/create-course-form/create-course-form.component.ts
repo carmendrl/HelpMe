@@ -25,7 +25,6 @@ export class CreateCourseFormComponent implements OnInit {
   }
 
   createNewCourseFromForm(){
-    debugger
     this.saved = true;
     let yearSemester = this.todayYear + this.semester;
     this.courseService.postNewCourse(this.subject, this.number, this.title, yearSemester).subscribe();

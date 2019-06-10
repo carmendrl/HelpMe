@@ -1,3 +1,26 @@
-<p>
-  assign-modal works!
-</p>
+<!--modal-->
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss();thisForm.reset();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <label>Search</label>
+
+    <form  #thisForm="ngForm">
+      <div class="form-group row no-gutters">
+        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+        <input type="email" name="emailAddress" placeholder="Email Address" [ngbTypeahead]="findUsers.bind(this)"
+        [resultFormatter]="formatUserForTypeAhead"
+        [inputFormatter]="formatUserForTypeAhead"
+        [(ngModel)]="selectedUser"
+        class="form-control col-md-6" email required>
+      </div>
+
+      <button type="submit"
+      [disabled]="submitShouldBeDisabled()"
+      class="btn btn-primary" (click)="assignSelectedUser();thisForm.reset();">Assign User</button>
+    </form>
+  </div>
