@@ -14,7 +14,7 @@
         <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm()">Save</button>
       </div>
     </form>
   </div>
