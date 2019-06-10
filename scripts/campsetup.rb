@@ -5,7 +5,8 @@ professor = Professor.create!(
 	:first_name => "Help",
 	:last_name => "Me",
 	:password => "password",
-	:email => "mcfall@hope.edu"
+	:email => "mcfall@hope.edu",
+	:username => "ryanmcfall"
 )
 
 digits = 1..20
@@ -36,7 +37,7 @@ digits.each do |digit|
 	student = Student.create!(
 		:last_name => lookup[digit],
 		:first_name => "Student",
-
+    :username => "student#{digit}",
 		:password => "password",
 		:email => "student#{digit}@hope.edu"
 	)
