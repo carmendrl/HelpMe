@@ -55,7 +55,7 @@ are input into this model from the student dashboard, student view, and faculty 
             <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
             <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
             <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace"></button>
+            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
 
           </div></td>
           <td><div *ngIf="showAction" class="d-block d-lg-none">

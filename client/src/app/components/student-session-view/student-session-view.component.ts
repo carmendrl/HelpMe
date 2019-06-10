@@ -33,12 +33,12 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       }
 
       checkNotification(datas : any){
-      for (let data of datas){
-        for (let q of this.myQs){
-          if(q.id === data.id){
-            if(q.answer === undefined){
-              if(data.answer != undefined){
-                this.notifier.notify('info', 'Your question has been answered!');
+        for (let data of datas){
+          for (let q of this.myQs){
+            if(q.id === data.id){
+              if(q.answer === undefined){
+                if(data.answer != undefined){
+                  this.notifier.notify('info', 'Your question has been answered!');
                 }
               }
             }
@@ -55,19 +55,20 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         for (let question of questions){
 
           this.isMeTooUser=false;
-          for (let a of question.otherAskers){
-            if(a.id === this.currentUser.id){
-              this.isMeTooUser = true;
-            }
-          }
 
           if(question.id != undefined){
-            if (question.faq){
-              this.faQs.push(question);
+            for (let a of question.otherAskers){
+              if(a.id === this.currentUser.id){
+                this.isMeTooUser = true;
+              }
             }
 
-            else if(this.isMeTooUser){ //assinged or claimed by me
+            if(this.isMeTooUser){
+              //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
               this.myQs.push(question);
+            }
+            else if (question.faq){
+              this.faQs.push(question);
             }
             else{
               this.allOtherQs.push(question);
