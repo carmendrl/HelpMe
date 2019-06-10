@@ -1,7 +1,7 @@
 <section>
   <h2>Join a session</h2><br>
   <form #thisForm="ngForm" (ngSubmit)="joinSess()" class="form-inline">
-    <label>Enter a Session Code:</label>
+    <label>Enter a 6-digit Session Code:</label>
     <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="joinSession" name="token" [(ngModel)]="token" required>
     <button type="submit"  [disabled]="!(thisForm.valid)" class="btn btn-primary form-control ml-1">Join</button>
   </form>
