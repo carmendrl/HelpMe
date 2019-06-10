@@ -1,0 +1,20 @@
+<!-- modal -->
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <!-- form -->
+    <form class="needs-validation" novalidate>
+      <div class="form-group">
+        Answer:
+        <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
+      </div>
+    </form>
+  </div>

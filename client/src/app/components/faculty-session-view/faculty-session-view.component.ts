@@ -7,6 +7,7 @@ import { Answer } from '../../models/answer.model';
 import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -19,22 +20,48 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private faQs: Question[];
   private otherQs:  Question[];
   private currentQuestion: Question;
+  private currentDate: Date;
+  private user: User;
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location) {
-      super(userService, questionService, route, location);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
+      super(userService, questionService, route, location, notifierService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();
-      this.otherQs = new Array<Question>(); }
+      this.otherQs = new Array<Question>();
+      this.currentDate = new Date();
+      this.userService.CurrentUser$.subscribe(r => this.user = r);
+
+    }
 
       ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
+        this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
       }
 
+      checkNotification(datas : Question[]){
+        for (let data of datas){
+          if(this.data){
+          for (let q of this.data){
+            if (q.id === data.id){
+              if (q.claimedBy.id!= this.user.id){
+                if (data.claimedBy.id === this.user.id){
+                  this.notifier.notify('info', 'You have been assigned a question!');
+                }
+              }
+            }
+          }
+        }}
+      if (this.data && datas.length > this.data.length){
+        this.notifier.notify('info', 'A new question has been posted!');
+      }
+    }
+
+
       sortQuestions(questions: Question[]){
+        this.checkNotification(questions);
+        this.currentDate=new Date();
         //clears the array
-        debugger
         this.faQs.length = 0;
         this.otherQs.length = 0;
         this.unclaimedQs.length = 0;
@@ -54,7 +81,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             //as a part of the question model
             //right now assuming that quesstions would have the the id of the user that
             //claimed/got assigned the question and would be compared to the current user's id.
-            else if(question.claimedBy != undefined){
+            else if(question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
               }
