@@ -75,6 +75,7 @@ export class QuestionListComponent implements OnInit {
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
+          "getDismissReason":this.getDismissReason,
         }
       }
 
@@ -208,7 +209,7 @@ export class QuestionListComponent implements OnInit {
         modal.result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
-          this.closeResult = `Dismissed`;
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
       }
 
@@ -220,7 +221,7 @@ modal.componentInstance.currentQuestion = question;
         modal.result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
-          this.closeResult = `Dismissed`;  //${this.getDismissReason(reason)}
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;  //${this.getDismissReason(reason)}
         });
         console.log("Testing Modal");
       }
@@ -234,7 +235,7 @@ modal.componentInstance.currentQuestion = question;
           modal.result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`; // ${this.getDismissReason(reason)}
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
       }
 
