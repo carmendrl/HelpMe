@@ -20,14 +20,14 @@ export class LoginComponent implements OnInit {
 
   private failedLogin : boolean;
 
-  private currentUser : User;
+  protected currentUser : User;
 
   private time: number = 0;
 
 
 
 
-  constructor(private userService : UserService, private router : Router) {
+  constructor(public userService : UserService, public router : Router) {
     this.failedLogin = false;
 
     this.currentUser = new User();
