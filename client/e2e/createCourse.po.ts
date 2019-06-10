@@ -27,7 +27,7 @@ export class CreateCourse{
   }
 
   getCreateCourseButton(){
-    return element(by.css('.createCourseButton'));
+    return element(by.css('app-start-session .createCourseButton'));
   }
 
   getOpenModalElement() {
