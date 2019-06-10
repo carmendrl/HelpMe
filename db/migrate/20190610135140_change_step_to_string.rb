@@ -5,4 +5,5 @@ class ChangeStepToString < ActiveRecord::Migration[5.1]
 
   def down
     change_column :questions, :step, :integer
+  end
 end
