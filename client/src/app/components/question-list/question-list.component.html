@@ -1,9 +1,10 @@
-<!-- To determine what elements should be shown when, boolean variables such as "showDate"
+<!-- To determine what elements should be shown, boolean variables such as "showDate"
+(as well as question attributes - like whether or not it has an answer)
 are input into this model from the student dashboard, student view, and faculty view.
 -->
 
 <!-- <head>
-  <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+<link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 <form class="form-inline">
   <label for="SearchMyQuestions">Search</label>
@@ -41,126 +42,44 @@ are input into this model from the student dashboard, student view, and faculty 
           <ul *ngFor = "let t of question.tags" class="noStyle">
             <li>{{t}}</li>
           </ul></div></td>
-        <td><div *ngIf="showTimeInQueue">{{timeDiff(question)}}</div></td>
-        <td><div *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></div></td>
-        <!-- If we change container to fluid,
-         then these class d-*_block may have to changed accordingly-->
-        <td><div *ngIf="showAction" class="d-none d-lg-block d-xl-block">
-          <app-answer-button *ngIf="showAnswerButton && question.answer === undefined" [currentQuestion]="question"></app-answer-button>
-          <app-edit-button *ngIf="showEditButton && question.answer != undefined " [currentQuestion]="question"></app-edit-button>
-          <app-claim-button *ngIf="showClaimButton" [currentQuestion]="question" ></app-claim-button>
-          <app-assign-modal *ngIf="showAssignModal" [currentQuestion]="question"></app-assign-modal>
-          <app-faq-button *ngIf="showFAQButton" [faqStatus]= "question.faq" [currentQuestion]="question"></app-faq-button>
-          <app-delete-button *ngIf="showDeleteButton" [currentQuestion]="question" ></app-delete-button>
-          <app-me-too-button *ngIf="showMeTooButton" [currentQuestion]="question"></app-me-too-button>
+          <td><div *ngIf="showTimeInQueue">{{timeDiff(question)}}</div></td>
+          <td><div *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></div></td>
+          <!-- If we change container to fluid,
+          then these class d-*_block may have to changed accordingly-->
+          <td><div *ngIf="showAction" class="d-none d-lg-block d-xl-block">
 
-        </div></td>
-        <td><div *ngIf="showAction" class="d-block d-lg-none">
-          <form #thisForm (ngSubmit)="performAction(question)">
-            <div class="form-group">
-          <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
-          <option *ngIf="showAnswerButton && question.answer === undefined" value="answer"><app-answer-button [currentQuestion]="question"></app-answer-button></option>
-          <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
-          <option *ngIf="showClaimButton" value="claim">Claim</option>
-          <option *ngIf="showAssignModal" value="assign">Assign</option>
-          <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
-          <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
-          <option *ngIf="showDeleteButton" value="delete">Delete</option>
-          <option *ngIf="showMeTooButton"value="meToo">Me Too</option>
-</select>
-</div>
-<button type="submit" class ="btn btn-primary">Submit</button>
-</form>
-        </div></td>
-      </tr>
-    </tbody>
-  </table>
-  <div *ngIf="filterApplied">
-    {{filteredQuestions.length}} of {{questions.length}} questions displayed
-    <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
+            <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+            <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+            <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+            <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+            <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
+            <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
+            <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace"></button>
+
+          </div></td>
+          <td><div *ngIf="showAction" class="d-block d-lg-none">
+            <form #thisForm (ngSubmit)="performAction(question)">
+              <div class="form-group">
+                <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+                  <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
+                  <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                  <option *ngIf="showClaimButton" value="claim">Claim</option>
+                  <option *ngIf="showAssignButton" value="assign">Assign</option>
+                  <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+                  <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+                  <option *ngIf="showDeleteButton" value="delete">Delete</option>
+                  <option *ngIf="showMeTooButton"value="meToo">Me Too</option>
+                </select>
+              </div>
+              <button type="submit" class ="btn btn-primary">Submit</button>
+            </form>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="filterApplied">
+      {{filteredQuestions.length}} of {{questions.length}} questions displayed
+      <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
+    </div>
   </div>
-</div>
-
-
-<!-- Modals -->
-
-<!-- Edit modal -->
-<ng-template #editContent  let-modal let-d="dismiss" let-c="close">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-edit-answer" aria-labelledBy="modal-edit-answer">Edit an answer</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- form -->
-    <form class="needs-validation" novalidate>
-      <div class="form-group">
-        Answer:
-        <input type="text" class="form-control" name="text" [(ngModel)]="editText" required><br>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(); d('Cross click')">Save</button>
-      </div>
-    </form>
-
-  </div>
-</ng-template>
-
-
-<!-- Answer Modal -->
-<ng-template #answerContent let-modal let-d="dismiss" let-c="close">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <!-- form -->
-    <form class="needs-validation" novalidate>
-      <div class="form-group">
-        Answer:
-        <input type="text" class="form-control" name="text" [(ngModel)]="answerText" required><br>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(); d('Cross click')">Save</button>
-      </div>
-    </form>
-
-  </div>
-</ng-template>
-
-
-
-
-<!--assign modal-->
-<ng-template #assignContent let-modal let-d="dismiss" let-c="close">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <label>Search</label>
-
-    <form  #thisForm="ngForm">
-      <div class="form-group row no-gutters">
-        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
-        <input type="email" name="emailAddress" placeholder="Email Address" [ngbTypeahead]="findUsers.bind(this)"
-        [resultFormatter]="formatUserForTypeAhead"
-        [inputFormatter]="formatUserForTypeAhead"
-        [(ngModel)]="selectedUser"
-        class="form-control col-md-6" email required>
-      </div>
-
-      <button type="submit"
-      [disabled]="submitShouldBeDisabled()"
-      class="btn btn-primary" (click)="assignSelectedUser();d('Cross click');thisForm.reset();">Assign User</button>
-
-    </form>
-  </div>
-</ng-template>
-
-<p #trialContent>This is trial content</p>

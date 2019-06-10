@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { Observable, of } from 'rxjs';
@@ -18,7 +18,7 @@ export class AssignModalComponent implements OnInit {
   closeResult: string;
   private selectedUser : User = new User();
 
-  constructor(private modalService: NgbModal, private userService: UserService, private questionService: QuestionService) { }
+  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal, private userService: UserService, private questionService: QuestionService) { }
 
   ngOnInit() {
 
@@ -44,26 +44,9 @@ export class AssignModalComponent implements OnInit {
   			return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
   	}
 
-  openAssign(content) {
-    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-    console.log("Testing Modal");
-  }
-
   assignSelectedUser(){
-    this.questionService.assignQuestion(this.selectedUser, this.currentQuestion).subscribe();
+    this.questionService.assignQuestion(this.selectedUser, this.currentQuestion).subscribe(r => this.activeModal.close());
   }
 
-    private getDismissReason(reason: any): string {
-      if (reason === ModalDismissReasons.ESC) {
-        return 'by pressing ESC';
-      } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-        return 'by clicking on a backdrop';
-      } else {
-        return  `with: ${reason}`;
-      }
-    }
+
 }
