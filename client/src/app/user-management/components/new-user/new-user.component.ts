@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { User } from '../../../models/user.model';
 import { Router } from '@angular/router';
 
-
 import { UserService } from '../../../services/user.service';
 
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
@@ -13,18 +13,37 @@ import { UserService } from '../../../services/user.service';
 export class NewUserComponent implements OnInit {
 
 	private newUser : User;
-  constructor(private router : Router, private userService : UserService) {
+	private isProfessor : boolean;
+
+	@ViewChild("createprofessor", { static : true})
+	private newProfessorModalContent : ElementRef;
+
+  constructor(private router : Router, private userService : UserService, private modalService : NgbModal) {
 		this.newUser = new User();
+		this.newUser.Type = 'Student';
+		this.isProfessor = false;
 	}
 
   ngOnInit() {
   }
 
 	createNewAccount() : void {
-    this.userService.createAccount(this.newUser).subscribe(
+    this.userService.createAccount(this.newUser, this.isProfessor).subscribe(
       r => {
         if (r) {
-          this.router.navigateByUrl('/dashboard');
+					if (this.isProfessor) {
+						let options : NgbModalOptions = {
+							centered: true
+						}
+
+						this.modalService.open(this.newProfessorModalContent, options).result.then(
+							(result) => this.router.navigateByUrl('/dashboard'),
+							(result) => this.router.navigateByUrl('/')
+						);
+					}
+					else {
+          	this.router.navigateByUrl('/dashboard');
+					}
         }
       }
     );

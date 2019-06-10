@@ -6,9 +6,10 @@ import { UserManageRoutingModule } from './user-management-routing.module';
 import { NewUserComponent } from './components/new-user/new-user.component';
 import { PromoteUserComponent } from './components/promote-user/promote-user.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmPromotionRequestComponent } from './components/confirm-promotion-request/confirm-promotion-request.component';
 
 @NgModule({
-  declarations: [NewUserComponent, PromoteUserComponent],
+  declarations: [NewUserComponent, PromoteUserComponent, ConfirmPromotionRequestComponent],
 	exports: [
 		NewUserComponent
 	],

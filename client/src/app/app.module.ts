@@ -79,6 +79,9 @@ const Server = '/api';
       provide: API_SERVER, useValue: Server
     }
   ],
+	exports: [
+		LoginComponent
+	],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

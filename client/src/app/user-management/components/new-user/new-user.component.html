@@ -41,8 +41,43 @@
       Passwords do not match
     </div>
 
+		<div class="form-group row no-gutters">
+			<div class="form-check col-12">
+  			<input type="checkbox" [(ngModel)]="isProfessor" name="isProfessor" id="isProfessor">
+  			<label class="form-check-label" for="isProfessor">
+    			I am requesting a professor account
+  			</label>
+			</div>
+		</div>
 
     <button type="submit" class="btn btn-primary" [disabled]="!thisForm.valid">Create Account</button>
 
   </form>
 </div>
+
+<ng-template #createprofessor let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="createprofessor-header">Request created successfully</h4>
+	</div>
+
+	<div class="modal-body">
+		<p>Your request to create a new professor account has been
+			 created.  Any existing professor can confirm your request and
+			 will have the opportunity to do so on their next login.
+		</p>
+
+		<p>
+			Until the request has been confirmed, your account will be a student
+			account.  You will be able to participate in lab sessions created by another
+			professor, but will not be able to create a professor yourself.
+		</p>
+
+	</div>
+
+	<div class="modal-footer">
+
+		<button class="btn btn-primary" (click)="modal.close('Modal closed')">Go to dashboard page</button>
+		<button class="btn btn-secondary" (click)="modal.dismiss('Modal dismissed')">Return to home page</button>
+	</div>
+
+</ng-template>

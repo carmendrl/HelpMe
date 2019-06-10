@@ -12,6 +12,7 @@ import { timer, from} from 'rxjs';
 
 import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
+import { PromotionRequest } from '../user-management/models/promotion-request.model';
 
 export class PromoteUserResponse {
 	constructor (private _success : boolean, private _errorMessages? : string[]) {
@@ -29,7 +30,6 @@ export class PromoteUserResponse {
 	get ErrorMessages () : string[] {
 		return this._errorMessages;
 	}
-
 
 	addError (message : string) {
 		this._errorMessages.push(message);
@@ -81,8 +81,9 @@ export class UserService {
     );
   }
 
-  createAccount(user : User) : Observable<boolean> {
-    let url : string = `${this.apiHost}/users`;
+  createAccount(user : User, requestPromotion: boolean) : Observable<boolean> {
+		let url : string = `${this.apiHost}/users?requestPromotion=true`;
+
     let body = this.buildCreateAccountBodyFromUser (user);
     return this.httpClient.post(url, body).pipe(
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
@@ -96,18 +97,43 @@ export class UserService {
 		if (user_type) {
 			url = `${url}&type=${user_type}`;
 		}
-		
+
 		return this.httpClient.get(url).pipe(
 			map(r => r["data"].map (o => User.createFromJSon(o)))
 		)
 	}
 
 	requestPromotion ( user : User) : Observable<PromoteUserResponse> {
-		let url : string = `${this.apiHost}/system/users/${user.id}/request_promotion`;
+		let url : string = `${this.apiHost}/promotion_requests`;
 		console.log(`Url for request promotion is ${url}`);
-		return this.httpClient.post(url, {}).pipe(
+		return this.httpClient.post(url, {user_id: user.id}).pipe(
 			map (r => new PromoteUserResponse(true)),
 			catchError (r => this.handlePromotionRequestError(r))
+		);
+	}
+
+	loadPromotionRequest ( id : string) : Observable<PromotionRequest> {
+		let url : string = `${this.apiHost}/promotion_requests/${id}`;
+		return this.httpClient.get(url).pipe (
+			map (r => {
+					let pr : PromotionRequest = PromotionRequest.createFromJSon(r["data"]);
+					let user_id : string = r["data"]["relationships"]["user"]["data"]["id"];
+					let user = r["included"].find( e => e["type"] =="students" && e["id"] == user_id);
+					pr.User = User.createFromJSon(user);
+					let promoted_by_id : string = r["data"]["relationships"]["promoted_by"]["data"]["id"];
+					let promoted_by = r["included"].find( e => e["type"] == 'professors' && e["id"] == promoted_by_id);
+					pr.PromotedBy = User.createFromJSon(promoted_by);
+					return pr;
+				}
+			)//,
+			//catchError (r => this.handlePromotionRequestError(r))
+		);
+	}
+
+	confirmPromotionRequest (pr : PromotionRequest) : Observable<boolean> {
+		let url : string = `${this.apiHost}/promotion_requests/${pr.id}`;
+		return this.httpClient.put(url, {}).pipe(
+			map (r => true)
 		);
 	}
 
@@ -128,7 +154,7 @@ export class UserService {
       username: u.Username,
       password: u.Password,
       password_confirmation: u.Password,
-      type: 'Student'
+      type: u.Type
     }
   }
 

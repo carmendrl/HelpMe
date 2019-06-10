@@ -1,7 +1,18 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
-  before_action :authenticate_user!, only: [:show, :promote, :demote, :request_promotion, :find_user]
-#  before_filter :sign_up_params!
-  def show
+  before_action :authenticate_user!, only: [:show, :promote, :demote, :find_user]
+
+  #  Create a promotion request if requested
+	def create
+		super
+		if params["requestPromotion"] == 'true'
+			user = User.where(:email => params["email"]).first
+			PromotionRequest.create!(
+				:user => user
+			)
+		end
+	end
+
+	def show
     render json: User.find(params[:user_id])
   end
 
@@ -29,20 +40,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     end
   end
 
-	def request_promotion
-		user = User.find(params[:user_id])
-
-		if current_user.professor?
-				promotion_code = PromotionRequest.create!(
-					:user => user,
-					:promoted_by => current_user
-				)
-				render json: promotion_code
-		else
-			render_cannot_perform_operation("My be a professor to create a promotion to professor request")
-		end
-	end
-
 	def find_user
 		#find_params
 		query = params[:q].downcase
@@ -63,10 +60,6 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 		last_name_results = collection.where("lower(last_name) like ?", "%#{query}%")
 
 		all_results = email_results.or(first_name_results).or(last_name_results)
-
-		# if (params[:type])
-		# 	all_results = all_results.where(:type => params[:type])
-		# end
 
 		render json: all_results
 	end

@@ -5,17 +5,19 @@ class PromotionRequest < ApplicationRecord
 	end
 
   belongs_to :user
-	belongs_to :promoted_by, class_name: "User"
+	belongs_to :promoted_by, class_name: "User", optional: true
 
-  validates_each :user do |record, attribute, value|
-    if PromotionRequest
-			.where(:user_id => record.user_id)
-			.where("expires_on > ?", DateTime.current )
-			.any?
-			puts "Tried to create new request when non-expired one already exists"
-      record.errors.add(attribute, "user already has unexpired promotion request")
-		else
-			puts "No existing requests.  Creating ..."
-		end
+  validate :okToCreateNewRequest?, :on => :create
+
+	def okToCreateNewRequest?
+		 if PromotionRequest
+			 .where(:user_id => self.user_id)
+			 .where("expires_on > ?", DateTime.current )
+			 .any?
+			 puts "Tried to create new request when non-expired one already exists"
+			 self.errors.add(:user, "user already has unexpired promotion request")
+		 else
+			 puts "No existing requests.  Creating ..."
+		 end
 	end
 end
