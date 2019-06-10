@@ -1,7 +1,7 @@
 <!--modal-->
   <div class="modal-header">
     <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
-    <button type="button" class="close" aria-label="Close" (click)="d('Cross click');thisForm.reset();">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss();thisForm.reset();">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -21,6 +21,6 @@
 
       <button type="submit"
       [disabled]="submitShouldBeDisabled()"
-      class="btn btn-primary" (click)="assignSelectedUser();d('Cross click');thisForm.reset();">Assign User</button>
+      class="btn btn-primary" (click)="assignSelectedUser();thisForm.reset();">Assign User</button>
     </form>
   </div>

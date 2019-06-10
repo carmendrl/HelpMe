@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190606181236) do
+ActiveRecord::Schema.define(version: 20190610135140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 20190606181236) do
     t.uuid "claimed_by_id"
     t.string "status", default: "pending", null: false
     t.boolean "faq", default: false, null: false
-    t.integer "step"
+    t.string "step"
   end
 
   create_table "questions_tags", id: false, force: :cascade do |t|

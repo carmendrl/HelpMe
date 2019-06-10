@@ -14,7 +14,7 @@ export class StudentDashboardComponent implements OnInit {
 
   private sessions : LabSession[];
   private myQuestions : Question[];
-  private sessionId: number;
+  private invalidId: boolean;
   private token: string;
 
   constructor(private labSessionService : LabSessionService, private questionService: QuestionService,
@@ -28,16 +28,24 @@ export class StudentDashboardComponent implements OnInit {
     this.questionService.questionList().subscribe (
       questions => this.myQuestions = questions
     );
+    this.invalidId= false;
 
   }
 
   joinSess(){
 
     this.labSessionService.joinASession(this.token).subscribe(
-      sessionId => this.router.navigateByUrl(`/lab_sessions/${sessionId}`)
-    );
-
-
+      sessionId => {
+        if(sessionId != undefined){
+          this.invalidId = false;
+        this.router.navigateByUrl(`/lab_sessions/${sessionId}`);
+      }
+      else{
+        this.invalidId = true;
+      }
+    });
   }
+
+
 
 }
