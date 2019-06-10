@@ -102,7 +102,7 @@
           Session code is <strong>{{generatedCode}}</strong>
         </p>
         <p>
-          <a [routerLink]="['/session-view/']">Go to session</a>
+          <a [routerLink]="['/lab_sessions/${newSession.id}']" (click)="d('Cross click')">Go to session</a>
         </p>
         <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
         <span (click)="copySessionLink()"  class="btn btn-primary spanSpace">Copy Session Link</span>
