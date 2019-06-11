@@ -22,6 +22,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentQuestion: Question;
   private currentDate: Date;
   private user: User;
+  currentTime: Date;
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {
