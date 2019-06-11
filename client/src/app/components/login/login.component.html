@@ -51,7 +51,8 @@
 </div>
 
   <div *ngSwitchDefault>
-    You are already logged in as {{currentUser.Username}}.
+    You are already logged in as {{currentUser.FullName}}.
 
+		<button class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</button>
     <button class="btn btn-primary" (click)="doLogout()">Log out</button>
   </div>
