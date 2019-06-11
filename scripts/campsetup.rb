@@ -2,11 +2,29 @@ Professor.delete(Professor.all)
 Student.delete(Student.all)
 
 professor = Professor.create!(
-	:first_name => "Help",
+	:first_name => "Dr. Help",
 	:last_name => "Me",
 	:password => "password",
-	:email => "mcfall@hope.edu",
+	:email => "professor@hope.edu",
 	:username => "ryanmcfall"
+)
+
+ta1 = Student.create!(
+	:first_name => "TA",
+	:last_name => "One",
+	:password => "password",
+	:email => "ta1@hope.edu",
+	:username => "ryanmcfall",
+	:role => "ta"
+)
+
+ta2 = Student.create!(
+	:first_name => "TA",
+	:last_name => "Two",
+	:password => "password",
+	:email => "ta2@hope.edu",
+	:username => "ryanmcfall",
+	:role => "ta"
 )
 
 digits = 1..20
