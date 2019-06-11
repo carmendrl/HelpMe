@@ -69,7 +69,7 @@ are input into this model from the student dashboard, student view, and faculty 
                   <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
                   <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
                   <option *ngIf="showDeleteButton" value="delete">Delete</option>
-                  <option *ngIf="showMeTooButton"value="meToo">Me Too</option>
+                  <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
                 </select>
               </div>
               <button type="submit" class ="btn btn-primary">Submit</button>
