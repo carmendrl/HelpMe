@@ -99,7 +99,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           }
         }
       }
-
       setEndDate(){
         this.currentTime = new Date();
         this.labsessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();

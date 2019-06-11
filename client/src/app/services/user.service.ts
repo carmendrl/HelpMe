@@ -10,10 +10,13 @@ import { Observer } from 'rxjs/Observer';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { timer, from} from 'rxjs';
 
-import { API_SERVER } from '../app.config';
+import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
+
 import { User } from '../models/user.model';
 import { PromotionRequest } from '../user-management/models/promotion-request.model';
 import { Question } from '../models/question.model';
+
+import { environment } from '../../environments/environment';
 
 export class PromoteUserResponse {
 	constructor (private _success : boolean, private _errorMessages? : string[]) {
@@ -44,11 +47,33 @@ export class UserService {
 
   private noUser : User;
 
-  constructor (private httpClient : HttpClient, @Inject(API_SERVER) host : string) {
+	readonly KEY_USER : string = "USER";
+
+  constructor (private httpClient : HttpClient, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
       this._currentUser$ = new ReplaySubject<User> (1);
-      this.apiHost = host;
+      this.apiHost = environment.api_base;
       this.noUser = new User ();
       this.noUser.Username = "";
+
+			console.log ("UserService: looking for user information in local storage");
+
+			let previousUser = this.localStorage.get(this.KEY_USER);
+
+			if (previousUser) {
+				console.log ("UserService: Found saved user information in local storage");
+				console.log (previousUser);
+				let u : User = new User();
+				u.id = previousUser._id;
+				u.FirstName = previousUser._firstName;
+				u.LastName = previousUser._lastName;
+				u.EmailAddress = previousUser._emailAddress;
+				u.Username = previousUser._username;
+				u.Type = previousUser._type;
+				this._currentUser$.next(u);
+			}
+			else {
+				console.log("UserService: No saved user information in local storage");
+			}
   }
 
   get CurrentUser$() : Observable<User> {
@@ -95,6 +120,7 @@ export class UserService {
     let url : string = `${this.apiHost}/users/sign_out`;
     return this.httpClient.delete(url).pipe(
       tap(r => this._currentUser$.next(this.noUser)),
+			tap(r => {console.log("UserService: clearing logged in user"); this.localStorage.remove(this.KEY_USER)}),
       map(r => true ),
       catchError(error => of(false))
     );
@@ -180,7 +206,10 @@ export class UserService {
   }
 
   private updateLoggedInUserFromResponse(o : Object) {
-      this._currentUser$.next(User.createFromJSon(o));
+			let u : User = User.createFromJSon(o);
+			console.log("UserService:  Saving logged in user information to local storage");
+			this.localStorage.set(this.KEY_USER, u);
+      this._currentUser$.next(u);
   }
 
   private handleCreateAccountError (error) : Observable<boolean> {
