@@ -11,7 +11,7 @@
 
     <form  #thisForm="ngForm">
       <label>Step/ Question #</label>
-      <input name="step" type="number" id="step" class="form-control" [(ngModel)]="step" required><br>
+      <input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
       <label>Your Question</label>
        <quill-editor  format="text" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor>
       <label>Tags  </label>
