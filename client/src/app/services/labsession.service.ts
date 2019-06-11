@@ -3,17 +3,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { API_SERVER } from '../app.config';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
-import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 
+import { environment } from '../../environments/environment';
 
 //start of LabSessionService class
 @Injectable()
@@ -21,8 +20,8 @@ export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
 
-  constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
-    this.apiHost = host;
+  constructor(private httpClient : HttpClient) {
+    this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
   }
 
@@ -153,6 +152,14 @@ export class LabSessionService {
     return this.httpClient.get<LabSession>(url).pipe(
 			map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
       catchError(this.handleError<LabSession>(`getSession id=${id}`))
+    );
+  }
+  updateEndDate(id: string, date: Date): Observable<LabSession>{
+    let url : string = `${this.apiHost}/lab_sessions/${id}`;
+    let body = { end_date: date};
+    return this.httpClient.put<LabSession>(url, body).pipe(
+      map(r => {LabSession.createFromJSon(r); return r;}),
+      catchError(this.handleError<LabSession>(`change endDate`))
     );
   }
 

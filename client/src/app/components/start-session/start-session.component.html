@@ -1,4 +1,5 @@
 <body onload="myFunction">
+  <div *ngIf="coursesRetrieved && startCourse.length>0">
   <h2>Start a session</h2>
   <form #thisForm="ngForm" (ngSubmit)="startSession(); open2(content2)">
     <div class="row form-group">
@@ -118,7 +119,7 @@
     </div>
 
 </form>
-
+</div>
   <!-- modal-->
   <ng-template #content let-modal let-d="dismiss" let-c="close">
     <div class="modal-header">
@@ -134,5 +135,6 @@
 
 
   <div *ngIf="coursesRetrieved && startCourse.length===0">
+    <h4>Create A Course</h4><br>
     <app-create-course-form></app-create-course-form>
   </div>

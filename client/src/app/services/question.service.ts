@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@angular/core';
 import { Question } from '../models/question.model';
-import { ModelFactoryService } from './model-factory.service';
 import { LabSession } from '../models/lab_session.model';
 import { LabSessionService } from './labsession.service';
 import { User } from '../models/user.model';
@@ -9,10 +8,10 @@ import { Answer } from '../models/answer.model';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { API_SERVER } from '../app.config';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class QuestionService {
@@ -22,8 +21,8 @@ export class QuestionService {
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
 
-  constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
-    this.apiHost = host;
+  constructor(private httpClient : HttpClient, private labsessionService: LabSessionService) {
+    this.apiHost = environment.api_base;
     this.updatedQuestion$ = new Subject<Question>();
     this.newAnswer$ = new Subject<Answer>();
   }

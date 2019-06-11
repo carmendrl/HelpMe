@@ -8,6 +8,7 @@ import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
+import { LabSessionService } from '../../services/labsession.service';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -22,8 +23,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentQuestion: Question;
   private currentDate: Date;
   private user: User;
+  currentTime: Date;
 
-  constructor(userService: UserService, questionService: QuestionService,
+  constructor(userService: UserService, private labsessionService: LabSessionService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {
       super(userService, questionService, route, location, notifierService);
       this.unclaimedQs = new Array<Question>();
@@ -97,8 +99,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           }
         }
       }
-
-
+      setEndDate(){
+        this.currentTime = new Date();
+        this.labsessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
+      }
       assign(question: Question, user: User){
         question.claimedBy = user;
       }

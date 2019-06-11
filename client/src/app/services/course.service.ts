@@ -3,13 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { API_SERVER } from '../app.config';
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
-import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
+
+import { environment } from '../../environments/environment';
 
 //start of CourseService class
 @Injectable()
@@ -17,8 +17,8 @@ export class CourseService {
   private apiHost : string;
   public _newCourse$: Subject<Course>;
 
-  constructor(private httpClient : HttpClient, private _modelFactory : ModelFactoryService, @Inject(API_SERVER) host : string) {
-    this.apiHost = host;
+  constructor(private httpClient : HttpClient) {
+    this.apiHost = environment.api_base;
     this._newCourse$ = new Subject<Course>();
   }
 
