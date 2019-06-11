@@ -9,16 +9,15 @@ professor = Professor.create!(
 	:username => "ryanmcfall"
 )
 
-ta1 = Student.create!(
+ta1 = Professor.create!(
 	:first_name => "TA",
 	:last_name => "One",
 	:password => "password",
 	:email => "ta1@hope.edu",
-	:username => "ryanmcfall",
-	:role => "ta"
+	:username => "ryanmcfall"
 )
 
-ta2 = Student.create!(
+ta2 = Professor.create!(
 	:first_name => "TA",
 	:last_name => "Two",
 	:password => "password",

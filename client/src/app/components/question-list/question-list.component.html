@@ -17,48 +17,49 @@ are input into this model from the student dashboard, student view, and faculty 
   <table class="table table-striped">
     <thead>
       <tr>
-        <th><div *ngIf="showDate">Date</div></th>
-        <th><div *ngIf="showCourse">Course</div></th>
-        <th><div *ngIf="showStep">Step</div></th>
-        <th><div *ngIf="showNumberOfAskers">Number of Askers</div></th>
+        <th *ngIf="showDate">Date</th>
+        <th *ngIf="showCourse">Course</th>
+        <th *ngIf="showStep">Step</th>
+        <th *ngIf="showNumberOfAskers">Number of Askers</th>
         <th>Question</th>
-        <th><div *ngIf="showAskedBy">Asked By</div></th>
-        <th><div *ngIf="showTags" >Tags</div></th>
-        <th><div *ngIf="showTimeInQueue">Time in queue</div></th>
-        <th><div *ngIf="showAnswer">Answer</div></th>
-        <th><div *ngIf="showAction">Action</div></th>
+        <th *ngIf="showAskedBy">Asked By</th>
+        <th *ngIf="showTags">Tags</th>
+        <th *ngIf="showTimeInQueue">Time in queue</th>
+        <th *ngIf="showAnswer">Answer</th>
+        <th *ngIf="showAction">Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor = "let question of filteredQuestions">
-        <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
-        <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
-        <td><div *ngIf="showStep">{{question.step}}</div></td>
+        <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
+        <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
+        <td *ngIf="showStep">{{question.step}}</td>
         <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
-        <td><div *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></div></td>
+        <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
         <td> {{question.text}}</td>
-        <td><div *ngIf="showAskedBy">{{question.asker.FullName}}</div></td>
-        <td><div *ngIf="showTags">
+        <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
+        <td *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
             <li>{{t}}</li>
-          </ul></div></td>
-          <td><div *ngIf="showTimeInQueue">{{timeDiff(question)}}</div></td>
-          <td><div *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></div></td>
+          </ul>
+				</td>
+        <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
+        <td *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
-          <td><div *ngIf="showAction" class="d-none d-lg-block d-xl-block">
+          <td *ngIf="showAction">
+						<div class="d-none d-lg-block d-xl-block">
+	            <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+	            <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+	            <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+	            <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+	            <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
+	            <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
+	            <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+	            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
+						</div>
 
-            <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-            <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-            <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-            <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-            <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-            <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-            <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
-
-          </div></td>
-          <td><div *ngIf="showAction" class="d-block d-lg-none">
+          	<div class="d-block d-lg-none">
             <form #thisForm (ngSubmit)="performAction(question)">
               <div class="form-group">
                 <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
@@ -74,7 +75,8 @@ are input into this model from the student dashboard, student view, and faculty 
               </div>
               <button type="submit" class ="btn btn-primary">Submit</button>
             </form>
-          </div></td>
+						</div>
+          </td>
         </tr>
       </tbody>
     </table>
