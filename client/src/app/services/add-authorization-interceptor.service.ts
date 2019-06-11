@@ -18,7 +18,10 @@ export class AddAuthorizationInterceptorService implements HttpInterceptor {
   intercept (request : HttpRequest<any>, next : HttpHandler ) : Observable<HttpEvent<any>> {
     //  If we're signing in or creating an account, we'll need to observe the response which will have
     //  the headers in it
-    let creatingAccount : boolean = request.url.endsWith("/users") && request.method === "POST";
+		let createAccountRegEx = RegExp("\/users(\\?.*)?$")
+
+    // let creatingAccount : boolean = request.url.endsWith("/users") && request.method === "POST";
+    let creatingAccount : boolean = createAccountRegEx.test(request.url) && request.method === "POST";
     let signingIn : boolean = request.url.endsWith("/users/sign_in") && request.method === "POST";
 
     if (creatingAccount || signingIn) {

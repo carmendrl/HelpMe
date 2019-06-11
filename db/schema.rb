@@ -64,6 +64,15 @@ ActiveRecord::Schema.define(version: 20190610135140) do
     t.datetime "end_date", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
+  create_table "promotion_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "promoted_by_id"
+    t.datetime "expires_on"
+    t.datetime "confirmed_on"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "text", default: "", null: false
     t.uuid "original_asker_id"

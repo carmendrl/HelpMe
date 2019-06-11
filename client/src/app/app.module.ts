@@ -31,6 +31,7 @@ import { FacultySessionViewComponent } from './components/faculty-session-view/f
 import { AnswerModalComponent } from './components/answer-modal/answer-modal.component';
 import { EditModalComponent } from './components/edit-modal/edit-modal.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
+import { UserManagementModule } from "./user-management/user-management.module";
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { QuillModule } from 'ngx-quill';
@@ -99,10 +100,8 @@ const customNotifierOptions: NotifierOptions = {
     AskQuestionComponent,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule
-
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule
   ],
-
   providers: [
     UserService,
     LabSessionService,
@@ -116,6 +115,9 @@ const customNotifierOptions: NotifierOptions = {
     {
       provide: API_SERVER, useValue: Server
     }
+  ],
+  exports: [
+    LoginComponent
   ],
   bootstrap: [AppComponent],
   entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent]

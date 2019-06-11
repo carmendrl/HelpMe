@@ -20,7 +20,6 @@ import { SessionViewComponent } from '../components/session-view/session-view.co
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
-  public sessionId: string;
 
   constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
     this.apiHost = host;
@@ -89,13 +88,14 @@ export class LabSessionService {
     };
     return this.httpClient.post(url, body).pipe(
       map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
-      catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
+			tap(ls => this._newLabSession$.next(ls)),
+			catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
     );
 
   }
 
-  createNewLabSessionFromJson(r: Object[], includedResponses:any[]): LabSession{
-    var course: Object = includedResponses.find(function(element) {
+  createNewLabSessionFromJson(r: Object, includedResponses:any[]): LabSession{
+	  var course: Object = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r["attributes"]["course_id"];
     });
     //search for the professor information
@@ -108,8 +108,20 @@ export class LabSessionService {
     let session = LabSession.createFromJSon(r);
     newCourse.professor = professor;
     session.course = newCourse;
+		session.members = [];
 
-    this._newLabSession$.next(session);
+		r["relationships"]["users"]["data"].forEach(
+			u => {
+				let includedUser = includedResponses.find(function (e) {
+					return e["id"] == u["id"] && (e["type"] == "professors" || e["type"] == "students");
+				});
+				if (includedUser) {
+					session.members.push(User.createFromJSon(includedUser));
+				}
+			}
+		);
+
+    //this._newLabSession$.next(session);
     return session;
 }
 
@@ -130,17 +142,18 @@ export class LabSessionService {
   }
 
   private extractSessionId(r: Object): string {
-    //let s = new sessionResponse(r);
-    this.sessionId = r["relationships"]["lab_session"]["data"]["id"];
-    return this.sessionId;
+    let id : string = r["relationships"]["lab_session"]["data"]["id"];
+    return id;
   }
 
   getSession(id: string): Observable<LabSession>{
-    let url = `${this.apiHost}/lab_sessions/${this.sessionId}`;
-    return this.httpClient.get<LabSession>(url).pipe(
-      catchError(this.handleError<LabSession>(`getSession id=${this.sessionId}`))
-    );
+    let url = `${this.apiHost}/lab_sessions/${id}`;
+		let response;
 
+    return this.httpClient.get<LabSession>(url).pipe(
+			map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
+      catchError(this.handleError<LabSession>(`getSession id=${id}`))
+    );
   }
 
 //handles errors

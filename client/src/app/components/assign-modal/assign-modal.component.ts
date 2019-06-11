@@ -1,11 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-import { User } from '../../models/user.model';
+
 import { UserService } from '../../services/user.service';
-import { Observable, of } from 'rxjs';
-import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import { QuestionService } from '../../services/question.service';
+import { LabSessionService } from '../../services/labsession.service';
+
 import { Question } from '../../models/question.model';
+import { User } from '../../models/user.model';
+import { LabSession } from '../../models/lab_session.model';
 
 
 @Component({
@@ -16,37 +18,43 @@ import { Question } from '../../models/question.model';
 export class AssignModalComponent implements OnInit {
   @Input() private currentQuestion: Question;
   closeResult: string;
+  private sessionTAs : User[] = [];
   private selectedUser : User = new User();
+  private sessionReloaded : boolean = false;
+  private currentUser : User;
 
-  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal, private userService: UserService, private questionService: QuestionService) { }
+  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal, private labSessionService : LabSessionService, private questionService: QuestionService, private userService : UserService) { }
 
   ngOnInit() {
-
+    this.userService.CurrentUser$.subscribe (
+      u => {
+        this.currentUser = u;
+        this.loadSessionUsers();
+      })
   }
 
-  findUsers (value$ : Observable<string>){
-  		return value$.pipe(
-  			debounceTime(200),
-  			distinctUntilChanged(),
-  			mergeMap(searchTerm => searchTerm.length < 2 ? of([]) : this.userService.findUserByEmail(searchTerm,this.currentQuestion))
-  		);
-    }
+  private loadSessionUsers() : void {
+    let labSessionId : string = this.currentQuestion.session.id;
+    this.sessionReloaded = false;
 
-  formatUserForTypeAhead (user : User) : string {
-		if (user.id=== undefined || user.FullName === "") {
-			return "";
-		}
-
-		return `${user.FullName} (${user.EmailAddress})`;
-	}
-
-  submitShouldBeDisabled() : boolean {
-  			return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
-  	}
+    this.labSessionService.getSession(labSessionId).subscribe (
+      s => {
+        this.sessionTAs = s.members.filter(
+          u => (u.Type == 'professors' || u.Role == 'ta') && u.id != this.currentUser.id
+        );
+        if (this.sessionTAs.length > 0) {
+          this.selectedUser = this.sessionTAs[0];
+        }
+        this.sessionReloaded = true;
+      }
+    );
+  }
 
   assignSelectedUser(){
     this.questionService.assignQuestion(this.selectedUser, this.currentQuestion).subscribe(r => this.activeModal.close());
   }
 
-
+  submitShouldBeDisabled() : boolean {
+    return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
+  }
 }

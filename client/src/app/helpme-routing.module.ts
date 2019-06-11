@@ -22,7 +22,11 @@ const routes : Routes = [
   {
     'path': '',
     'component': HomeComponent
-  }
+  },
+	{
+		'path': 'users',
+		loadChildren: () => import('./user-management/user-management.module').then( mod => mod.UserManagementModule)
+	}
 ];
 
 @NgModule({
