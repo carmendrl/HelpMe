@@ -77,4 +77,8 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   ActiveModelSerializers.config.adapter = :json_api
+
+  #  Custom configuration
+  #  This is the page that Rails should render for any unmatched route
+  config.home_page_path="public/index.html"
 end
