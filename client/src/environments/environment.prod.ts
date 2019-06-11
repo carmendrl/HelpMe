@@ -3,5 +3,6 @@ import { SESSION_STORAGE, LOCAL_STORAGE, StorageService } from 'angular-webstora
 export const environment = {
   production: true,
 	local_storage_mode: LOCAL_STORAGE,
+	server: 'https://hopehelpme.herokuapp',
 	api_base: 'https://hopehelpme.herokuapp.com/api'
 };
