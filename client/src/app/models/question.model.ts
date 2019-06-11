@@ -10,7 +10,7 @@ export class Question extends Entity{
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: number) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: string) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -143,11 +143,11 @@ export class Question extends Entity{
     this._status = status;
   }
 
-  get step() : number{
+  get step() : string{
     return this._step;
   }
 
-  set step(step : number){
+  set step(step : string){
     this._step = step;
   }
 
