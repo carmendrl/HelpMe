@@ -5,23 +5,13 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
   <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
-<!-- <form class="form-inline">
-  <label for="SearchMyQuestions">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [ngbTypeahead]="findQuestions.bind(this)"
-  [resultFormatter]="formatQuestionForTypeAhead"
-  [inputFormatter]="formatQuestionForTypeAhead"
-  [(ngModel)]="selectedQuestion"
-  class="form-control col-md-6" text required/>
-  <!-- <button class="btn btn-primary form-control ml-1" (click)="filter()" [disabled]="filterTextIsEmpty()"><span class="fas fa-search"></span></button> -->
-<!-- </form> -->
 
-<!-- <form class="form-inline">
+<form class="form-inline">
   <label for="SearchMyQuestions">Search</label>
   <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
   <button class="btn btn-primary form-control ml-1" (click)="filter()" [disabled]="filterTextIsEmpty()"><span class="fas fa-search"></span></button>
-</form> -->
+</form>
 
-<input [(ngModel)]="searchText" placeholder="search text goes here">
 <div class="results">
   <p class="table-caption">Matching Questions</p>
   <table class="table table-striped">
@@ -40,7 +30,7 @@ are input into this model from the student dashboard, student view, and faculty 
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor = "let question of filteredQuestions | filter :searchText">
+      <tr *ngFor = "let question of filteredQuestions">
         <td><div *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</div></td>
         <td><div *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</div></td>
         <td><div *ngIf="showStep">{{question.step}}</div></td>

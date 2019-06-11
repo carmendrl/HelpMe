@@ -35,6 +35,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       }
 
       checkNotification(datas : any){
+        debugger
       for (let data of datas){
         for (let q of this.myQs){
           if(q.id === data.id){

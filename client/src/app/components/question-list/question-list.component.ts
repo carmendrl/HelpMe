@@ -33,7 +33,6 @@ export class QuestionListComponent implements OnInit, AfterViewInit {
   //private editContent;
   private selectedUser : User = new User();
 
-  @Input() private selectedQuestion : Question;
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
   @Input() private currentDate: Date;
@@ -82,79 +81,57 @@ export class QuestionListComponent implements OnInit, AfterViewInit {
         "openAssign":this.openAssign,
       }
       this.ngAfterViewInit();
-      // this.newfilter = new FormControl();
-      // this.obfilter$ = this.newfilter.valueChanges;
   }
 
   ngOnInit() {
-    // this.filterApplied = false;
-    // this.filterText = "";
+    this.filterApplied = false;
+    this.filterText = "";
   }
 
   ngAfterViewInit() {
     console.log(`ngAfterViewInit - editContent is ${this.editContent}`);
   }
 
-
-findQuestions(value$ : Observable<string>){
-  return value$.pipe(
-    debounceTime(200),
-    distinctUntilChanged(),
-    mergeMap(searchTerm => searchTerm.length < 2 ? of([]) : this.questionService.findQuestionByText(searchTerm))
-  );
-}
-
-formatQuestionForTypeAhead (question : Question ) : string{
-  if (question.id === undefined || question.text === ""){
-    return "";
+  filterTextIsEmpty () : boolean {
+    if (/\S/.test(this.filterText)) {
+      return false;
+    }
+    return true;
   }
 
-  return `${question.text}`;
-}
+  filter () : void {
+    this.filterApplied = true;
+    this.filteredQuestions = this.questions.filter(
+      q=>this.includeQuestion(q)
+    );
+  }
 
+  clearFilter () : void {
+    this.filterApplied = false;
+    this.filterText = "";
+    this.copyAllQuestionsToFilteredQuestions();
+  }
 
+  private copyAllQuestionsToFilteredQuestions () {
+    this.filteredQuestions = this.questions.slice(0, this.questions.length);
+  }
 
+  private includeQuestion (question : Question) : boolean {
 
-  // filterTextIsEmpty () : boolean { /////
-  //   if (/\S/.test(this.filterText)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-  //
-  // filter () : void {
-  //   this.filterApplied = true;
-  //   this.filteredQuestions = this.questions.filter(
-  //     q=>this.includeQuestion(q)
-  //   );
-  // }
-  //
-  // clearFilter () : void {
-  //   this.filterApplied = false;
-  //   this.filterText = "";
-  //   this.copyAllQuestionsToFilteredQuestions();
-  // }
-  //
-  // private copyAllQuestionsToFilteredQuestions () {
-  //   this.filteredQuestions = this.questions.slice(0, this.questions.length);
-  // }
-  //
-  // private includeQuestion (question : Question) : boolean {
-  //
-  //   //  Look at question text, course, Date
-  //   let regEx : RegExp = new RegExp(`${this.filterText}`, 'i');
-  //   if (regEx.test(question.text)) return true;
-  //   if (regEx.test(question.session.course.subjectAndNumber)) return true;
-  //
-  //   //  Create a moment from the date, and format it with full versions
-  //   //  of both the month and the day to allow for searches including
-  //   //  those things
-  //   let fullDate = moment(question.date).format("dddd, MMMM Do YYYY");
-  //
-  //   if (regEx.test(fullDate)) return true;
-  //
-  //   return false;
-  // }
+    //  Look at question text, course, Date
+    let regEx : RegExp = new RegExp(`${this.filterText}`, 'i');
+    if (regEx.test(question.text)) return true;
+    if (regEx.test(question.session.course.subjectAndNumber)) return true;
+
+    //  Create a moment from the date, and format it with full versions
+    //  of both the month and the day to allow for searches including
+    //  those things
+    let fullDate = moment(question.date).format("dddd, MMMM Do YYYY");
+
+    if (regEx.test(fullDate)) return true;
+
+    return false;
+  }
 
   private timeDiff(question: Question) : string{
     return this.timeDifference = moment(question.date).fromNow();
