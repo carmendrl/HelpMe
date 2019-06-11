@@ -173,6 +173,11 @@ export class QuestionListComponent implements OnInit {
       claimQuestion(question: Question){
         this.questionService.claimAQuestion(question).subscribe();
       }
+
+      unclaimQuestion(question: Question){
+        this.questionService.unclaimAQuestion(question).subscribe();
+      }
+      
       assignQuestion(question: Question){
         this.openAssign(AssignModalComponent, question);
 
