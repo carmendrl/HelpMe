@@ -7,6 +7,8 @@ import { Question } from './models/question.model';
 import { User } from './models/user.model';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
+import { LabSessionService } from './services/labsession.service';
+import { LabSession } from './models/lab_session.model';
 
 export abstract class SessionView  {
   questions: Question[];
@@ -14,10 +16,10 @@ export abstract class SessionView  {
   protected data : any;
   private questionSubscription : Subscription;
   private timerSubscription : Subscription;
-  sessionId: string;
+  protected sessionId: string;
   protected readonly notifier: NotifierService;
 
-  constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService) {
+  constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u

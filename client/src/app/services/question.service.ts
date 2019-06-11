@@ -12,20 +12,21 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 import { API_SERVER } from '../app.config';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
 export class QuestionService {
   private apiHost : string;
   private userQuestions : Question[];
-  private sessionId : number;
+  private sessionId : string;
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
 
-  constructor(private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
+  constructor( private route: ActivatedRoute, private httpClient : HttpClient, @Inject(API_SERVER) host : string, private labsessionService: LabSessionService) {
     this.apiHost = host;
     this.updatedQuestion$ = new Subject<Question>();
     this.newAnswer$ = new Subject<Answer>();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
   }
 
   get getUpdatedQuestion$() : Observable<Question> {
@@ -225,6 +226,15 @@ export class QuestionService {
         tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`assigned =${question.id}`))
       )
+    }
+
+    findQuestionByText (text : string) : Observable <Question[]>{
+      debugger
+      let url: string = `${this.apiHost}/user/questions`;
+      return this.httpClient.get(url).pipe(
+        map(r => this.createArray(r['data'], r['included'])),
+        catchError(this.handleError<Question[]>(`getSessionQuestions`))
+      );
     }
 
       //handles errors

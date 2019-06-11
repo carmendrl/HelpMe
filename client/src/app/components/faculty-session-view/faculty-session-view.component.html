@@ -1,3 +1,6 @@
+<p>
+  The current session code is {{token}}
+</p>
 <section>
   <h2>Unclaimed Questions</h2>
   <app-question-list [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignModal]= "true" [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs" [currentDate]="currentDate" [showNumberOfAskers]="true"></app-question-list>

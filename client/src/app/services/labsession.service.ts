@@ -13,6 +13,7 @@ import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 
 //start of LabSessionService class
@@ -108,7 +109,6 @@ export class LabSessionService {
     let session = LabSession.createFromJSon(r);
     newCourse.professor = professor;
     session.course = newCourse;
-
     this._newLabSession$.next(session);
     return session;
 }
@@ -136,9 +136,11 @@ export class LabSessionService {
   }
 
   getSession(id: string): Observable<LabSession>{
-    let url = `${this.apiHost}/lab_sessions/${this.sessionId}`;
+    debugger
+    let url = `${this.apiHost}/lab_sessions/${id}`;
     return this.httpClient.get<LabSession>(url).pipe(
-      catchError(this.handleError<LabSession>(`getSession id=${this.sessionId}`))
+      map(r => LabSession.createFromJSon(r["data"])),
+      catchError(this.handleError<LabSession>(`get a lab session id= ${id}`))
     );
 
   }

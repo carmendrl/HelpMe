@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -8,6 +8,8 @@ import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
+import { LabSessionService } from '../../services/labsession.service';
+import { LabSession } from '../../models/lab_session.model';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -22,10 +24,11 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentQuestion: Question;
   private currentDate: Date;
   private user: User;
+  private token : string;
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
-      super(userService, questionService, route, location, notifierService);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+      super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();
@@ -37,6 +40,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
+         this.getSessionCode();
       }
 
       checkNotification(datas : Question[]){
@@ -104,6 +108,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
 
       delete(question: Question){
+      }
 
+      getSessionCode(){
+        this.sessionService.getSession(this.sessionId).subscribe(session => this.token = session.token);
       }
     }
