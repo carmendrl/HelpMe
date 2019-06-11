@@ -11,7 +11,7 @@ class AnswersController < ApplicationController
     answer = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:question_id]).answer
     answer.update!(answer_params)
 
-    render json: answer
+    render json: answer, include: [:answerer]
   end
 
   def create
@@ -20,7 +20,7 @@ class AnswersController < ApplicationController
 
     question.save!
 
-    render json: answer
+    render json: answer, include: [:answerer]
   end
 
   def destroy
