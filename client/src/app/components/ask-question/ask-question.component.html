@@ -14,11 +14,11 @@
       <input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
       <label>Your Question</label>
        <quill-editor  format="text" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor>
-      <label>Tags  </label>
+      <!-- <label>Tags  </label>
         <!-- list all the current tags and allow then to be removed individually-->
-        <div class="form-inline">
+      <!--  <div class="form-inline">
       <input type="text" id="tags" class="form-control"/><br>
-      <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br>
+      <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
       <button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
       <button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
     </form>
