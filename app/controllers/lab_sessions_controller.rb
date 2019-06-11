@@ -7,7 +7,7 @@ class LabSessionsController < ApplicationController
   end
 
   def show
-    render json: @lab_session, include: [:users]
+    render json: @lab_session, include: ['users', 'course', 'course.instructor']
   end
 
   def create

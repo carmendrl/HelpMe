@@ -97,7 +97,8 @@ const customNotifierOptions: NotifierOptions = {
     AnswerModalComponent,
     EditModalComponent,
     AssignModalComponent,
-
+		AskQuestionComponent
+  ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule
   ],

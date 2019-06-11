@@ -7,20 +7,33 @@
   </div>
 
   <div class="modal-body">
-    <label>Search</label>
+		<div *ngIf = "!sessionReloaded">
+			Loading list of users for the session
+		</div>
 
-    <form  #thisForm="ngForm">
-      <div class="form-group row no-gutters">
-        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
-        <input type="email" name="emailAddress" placeholder="Email Address" [ngbTypeahead]="findUsers.bind(this)"
-        [resultFormatter]="formatUserForTypeAhead"
-        [inputFormatter]="formatUserForTypeAhead"
-        [(ngModel)]="selectedUser"
-        class="form-control col-md-6" email required>
-      </div>
+		<div *ngIf = "sessionReloaded">
 
-      <button type="submit"
-      [disabled]="submitShouldBeDisabled()"
-      class="btn btn-primary" (click)="assignSelectedUser();thisForm.reset();">Assign User</button>
-    </form>
+	    <form  #thisForm="ngForm" *ngIf="sessionTAs.length > 0">
+	      <div class="form-group row no-gutters">
+	        <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
+					<select [(ngModel)]="selectedUser" name="selectedUser">
+						<option *ngFor="let ta of sessionTAs" [ngValue]="ta">{{ta.FullName}}</option>
+					</select>
+	      </div>
+
+	      <button type="submit"
+	      [disabled]="submitShouldBeDisabled()"
+	      class="btn btn-primary" (click)="assignSelectedUser();thisForm.reset();">Assign to {{selectedUser.FullName}}</button>
+	    </form>
+
+			<div *ngIf="sessionTAs.length === 0" class="alert alert-danger">
+				<p>
+					There are no TAs or other professors currently in the session.
+				</p>
+
+				<p>Click the button below to reload the list of session participants.</p>
+
+				<span class="btn btn-outline-primary" (click)="loadSessionUsers()">Reload</span>
+			</div>
+		</div>
   </div>
