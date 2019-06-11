@@ -6,5 +6,6 @@ import { SESSION_STORAGE, LOCAL_STORAGE, StorageService } from 'angular-webstora
 
 export const environment = {
   production: false,
-	local_storage_mode: SESSION_STORAGE
+	local_storage_mode: SESSION_STORAGE,
+	api_base: '/api'
 };

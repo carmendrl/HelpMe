@@ -12,7 +12,6 @@ import { timer, from} from 'rxjs';
 
 import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
 
-import { API_SERVER } from '../app.config';
 import { User } from '../models/user.model';
 import { PromotionRequest } from '../user-management/models/promotion-request.model';
 import { Question } from '../models/question.model';
@@ -50,9 +49,9 @@ export class UserService {
 
 	readonly KEY_USER : string = "USER";
 
-  constructor (private httpClient : HttpClient, @Inject(API_SERVER) host : string, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
+  constructor (private httpClient : HttpClient, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
       this._currentUser$ = new ReplaySubject<User> (1);
-      this.apiHost = host;
+      this.apiHost = environment.api_base;
       this.noUser = new User ();
       this.noUser.Username = "";
 

@@ -4,12 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { API_SERVER } from './app.config';
 
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { ModelFactoryService } from './services/model-factory.service';
 import { UserService } from './services/user.service';
 import { LabSessionService } from './services/labsession.service';
 import { QuestionService } from './services/question.service';
@@ -110,13 +108,9 @@ const customNotifierOptions: NotifierOptions = {
     LabSessionService,
     QuestionService,
     CourseService,
-    ModelFactoryService,
     NgbActiveModal,
     {
       provide: HTTP_INTERCEPTORS, useClass: AddAuthorizationInterceptorService, multi: true
-    },
-    {
-      provide: API_SERVER, useValue: Server
     }
   ],
   exports: [
