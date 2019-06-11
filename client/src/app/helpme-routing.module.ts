@@ -8,10 +8,6 @@ import { SessionViewComponent } from './components/session-view/session-view.com
 
 const routes : Routes = [
   {
-    'path': 'login',
-    'component': LoginComponent
-  },
-  {
     'path': 'dashboard',
     'component': DashboardComponent
   },
