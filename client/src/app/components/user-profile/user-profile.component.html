@@ -17,6 +17,8 @@
 
     <div ngbDropdownMenu>
       <button class="dropdown-item">Edit Profile</button>
+      <button  *ngIf="user.Type==='professors'" class="dropdown-item" (click)="switchTypes(user)">Switch to Student View</button>
+      <button  *ngIf="user.ActingAsStudent === true" class="dropdown-item" (click)="switchTypes(user)">Switch to Professor View</button>
       <button class="dropdown-item" (click)="logout()">Log out</button>
     </div>
   </div>
