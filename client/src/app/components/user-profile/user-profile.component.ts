@@ -40,7 +40,7 @@ export class UserProfileComponent implements OnInit {
 
   private handleLogoutResponse(wasLoggedOut : boolean) {
     if (wasLoggedOut) {
-      this.router.navigateByUrl("/login");
+      this.router.navigateByUrl("/");
     }
   }
 }

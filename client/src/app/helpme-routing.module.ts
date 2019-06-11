@@ -8,10 +8,6 @@ import { SessionViewComponent } from './components/session-view/session-view.com
 
 const routes : Routes = [
   {
-    'path': 'login',
-    'component': LoginComponent
-  },
-  {
     'path': 'dashboard',
     'component': DashboardComponent
   },
@@ -22,7 +18,11 @@ const routes : Routes = [
   {
     'path': '',
     'component': HomeComponent
-  }
+  },
+	{
+		'path': 'users',
+		loadChildren: () => import('./user-management/user-management.module').then( mod => mod.UserManagementModule)
+	}
 ];
 
 @NgModule({

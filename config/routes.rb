@@ -7,10 +7,14 @@ Rails.application.routes.draw do
 	  }
 
 	  devise_scope :user do
-	    get "system/users/:user_id", to: "registrations#show", as: :user
-	    post "system/users/promote", to: "registrations#promote", as: :promote
+			get "system/users/find", to: "registrations#find_user", as: :find_user
+			post "system/users/promote", to: "registrations#promote", as: :promote
 	    post "system/users/demote", to: "registrations#demote", as: :demote
+			get "system/users/:user_id", to: "registrations#show", as: :user
+			#post "system/users/:user_id/request_promotion", to:"registrations#request_promotion"
 	  end
+
+		resources :promotion_requests
 
 		scope :user do
 			get "questions", to: "questions#show_user_questions"

@@ -1,0 +1,33 @@
+<div *ngIf = "routeParamId === '' && !promotionRequest.id">
+	<p>
+	  Please enter the id of the request in the form below
+		<input type="text" [(ngModel)]="requestId">
+		<button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
+	</p>
+</div>
+
+<div [ngSwitch]="state">
+	<div *ngSwitchCase = "'loadingRequest'">
+		Looking up information ...  please wait.
+	</div>
+
+	<div *ngSwitchCase = "'loaded'">
+		<h2>Confirm request</h2>
+		<p>
+			Click the <strong>Confirm</strong> button below to confirm
+			{{promotionRequest.PromotedBy.FullName}}'s request to change
+			{{promotionRequest.User.FullName}}'s account to a professor account.
+		</p>
+
+		<button class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
+	</div>
+
+	<div *ngSwitchCase = "'confirming'">
+		<p>Confirming request ....</p>
+	</div>
+
+	<div *ngSwitchCase = "'confirmed'">
+		<p>Confirmed - your account is now a professor account.</p>
+		<span class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</span>
+	</div>
+</div>
