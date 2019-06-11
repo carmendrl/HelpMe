@@ -173,6 +173,22 @@ export class QuestionService {
           catchError(this.handleError<Question>(`claim id=${question.id}`))
         );
       }
+      unclaimAQuestion(question: Question): Observable<Question>{
+        let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
+        let user = new User();
+        let body = {
+          text : question.text,
+          faq : question.faq,
+          claimed_by_id: "",
+          status: "pending"
+        };
+        return this.httpClient.put(url, body).pipe(
+          map(r => {question.claimedBy=undefined;question.status="pending";return question;}),
+          tap(r => this.updatedQuestion$.next(r)),
+          catchError(this.handleError<Question>(`unclaim id=${question.id}`))
+        );
+      }
+
 
       answerAQuestion(question: Question, text: string): Observable<Answer>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
