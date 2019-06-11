@@ -1,8 +1,5 @@
 Rails.application.routes.draw do
 
-  #  This is for Heroku, which runs Rails, so Angular routes need to be forwarded
-  get '*unmatched_route' => "static_pages#index"
-
 	scope :api do
 	  mount_devise_token_auth_for "User", at: "users", controllers: {
 	    registrations: "registrations",
@@ -59,4 +56,6 @@ Rails.application.routes.draw do
 
 	end
 
+	#  This is for Heroku, which runs Rails, so Angular routes need to be forwarded
+  get '*unmatched_route' => "static_pages#index"
 end
