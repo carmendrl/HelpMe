@@ -156,6 +156,15 @@ export class LabSessionService {
     );
   }
 
+  updateEndDate(id: string, date: Date): Observable<LabSession>{
+    let url : string = `${this.apiHost}/lab_sessions/${id}`;
+    let body = { end_date: date};
+    return this.httpClient.put<LabSession>(url, body).pipe(
+      map(r => {LabSession.createFromJSon(r); return r;}),
+      catchError(this.handleError<LabSession>(`change endDate`))
+    );
+  }
+
 //handles errors
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
