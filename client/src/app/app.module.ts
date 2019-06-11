@@ -35,6 +35,9 @@ import { UserManagementModule } from "./user-management/user-management.module";
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { QuillModule } from 'ngx-quill';
+
+import { StorageServiceModule } from 'angular-webstorage-service';
+
 const Server = '/api';
 //Custom angular notifier options
 const customNotifierOptions: NotifierOptions = {
@@ -100,7 +103,7 @@ const customNotifierOptions: NotifierOptions = {
     AskQuestionComponent,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
   ],
   providers: [
     UserService,
