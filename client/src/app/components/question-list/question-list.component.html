@@ -44,7 +44,7 @@ are input into this model from the student dashboard, student view, and faculty 
           </ul>
 				</td>
         <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-        <td *ngIf="showAnswer"><a href="#">{{question.answerText}}</a></td>
+        <td><div *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</div></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction">
