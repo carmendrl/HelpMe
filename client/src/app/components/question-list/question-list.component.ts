@@ -140,6 +140,9 @@ export class QuestionListComponent implements OnInit {
       setClaim(){
         this.selectedAction = "claim";
       }
+      setUnclaim(){
+        this.selectedAction = "unclaim";
+      }
 
       setAssign(){
         this.selectedAction = "assign";
