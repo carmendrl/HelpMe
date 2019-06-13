@@ -6,8 +6,16 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
+<h2 class="inlineHeader">{{header}}
+  <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestions.length}}</span>
+</button>
+</h2>
 
-<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search text goes here"/>
+<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+
+<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
 <div class="results">
 <p class="table-caption">Matching Questions</p>
 <table class="table table-striped">
@@ -25,9 +33,8 @@ are input into this model from the student dashboard, student view, and faculty 
       <th *ngIf="showAction">Action</th>
     </tr>
       </thead>
-
       <tbody>
-        <tr *ngFor = "let question of filteredQuestions | filter: searchText ">
+        <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
         <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
         <td *ngIf="showStep">{{question.step}}</td>
@@ -46,36 +53,34 @@ are input into this model from the student dashboard, student view, and faculty 
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction">
-						<div class="d-none d-lg-block d-xl-block">
-	            <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-	            <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-	            <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-              <button *ngIf="showUnclaimButton" (click)="setUnclaim(); performAction(question)" class="btn btn-primary actionSpace">Unclaim</button>
-	            <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-	            <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-	            <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-	            <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-	            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
-						</div>
+            <div class="d-none d-lg-block d-xl-block">
+              <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+              <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+              <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+              <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
+              <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
+              <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
+            </div>
 
-          	<div class="d-block d-lg-none">
-            <form #thisForm (ngSubmit)="performAction(question)">
-              <div class="form-group">
-                <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
-                  <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
-                  <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
-                  <option *ngIf="showClaimButton" value="claim">Claim</option>
-                  <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
-                  <option *ngIf="showAssignButton" value="assign">Assign</option>
-                  <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
-                  <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
-                  <option *ngIf="showDeleteButton" value="delete">Delete</option>
-                  <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
-                </select>
-              </div>
-              <button type="submit" class ="btn btn-primary">Submit</button>
-            </form>
-						</div>
+            <div class="d-block d-lg-none">
+              <form #thisForm (ngSubmit)="performAction(question)">
+                <div class="form-group">
+                  <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+                    <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
+                    <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                    <option *ngIf="showClaimButton" value="claim">Claim</option>
+                    <option *ngIf="showAssignButton" value="assign">Assign</option>
+                    <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+                    <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+                    <option *ngIf="showDeleteButton" value="delete">Delete</option>
+                    <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
+                  </select>
+                </div>
+                <button type="submit" class ="btn btn-primary">Submit</button>
+              </form>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -85,3 +90,4 @@ are input into this model from the student dashboard, student view, and faculty 
       <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
     </div>
   </div>
+</div>

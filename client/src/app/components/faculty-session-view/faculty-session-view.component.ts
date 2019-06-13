@@ -25,7 +25,13 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentDate: Date;
   private user: User;
   private token : string;
+  private description:string;
+  private subjectAndNumber:string;
   currentTime: Date;
+  private unclaimedQHeader:string = "Unclaimed Questions";
+  private myQHeader:string = "My Questions";
+  private faqHeader:string = "Frequently Asked Questions";
+  private otherQHeader:string = "Other Questions";
 
 
   constructor(userService: UserService, questionService: QuestionService,
@@ -42,7 +48,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
-         this.getSessionCode();
+         this.getSessionCodeAndDescription();
       }
 
       checkNotification(datas : Question[]){
@@ -114,7 +120,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       delete(question: Question){
       }
 
-      getSessionCode(){
-        this.sessionService.getSession(this.sessionId).subscribe(session => this.token = session.token);
+      getSessionCodeAndDescription(){
+        this.sessionService.getSession(this.sessionId).subscribe(session =>
+          {this.token = session.token,
+            this.subjectAndNumber = session.course.subjectAndNumber,
+            this.description = session.description});
       }
     }

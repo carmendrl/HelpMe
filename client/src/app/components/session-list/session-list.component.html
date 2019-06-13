@@ -1,9 +1,4 @@
-<form class="form-inline">
-  <label for="SearchPastSessions">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchPastSessions" placeholder="Course, date, session #"/>
-  <button class="btn btn-primary form-control ml-1"><span class="fas fa-search"></span></button>
-</form>
-
+<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
 <div class="results">
 <p class="table-caption">{{label}}</p>
   <table class="table table-striped">
@@ -17,7 +12,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="sessionList" *ngFor = "let session of sessions">
+      <tr class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
         <td>{{session.startDate | date:'EEE LLL dd'}}</td>
         <td>{{session.course.subjectAndNumber}}</td>
         <td>{{session.professor.FullName}}</td>
