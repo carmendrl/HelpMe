@@ -30,6 +30,9 @@ export class QuestionListComponent implements OnInit {
   private closeResult: string;
   private editText : string;
   private answerText:string;
+  //private editContent;
+  //private selectedUser : User = new User();
+  //private newContent;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -79,7 +82,7 @@ export class QuestionListComponent implements OnInit {
 
       ngOnInit() {
       }
-      
+
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
       }
@@ -188,30 +191,30 @@ export class QuestionListComponent implements OnInit {
           <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
           modal.componentInstance.currentQuestion = question;
           modal.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-          }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-          });
-        }
-
-
-        private getDismissReason(reason: any): string {
-          if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-          } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-          } else {
-            return  `with: ${reason}`;
-          }
-        }
-
-
-
-        // gravatarImageUrl() : string {
-        //     //debugger
-        //
-        //
-        //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-        // }
-
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
       }
+
+
+      private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+          return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+          return 'by clicking on a backdrop';
+        } else {
+          return  `with: ${reason}`;
+        }
+      }
+
+
+
+      // gravatarImageUrl() : string {
+      //     //debugger
+      //
+      //
+      //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+      // }
+
+    }

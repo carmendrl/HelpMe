@@ -8,7 +8,9 @@ export class User extends Entity{
     private _lastName?: string,
     private _type? : string,
     _id? : string,
-    private _password? : string)
+    private _password? : string,
+    private _role? : string
+	)
   {
     super (_id);
   }
@@ -38,7 +40,13 @@ export class User extends Entity{
     this._type = type;
   }
 
+	get Role() : string { return this._role; }
+	set Role(role : string) { this._role = role;}
+
   get FullName() : string {
+		if (!this.FirstName && !this.LastName) {
+			return "";
+		}
     return `${this._firstName} ${this._lastName}`;
   }
 
@@ -56,7 +64,7 @@ export class User extends Entity{
     user.EmailAddress = o["attributes"]["email"];
     user.FirstName = o["attributes"]["first_name"];
     user.LastName = o["attributes"]["last_name"];
-
+		user.Role = o["attributes"]["role"];
     return user;
   }
 

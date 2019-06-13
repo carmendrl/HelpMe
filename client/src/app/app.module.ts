@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { API_SERVER } from './app.config';
 import { FilterPipe} from './filter.pipe';
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
-import { ModelFactoryService } from './services/model-factory.service';
 import { UserService } from './services/user.service';
 import { LabSessionService } from './services/labsession.service';
 import { QuestionService } from './services/question.service';
@@ -29,16 +27,16 @@ import { CreateCourseFormComponent } from './components/create-course-form/creat
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
 import { FacultySessionViewComponent } from './components/faculty-session-view/faculty-session-view.component';
-import { AnswerButtonComponent } from './components/answer-button/answer-button.component';
-import { EditButtonComponent } from './components/edit-button/edit-button.component';
-import { FaqButtonComponent } from './components/faq-button/faq-button.component';
-import { ClaimButtonComponent } from './components/claim-button/claim-button.component';
-import { DeleteButtonComponent } from './components/delete-button/delete-button.component';
-import { MeTooButtonComponent } from './components/me-too-button/me-too-button.component';
+import { AnswerModalComponent } from './components/answer-modal/answer-modal.component';
+import { EditModalComponent } from './components/edit-modal/edit-modal.component';
 import { AssignModalComponent } from './components/assign-modal/assign-modal.component';
+import { UserManagementModule } from "./user-management/user-management.module";
 import { AskQuestionComponent } from './components/ask-question/ask-question.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { QuillModule } from 'ngx-quill';
+
+import { StorageServiceModule } from 'angular-webstorage-service';
+
 const Server = '/api';
 
 //Custom angular notifier options
@@ -99,36 +97,29 @@ const customNotifierOptions: NotifierOptions = {
     SessionViewComponent,
     StudentSessionViewComponent,
     FacultySessionViewComponent,
-    AnswerButtonComponent,
-    EditButtonComponent,
-    FaqButtonComponent,
-    ClaimButtonComponent,
-    DeleteButtonComponent,
-    MeTooButtonComponent,
+    AnswerModalComponent,
+    EditModalComponent,
     AssignModalComponent,
     AskQuestionComponent,
     FilterPipe,
   ],
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, FormsModule
-
-
-
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
   ],
-
   providers: [
     UserService,
     LabSessionService,
     QuestionService,
     CourseService,
-    ModelFactoryService,
+    NgbActiveModal,
     {
       provide: HTTP_INTERCEPTORS, useClass: AddAuthorizationInterceptorService, multi: true
-    },
-    {
-      provide: API_SERVER, useValue: Server
     }
   ],
-  bootstrap: [AppComponent]
+  exports: [
+    LoginComponent
+  ],
+  bootstrap: [AppComponent],
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent]
 })
 export class AppModule { }

@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor = "let session of sessions">
+      <tr class="sessionList" *ngFor = "let session of sessions">
         <td>{{session.startDate | date:'EEE LLL dd'}}</td>
         <td>{{session.course.subjectAndNumber}}</td>
         <td>{{session.professor.FullName}}</td>

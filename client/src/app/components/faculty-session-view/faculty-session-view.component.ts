@@ -25,6 +25,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentDate: Date;
   private user: User;
   private token : string;
+  currentTime: Date;
+
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
@@ -101,8 +103,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           }
         }
       }
-
-
+      setEndDate(){
+        this.currentTime = new Date();
+        this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
+      }
       assign(question: Question, user: User){
         question.claimedBy = user;
       }

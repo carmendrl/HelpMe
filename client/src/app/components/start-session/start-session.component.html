@@ -1,4 +1,5 @@
 <body onload="myFunction">
+  <div *ngIf="coursesRetrieved && startCourse.length>0">
   <h2>Start a session</h2>
   <form #thisForm="ngForm" (ngSubmit)="startSession(); open2(content2)">
     <div class="row form-group">
@@ -15,7 +16,7 @@
       </div>
       <div>
         <!--button that opens modal-->
-        <a class="inline-block btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
+        <a class="createCourseButton inline-block btn btn-primary" style="color:white" (click)="open(content)">Create Course</a>
         </div>
     </div>
 
@@ -101,8 +102,8 @@
         <p>
           Session code is <strong>{{generatedCode}}</strong>
         </p>
-        <p>
-          <a [routerLink]="['/lab_sessions/${newSession.id}']" (click)="d('Cross click')">Go to session</a>
+        <p *ngIf= "newSession != undefined">
+          <a [routerLink]="['/lab_sessions', newSession.id]" (click)="d('Cross click')">Go to session</a>
         </p>
         <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
         <span (click)="copySessionLink()"  class="btn btn-primary spanSpace">Copy Session Link</span>
@@ -118,7 +119,7 @@
     </div>
 
 </form>
-
+</div>
   <!-- modal-->
   <ng-template #content let-modal let-d="dismiss" let-c="close">
     <div class="modal-header">
@@ -134,5 +135,6 @@
 
 
   <div *ngIf="coursesRetrieved && startCourse.length===0">
+    <h4>Create A Course</h4><br>
     <app-create-course-form></app-create-course-form>
   </div>

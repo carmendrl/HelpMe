@@ -1,6 +1,6 @@
 <div [ngSwitch]="currentUser.Username">
 
-  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" >
+  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" class="loginForm" >
     <div class="row form-group">
       <div class="col-12 col-sm-2">
         <label for="Email">Email Address</label>
@@ -23,7 +23,7 @@
 
     <div class="row form-group">
       <div class="col">
-        <button type="submit" [disabled]="thisForm.invalid" class="btn btn-primary">Log In</button>
+        <button type="submit" [disabled]="thisForm.invalid" class="btn btn-primary loginButton">Log In</button>
       </div>
     </div>
 
@@ -51,7 +51,8 @@
 </div>
 
   <div *ngSwitchDefault>
-    You are already logged in as {{currentUser.Username}}.
+    You are already logged in as {{currentUser.FullName}}.
 
+		<button class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</button>
     <button class="btn btn-primary" (click)="doLogout()">Log out</button>
   </div>

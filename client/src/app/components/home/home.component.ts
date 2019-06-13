@@ -27,12 +27,12 @@ export class HomeComponent implements OnInit {
   }
 
   createNewAccount() : void {
-    this.userService.createAccount(this.newUser).subscribe(
-      r => {
-        if (r) {
-          this.router.navigateByUrl('/dashboard');     
-        }
-      }
-    );
+    // this.userService.createAccount(this.newUser).subscribe(
+    //   r => {
+    //     if (r) {
+    //       this.router.navigateByUrl('/dashboard');
+    //     }
+    //   }
+    // );
   }
 }

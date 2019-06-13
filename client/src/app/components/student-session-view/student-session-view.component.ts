@@ -35,15 +35,24 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       }
 
       checkNotification(datas : any){
-        debugger
-      for (let data of datas){
-        for (let q of this.myQs){
-          if(q.id === data.id){
-            if(q.answer === undefined){
-              if(data.answer != undefined){
-                this.notifier.notify('info', 'Your question has been answered!');
+        for (let data of datas){
+          for (let q of this.myQs){
+            if(q.id === data.id){
+              //if your question was answered notification is sent (unless it was answered by yourself)
+              if(q.answer === undefined){
+                if(data.answer != undefined){
+                    if(data.answer.user.id != this.currentUser.id){
+                    this.notifier.notify('info', 'Your question has been answered!');
+                    }
                 }
               }
+              //if the answer to your question was editted (but not by yourself)
+              // else{
+              //   debugger
+              //   if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
+              //     this.notifier.notify('info', 'The answer to your question has been updated.');
+              //   }
+              // }
             }
           }
         }
@@ -58,19 +67,20 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         for (let question of questions){
 
           this.isMeTooUser=false;
-          for (let a of question.otherAskers){
-            if(a.id === this.currentUser.id){
-              this.isMeTooUser = true;
-            }
-          }
 
           if(question.id != undefined){
-            if (question.faq){
-              this.faQs.push(question);
+            for (let a of question.otherAskers){
+              if(a.id === this.currentUser.id){
+                this.isMeTooUser = true;
+              }
             }
 
-            else if(this.isMeTooUser){ //assinged or claimed by me
+            if(this.isMeTooUser){
+              //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
               this.myQs.push(question);
+            }
+            else if (question.faq){
+              this.faQs.push(question);
             }
             else{
               this.allOtherQs.push(question);

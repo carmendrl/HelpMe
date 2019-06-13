@@ -3,28 +3,26 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { API_SERVER } from '../app.config';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
-import { ModelFactoryService } from './model-factory.service';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
+import { environment } from '../../environments/environment';
 
 //start of LabSessionService class
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
-  public sessionId: string;
 
-  constructor(private httpClient : HttpClient,@Inject(API_SERVER) host : string) {
-    this.apiHost = host;
+  constructor(private httpClient : HttpClient) {
+    this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
   }
 
@@ -90,13 +88,14 @@ export class LabSessionService {
     };
     return this.httpClient.post(url, body).pipe(
       map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
-      catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
+			tap(ls => this._newLabSession$.next(ls)),
+			catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
     );
 
   }
 
-  createNewLabSessionFromJson(r: Object[], includedResponses:any[]): LabSession{
-    var course: Object = includedResponses.find(function(element) {
+  createNewLabSessionFromJson(r: Object, includedResponses:any[]): LabSession{
+	  var course: Object = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r["attributes"]["course_id"];
     });
     //search for the professor information
@@ -109,7 +108,20 @@ export class LabSessionService {
     let session = LabSession.createFromJSon(r);
     newCourse.professor = professor;
     session.course = newCourse;
-    this._newLabSession$.next(session);
+		session.members = [];
+
+		r["relationships"]["users"]["data"].forEach(
+			u => {
+				let includedUser = includedResponses.find(function (e) {
+					return e["id"] == u["id"] && (e["type"] == "professors" || e["type"] == "students");
+				});
+				if (includedUser) {
+					session.members.push(User.createFromJSon(includedUser));
+				}
+			}
+		);
+
+    //this._newLabSession$.next(session);
     return session;
 }
 
@@ -130,19 +142,26 @@ export class LabSessionService {
   }
 
   private extractSessionId(r: Object): string {
-    //let s = new sessionResponse(r);
-    this.sessionId = r["relationships"]["lab_session"]["data"]["id"];
-    return this.sessionId;
+    let id : string = r["relationships"]["lab_session"]["data"]["id"];
+    return id;
   }
 
   getSession(id: string): Observable<LabSession>{
-    debugger
     let url = `${this.apiHost}/lab_sessions/${id}`;
-    return this.httpClient.get<LabSession>(url).pipe(
-      map(r => LabSession.createFromJSon(r["data"])),
-      catchError(this.handleError<LabSession>(`get a lab session id= ${id}`))
-    );
+		let response;
 
+    return this.httpClient.get<LabSession>(url).pipe(
+			map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
+      catchError(this.handleError<LabSession>(`getSession id=${id}`))
+    );
+  }
+  updateEndDate(id: string, date: Date): Observable<LabSession>{
+    let url : string = `${this.apiHost}/lab_sessions/${id}`;
+    let body = { end_date: date};
+    return this.httpClient.put<LabSession>(url, body).pipe(
+      map(r => {LabSession.createFromJSon(r); return r;}),
+      catchError(this.handleError<LabSession>(`change endDate`))
+    );
   }
 
 //handles errors

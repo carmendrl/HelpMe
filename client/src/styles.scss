@@ -26,3 +26,10 @@ section {
 .results {
   margin-top: 1em;
 }
+
+input[type='text'], input[type='password'], input[type='email'] {
+	padding-left: 0.5em !important;
+}
+.btn:hover {
+	cursor:pointer;
+}

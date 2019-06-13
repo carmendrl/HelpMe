@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190606181236) do
+ActiveRecord::Schema.define(version: 20190610135140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -64,6 +64,15 @@ ActiveRecord::Schema.define(version: 20190606181236) do
     t.datetime "end_date", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
+  create_table "promotion_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
+    t.uuid "promoted_by_id"
+    t.datetime "expires_on"
+    t.datetime "confirmed_on"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "questions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "text", default: "", null: false
     t.uuid "original_asker_id"
@@ -73,7 +82,7 @@ ActiveRecord::Schema.define(version: 20190606181236) do
     t.uuid "claimed_by_id"
     t.string "status", default: "pending", null: false
     t.boolean "faq", default: false, null: false
-    t.integer "step"
+    t.string "step"
   end
 
   create_table "questions_tags", id: false, force: :cascade do |t|

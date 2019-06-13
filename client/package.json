@@ -10,10 +10,11 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "preinstall": "npm install -g node-gyp",
-    "heroku-postbuild": "ng build --configuration=production"
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/build-angular": "~0.800.0",
     "@angular/animations": "^8.0.0",
     "@angular/cli": "^8.0.1",
     "@angular/common": "^8.0.0",
@@ -30,8 +31,9 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "angular-notifier": "^4.1.1",
+    "angular-webstorage-service": "^1.0.2",
     "bootstrap": "4.0.0-beta.2",
-    "codelyzer": "~3.2.0",
+    "codelyzer": "^5.0.1",
     "core-js": "^2.4.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
@@ -56,8 +58,5 @@
     "web-animations-js": "^2.3.1",
     "zone.js": "~0.9.1"
   },
-  "devDependencies": {
-    "@angular-devkit/build-angular": "~0.800.0",
-    "codelyzer": "^5.0.1"
-  }
+  "devDependencies": {}
 }
