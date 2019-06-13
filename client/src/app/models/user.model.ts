@@ -9,7 +9,8 @@ export class User extends Entity{
     private _type? : string,
     _id? : string,
     private _password? : string,
-    private _role? : string
+    private _role? : string,
+    private _actingAsStudent? : boolean
 	)
   {
     super (_id);
@@ -35,7 +36,19 @@ export class User extends Entity{
     this._lastName = lastName;
   }
 
-  get Type() : string { return this._type}
+  get Type() : string {
+    if(this._actingAsStudent === true)
+    {
+      return "students";
+    }
+    else if(this._actingAsStudent === false){
+      return "professors";
+    }
+    else{
+      return this._type;
+    }
+  }
+
   set Type(type: string) {
     this._type = type;
   }
@@ -53,6 +66,14 @@ export class User extends Entity{
   get Password() : string { return this._password; }
   set Password(newPassword : string) {
     this._password = newPassword;
+  }
+
+  get ActingAsStudent(): boolean{
+    return this._actingAsStudent;
+  }
+
+  set ActingAsStudent(b: boolean){
+    this._actingAsStudent = b;
   }
 
   static createFromJSon(o : Object){

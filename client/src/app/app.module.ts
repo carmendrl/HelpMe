@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
+import { FilterPipe} from './filter.pipe';
 
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
@@ -37,6 +38,7 @@ import { QuillModule } from 'ngx-quill';
 import { StorageServiceModule } from 'angular-webstorage-service';
 
 const Server = '/api';
+
 //Custom angular notifier options
 const customNotifierOptions: NotifierOptions = {
   position: {
@@ -99,6 +101,7 @@ const customNotifierOptions: NotifierOptions = {
     EditModalComponent,
     AssignModalComponent,
     AskQuestionComponent,
+    FilterPipe,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule

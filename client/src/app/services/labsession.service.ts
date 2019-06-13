@@ -11,6 +11,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 import { environment } from '../../environments/environment';
 
@@ -154,6 +155,7 @@ export class LabSessionService {
       catchError(this.handleError<LabSession>(`getSession id=${id}`))
     );
   }
+
   updateEndDate(id: string, date: Date): Observable<LabSession>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};

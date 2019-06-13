@@ -7,6 +7,8 @@ import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
+import { LabSessionService } from '../../services/labsession.service';
+import { LabSession } from '../../models/lab_session.model';
 
 @Component({
   selector: 'app-student-session-view',
@@ -24,8 +26,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private otherQHeader:string = "All Other Questions";
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
-      super(userService, questionService, route, location, notifierService);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+      super(userService, questionService, route, location, notifierService, sessionService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();}

@@ -15,11 +15,7 @@ are input into this model from the student dashboard, student view, and faculty 
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
-  <form class="form-inline">
-    <label for="SearchMyQuestions">Search</label>
-    <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
-    <button class="btn btn-primary form-control ml-1" (click)="filter()" [disabled]="filterTextIsEmpty()"><span class="fas fa-search"></span></button>
-  </form>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search text goes here"/>
 
   <div class="results">
     <p class="table-caption">Matching Questions</p>
@@ -39,7 +35,7 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let question of filteredQuestions">
+        <tr *ngFor = "let question of filteredQuestions | filter: searchText">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>

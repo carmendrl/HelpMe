@@ -1,3 +1,7 @@
+<p>
+  The current session code is {{token}}
+</p>
+
 <div class="btn-group pull-left">
   <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
   <button class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
@@ -13,7 +17,7 @@
   <app-question-list [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate"
-  [showNumberOfAskers]="true"></app-question-list>
+  [showNumberOfAskers]="true" [showUnclaimButton]="true"></app-question-list>
 </section>
 
 <section>

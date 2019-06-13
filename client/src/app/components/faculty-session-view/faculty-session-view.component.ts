@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
+import { LabSession } from '../../models/lab_session.model';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -23,15 +24,17 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentQuestion: Question;
   private currentDate: Date;
   private user: User;
+  private token : string;
   currentTime: Date;
   private unclaimedQHeader:string = "Unclaimed Questions";
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
   private otherQHeader:string = "Other Questions";
 
-  constructor(userService: UserService, private labsessionService: LabSessionService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
-      super(userService, questionService, route, location, notifierService);
+
+  constructor(userService: UserService, questionService: QuestionService,
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+      super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();
@@ -43,6 +46,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
+         this.getSessionCode();
       }
 
       checkNotification(datas : Question[]){
@@ -50,7 +54,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           if(this.data){
           for (let q of this.data){
             if (q.id === data.id){
-              if (q.claimedBy.id!= this.user.id){
+              if (q.claimedBy != undefined && q.claimedBy.id != undefined && q.claimedBy.id!= this.user.id){
                 if (data.claimedBy.id === this.user.id){
                   this.notifier.notify('info', 'You have been assigned a question!');
                 }
@@ -85,9 +89,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             }
             //how this is implemented this depends on how the assinged/claimed/pending variables look
             //as a part of the question model
-            //right now assuming that quesstions would have the the id of the user that
+            //right now assuming that questions would have the the id of the user that
             //claimed/got assigned the question and would be compared to the current user's id.
-            else if(question.claimedBy.id != undefined){
+            else if(question.claimedBy != undefined && question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
               }
@@ -105,13 +109,16 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
       setEndDate(){
         this.currentTime = new Date();
-        this.labsessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
+        this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
       }
       assign(question: Question, user: User){
         question.claimedBy = user;
       }
 
       delete(question: Question){
+      }
 
+      getSessionCode(){
+        this.sessionService.getSession(this.sessionId).subscribe(session => this.token = session.token);
       }
     }

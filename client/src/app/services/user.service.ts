@@ -182,6 +182,8 @@ export class UserService {
 		);
 	}
 
+
+
 	private handlePromotionRequestError (error) : Observable<PromoteUserResponse> {
 		if (error instanceof HttpErrorResponse) {
 			let response : PromoteUserResponse = new PromoteUserResponse(false);
