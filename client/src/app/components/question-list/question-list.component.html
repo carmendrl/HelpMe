@@ -37,20 +37,21 @@ are input into this model from the student dashboard, student view, and faculty 
       <tbody>
         <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
-          <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
-          <td *ngIf="showStep">{{question.step}}</td>
-          <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
-          <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
-          <td> {{question.text}}</td>
-          <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
-          <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
-          <td *ngIf="showTags">
-            <ul *ngFor = "let t of question.tags" class="noStyle">
-              <li>{{t}}</li>
-            </ul>
-          </td>
-          <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-          <td *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</td>
+        <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
+        <td *ngIf="showStep">{{question.step}}</td>
+        <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
+        <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
+        <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"> </quill-editor></td>
+        <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
+        <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
+        <td *ngIf="showTags">
+          <ul *ngFor = "let t of question.tags" class="noStyle">
+            <li>{{t}}</li>
+          </ul>
+				</td>
+        <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
+        <!-- <td *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</td> -->
+        <td><quill-editor *ngIf="showAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction">

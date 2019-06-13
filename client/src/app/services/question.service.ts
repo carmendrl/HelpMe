@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+//import { SafeHtml } from '@angular/platform-browser';
 
 @Injectable()
 export class QuestionService {
