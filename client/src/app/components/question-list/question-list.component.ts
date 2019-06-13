@@ -105,6 +105,17 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+
+      filteredQuestionsLength():number{
+        if(this.filteredQuestions == undefined){
+          return 0;
+        }
+        else{
+          return this.filteredQuestions.length;
+        }
+      }
+
+
       setAnswer(){
         this.selectedAction = "answer";
       }
