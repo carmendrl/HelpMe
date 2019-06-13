@@ -15,10 +15,10 @@ are input into this model from the student dashboard, student view, and faculty 
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search text goes here"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Search Questions Here"/>
 
   <div class="results">
-    <p class="table-caption">Matching Questions</p>
+    <p *ngIf="filter()" class="table-caption">Matching Questions</p>
     <table class="table table-striped">
       <thead>
         <tr>

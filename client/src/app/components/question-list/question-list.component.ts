@@ -20,8 +20,6 @@ import * as moment from 'moment';
 })
 export class QuestionListComponent implements OnInit {
 
-  private filterText : string;
-  private filterApplied: boolean;
   private timeDifference:string;
   private selectedAction: string;
   private currentUser : User;
@@ -30,6 +28,7 @@ export class QuestionListComponent implements OnInit {
   private closeResult: string;
   private editText : string;
   private answerText:string;
+  private searchText:string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -94,6 +93,16 @@ export class QuestionListComponent implements OnInit {
         else{
           return "Close"
         }
+      }
+
+      filter():boolean{
+        if( this.searchText !=undefined && this.searchText!=""){
+          return true;
+        }
+        else{
+          return false;
+        }
+
       }
 
       setAnswer(){
