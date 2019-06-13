@@ -20,7 +20,6 @@ export class SessionListComponent implements OnInit {
   ngOnInit() {
   }
 
-
   copySessionCode(s:LabSession){
     this.copied = true;
     let selBox = this.document.createElement('textarea');

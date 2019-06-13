@@ -7,7 +7,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 
-<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search text goes here"/>
+<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
 <div class="results">
 <p class="table-caption">Matching Questions</p>
 <table class="table table-striped">
@@ -27,7 +27,7 @@ are input into this model from the student dashboard, student view, and faculty 
       </thead>
 
       <tbody>
-        <tr *ngFor = "let question of filteredQuestions | filter: searchText ">
+        <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
         <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
         <td *ngIf="showStep">{{question.step}}</td>
