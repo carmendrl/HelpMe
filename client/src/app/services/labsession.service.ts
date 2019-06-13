@@ -155,6 +155,7 @@ export class LabSessionService {
       catchError(this.handleError<LabSession>(`getSession id=${id}`))
     );
   }
+
   updateEndDate(id: string, date: Date): Observable<LabSession>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};

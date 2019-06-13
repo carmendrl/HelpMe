@@ -13,11 +13,13 @@ import { Md5 } from 'ts-md5/dist/md5';
 })
 export class UserProfileComponent implements OnInit {
 
+  private currentUser: User;
+
   constructor(private userService : UserService, private router : Router) {
 
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   logout () : void {
     this.userService.logout().subscribe (
@@ -25,6 +27,14 @@ export class UserProfileComponent implements OnInit {
     );
   }
 
+  switchTypes(user: User){
+    if(user.ActingAsStudent === true){
+      user.ActingAsStudent = false;
+    }
+    else if(user.ActingAsStudent === false || user.ActingAsStudent === undefined){
+      user.ActingAsStudent = true;
+    }
+  }
 	gravatarImageUrl (user: User) : string {
 			let email : string = user.EmailAddress;
 			//debugger

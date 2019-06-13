@@ -54,6 +54,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
+  @Input() private showUnclaimButton: boolean = false;
 
 
   constructor(private questionService: QuestionService, private userService: UserService,
@@ -66,6 +67,7 @@ export class QuestionListComponent implements OnInit {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
           "claim": this.claimQuestion,
+          "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
           "removeFaQ": this.removeFaqQuestion,
           "addFaQ": this.addFaqQuestion,
@@ -95,6 +97,9 @@ export class QuestionListComponent implements OnInit {
       }
       setClaim(){
         this.selectedAction = "claim";
+      }
+      setUnclaim(){
+        this.selectedAction = "unclaim";
       }
 
       setAssign(){
@@ -131,6 +136,11 @@ export class QuestionListComponent implements OnInit {
       claimQuestion(question: Question){
         this.questionService.claimAQuestion(question).subscribe();
       }
+
+      unclaimQuestion(question: Question){
+        this.questionService.unclaimAQuestion(question).subscribe();
+      }
+
       assignQuestion(question: Question){
         this.openAssign(AssignModalComponent, question);
 
