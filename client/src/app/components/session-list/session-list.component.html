@@ -1,6 +1,6 @@
 <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
 <div class="results">
-<p class="table-caption">{{label}}</p>
+<p *ngIf="filter()" class="table-caption">{{label}}</p>
   <table class="table table-striped">
     <thead>
       <tr>

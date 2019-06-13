@@ -8,6 +8,17 @@ export class QuestionFilterPipe implements PipeTransform {
     if(!questions || !searchText){
       return questions;
     }
-    return questions.filter( question => question.text.toLowerCase().indexOf(searchText.toLowerCase())!== -1)
+    return questions.filter( question => {
+      let text = question.text.toLowerCase().indexOf(searchText.toLowerCase())!== -1;
+      if(text){
+        return text;
+      }
+      if(question.step != undefined){
+        let step = question.step.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+        if(step){
+          return step;
+        }
+      }
+    })
   }
 }
