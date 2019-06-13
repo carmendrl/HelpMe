@@ -21,6 +21,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private myQs: Question[];
   private allOtherQs:  Question[];
   private isMeTooUser: boolean;
+  private description:string;
+  private subjectAndNumber:string;
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
   private otherQHeader:string = "All Other Questions";
@@ -35,6 +37,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
+        this.getSessionDescription();
       }
 
       checkNotification(datas : any){
@@ -91,5 +94,13 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
         }
       }
+
+
+      getSessionDescription(){
+        this.sessionService.getSession(this.sessionId).subscribe(session =>
+          {this.subjectAndNumber = session.course.subjectAndNumber,
+            this.description = session.description});
+      }
+
 
     }
