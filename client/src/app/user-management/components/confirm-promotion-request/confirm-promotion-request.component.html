@@ -1,33 +1,145 @@
-<div *ngIf = "routeParamId === '' && !promotionRequest.id">
-	<p>
-	  Please enter the id of the request in the form below
-		<input type="text" [(ngModel)]="requestId">
-		<button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
-	</p>
+<div *ngIf = "!initCompleted">
+	Initializing ...
 </div>
 
-<div [ngSwitch]="state">
-	<div *ngSwitchCase = "'loadingRequest'">
-		Looking up information ...  please wait.
-	</div>
-
-	<div *ngSwitchCase = "'loaded'">
-		<h2>Confirm request</h2>
+<div *ngIf = "initCompleted">
+	<div *ngIf = "requestType=='single' && routeParamId === '' && !promotionRequest.id">
 		<p>
-			Click the <strong>Confirm</strong> button below to confirm
-			{{promotionRequest.PromotedBy.FullName}}'s request to change
-			{{promotionRequest.User.FullName}}'s account to a professor account.
+		  Please enter the id of the request in the form below
+			<input type="text" [(ngModel)]="requestId">
+			<button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
 		</p>
-
-		<button class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
 	</div>
 
-	<div *ngSwitchCase = "'confirming'">
-		<p>Confirming request ....</p>
-	</div>
+	<div [ngSwitch]="state">
+		<div *ngSwitchCase = "'loadingRequest'">
+			Looking up information ...  please wait.
+		</div>
 
-	<div *ngSwitchCase = "'confirmed'">
-		<p>Confirmed - your account is now a professor account.</p>
-		<span class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</span>
+		<div *ngSwitchCase = "'loaded'">
+			<div *ngIf="requestType=='single'">
+				<h2>Confirm request</h2>
+				<p>
+					Click the <strong>Confirm</strong> button below to confirm
+					{{promotionRequest.PromotedBy.FullName}}'s request to change
+					{{promotionRequest.User.FullName}}'s account to a professor account.
+				</p>
+			</div>
+
+			<div *ngIf="requestType=='multiple'">
+				<h2>Promotion Requests</h2>
+
+				<p>
+					The {{unconfirmedRequests.length > 1 ? 'users' : 'user'}}
+					below
+					{{unconfirmedRequests.length > 1 ? "have" : "has"}}
+					requested a professor account.  Please
+					confirm any users you recognize to be professors.
+				</p>
+				<p>
+					Or, you can
+					<a [routerLink]="['/dashboard']">continue to your dashboard</a>.
+				</p>
+
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								<div class="form-check">
+									<input type="checkbox" name="selectAll" (change)="selectAll()" [(ngModel)]="selectAllChecked">
+									<label for="selectAll" class="form-check-label">
+										{{ selectAllChecked ? "Deselect all" : "Select all"}}
+									</label>
+								</div>
+							</th>
+							<th>Requester</th>
+							<th>Request date</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr *ngFor="let request of unconfirmedRequests; let i=index">
+							<td>
+								<input type="checkbox" [(ngModel)]="requestSelected[i]">
+							</td>
+							<td>
+								{{request.User.FullName}} ({{request.User.EmailAddress}})
+							</td>
+							<td>
+								{{request.CreatedAt | date:'short'}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<button class="btn btn-primary" (click)="confirmRequest()" [disabled]="confirmShouldBeDisabled()">Confirm</button>
+		</div>
+
+		<div *ngSwitchCase = "'confirming'">
+			<p>Confirming request ....</p>
+		</div>
+
+		<div *ngSwitchCase = "'confirmed'">
+			<div *ngIf="requestType == 'single'">
+				The requested user has been promoted to a professor acccount.
+			</div>
+
+			<div *ngIf="requestType == 'multiple'">
+				The following {{confirmedRequests.length > 1 ? "users have " : "user has been"}}
+				promoted to a professor:
+				<ul>
+					<li *ngFor = "let request of confirmedRequests">
+						{{request.User.FullName}}
+					</li>
+				</ul>
+			</div>
+
+			<span class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</span>
+		</div>
+
+		<div *ngSwitchCase = "'errorConfirming'">
+			<p>
+				<span *ngIf="errorRequests.length > 1">
+					Some errors
+				</span>
+				<span *ngIf="errorRequests.length == 1">
+					An error
+				</span>
+				occurred while confirming the selected request(s).
+			</p>
+
+			<table class="table">
+				<thead>
+					<tr>
+						<th>User</th>
+						<th>Reason for error</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let error of errorRequests">
+						<td>{{error.Data.User.FullName}}</td>
+						<td>
+							<ul class="list-unstyled">
+								<li *ngFor="let error of error.ErrorMessages">
+									{{error}}
+								</li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div *ngIf="confirmedRequests.length > 0">
+				<p>
+					Requests to promote the following user(s) <strong>were confirmed successfully</strong>
+				</p>
+
+				<ul class="list-unstyled">
+					<li *ngFor="let success of confirmedRequests">
+						{{success.User.FullName}}
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </div>

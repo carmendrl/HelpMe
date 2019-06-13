@@ -254,7 +254,6 @@ export class QuestionService {
     }
 
     findQuestionByText (text : string) : Observable <Question[]>{
-      debugger
       let url: string = `${this.apiHost}/user/questions`;
       return this.httpClient.get(url).pipe(
         map(r => this.createArray(r['data'], r['included'])),

@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import * as HttpStatus from 'http-status-codes';
+
 import { UserService } from '../../services/user.service';
+import { ApiResponse } from '../../services/api-response';
 
 import { User } from '../../models/user.model';
 
@@ -44,11 +47,21 @@ export class LoginComponent implements OnInit {
     return /^\S+@\S+(\.\S+)+$/.test(this.emailAddress);
   }
 
-  handleLoginResponse (succeeded : boolean) {
-    this.failedLogin = !succeeded;
-    if (succeeded) {
-      this.router.navigateByUrl("/dashboard");
-    }
+  handleLoginResponse (response : ApiResponse<User>) {
+		if (response.Successful) {
+			this.failedLogin = response.HttpStatusCode == HttpStatus.UNAUTHORIZED;
+	    if (!this.failedLogin) {
+				if (response.Data.Type == 'professors') {
+					this.router.navigateByUrl("/confirm-promotions");
+				}
+				else {
+					this.router.navigateByUrl("/dashboard");
+				}
+	    }
+		}
+		else {
+			console.log("Unsuccessful call to login API call");
+		}
   }
 
   onSubmit() : void {

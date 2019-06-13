@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
+import * as HttpStatus from 'http-status-codes';
+
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Observable } from 'rxjs/Observable';
@@ -16,6 +18,7 @@ import { User } from '../models/user.model';
 import { PromotionRequest } from '../user-management/models/promotion-request.model';
 import { Question } from '../models/question.model';
 
+import { ApiResponse } from './api-response';
 import { environment } from '../../environments/environment';
 
 export class PromoteUserResponse {
@@ -80,25 +83,7 @@ export class UserService {
     return this._currentUser$;
   }
 
-  createUserArray(objects:any[]): User[]{
-    let users = new Array<User>();
-
-    //loop through the labsessions and push them onto an array after reformating
-    for(let object of objects){
-
-      users.push(this.buildCreateUserFromJson(object));
-
-    }
-    return users;
-  }
-
-    private buildCreateUserFromJson(s: Object) : User {
-      let user = User.createFromJSon(s);
-
-      return user;
-    }
-
-  login (emailAddress : string, password : string) : Observable<boolean> {
+  login (emailAddress : string, password : string) : Observable<ApiResponse<User>> {
     let url : string =`${this.apiHost}/users/sign_in`;
     let body = {
       email: emailAddress,
@@ -110,9 +95,10 @@ export class UserService {
       //delay(20000), //This is here to test for login delay messages
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
       map(r => {
-        return true
-      }),
-      catchError(error => this.handleError(error))
+				let user : User = User.createFromJSon(r["data"]);
+				return new ApiResponse<User>(true, user)
+			}),
+      catchError(error => this.handleLoginError(error))
     );
   }
 
@@ -127,13 +113,13 @@ export class UserService {
   }
 
   createAccount(user : User, requestPromotion: boolean) : Observable<boolean> {
-		let url : string = `${this.apiHost}/users?requestPromotion=true`;
+		let url : string = `${this.apiHost}/users?requestPromotion=${requestPromotion}`;
 
     let body = this.buildCreateAccountBodyFromUser (user);
     return this.httpClient.post(url, body).pipe(
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-      map(r => true ),
-      catchError(error => this.handleCreateAccountError(error))
+      map(r => true )
+      //catchError(error => this.handleCreateAccountError(error))
     );
   }
 
@@ -146,51 +132,6 @@ export class UserService {
 		return this.httpClient.get(url).pipe(
 			map(r => r["data"].map (o => User.createFromJSon(o)))
 		)
-	}
-
-	requestPromotion ( user : User) : Observable<PromoteUserResponse> {
-		let url : string = `${this.apiHost}/promotion_requests`;
-		console.log(`Url for request promotion is ${url}`);
-		return this.httpClient.post(url, {user_id: user.id}).pipe(
-			map (r => new PromoteUserResponse(true)),
-			catchError (r => this.handlePromotionRequestError(r))
-		);
-	}
-
-	loadPromotionRequest ( id : string) : Observable<PromotionRequest> {
-		let url : string = `${this.apiHost}/promotion_requests/${id}`;
-		return this.httpClient.get(url).pipe (
-			map (r => {
-					let pr : PromotionRequest = PromotionRequest.createFromJSon(r["data"]);
-					let user_id : string = r["data"]["relationships"]["user"]["data"]["id"];
-					let user = r["included"].find( e => e["type"] =="students" && e["id"] == user_id);
-					pr.User = User.createFromJSon(user);
-					let promoted_by_id : string = r["data"]["relationships"]["promoted_by"]["data"]["id"];
-					let promoted_by = r["included"].find( e => e["type"] == 'professors' && e["id"] == promoted_by_id);
-					pr.PromotedBy = User.createFromJSon(promoted_by);
-					return pr;
-				}
-			)//,
-			//catchError (r => this.handlePromotionRequestError(r))
-		);
-	}
-
-	confirmPromotionRequest (pr : PromotionRequest) : Observable<boolean> {
-		let url : string = `${this.apiHost}/promotion_requests/${pr.id}`;
-		return this.httpClient.put(url, {}).pipe(
-			map (r => true)
-		);
-	}
-
-
-
-	private handlePromotionRequestError (error) : Observable<PromoteUserResponse> {
-		if (error instanceof HttpErrorResponse) {
-			let response : PromoteUserResponse = new PromoteUserResponse(false);
-      error.error.error.errors.forEach (err => response.addError(err.message))
-			return of(response);
-    }
-		return of(new PromoteUserResponse(true));
 	}
 
   private buildCreateAccountBodyFromUser ( u : User) {
@@ -212,17 +153,118 @@ export class UserService {
       this._currentUser$.next(u);
   }
 
-  private handleCreateAccountError (error) : Observable<boolean> {
+  private handleCreateAccountError (error) : Observable<ApiResponse<User>> {
     if (error instanceof HttpErrorResponse) {
       let httpError = <HttpErrorResponse> error;
       let errorMessage : string = "The account was not created for the following reasons:";
       let reasons = error.error.errors.full_messages.join(", ");
       console.log(reasons);
     }
-    return of(false);
+    return of(new ApiResponse<User> (false));
   }
 
-  private handleError (error) : Observable<boolean> {
-    return of(false);
+  private handleLoginError (error) : Observable<ApiResponse<User>> {
+		let apiResponse : ApiResponse<User> = new ApiResponse<User> (false);
+
+		if (error instanceof HttpErrorResponse) {
+			apiResponse.HttpStatusCode = error.status;
+
+			if (error.status == HttpStatus.UNAUTHORIZED) {
+				apiResponse.Successful = true;
+				return of(apiResponse);
+			}
+			else {
+				apiResponse.addError("An unexpected error occurred while trying to log you in.  If this problem persists, please contact the HelpMe administrators");
+				return of(apiResponse);
+			}
+		}
+
+    return of(apiResponse);
   }
+
+	//  This area of the user service deals with promoting users to professors
+	requestPromotion ( user : User) : Observable<PromoteUserResponse> {
+		let url : string = `${this.apiHost}/promotion_requests`;
+		console.log(`Url for request promotion is ${url}`);
+		return this.httpClient.post(url, {user_id: user.id}).pipe(
+			map (r => new PromoteUserResponse(true)),
+			catchError (r => this.handlePromotionRequestError(r))
+		);
+	}
+
+	loadPromotionRequests ( unconfirmedOnly : boolean) : Observable<PromotionRequest[]> {
+		let unconfirmedString : string = unconfirmedOnly ? 'true' : 'false';
+		let url : string = `${this.apiHost}/promotion_requests?unconfirmed=${unconfirmedString}`;
+		return this.httpClient.get(url).pipe(
+			map( r => r["data"].map(o => this.createSinglePromotionRequestFromJSON(o, r["included"])))
+		);
+	}
+
+	loadPromotionRequest ( id : string) : Observable<PromotionRequest> {
+		let url : string = `${this.apiHost}/promotion_requests/${id}`;
+		return this.httpClient.get(url).pipe (
+			map (r => this.createSinglePromotionRequestFromJSON(r["data"], r["included"]))
+			//catchError (r => this.handlePromotionRequestError(r))
+		);
+	}
+
+	private createSinglePromotionRequestFromJSON (r : object, included : object[]) : PromotionRequest {
+		let pr : PromotionRequest = PromotionRequest.createFromJSon(r);
+		let user_id : string = r["relationships"]["user"]["data"]["id"];
+		let user = included.find( e => e["type"] =="students" && e["id"] == user_id);
+		pr.User = User.createFromJSon(user);
+		let promoted_by_object : string = r["relationships"]["promoted_by"];
+		if (promoted_by_object["data"]) {
+			let promoted_by_id = promoted_by_object["data"]["id"];
+			let promoted_by = included.find( e => e["type"] == 'professors' && e["id"] == promoted_by_id);
+			pr.PromotedBy = User.createFromJSon(promoted_by);
+		}
+
+		return pr;
+	}
+
+	confirmPromotionRequest (pr : PromotionRequest) : Observable<ApiResponse<PromotionRequest>> {
+		let url : string = `${this.apiHost}/promotion_requests/${pr.id}`;
+		return this.httpClient.put(url, {}).pipe(
+			map (r => {
+				let pr : PromotionRequest = this.createSinglePromotionRequestFromJSON(r["data"], r["included"]);
+				let response : ApiResponse<PromotionRequest> = new ApiResponse<PromotionRequest> (true, pr);
+				return response;
+			}),
+			catchError(r => this.handleConfirmPromotionRequestError(r, pr))
+		);
+	}
+
+	private handleConfirmPromotionRequestError (error : any, pr : PromotionRequest) : Observable<ApiResponse<PromotionRequest>> {
+		let apiResponse : ApiResponse<PromotionRequest> = new ApiResponse<PromotionRequest> (false);
+		apiResponse.Data = pr;
+		if (error instanceof HttpErrorResponse) {
+			apiResponse.HttpStatusCode = error.status;
+			if (error.error.errors) {
+				apiResponse.addError(error.error.errors.join(","));
+			}
+			else {
+				if (error.error) {
+					apiResponse.addError(error.error);
+				}
+				else {
+					apiResponse.addError("An unkown HTTP error occurred");
+				}
+			}
+		}
+		else {
+				apiResponse.addError("An unkown error occurred");
+		}
+		return of(apiResponse);
+	}
+
+	private handlePromotionRequestError (error) : Observable<PromoteUserResponse> {
+		if (error instanceof HttpErrorResponse) {
+			let response : PromoteUserResponse = new PromoteUserResponse(false);
+			error.error.error.errors.forEach (err => response.addError(err.message))
+			return of(response);
+		}
+		return of(new PromoteUserResponse(true));
+	}
+
 }

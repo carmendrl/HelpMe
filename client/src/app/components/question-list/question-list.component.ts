@@ -108,12 +108,12 @@ export class QuestionListComponent implements OnInit {
 
       filteredQuestionsLength():number{
         if(this.filteredQuestions == undefined){
-        return 0;
+          return 0;
+        }
+        else{
+          return this.filteredQuestions.length;
+        }
       }
-      else{
-        return this.filteredQuestions.length;
-      }
-    }
 
 
       setAnswer(){

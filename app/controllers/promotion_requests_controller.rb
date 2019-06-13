@@ -3,7 +3,11 @@ class PromotionRequestsController < ApplicationController
   before_action :find_request!, except: [:index, :create]
 
   def index
-    render json: PromotionRequest.all
+		if params[:unconfirmed] == 'true'
+			render json: PromotionRequest.where(:confirmed_on => nil), include: [:user, :promoted_by]
+		else
+    	render json: PromotionRequest.all, include: [:user, :promoted_by]
+		end
   end
 
   def create
@@ -21,25 +25,10 @@ class PromotionRequestsController < ApplicationController
   end
 
   def update
-		if current_user.id == @request.user.id
-
 			@request.confirmed_on = DateTime.current
+			@request.promoted_by = current_user
 			@request.save!
-
-			current_user.type = :Professor
-			current_user.save!
-
-			#  We need to re-sign in using a Professor
-			#  object rather than the Student object
-			#  that was originally signed in to keep
-			#  Devise from trying to find the user
-			#  as a student
-			sign_in Professor.find(current_user.id)
-
-			render json: @request
-		else
-			render_cannot_perform_operation("Only the user being promoted to a professor can confirm a promotion request")
-		end
+			render json: @request, include: [:user, :promoted_by]
 	end
 
   def show

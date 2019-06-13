@@ -4,5 +4,5 @@ export const environment = {
   production: true,
 	local_storage_mode: LOCAL_STORAGE,
 	server: 'https://hopehelpme.herokuapp',
-	api_base: 'https://hopehelpme.herokuapp.com/api'
+	api_base: '/api'
 };

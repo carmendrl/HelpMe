@@ -22,7 +22,7 @@ export class PromotionRequest extends Entity {
 	static createFromJSon (o : any) : PromotionRequest {
 		let pr : PromotionRequest = new PromotionRequest();
 		pr.id = o["id"];
-		pr.CreatedAt = o["created_at"];
+		pr.CreatedAt = new Date(o["attributes"]["created_at"]);
 		return pr;
 	}
 }
