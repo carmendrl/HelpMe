@@ -2,17 +2,18 @@
 <section>
   <app-ask-question [session]="sessionId"></app-ask-question>
 </section>
+
 <section>
-  <h2>Frequently Asked Questions</h2>
-  <app-question-list [showAction]= "false" [questions]="faQs" [filteredQuestions]="faQs"></app-question-list>
+  <app-question-list [header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false"></app-question-list>
 </section>
 
 <section>
-  <h2>My Questions</h2>
-  <app-question-list [showAnswerButton]= "true" [showEditButton]= "true" [questions]="myQs" [filteredQuestions]="myQs"></app-question-list>
+  <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
+  [filteredQuestions]="faQs"></app-question-list>
 </section>
 
 <section>
-  <h2>All Questions</h2>
-  <app-question-list [showAnswerButton]= "true" [showEditButton]= "true" [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
+  <app-question-list [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
 </section>

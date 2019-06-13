@@ -24,6 +24,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private currentDate: Date;
   private user: User;
   currentTime: Date;
+  private unclaimedQHeader:string = "Unclaimed Questions";
+  private myQHeader:string = "My Questions";
+  private faqHeader:string = "Frequently Asked Questions";
+  private otherQHeader:string = "Other Questions";
 
   constructor(userService: UserService, private labsessionService: LabSessionService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {

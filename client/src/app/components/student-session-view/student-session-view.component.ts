@@ -19,6 +19,9 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private myQs: Question[];
   private allOtherQs:  Question[];
   private isMeTooUser: boolean;
+  private faqHeader:string = "Frequently Asked Questions";
+  private myQHeader:string = "My Questions";
+  private otherQHeader:string = "All Other Questions";
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService) {

@@ -30,13 +30,11 @@ export class QuestionListComponent implements OnInit {
   private closeResult: string;
   private editText : string;
   private answerText:string;
-  //private editContent;
-  //private selectedUser : User = new User();
-  //private newContent;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
   @Input() private currentDate: Date;
+  @Input() private header: string;
   @Input() private showDate: boolean = false;
   @Input() private showCourse: boolean = false;
   @Input() private showAskedBy: boolean = false;
@@ -53,6 +51,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
+  @Input() public isCollapsed: boolean = true;
 
 
   constructor(private questionService: QuestionService, private userService: UserService,
@@ -127,6 +126,15 @@ export class QuestionListComponent implements OnInit {
 
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
+      }
+
+      checkIfCollapsed():string{
+        if(this.isCollapsed){
+          return "Open";
+        }
+        else{
+          return "Close"
+        }
       }
 
       setAnswer(){
@@ -217,7 +225,7 @@ export class QuestionListComponent implements OnInit {
       //Assign Modal methods
       openAssign(content, question:Question) {
         let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'});
-modal.componentInstance.currentQuestion = question;
+        modal.componentInstance.currentQuestion = question;
         modal.result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
@@ -233,30 +241,30 @@ modal.componentInstance.currentQuestion = question;
           <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
           modal.componentInstance.currentQuestion = question;
           modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-      }
-
-
-      private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-          return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-          return 'by clicking on a backdrop';
-        } else {
-          return  `with: ${reason}`;
+            this.closeResult = `Closed with: ${result}`;
+          }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          });
         }
+
+
+        private getDismissReason(reason: any): string {
+          if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+          } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+          } else {
+            return  `with: ${reason}`;
+          }
+        }
+
+
+
+        // gravatarImageUrl() : string {
+        //     //debugger
+        //
+        //
+        //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+        // }
+
       }
-
-
-
-      // gravatarImageUrl() : string {
-      //     //debugger
-      //
-      //
-      //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-      // }
-
-    }
