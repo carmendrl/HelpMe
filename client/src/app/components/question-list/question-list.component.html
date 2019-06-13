@@ -9,7 +9,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <h2 class="inlineHeader">{{header}}
   <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestions.length}}</span>
+  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
 </button>
 </h2>
 
@@ -27,6 +27,7 @@ are input into this model from the student dashboard, student view, and faculty 
       <th *ngIf="showNumberOfAskers">Number of Askers</th>
       <th>Question</th>
       <th *ngIf="showAskedBy">Asked By</th>
+      <th *ngIf="showClaimedBy">Claimed By</th>
       <th *ngIf="showTags">Tags</th>
       <th *ngIf="showTimeInQueue">Time in queue</th>
       <th *ngIf="showAnswer">Answer</th>
@@ -42,6 +43,7 @@ are input into this model from the student dashboard, student view, and faculty 
         <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
         <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"> </quill-editor></td>
         <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
+        <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
         <td *ngIf="showTags">
           <ul *ngFor = "let t of question.tags" class="noStyle">
             <li>{{t}}</li>
@@ -85,9 +87,5 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </tbody>
     </table>
-    <div *ngIf="filterApplied">
-      {{filteredQuestions.length}} of {{questions.length}} questions displayed
-      <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
-    </div>
   </div>
 </div>
