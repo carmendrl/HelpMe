@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ask-question',
@@ -13,14 +14,17 @@ export class AskQuestionComponent implements OnInit {
   private possibleMatches: Question[] = new Array<Question>();
   private step: number;
   private questionMessage: string;
+  private message: SafeHtml;
   blured = false;
   focused = false;
   @Input() session: string;
 
-  constructor(private modalService: NgbModal, private questionService: QuestionService) { }
+  constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
+}
 
   ngOnInit() {
-  }
+
+}
 
   open(content){
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
@@ -69,4 +73,7 @@ export class AskQuestionComponent implements OnInit {
       this.questionMessage = "";
 
     }
+
+
+
 }

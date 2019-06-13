@@ -35,6 +35,7 @@ export class StartSessionComponent implements OnInit {
   private end_time: {hour:number, minute:number, second:number};
   private startBeforeEnd: boolean;
   private coursesRetrieved: boolean = false;
+  private copied : boolean = false;
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -93,6 +94,7 @@ export class StartSessionComponent implements OnInit {
     }
 
     copySessionCode(){
+      this.copied = true;
       let selBox = this.document.createElement('textarea');
       selBox.value=this.newSession.token;
       this.document.body.appendChild(selBox);
@@ -103,6 +105,7 @@ export class StartSessionComponent implements OnInit {
     }
 
     copySessionLink(){
+      this.copied = true;
       let selBox = this.document.createElement('textarea');
       let url =`${environment.server}/lab_sessions/${this.newSession.id}`;
       selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION

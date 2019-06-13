@@ -20,8 +20,6 @@ import * as moment from 'moment';
 })
 export class QuestionListComponent implements OnInit {
 
-  private filterText : string;
-  private filterApplied: boolean;
   private timeDifference:string;
   private selectedAction: string;
   private currentUser : User;
@@ -30,13 +28,12 @@ export class QuestionListComponent implements OnInit {
   private closeResult: string;
   private editText : string;
   private answerText:string;
-  //private editContent;
-  //private selectedUser : User = new User();
-  //private newContent;
+  private searchText:string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
   @Input() private currentDate: Date;
+  @Input() private header: string;
   @Input() private showDate: boolean = false;
   @Input() private showCourse: boolean = false;
   @Input() private showAskedBy: boolean = false;
@@ -53,6 +50,9 @@ export class QuestionListComponent implements OnInit {
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
+  @Input() private showUnclaimButton: boolean = false;
+  @Input() private showClaimedBy: boolean = false;
+  @Input() public isCollapsed: boolean = true;
 
 
   constructor(private questionService: QuestionService, private userService: UserService,
@@ -65,6 +65,7 @@ export class QuestionListComponent implements OnInit {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
           "claim": this.claimQuestion,
+          "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
           "removeFaQ": this.removeFaqQuestion,
           "addFaQ": this.addFaqQuestion,
@@ -80,54 +81,40 @@ export class QuestionListComponent implements OnInit {
       }
 
       ngOnInit() {
-        this.filterApplied = false;
-        this.filterText = "";
-      }
-
-      filterTextIsEmpty () : boolean {
-        if (/\S/.test(this.filterText)) {
-          return false;
-        }
-        return true;
-      }
-
-      filter () : void {
-        this.filterApplied = true;
-        this.filteredQuestions = this.questions.filter(
-          q=>this.includeQuestion(q)
-        );
-      }
-
-      clearFilter () : void {
-        this.filterApplied = false;
-        this.filterText = "";
-        this.copyAllQuestionsToFilteredQuestions();
-      }
-
-      private copyAllQuestionsToFilteredQuestions () {
-        this.filteredQuestions = this.questions.slice(0, this.questions.length);
-      }
-
-      private includeQuestion (question : Question) : boolean {
-
-        //  Look at question text, course, Date
-        let regEx : RegExp = new RegExp(`${this.filterText}`, 'i');
-        if (regEx.test(question.text)) return true;
-        if (regEx.test(question.session.course.subjectAndNumber)) return true;
-
-        //  Create a moment from the date, and format it with full versions
-        //  of both the month and the day to allow for searches including
-        //  those things
-        let fullDate = moment(question.date).format("dddd, MMMM Do YYYY");
-
-        if (regEx.test(fullDate)) return true;
-
-        return false;
       }
 
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
       }
+
+      checkIfCollapsed():string{
+        if(this.isCollapsed){
+          return "Open";
+        }
+        else{
+          return "Close"
+        }
+      }
+
+      filter():boolean{
+        if( this.searchText !=undefined && this.searchText!=""){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
+
+      filteredQuestionsLength():number{
+        if(this.filteredQuestions == undefined){
+          return 0;
+        }
+        else{
+          return this.filteredQuestions.length;
+        }
+      }
+
 
       setAnswer(){
         this.selectedAction = "answer";
@@ -137,6 +124,9 @@ export class QuestionListComponent implements OnInit {
       }
       setClaim(){
         this.selectedAction = "claim";
+      }
+      setUnclaim(){
+        this.selectedAction = "unclaim";
       }
 
       setAssign(){
@@ -173,6 +163,11 @@ export class QuestionListComponent implements OnInit {
       claimQuestion(question: Question){
         this.questionService.claimAQuestion(question).subscribe();
       }
+
+      unclaimQuestion(question: Question){
+        this.questionService.unclaimAQuestion(question).subscribe();
+      }
+
       assignQuestion(question: Question){
         this.openAssign(AssignModalComponent, question);
 
@@ -217,7 +212,7 @@ export class QuestionListComponent implements OnInit {
       //Assign Modal methods
       openAssign(content, question:Question) {
         let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'});
-modal.componentInstance.currentQuestion = question;
+        modal.componentInstance.currentQuestion = question;
         modal.result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
@@ -233,30 +228,30 @@ modal.componentInstance.currentQuestion = question;
           <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
           modal.componentInstance.currentQuestion = question;
           modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-      }
-
-
-      private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-          return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-          return 'by clicking on a backdrop';
-        } else {
-          return  `with: ${reason}`;
+            this.closeResult = `Closed with: ${result}`;
+          }, (reason) => {
+            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          });
         }
+
+
+        private getDismissReason(reason: any): string {
+          if (reason === ModalDismissReasons.ESC) {
+            return 'by pressing ESC';
+          } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+            return 'by clicking on a backdrop';
+          } else {
+            return  `with: ${reason}`;
+          }
+        }
+
+
+
+        // gravatarImageUrl() : string {
+        //     //debugger
+        //
+        //
+        //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+        // }
+
       }
-
-
-
-      // gravatarImageUrl() : string {
-      //     //debugger
-      //
-      //
-      //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-      // }
-
-    }

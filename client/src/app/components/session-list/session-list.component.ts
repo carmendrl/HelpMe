@@ -13,13 +13,15 @@ export class SessionListComponent implements OnInit {
 
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
+
+  private copied: boolean = false;
   constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
 
   ngOnInit() {
   }
 
-
   copySessionCode(s:LabSession){
+    this.copied = true;
     let selBox = this.document.createElement('textarea');
     selBox.value=s.token;
     this.document.body.appendChild(selBox);
@@ -30,6 +32,7 @@ export class SessionListComponent implements OnInit {
   }
 
   copySessionLink(s:LabSession){
+    this.copied = true;
     let selBox = this.document.createElement('textarea');
     let url ="www.YouDidIT....."+s.id+".....com";
     selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
@@ -43,5 +46,15 @@ export class SessionListComponent implements OnInit {
   viewSession(s:LabSession){
     this.router.navigateByUrl(`/lab_sessions/${s.id}`);
   }
+
+  filter():boolean{
+    if( this.searchText !=undefined && this.searchText!=""){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
 
 }

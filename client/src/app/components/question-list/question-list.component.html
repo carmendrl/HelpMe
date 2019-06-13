@@ -6,82 +6,84 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
-<form class="form-inline">
-  <label for="SearchMyQuestions">Search</label>
-  <input type="text" class="form-control ml-2" name="SearchMyQuestions" placeholder="Text, course, date" [(ngModel)]="filterText"/>
-  <button class="btn btn-primary form-control ml-1" (click)="filter()" [disabled]="filterTextIsEmpty()"><span class="fas fa-search"></span></button>
-</form>
+<h2 class="inlineHeader">{{header}}
+  <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+</button>
+</h2>
 
-<div class="results">
-  <p class="table-caption">Matching Questions</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th *ngIf="showDate">Date</th>
-        <th *ngIf="showCourse">Course</th>
-        <th *ngIf="showStep">Step</th>
-        <th *ngIf="showNumberOfAskers">Number of Askers</th>
-        <th>Question</th>
-        <th *ngIf="showAskedBy">Asked By</th>
-        <th *ngIf="showTags">Tags</th>
-        <th *ngIf="showTimeInQueue">Time in queue</th>
-        <th *ngIf="showAnswer">Answer</th>
-        <th *ngIf="showAction">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor = "let question of filteredQuestions">
-        <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
-        <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
-        <td *ngIf="showStep">{{question.step}}</td>
-        <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
-        <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
-        <td> {{question.text}}</td>
-        <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
-        <td *ngIf="showTags">
-          <ul *ngFor = "let t of question.tags" class="noStyle">
-            <li>{{t}}</li>
-          </ul>
-				</td>
-        <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-        <td><div *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</div></td>
+<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <div class="results">
+    <p *ngIf="filter()" class="table-caption">Matching Questions</p>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th *ngIf="showDate">Date</th>
+          <th *ngIf="showCourse">Course</th>
+          <th *ngIf="showStep">Step</th>
+          <th *ngIf="showNumberOfAskers">Number of Askers</th>
+          <th>Question</th>
+          <th *ngIf="showAskedBy">Asked By</th>
+          <th *ngIf="showClaimedBy">Claimed By</th>
+          <th *ngIf="showTags">Tags</th>
+          <th *ngIf="showTimeInQueue">Time in queue</th>
+          <th *ngIf="showAnswer">Answer</th>
+          <th *ngIf="showAction">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
+          <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
+          <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
+          <td *ngIf="showStep">{{question.step}}</td>
+          <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
+          <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"> </quill-editor></td>
+          <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
+          <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
+          <td *ngIf="showTags">
+            <ul *ngFor = "let t of question.tags" class="noStyle">
+              <li>{{t}}</li>
+            </ul>
+          </td>
+          <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
+          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction">
-						<div class="d-none d-lg-block d-xl-block">
-	            <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-	            <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-	            <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-	            <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-	            <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-	            <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-	            <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-	            <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
-						</div>
+            <div class="d-none d-lg-block d-xl-block">
+              <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+              <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+              <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+              <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
+              <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
+              <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
+            </div>
 
-          	<div class="d-block d-lg-none">
-            <form #thisForm (ngSubmit)="performAction(question)">
-              <div class="form-group">
-                <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
-                  <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
-                  <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
-                  <option *ngIf="showClaimButton" value="claim">Claim</option>
-                  <option *ngIf="showAssignButton" value="assign">Assign</option>
-                  <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
-                  <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
-                  <option *ngIf="showDeleteButton" value="delete">Delete</option>
-                  <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
-                </select>
-              </div>
-              <button type="submit" class ="btn btn-primary">Submit</button>
-            </form>
-						</div>
+            <div class="d-block d-lg-none">
+              <form #thisForm (ngSubmit)="performAction(question)">
+                <div class="form-group">
+                  <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+                    <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
+                    <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                    <option *ngIf="showClaimButton" value="claim">Claim</option>
+                    <option *ngIf="showAssignButton" value="assign">Assign</option>
+                    <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+                    <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+                    <option *ngIf="showDeleteButton" value="delete">Delete</option>
+                    <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
+                  </select>
+                </div>
+                <button type="submit" class ="btn btn-primary">Submit</button>
+              </form>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <div *ngIf="filterApplied">
-      {{filteredQuestions.length}} of {{questions.length}} questions displayed
-      <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
-    </div>
   </div>
+</div>

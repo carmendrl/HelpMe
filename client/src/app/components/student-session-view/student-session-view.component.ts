@@ -7,6 +7,8 @@ import { User } from '../../models/user.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
+import { LabSessionService } from '../../services/labsession.service';
+import { LabSession } from '../../models/lab_session.model';
 
 @Component({
   selector: 'app-student-session-view',
@@ -19,10 +21,15 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private myQs: Question[];
   private allOtherQs:  Question[];
   private isMeTooUser: boolean;
+  private description:string;
+  private subjectAndNumber:string;
+  private faqHeader:string = "Frequently Asked Questions";
+  private myQHeader:string = "My Questions";
+  private otherQHeader:string = "All Other Questions";
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService) {
-      super(userService, questionService, route, location, notifierService);
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+      super(userService, questionService, route, location, notifierService, sessionService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();}
@@ -30,17 +37,28 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
+        this.getSessionDescription();
       }
 
       checkNotification(datas : any){
         for (let data of datas){
           for (let q of this.myQs){
             if(q.id === data.id){
+              //if your question was answered notification is sent (unless it was answered by yourself)
               if(q.answer === undefined){
                 if(data.answer != undefined){
-                  this.notifier.notify('info', 'Your question has been answered!');
+                    if(data.answer.user.id != this.currentUser.id){
+                    this.notifier.notify('info', 'Your question has been answered!');
+                    }
                 }
               }
+              //if the answer to your question was editted (but not by yourself)
+              // else{
+              //   debugger
+              //   if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
+              //     this.notifier.notify('info', 'The answer to your question has been updated.');
+              //   }
+              // }
             }
           }
         }
@@ -76,5 +94,13 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
         }
       }
+
+
+      getSessionDescription(){
+        this.sessionService.getSession(this.sessionId).subscribe(session =>
+          {this.subjectAndNumber = session.course.subjectAndNumber,
+            this.description = session.description});
+      }
+
 
     }

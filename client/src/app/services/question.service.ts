@@ -10,21 +10,23 @@ import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
-
+import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+//import { SafeHtml } from '@angular/platform-browser';
 
 @Injectable()
 export class QuestionService {
   private apiHost : string;
   private userQuestions : Question[];
-  private sessionId : number;
+  private sessionId : string;
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
 
-  constructor(private httpClient : HttpClient, private labsessionService: LabSessionService) {
+  constructor(private httpClient : HttpClient, private labsessionService: LabSessionService, private route:ActivatedRoute) {
     this.apiHost = environment.api_base;
     this.updatedQuestion$ = new Subject<Question>();
     this.newAnswer$ = new Subject<Answer>();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
   }
 
   get getUpdatedQuestion$() : Observable<Question> {
@@ -69,8 +71,12 @@ export class QuestionService {
           var answer: Object = includedResponse.find(function(element) {
             return element["type"]==="answers" && element["id"]=== object["relationships"]["answer"]["data"]["id"];
           });
+          var answerer: Object = includedResponse.find(function(element) {
+            return element["id"]=== answer["relationships"]["answerer"]["data"]["id"];
+          });
         }else{
           var answer: Object = undefined;
+          var answerer: Object = undefined;
         }
 
         if (object["relationships"]["claimed_by"] != undefined) {
@@ -92,7 +98,7 @@ export class QuestionService {
           var askers: Object[] = undefined;
         }
 
-        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers));
+        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
       }
 
       return userQuestions;
@@ -100,7 +106,7 @@ export class QuestionService {
 
 
     private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object,
-      aData : Object, askerData:Object, claimerData: Object, askersData:Object[]) : Question{
+      aData : Object, askerData:Object, claimerData: Object, askersData:Object[], answererData:Object) : Question{
 
         let prof = User.createFromJSon(profData);
         let c = Course.createFromJSon(cData);
@@ -112,7 +118,9 @@ export class QuestionService {
         q.session=s;
         q.asker=asker;
         if(aData != undefined){
+          let answerer = User.createFromJSon(answererData);
           let a = Answer.createFromJSon(aData);
+          a.user = answerer;
           a.session=s;
           q.answer=a;
         }
@@ -172,12 +180,31 @@ export class QuestionService {
           catchError(this.handleError<Question>(`claim id=${question.id}`))
         );
       }
+      unclaimAQuestion(question: Question): Observable<Question>{
+        let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
+        let user = new User();
+        let body = {
+          text : question.text,
+          faq : question.faq,
+          claimed_by_id: "",
+          status: "pending"
+        };
+        return this.httpClient.put(url, body).pipe(
+          map(r => {question.claimedBy=undefined;question.status="pending";return question;}),
+          tap(r => this.updatedQuestion$.next(r)),
+          catchError(this.handleError<Question>(`unclaim id=${question.id}`))
+        );
+      }
+
 
       answerAQuestion(question: Question, text: string): Observable<Answer>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = { text: text };
+        var answerer:User;
         return this.httpClient.post(url, body).pipe(
-          map(r => question.answer = (Answer.createFromJSon(r["data"]))),
+          map(r => {answerer = User.createFromJSon(r["included"]);
+          question.answer = (Answer.createFromJSon(r["data"]));
+          question.answer.user = answerer; return question.answer }),
           tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r)}),
           catchError(this.handleError<Answer>(`answer created`))
         );
@@ -224,6 +251,14 @@ export class QuestionService {
         tap(r => this.updatedQuestion$.next(r)),
         catchError(this.handleError<Question>(`assigned =${question.id}`))
       )
+    }
+
+    findQuestionByText (text : string) : Observable <Question[]>{
+      let url: string = `${this.apiHost}/user/questions`;
+      return this.httpClient.get(url).pipe(
+        map(r => this.createArray(r['data'], r['included'])),
+        catchError(this.handleError<Question[]>(`getSessionQuestions`))
+      );
     }
 
       //handles errors
