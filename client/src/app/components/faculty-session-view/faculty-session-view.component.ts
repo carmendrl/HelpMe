@@ -99,7 +99,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
               }
               else{
                 question.answer = new Answer();
-                question.answer.text="This question was claimed by " + question.claimedBy.FullName;
                 this.otherQs.push(question);
               }
             }

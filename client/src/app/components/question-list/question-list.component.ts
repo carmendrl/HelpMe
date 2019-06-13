@@ -51,6 +51,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
   @Input() private showUnclaimButton: boolean = false;
+  @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
 
 
@@ -102,7 +103,6 @@ export class QuestionListComponent implements OnInit {
         else{
           return false;
         }
-
       }
 
       setAnswer(){
