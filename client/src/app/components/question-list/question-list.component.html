@@ -9,7 +9,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <h2 class="inlineHeader">{{header}}
   <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestions.length}}</span>
+  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
 </button>
 </h2>
 
