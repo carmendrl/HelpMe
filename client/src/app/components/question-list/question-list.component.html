@@ -15,41 +15,43 @@ are input into this model from the student dashboard, student view, and faculty 
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="Search Questions Here"/>
-
-  <div class="results">
-    <p *ngIf="filter()" class="table-caption">Matching Questions</p>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th *ngIf="showDate">Date</th>
-          <th *ngIf="showCourse">Course</th>
-          <th *ngIf="showStep">Step</th>
-          <th *ngIf="showNumberOfAskers">Number of Askers</th>
-          <th>Question</th>
-          <th *ngIf="showAskedBy">Asked By</th>
-          <th *ngIf="showTags">Tags</th>
-          <th *ngIf="showTimeInQueue">Time in queue</th>
-          <th *ngIf="showAnswer">Answer</th>
-          <th *ngIf="showAction">Action</th>
-        </tr>
+<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+<div class="results">
+<p class="table-caption">Matching Questions</p>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th *ngIf="showDate">Date</th>
+      <th *ngIf="showCourse">Course</th>
+      <th *ngIf="showStep">Step</th>
+      <th *ngIf="showNumberOfAskers">Number of Askers</th>
+      <th>Question</th>
+      <th *ngIf="showAskedBy">Asked By</th>
+      <th *ngIf="showClaimedBy">Claimed By</th>
+      <th *ngIf="showTags">Tags</th>
+      <th *ngIf="showTimeInQueue">Time in queue</th>
+      <th *ngIf="showAnswer">Answer</th>
+      <th *ngIf="showAction">Action</th>
+    </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let question of filteredQuestions | filter: searchText">
+        <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
-          <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
-          <td *ngIf="showStep">{{question.step}}</td>
-          <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
-          <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
-          <td> {{question.text}}</td>
-          <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
-          <td *ngIf="showTags">
-            <ul *ngFor = "let t of question.tags" class="noStyle">
-              <li>{{t}}</li>
-            </ul>
-          </td>
-          <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-          <td *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</td>
+        <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
+        <td *ngIf="showStep">{{question.step}}</td>
+        <!-- <td><div *ngIf="question.otherAskers.length<=2 && showNumberOfAskers">{{question.otherAskers.length}}</div></td> -->
+        <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
+        <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"> </quill-editor></td>
+        <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
+        <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
+        <td *ngIf="showTags">
+          <ul *ngFor = "let t of question.tags" class="noStyle">
+            <li>{{t}}</li>
+          </ul>
+				</td>
+        <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
+        <!-- <td *ngIf="showAnswer" style="color:dodgerBlue">{{question.answerText}}</td> -->
+        <td><quill-editor *ngIf="showAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction">
@@ -85,9 +87,5 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </tbody>
     </table>
-    <div *ngIf="filterApplied">
-      {{filteredQuestions.length}} of {{questions.length}} questions displayed
-      <button class="btn btn-primary" (click)="clearFilter()">Clear filter</button>
-    </div>
   </div>
 </div>

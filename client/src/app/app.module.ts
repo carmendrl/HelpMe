@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
-import { FilterPipe} from './filter.pipe';
+import {  QuestionFilterPipe } from './question-filter.pipe';
+import { SessionFilterPipe } from './session-filter.pipe'
 
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from './components/login/login.component';
@@ -36,6 +37,7 @@ import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { QuillModule } from 'ngx-quill';
 
 import { StorageServiceModule } from 'angular-webstorage-service';
+
 
 const Server = '/api';
 
@@ -101,7 +103,8 @@ const customNotifierOptions: NotifierOptions = {
     EditModalComponent,
     AssignModalComponent,
     AskQuestionComponent,
-    FilterPipe,
+    QuestionFilterPipe,
+    SessionFilterPipe,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
