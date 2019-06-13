@@ -1,4 +1,5 @@
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
+<p class="center">Last refreshed: {{timeFromRefresh}} </p>
 <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
 <section>
   <app-ask-question [session]="sessionId"></app-ask-question>

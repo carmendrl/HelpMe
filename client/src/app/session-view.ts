@@ -9,6 +9,8 @@ import { Observable, interval, Subscription, timer } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from './services/labsession.service';
 import { LabSession } from './models/lab_session.model';
+import * as moment from 'moment';
+
 
 export abstract class SessionView  {
   questions: Question[];
@@ -18,6 +20,7 @@ export abstract class SessionView  {
   private timerSubscription : Subscription;
   protected sessionId: string;
   protected readonly notifier: NotifierService;
+  protected timeFromRefresh: string;
 
   constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
@@ -41,6 +44,7 @@ export abstract class SessionView  {
       this.checkNotification(data);
       this.data = data; this.sortQuestions(this.data);
       this.subscribeToData();
+      this.time();
     });
   }
 
@@ -55,6 +59,10 @@ export abstract class SessionView  {
     if (this.timerSubscription){
       this.timerSubscription.unsubscribe();
     }
+  }
+
+  time(){
+    this.timeFromRefresh = moment().format('LTS');
   }
 
 
