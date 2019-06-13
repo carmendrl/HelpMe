@@ -24,3 +24,18 @@
   margin-left: 10px;
 
 }
+.smallScreen{
+  display:none;
+}
+
+@media only screen and (max-width: 600px){
+  .smallScreen{
+    display:inline;
+  }
+  .largeScreen{
+    display:none;
+  }
+  .qEditor{
+    border:none;
+  }
+}

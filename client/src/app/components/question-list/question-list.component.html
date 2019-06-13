@@ -6,6 +6,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
+<div class="largeScreen">
 <h2 class="inlineHeader">{{header}}
   <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
@@ -88,4 +89,58 @@ are input into this model from the student dashboard, student view, and faculty 
       </tbody>
     </table>
   </div>
+</div>
+</div>
+
+<div class="smallScreen">
+  <h2 class="inlineHeader">{{header}}
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+  </button>
+  </h2>
+<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <div class="results">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
+      <div>
+        <quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"></quill-editor>
+        <span>( {{timeDiff(question)}} )</span>
+      </div>
+      <span><quill-editor *ngIf="showAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></span>
+      <span><td *ngIf="showAction">
+        <div class="d-none d-lg-block d-xl-block">
+          <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+          <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+          <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+          <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+          <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
+          <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
+          <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+          <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
+        </div>
+
+        <div class="d-block d-lg-none">
+          <form #thisForm (ngSubmit)="performAction(question)">
+            <div class="form-group">
+              <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+                <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
+                <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                <option *ngIf="showClaimButton" value="claim">Claim</option>
+                <option *ngIf="showAssignButton" value="assign">Assign</option>
+                <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+                <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+                <option *ngIf="showDeleteButton" value="delete">Delete</option>
+                <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
+              </select>
+            </div>
+            <button type="submit" class ="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </span>
+    </div>
+  </div>
+</div>
+
+
 </div>
