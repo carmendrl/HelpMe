@@ -21,6 +21,10 @@ const routes : Routes = [
 	{
 		'path': 'confirm-promotion/:request-id',
 		'component': ConfirmPromotionRequestComponent
+	},
+	{
+		'path': 'confirm-promotions',
+		'component': ConfirmPromotionRequestComponent
 	}
 ];
 
