@@ -45,11 +45,11 @@ const Server = '/api';
 const customNotifierOptions: NotifierOptions = {
   position: {
 		horizontal: {
-			position: 'left',
+			position: 'middle',
 			distance: 12
 		},
 		vertical: {
-			position: 'bottom',
+			position: 'top',
 			distance: 12,
 			gap: 10
 		}
