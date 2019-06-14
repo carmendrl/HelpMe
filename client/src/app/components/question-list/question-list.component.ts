@@ -90,12 +90,15 @@ export class QuestionListComponent implements OnInit {
         return this.timeDifference = moment(question.date).fromNow();
       }
 
-      private stepTextTime(question: Question): string{
+      private stepTextTime(question: Question): Object[]{
+        let tempArray = new Array<Object>();
         this.timeDifference = moment(question.date).fromNow();
-        question.text = Object.assign({}, question.text, {"insert": "this.timeDifference"});
+        tempArray.push(question.text);
+        //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
         this.step = question.step;
-        return question.text;
+        return tempArray;
       }
+
       checkIfCollapsed():string{
         if(this.isCollapsed){
           return "Open";
