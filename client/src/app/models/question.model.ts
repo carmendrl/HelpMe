@@ -18,6 +18,7 @@ export class Question extends Entity{
     this._claimedBy = new User();
   }
 
+
   get date() : Date {
     return this._date;
   }

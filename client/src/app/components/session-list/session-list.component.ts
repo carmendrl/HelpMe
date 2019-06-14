@@ -14,6 +14,8 @@ export class SessionListComponent implements OnInit {
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
 
+  private searchText: string;
+
   private copied: boolean = false;
   constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
 
@@ -47,14 +49,14 @@ export class SessionListComponent implements OnInit {
     this.router.navigateByUrl(`/lab_sessions/${s.id}`);
   }
 
-  // filter():boolean{
-  //   if( this.searchText !=undefined && this.searchText!=""){
-  //     return true;
-  //   }
-  //   else{
-  //     return false;
-  //   }
-  // }
+  filter():boolean{
+    if( this.searchText !=undefined && this.searchText!=""){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 
 
 }

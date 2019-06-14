@@ -29,6 +29,7 @@ export class QuestionListComponent implements OnInit {
   private editText : string;
   private answerText:string;
   private searchText:string;
+  private step: string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -53,7 +54,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showUnclaimButton: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
-
+  public toggleAnswer: boolean = false;
 
   constructor(private questionService: QuestionService, private userService: UserService,
     private modalService: NgbModal) {
@@ -83,10 +84,18 @@ export class QuestionListComponent implements OnInit {
       ngOnInit() {
       }
 
+
+
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
       }
 
+      private stepTextTime(question: Question): string{
+        this.timeDifference = moment(question.date).fromNow();
+        question.text = Object.assign({}, question.text, {"insert": "this.timeDifference"});
+        this.step = question.step;
+        return question.text;
+      }
       checkIfCollapsed():string{
         if(this.isCollapsed){
           return "Open";
