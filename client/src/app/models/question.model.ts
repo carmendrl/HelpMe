@@ -2,20 +2,23 @@ import { LabSession } from './lab_session.model';
 import { User } from './user.model';
 import { Entity } from './entity.model';
 import { Answer } from './answer.model';
+import * as moment from 'moment';
 
 export class Question extends Entity{
   private _tags : Set<string>;
+  private timeDifference: string;
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: string) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: string, private _smallText?: string) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
     this._otherAskers = new Array<User>();
     this._claimedBy = new User();
+
   }
 
 
@@ -32,9 +35,27 @@ export class Question extends Entity{
   }
 
   set text(text : string) {
+    //debugger
+    let tempString = "";
     this._text = text;
+    this.timeDifference = moment(this.date).fromNow();
+    if(this._step != undefined){
+      tempString = tempString + this._step + ".";
+    }
+    tempString = tempString + text.substring(19,text.length-6) + " ";
+    tempString = tempString + "(" + this.timeDifference + ")";
+    //debugger
+    this._smallText = tempString;
   }
 
+  get smallText() : string{
+    //debugger
+    return this._smallText;
+  }
+
+  set smallText(text: string) {
+    this._smallText = text;
+  }
   get answer() : Answer {
     return this._answer;
   }

@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+import * as moment from 'moment';
 //import { SafeHtml } from '@angular/platform-browser';
 
 @Injectable()
@@ -21,6 +22,7 @@ export class QuestionService {
   private sessionId : string;
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
+  private timeDifference: string;
 
   constructor(private httpClient : HttpClient, private labsessionService: LabSessionService, private route:ActivatedRoute) {
     this.apiHost = environment.api_base;
@@ -36,6 +38,15 @@ export class QuestionService {
   get getNewAnswer$() : Observable<Answer> {
     return this.newAnswer$;
   }
+
+  // updateSmallText(question: Question){
+  //   let tempArray = new Array<Object>();
+  //   this.timeDifference = moment(question.date).fromNow();
+  //   tempArray.push(question.text);
+  //   tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
+  //   //this.step = question.step;
+  //   question.smallText = tempArray;
+  // }
 
   questionList() : Observable<Question[]> {
     let url :string = `${this.apiHost}/user/questions`;

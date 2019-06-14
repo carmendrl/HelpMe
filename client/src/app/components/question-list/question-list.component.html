@@ -102,9 +102,7 @@ are input into this model from the student dashboard, student view, and faculty 
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
       <div>
-        <quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="stepTextTime(question)"></quill-editor>
-        <!-- <span>( {{timeDiff(question)}} )</span> -->
-        <!-- <quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="timeDiff(question)"></quill-editor> -->
+          <span> {{question.smallText}} </span>
       </div>
       <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
       <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">

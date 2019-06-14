@@ -90,14 +90,15 @@ export class QuestionListComponent implements OnInit {
         return this.timeDifference = moment(question.date).fromNow();
       }
 
-      private stepTextTime(question: Question): Object[]{
-        let tempArray = new Array<Object>();
-        this.timeDifference = moment(question.date).fromNow();
-        tempArray.push(question.text);
-        //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
-        this.step = question.step;
-        return tempArray;
-      }
+      // private stepTextTime(question: Question): Object[]{
+      //   console.log();
+      //   let tempArray = new Array<Object>();
+      //   this.timeDifference = moment(question.date).fromNow();
+      //   tempArray.push(question.text);
+      //   //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
+      //   this.step = question.step;
+      //   return tempArray;
+      // }
 
       checkIfCollapsed():string{
         if(this.isCollapsed){
