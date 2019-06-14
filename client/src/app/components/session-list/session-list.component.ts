@@ -47,14 +47,14 @@ export class SessionListComponent implements OnInit {
     this.router.navigateByUrl(`/lab_sessions/${s.id}`);
   }
 
-  filter():boolean{
-    if( this.searchText !=undefined && this.searchText!=""){
-      return true;
-    }
-    else{
-      return false;
-    }
-  }
+  // filter():boolean{
+  //   if( this.searchText !=undefined && this.searchText!=""){
+  //     return true;
+  //   }
+  //   else{
+  //     return false;
+  //   }
+  // }
 
 
 }
