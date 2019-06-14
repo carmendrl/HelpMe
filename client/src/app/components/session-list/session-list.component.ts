@@ -13,6 +13,7 @@ export class SessionListComponent implements OnInit {
 
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
+  private searchText:string;
 
   private copied: boolean = false;
   constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
