@@ -28,6 +28,10 @@ class PromotionRequestsController < ApplicationController
 			@request.confirmed_on = DateTime.current
 			@request.promoted_by = current_user
 			@request.save!
+
+			@request.user.type = 'Professor'
+			@request.user.save!
+
 			render json: @request, include: [:user, :promoted_by]
 	end
 
