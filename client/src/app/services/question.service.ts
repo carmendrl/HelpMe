@@ -22,7 +22,8 @@ export class QuestionService {
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
 
-  constructor(private httpClient : HttpClient, private labsessionService: LabSessionService, private route:ActivatedRoute) {
+  constructor(private httpClient : HttpClient, private labsessionService: LabSessionService,
+    private route:ActivatedRoute) {
     this.apiHost = environment.api_base;
     this.updatedQuestion$ = new Subject<Question>();
     this.newAnswer$ = new Subject<Answer>();
