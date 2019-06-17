@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { LabSessionService } from '../../services/labsession.service';
 import { QuestionService } from '../../services/question.service';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ export class StudentDashboardComponent implements OnInit {
   private myQuestions : Question[];
   private invalidId: boolean;
   private token: string;
+  @Input() started: boolean = false;
 
   constructor(private labSessionService : LabSessionService, private questionService: QuestionService,
     private router : Router) { }
@@ -38,7 +39,7 @@ export class StudentDashboardComponent implements OnInit {
       sessionId => {
         if(sessionId != undefined){
           this.invalidId = false;
-        this.router.navigateByUrl(`/lab_sessions/${sessionId}`);
+        if(this.started === true){this.router.navigateByUrl(`/lab_sessions/${sessionId}`)};
       }
       else{
         this.invalidId = true;
