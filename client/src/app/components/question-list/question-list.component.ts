@@ -1,15 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
 import { UserService } from '../../services/user.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, from } from 'rxjs';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
 import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
-import {EditModalComponent} from '../edit-modal/edit-modal.component'
-import {AnswerModalComponent} from '../answer-modal/answer-modal.component'
-import {AssignModalComponent} from '../assign-modal/assign-modal.component'
+import {EditModalComponent} from '../edit-modal/edit-modal.component';
+import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
+import {AssignModalComponent} from '../assign-modal/assign-modal.component';
 import * as moment from 'moment';
 
 
@@ -29,6 +29,7 @@ export class QuestionListComponent implements OnInit {
   private editText : string;
   private answerText:string;
   private searchText:string;
+  private step: string;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -54,6 +55,12 @@ export class QuestionListComponent implements OnInit {
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
 
+  public toggleAnswer: boolean = false;
+
+
+  @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+
+
 
   constructor(private questionService: QuestionService, private userService: UserService,
     private modalService: NgbModal) {
@@ -75,17 +82,28 @@ export class QuestionListComponent implements OnInit {
           "modalService":this.modalService,
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
-          "openAssign":this.openAssign,
-          "getDismissReason":this.getDismissReason,
+          "openAssign":this.openAssign
         }
       }
 
       ngOnInit() {
       }
 
+
+
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
       }
+
+      // private stepTextTime(question: Question): Object[]{
+      //   console.log();
+      //   let tempArray = new Array<Object>();
+      //   this.timeDifference = moment(question.date).fromNow();
+      //   tempArray.push(question.text);
+      //   //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
+      //   this.step = question.step;
+      //   return tempArray;
+      // }
 
       checkIfCollapsed():string{
         if(this.isCollapsed){
@@ -147,111 +165,84 @@ export class QuestionListComponent implements OnInit {
       //methods for select element in drop down menu
       performAction(q: Question){
         this.currentQuestion = q;
-        this.actions[this.selectedAction](q);
+        this.actions[this.selectedAction](q).subscribe(r => this.refreshData());
       }
 
-
-      answerQuestion(question: Question){
-        this.openAnswer(AnswerModalComponent, question);
-
+      refreshData(){
+        this.refreshEvent.next();
       }
 
-      editQuestion(question: Question){
-        this.openEdit(EditModalComponent, question);
-
-      }
-      claimQuestion(question: Question){
-        this.questionService.claimAQuestion(question).subscribe();
+      answerQuestion(question: Question):Observable<any>{
+        return this.openAnswer(AnswerModalComponent, question);
       }
 
-      unclaimQuestion(question: Question){
-        this.questionService.unclaimAQuestion(question).subscribe();
+      editQuestion(question: Question):Observable<any>{
+        return this.openEdit(EditModalComponent, question);
       }
 
-      assignQuestion(question: Question){
-        this.openAssign(AssignModalComponent, question);
-
+      claimQuestion(question: Question):Observable<any>{
+        return this.questionService.claimAQuestion(question);
       }
-      addFaqQuestion(question: Question){
-        this.questionService.updateQuestion(question, question.text, true).subscribe();
 
+      unclaimQuestion(question: Question):Observable<any>{
+        return this.questionService.unclaimAQuestion(question);
       }
-      removeFaqQuestion(question: Question){
-        this.questionService.updateQuestion(question, question.text, false).subscribe();
 
+      assignQuestion(question: Question):Observable<any>{
+        return this.openAssign(AssignModalComponent, question);
       }
-      deleteQuestion(question: Question){
-        this.questionService.deleteAQuestion(question).subscribe();
 
+      addFaqQuestion(question: Question):Observable<any>{
+        return this.questionService.updateQuestion(question, question.text, true);
       }
-      meTooQuestion(question: Question){
-        this.questionService.addMeToo(question, true, this.currentUser).subscribe();
 
+      removeFaqQuestion(question: Question):Observable<any>{
+        return this.questionService.updateQuestion(question, question.text, false);
+      }
+
+      deleteQuestion(question: Question):Observable<any>{
+        return this.questionService.deleteAQuestion(question);
+      }
+
+      meTooQuestion(question: Question):Observable<any>{
+        return this.questionService.addMeToo(question, true, this.currentUser);
       }
 
 
       //Edit Modal methods
-      openEdit(content, question: Question){
-
+      openEdit(content, question: Question):Observable<any>{
         let modal = this.modalService.open(content,
           <NgbModalOptions>{
             ariaLabelledBy: 'modal-edit-answer',
-          }
-        );
-
-        modal.componentInstance.currentQuestion = question;
-
-        modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-      }
-
-
-      //Assign Modal methods
-      openAssign(content, question:Question) {
-        let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'});
-        modal.componentInstance.currentQuestion = question;
-        modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;  //${this.getDismissReason(reason)}
-        });
-        console.log("Testing Modal");
-      }
-
-
-      //Answer Modal methods
-      openAnswer(content, question: Question){
-        let modal= this.modalService.open(content,
-          <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
-          modal.componentInstance.currentQuestion = question;
-          modal.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-          }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
           });
+          modal.componentInstance.currentQuestion = question;
+          return from(modal.result);
         }
 
 
-        private getDismissReason(reason: any): string {
-          if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-          } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-          } else {
-            return  `with: ${reason}`;
+        //Assign Modal methods
+        openAssign(content, question:Question):Observable<any> {
+          let modal= this.modalService.open(content, <NgbModalOptions>{
+            ariaLabelledBy: 'modal-create-course'});
+          modal.componentInstance.currentQuestion = question;
+          return from(modal.result);
+        }
+
+
+        //Answer Modal methods
+        openAnswer(content, question: Question):Observable<any>{
+          let modal= this.modalService.open(content,
+            <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+            modal.componentInstance.currentQuestion = question;
+            return from(modal.result);
           }
+
+
+          // gravatarImageUrl() : string {
+          //     //debugger
+          //
+          //
+          //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+          // }
+
         }
-
-
-
-        // gravatarImageUrl() : string {
-        //     //debugger
-        //
-        //
-        //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-        // }
-
-      }

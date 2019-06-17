@@ -9,6 +9,8 @@ import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
+import { QuestionListComponent } from '../question-list/question-list.component';
+import { AskQuestionComponent } from '../ask-question/ask-question.component';
 
 @Component({
   selector: 'app-student-session-view',
@@ -47,18 +49,18 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               //if your question was answered notification is sent (unless it was answered by yourself)
               if(q.answer === undefined){
                 if(data.answer != undefined){
-                    if(data.answer.user.id != this.currentUser.id){
+                  if(data.answer.user.id != this.currentUser.id){
                     this.notifier.notify('info', 'Your question has been answered!');
-                    }
+                  }
                 }
               }
-              //if the answer to your question was editted (but not by yourself)
-              // else{
-              //   debugger
-              //   if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
-              //     this.notifier.notify('info', 'The answer to your question has been updated.');
-              //   }
-              // }
+              //if the answer to your question was editted (even if it was editted by yourself)
+              else{
+                debugger
+                if(q.answer.text != data.answer.text){
+                  this.notifier.notify('info', 'The answer to your question has been updated.');
+                }
+              }
             }
           }
         }
@@ -74,23 +76,21 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
           this.isMeTooUser=false;
 
-          if(question.id != undefined){
-            for (let a of question.otherAskers){
-              if(a.id === this.currentUser.id){
-                this.isMeTooUser = true;
-              }
+          for (let a of question.otherAskers){
+            if(a.id === this.currentUser.id){
+              this.isMeTooUser = true;
             }
+          }
 
-            if(this.isMeTooUser){
-              //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
-              this.myQs.push(question);
-            }
-            else if (question.faq){
-              this.faQs.push(question);
-            }
-            else{
-              this.allOtherQs.push(question);
-            }
+          if(this.isMeTooUser){
+            //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
+            this.myQs.push(question);
+          }
+          else if (question.faq){
+            this.faQs.push(question);
+          }
+          else{
+            this.allOtherQs.push(question);
           }
         }
       }
@@ -100,7 +100,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.sessionService.getSession(this.sessionId).subscribe(session =>
           {this.subjectAndNumber = session.course.subjectAndNumber,
             this.description = session.description});
-      }
+          }
 
 
-    }
+        }

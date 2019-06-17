@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
@@ -18,6 +18,8 @@ export class AskQuestionComponent implements OnInit {
   blured = false;
   focused = false;
   @Input() session: string;
+
+  @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
 }
@@ -45,9 +47,13 @@ export class AskQuestionComponent implements OnInit {
   }
 
   createQuestion(){
-    this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe();
+    this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe(
+      r => this.refreshData());
   }
 
+  refreshData(){
+    this.refreshEvent.next();
+  }
 
     created(event) {
       // tslint:disable-next-line:no-console

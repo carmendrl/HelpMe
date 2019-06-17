@@ -1,3 +1,19 @@
 .actionSpace{
   margin: 3px;
 }
+.smallScreen{
+  display:none;
+}
+
+@media only screen and (max-width: 600px){
+  .smallScreen{
+    display:inline;
+  }
+  .largeScreen{
+    display:none;
+  }
+  .qEditor{
+    border:none;
+    margin-left:10px;
+  }
+}

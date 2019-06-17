@@ -13,7 +13,10 @@ export class SessionListComponent implements OnInit {
 
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
+  @Input() public isCollapsed: boolean = true;
   private searchText:string;
+
+
 
   private copied: boolean = false;
   constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
@@ -58,4 +61,21 @@ export class SessionListComponent implements OnInit {
   }
 
 
+  sessionsLength():number{
+    if(this.sessions == undefined){
+      return 0;
+        }
+      else{
+        return this.sessions.length;
+        }
+    }
+
+    checkIfCollapsed():string{
+      if(this.isCollapsed){
+        return "Open";
+      }
+      else{
+        return "Close"
+      }
+    }
 }
