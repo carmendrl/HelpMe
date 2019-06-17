@@ -78,7 +78,7 @@ export class LabSessionService {
 
 
 
-  createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<LabSession> {
+  createNewLabSession(description:String, courseId:string, startDate: Date, endDate: Date): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions`;
     let body = {
       description: description,

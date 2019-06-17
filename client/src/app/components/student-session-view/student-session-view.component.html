@@ -1,23 +1,23 @@
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
-<p <!--*ngIf="!readOnly"--> class="center">Last refreshed: {{timeFromRefresh}} </p>
+<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
 <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
 <section>
-  <app-ask-question [session]="sessionId" (refreshEvent)="refreshData()"></app-ask-question>
+  <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"></app-ask-question>
 </section>
 
 <section>
   <app-question-list [header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false" <!--[readOnly]="readOnly"-->
+  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false" [readOnly]="readOnly"
   (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
-  [filteredQuestions]="faQs" <!--[readOnly]="readOnly"--> (refreshEvent)="refreshData()"></app-question-list>
+  [filteredQuestions]="faQs" [readOnly]="readOnly" (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" <!--[readOnly]="readOnly"-->
+  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [readOnly]="readOnly"
   (refreshEvent)="refreshData()"></app-question-list>
 </section>

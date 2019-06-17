@@ -10,7 +10,8 @@ import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
-import { QuestionListComponent } from '../question-list/question-list.component'
+import { QuestionListComponent } from '../question-list/question-list.component';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -110,7 +111,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         }
       }
       setEndDate(){
-        this.currentTime = new Date();
+        this.currentTime = moment().utc().toDate();
+        //debugger
         this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
       }
       assign(question: Question, user: User){

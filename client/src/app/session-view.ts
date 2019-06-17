@@ -21,7 +21,7 @@ export abstract class SessionView  {
   protected sessionId: string;
   protected readonly notifier: NotifierService;
   protected timeFromRefresh: string;
-
+  
   constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
@@ -38,6 +38,7 @@ export abstract class SessionView  {
   abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
 
   abstract checkNotification( data : any );//allows different notifications depending on the specific user
+
 
   private refreshData(){
     this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {

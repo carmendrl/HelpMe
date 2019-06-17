@@ -28,7 +28,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
   private otherQHeader:string = "All Other Questions";
-  //private readOnly: boolean = false;
+  private readOnly: boolean = false;
+  private currentDate: Date = new Date();
 
 
   constructor(userService: UserService, questionService: QuestionService,
@@ -43,20 +44,18 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
+        this.checkIfEnded();
+      }
+
+      checkIfEnded(){
+        let session : LabSession;
+        let newDate = new Date();
+        this.currentDate = newDate;
+
+        this.sessionService.getSession(this.sessionId).subscribe(r => {if(new Date(r.endDate.toString()) <= this.currentDate){this.readOnly = true;}else{this.readOnly = false;}});
 
       }
 
-      // checkIfEnded(): boolean{
-      //   let session : LabSession;
-      //   this.sessionService.getSession(this.sessionId).subscribe(r => session = r);
-      //   let currentDate = new Date();
-      //   if(session.endDate >= currentDate){
-      //     return true;
-      //   }
-      //   else{
-      //     return false;
-      //   }
-      // }
 
       checkNotification(datas : any){
         for (let data of datas){
@@ -72,7 +71,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               }
               //if the answer to your question was editted (even if it was editted by yourself)
               else{
-                debugger
+                //debugger
                 if(q.answer.text != data.answer.text){
                   this.notifier.notify('info', 'The answer to your question has been updated.');
                 }

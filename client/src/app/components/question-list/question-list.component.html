@@ -32,7 +32,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <th *ngIf="showTags">Tags</th>
           <th *ngIf="showTimeInQueue">Time in queue</th>
           <th *ngIf="showAnswer">Answer</th>
-          <th *ngIf="showAction">Action</th>
+          <th *ngIf="showAction && !readOnly">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -53,7 +53,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
-          <td *ngIf="showAction">
+          <td *ngIf="showAction && !readOnly">
             <div class="d-none d-lg-block d-xl-block">
               <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
               <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
@@ -66,8 +66,8 @@ are input into this model from the student dashboard, student view, and faculty 
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
             </div>
 
-            <div <!--*ngIf="!readOnly"--> class="d-block d-lg-none">
-              <form #thisForm (ngSubmit)="performAction(question);">
+            <div *ngIf="!readOnly" class="d-block d-lg-none">
+              <form #thisForm (ngSubmit)="performAction(question)">
                 <div class="form-group">
                   <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
                     <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
@@ -109,10 +109,10 @@ are input into this model from the student dashboard, student view, and faculty 
           <span> {{question.smallText}} </span><br><br>
       </div>
       <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
-      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" [styles]="{ border:'none'}" class="ql-editor" style="color:dodgerBlue" readOnly="true"  [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
-      <span><td *ngIf="showAction">
+      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
+      <span><td *ngIf="showAction && !readOnly">
 
-        <div <!--*ngIf="readOnly"--> class="d-block d-lg-none inlineButton">
+        <div class="d-block d-lg-none inlineButton">
           <form #thisForm (ngSubmit)="performAction(question)">
             <div class="form-group">
               <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
@@ -127,7 +127,7 @@ are input into this model from the student dashboard, student view, and faculty 
                 <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
               </select>
             </div>
-            <button type="submit" class ="btn btn-primary">Submit</button>
+            <button *ngIf="!readOnly" type="submit" class ="btn btn-primary">Submit</button>
           </form>
         </div>
       </span>
