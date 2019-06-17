@@ -13,12 +13,14 @@ import { Answer } from '../../models/answer.model';
 })
 export class EditModalComponent implements OnInit {
   private currentQuestion : Question;
+  private answererId:string;
   closeResult: string;
   saved : boolean = false;
   blured = false;
   focused = false;
 
-  constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal) {
+  constructor(private activeModal: NgbActiveModal, private questionService: QuestionService,
+    private modalService: NgbModal) {
   }
 
   ngOnInit() {
@@ -26,7 +28,9 @@ export class EditModalComponent implements OnInit {
 
   editAnswerFromForm(){
     this.saved = true;
-    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text).subscribe(r => this.activeModal.close());
+    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text,
+      this.answererId).subscribe(
+      r => this.activeModal.close());
   }
 
   created(event) {

@@ -153,7 +153,6 @@ export class QuestionService {
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
         //let temp = question;
         return this.httpClient.delete(url).pipe(
-          tap(r => {question.id = undefined; this.updatedQuestion$.next(question)}),
           map(r => true),
           catchError(this.handleError<boolean>(`delete question id=${question.id}`))
         );
@@ -211,14 +210,21 @@ export class QuestionService {
         );
       }
 
-      editAnAnswer(question: Question, text: string): Observable<Question>{
+      editAnAnswer(question: Question, text: string, answererId:string): Observable<Question>{
+        debugger
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
-          text : text
+          text : text,
+          answerer_id: answererId
         };
+        var answerer: User;
         return this.httpClient.put(url, body).pipe(
-          map(r => {question.answer.text = text; return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          map(r => {answerer = User.createFromJSon(r["included"]);
+          question.answer = (Answer.createFromJSon(r["data"]));
+          question.answer.user = answerer; return question}),
+          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r.answer)}),
+          // map(r => {question.answer.text = text; return question;}),
+          // tap(r => this.updatedQuestion$.next(r)),
           catchError(this.handleError<Question>(`answer edited`))
         );
       }

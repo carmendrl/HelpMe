@@ -50,15 +50,25 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               if(q.answer === undefined){
                 if(data.answer != undefined){
                   if(data.answer.user.id != this.currentUser.id){
-                    this.notifier.notify('info', 'Your question has been answered!');
+                    if(data.step != "" && data.step != undefined){
+                      this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
+                    }
+                    else{
+                      this.notifier.notify('info', 'Your question has been answered!');
+                    }
                   }
                 }
               }
               //if the answer to your question was editted (even if it was editted by yourself)
               else{
                 debugger
-                if(q.answer.text != data.answer.text){
-                  this.notifier.notify('info', 'The answer to your question has been updated.');
+                if(q.answer.text != data.answer.text && q.answer.user.id != this.currentUser.id){
+                  if(data.step != "" && data.step != undefined){
+                    this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
+                  }
+                  else{
+                    this.notifier.notify('info', 'The answer to your question has been updated.');
+                  }
                 }
               }
             }

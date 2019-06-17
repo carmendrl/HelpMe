@@ -48,7 +48,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
+        this.questionService.getUpdatedQuestion$.subscribe(r =>
+           { this.checkNotification(this.questions);
+             this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
       }
 
@@ -57,14 +59,17 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           if(this.data){
           for (let q of this.data){
             if (q.id === data.id){
-              if (q.claimedBy != undefined && q.claimedBy.id != undefined && q.claimedBy.id!= this.user.id){
+              if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+                if(data.claimedBy.id != undefined){
                 if (data.claimedBy.id === this.user.id){
                   this.notifier.notify('info', 'You have been assigned a question!');
                 }
               }
+              }
             }
           }
-        }}
+        }
+      }
       if (this.data && datas.length > this.data.length){
         this.notifier.notify('info', 'A new question has been posted!');
       }
@@ -72,7 +77,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
       sortQuestions(questions: Question[]){
-        this.checkNotification(questions);
         this.currentDate=new Date();
         //clears the array
         this.faQs.length = 0;
@@ -81,7 +85,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         this.myQs.length= 0;
 
         for (let question of questions){
-          if(question.id != undefined){
             if(question.isAnswered){
               if (question.faq){
                 this.faQs.push(question);
@@ -98,6 +101,11 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
               }
+              else if(question.claimedBy.id === ""){
+                //this else-if statement puts the question back the unclaimedQs
+                //if it was previous claimed and then unclaimed.
+                this.unclaimedQs.push(question);
+              }
               else{
                 question.answer = new Answer();
                 this.otherQs.push(question);
@@ -106,7 +114,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             else{
               this.unclaimedQs.push(question);
             }
-          }
         }
       }
       setEndDate(){

@@ -29,7 +29,7 @@
 </section>
 
 <section>
-  <app-question-list [header]= "otherQHeader" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
+  <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
   [showDeleteButton]= "true" (refreshEvent)="refreshData()"></app-question-list>
 </section>
