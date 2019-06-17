@@ -239,18 +239,7 @@ export class UserService {
 		let apiResponse : ApiResponse<PromotionRequest> = new ApiResponse<PromotionRequest> (false);
 		apiResponse.Data = pr;
 		if (error instanceof HttpErrorResponse) {
-			apiResponse.HttpStatusCode = error.status;
-			if (error.error.errors) {
-				apiResponse.addError(error.error.errors.join(","));
-			}
-			else {
-				if (error.error) {
-					apiResponse.addError(error.error);
-				}
-				else {
-					apiResponse.addError("An unkown HTTP error occurred");
-				}
-			}
+			apiResponse.addErrorsFromHttpError(error);
 		}
 		else {
 				apiResponse.addError("An unkown error occurred");
