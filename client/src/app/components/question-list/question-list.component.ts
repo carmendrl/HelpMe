@@ -182,6 +182,7 @@ export class QuestionListComponent implements OnInit {
         this.currentQuestion = q;
         this.i = this.questions.indexOf(q);
         this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
+        this.selectedAction[this.i] ="";
       }
 
       refreshData(){
