@@ -21,7 +21,7 @@ import * as moment from 'moment';
 export class QuestionListComponent implements OnInit {
 
   private timeDifference:string;
-  private selectedAction: string;
+  private selectedAction: Array<string>;
   private currentUser : User;
   private currentQuestion: Question;
   private actions;
@@ -30,6 +30,7 @@ export class QuestionListComponent implements OnInit {
   private answerText:string;
   private searchText:string;
   private step: string;
+  private i:number;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -88,6 +89,7 @@ export class QuestionListComponent implements OnInit {
       }
 
       ngOnInit() {
+        this.selectedAction = new Array<string>(this.questions.length);
       }
 
 
@@ -148,37 +150,38 @@ export class QuestionListComponent implements OnInit {
 
 
       setAnswer(){
-        this.selectedAction = "answer";
+        this.selectedAction[this.i] = "answer";
       }
       setEdit(){
-        this.selectedAction = "edit";
+        this.selectedAction[this.i] = "edit";
       }
       setClaim(){
-        this.selectedAction = "claim";
+        this.selectedAction[this.i] = "claim";
       }
       setUnclaim(){
-        this.selectedAction = "unclaim";
+        this.selectedAction[this.i] = "unclaim";
       }
 
       setAssign(){
-        this.selectedAction = "assign";
+        this.selectedAction[this.i] = "assign";
       }
       setAddFaq(){
-        this.selectedAction = "addFaQ";
+        this.selectedAction[this.i] = "addFaQ";
       }
       setRemoveFaq(){
-        this.selectedAction = "removeFaQ";
+        this.selectedAction[this.i] = "removeFaQ";
       }
       setDelete(){
-        this.selectedAction = "delete";
+        this.selectedAction[this.i] = "delete";
       }
       setMeToo(){
-        this.selectedAction = "meToo";
+        this.selectedAction[this.i] = "meToo";
       }
       //methods for select element in drop down menu
       performAction(q: Question){
         this.currentQuestion = q;
-        this.actions[this.selectedAction](q).subscribe(r => this.refreshData());
+        this.i = this.questions.indexOf(q);
+        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
       }
 
       refreshData(){
