@@ -23,7 +23,9 @@ export class AssignModalComponent implements OnInit {
   private sessionReloaded : boolean = false;
   private currentUser : User;
 
-  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal, private labSessionService : LabSessionService, private questionService: QuestionService, private userService : UserService) { }
+  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
+    private labSessionService : LabSessionService, private questionService:
+    QuestionService, private userService : UserService) {}
 
   ngOnInit() {
     this.userService.CurrentUser$.subscribe (
@@ -55,6 +57,7 @@ export class AssignModalComponent implements OnInit {
   }
 
   submitShouldBeDisabled() : boolean {
-    return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
+    return this.selectedUser === undefined;
+    //.id == undefined || this.selectedUser.EmailAddress === ""
   }
 }

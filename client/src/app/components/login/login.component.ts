@@ -5,6 +5,7 @@ import * as HttpStatus from 'http-status-codes';
 
 import { UserService } from '../../services/user.service';
 import { ApiResponse } from '../../services/api-response';
+import { LoggedinGuard } from '../../auth/loggedin.guard';
 
 import { User } from '../../models/user.model';
 
@@ -28,9 +29,7 @@ export class LoginComponent implements OnInit {
   private time: number = 0;
 
 
-
-
-  constructor(public userService : UserService, public router : Router) {
+  constructor(public userService : UserService, public router : Router, private loggedInGuard : LoggedinGuard) {
     this.failedLogin = false;
 
     this.currentUser = new User();
@@ -51,7 +50,10 @@ export class LoginComponent implements OnInit {
 		if (response.Successful) {
 			this.failedLogin = response.HttpStatusCode == HttpStatus.UNAUTHORIZED;
 	    if (!this.failedLogin) {
-				if (response.Data.Type == 'professors') {
+				if (this.loggedInGuard.urlAfterLogin != "") {
+					this.router.navigateByUrl(this.loggedInGuard.urlAfterLogin);
+				}
+				else if (response.Data.Type == 'professors') {
 					this.router.navigateByUrl("/confirm-promotions");
 				}
 				else {

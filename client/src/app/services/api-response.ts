@@ -1,5 +1,5 @@
 import * as HttpStatus from 'http-status-codes';
-
+import { HttpErrorResponse } from '@angular/common/http';
 export class ApiResponse<T> {
 	constructor (private _success : boolean, private _data? : T, private _statusCode? : number, private _errorMessages? : string[]) {
 		this._errorMessages = new Array<string> ();
@@ -33,5 +33,24 @@ export class ApiResponse<T> {
 
 	addError (message : string) {
 		this._errorMessages.push(message);
+	}
+
+	get ErrorsAsString() : string {
+		return this._errorMessages.join(",");
+	}
+
+	addErrorsFromHttpError (error : HttpErrorResponse) {
+		this.HttpStatusCode = error.status;
+		if (error.error.errors) {
+			error.error.error.errors.forEach (err => this.addError(err.message));
+		}
+		else {
+			if (error.error) {
+				this.addError(error.error);
+			}
+			else {
+				this.addError("An unknown HTTP error occurred");
+			}
+		}
 	}
 }
