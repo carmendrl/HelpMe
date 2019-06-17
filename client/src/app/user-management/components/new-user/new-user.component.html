@@ -52,6 +52,9 @@
 
     <button type="submit" class="btn btn-primary" [disabled]="!thisForm.valid">Create Account</button>
 
+		<div *ngIf="createAccountErrorMessage != ''" class="mt-2 alert alert-danger">
+			{{createAccountErrorMessage}}
+		</div>
   </form>
 </div>
 
