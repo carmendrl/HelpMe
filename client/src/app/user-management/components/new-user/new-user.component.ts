@@ -15,6 +15,9 @@ export class NewUserComponent implements OnInit {
 	private newUser : User;
 	private isProfessor : boolean;
 
+	private createAccountErrorMessage : string;
+	private confirmPassword: string;
+
 	@ViewChild("createprofessor", { static : true})
 	private newProfessorModalContent : ElementRef;
 
@@ -22,6 +25,8 @@ export class NewUserComponent implements OnInit {
 		this.newUser = new User();
 		this.newUser.Type = 'Student';
 		this.isProfessor = false;
+		this.createAccountErrorMessage = "";
+		this.confirmPassword = "";
 	}
 
   ngOnInit() {
@@ -30,22 +35,29 @@ export class NewUserComponent implements OnInit {
 	createNewAccount() : void {
     this.userService.createAccount(this.newUser, this.isProfessor).subscribe(
       r => {
-        if (r) {
+        if (r.Successful) {
 					if (this.isProfessor) {
-						let options : NgbModalOptions = {
-							centered: true
-						}
-
-						this.modalService.open(this.newProfessorModalContent, options).result.then(
-							(result) => this.router.navigateByUrl('/dashboard'),
-							(result) => this.router.navigateByUrl('/')
-						);
+						this.showNewProfessorModal();
 					}
 					else {
           	this.router.navigateByUrl('/dashboard');
 					}
         }
+				else {
+					this.createAccountErrorMessage = r.ErrorsAsString;
+				}
       }
     );
   }
+
+	private showNewProfessorModal () : void {
+		let options : NgbModalOptions = {
+			centered: true
+		}
+
+		this.modalService.open(this.newProfessorModalContent, options).result.then(
+			(result) => this.router.navigateByUrl('/dashboard'),
+			(result) => this.router.navigateByUrl('/')
+		);
+	}
 }

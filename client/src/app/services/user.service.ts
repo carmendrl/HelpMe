@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { of } from 'rxjs/observable/of';
 import { Observer } from 'rxjs/Observer';
-import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
+import { map, catchError, tap, delay, timeout, finalize } from 'rxjs/operators';
 import { timer, from} from 'rxjs';
 
 import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
@@ -105,22 +105,41 @@ export class UserService {
   logout () : Observable<boolean> {
     let url : string = `${this.apiHost}/users/sign_out`;
     return this.httpClient.delete(url).pipe(
-      tap(r => this._currentUser$.next(this.noUser)),
-			tap(r => {console.log("UserService: clearing logged in user"); this.localStorage.remove(this.KEY_USER)}),
-      map(r => true ),
-      catchError(error => of(false))
-    );
+			map( r => true),
+      catchError(error => of(false)),
+			//  Regardless of success of failure, remove the key that makes it look like the user is
+			//  logged in and tell the application that no user is logged in
+			finalize( () => {
+					console.log("UserService: clearing logged in user");
+					this.localStorage.remove(this.KEY_USER);
+					this._currentUser$.next(this.noUser)
+				}
+			)
+		);
   }
 
-  createAccount(user : User, requestPromotion: boolean) : Observable<boolean> {
+  createAccount(user : User, requestPromotion: boolean) : Observable<ApiResponse<User>> {
 		let url : string = `${this.apiHost}/users?requestPromotion=${requestPromotion}`;
 
     let body = this.buildCreateAccountBodyFromUser (user);
     return this.httpClient.post(url, body).pipe(
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-      map(r => true )
-      //catchError(error => this.handleCreateAccountError(error))
+      map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
+      catchError(error => this.handleCreateAccountError(error))
     );
+  }
+
+	private handleCreateAccountError (error) : Observable<ApiResponse<User>> {
+		let apiResponse : ApiResponse<User> = new ApiResponse<User> (false);
+
+    if (error instanceof HttpErrorResponse) {
+      let httpError = <HttpErrorResponse> error;
+			apiResponse.HttpStatusCode = httpError.status;
+      let errorMessage : string = "The account was not created for the following reasons:";
+      let reasons = error.error.errors.full_messages.join(", ");
+      apiResponse.addError(`${errorMessage} ${reasons}`);
+    }
+    return of(apiResponse);
   }
 
 	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
@@ -151,16 +170,6 @@ export class UserService {
 			console.log("UserService:  Saving logged in user information to local storage");
 			this.localStorage.set(this.KEY_USER, u);
       this._currentUser$.next(u);
-  }
-
-  private handleCreateAccountError (error) : Observable<ApiResponse<User>> {
-    if (error instanceof HttpErrorResponse) {
-      let httpError = <HttpErrorResponse> error;
-      let errorMessage : string = "The account was not created for the following reasons:";
-      let reasons = error.error.errors.full_messages.join(", ");
-      console.log(reasons);
-    }
-    return of(new ApiResponse<User> (false));
   }
 
   private handleLoginError (error) : Observable<ApiResponse<User>> {
