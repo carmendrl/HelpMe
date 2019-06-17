@@ -39,9 +39,6 @@ export class Question extends Entity{
     let tempString = "";
     this._text = text;
     this.timeDifference = moment(this.date).fromNow();
-    if(this._step != undefined){
-      tempString = tempString + this._step + ".";
-    }
     tempString = tempString + text.substring(19,text.length-6) + " ";
     tempString = tempString + "(" + this.timeDifference + ")";
     //debugger

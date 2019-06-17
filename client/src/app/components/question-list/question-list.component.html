@@ -58,6 +58,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
               <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
               <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+              <button *ngIf="showUnclaimButton" (click)="setUnclaim(); performAction(question)" class="btn btn-primary actionSpace">Unclaim</button>
               <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
               <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
               <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
@@ -72,6 +73,7 @@ are input into this model from the student dashboard, student view, and faculty 
                     <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
                     <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
                     <option *ngIf="showClaimButton" value="claim">Claim</option>
+                    <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
                     <option *ngIf="showAssignButton" value="assign">Assign</option>
                     <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
                     <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
@@ -90,6 +92,7 @@ are input into this model from the student dashboard, student view, and faculty 
 </div>
 </div>
 
+<!-- mobile view -->
 <div class="smallScreen">
   <h2 class="inlineHeader">{{header}}
     <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
@@ -102,21 +105,12 @@ are input into this model from the student dashboard, student view, and faculty 
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
       <div>
-          <span> {{question.smallText}} </span>
+          <span *ngIf="question.step">{{question.step}}.</span>
+          <span> {{question.smallText}} </span><br><br>
       </div>
       <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
       <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
       <span><td *ngIf="showAction">
-        <div class="d-none d-lg-block d-xl-block">
-          <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-          <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-          <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-          <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-          <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-          <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-          <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-          <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
-        </div>
 
         <div class="d-block d-lg-none inlineButton">
           <form #thisForm (ngSubmit)="performAction(question)">
@@ -125,6 +119,7 @@ are input into this model from the student dashboard, student view, and faculty 
                 <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
                 <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
                 <option *ngIf="showClaimButton" value="claim">Claim</option>
+                <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
                 <option *ngIf="showAssignButton" value="assign">Assign</option>
                 <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
                 <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
