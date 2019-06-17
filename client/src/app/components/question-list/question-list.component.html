@@ -6,6 +6,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
+<div class="largeScreen">
 <h2 class="inlineHeader">{{header}}
   <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
@@ -88,4 +89,52 @@ are input into this model from the student dashboard, student view, and faculty 
       </tbody>
     </table>
   </div>
+</div>
+</div>
+
+<!-- mobile view -->
+<div class="smallScreen">
+  <h2 class="inlineHeader">{{header}}
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+  </button>
+  </h2>
+<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <div class="results">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
+      <div>
+          <span *ngIf="question.step">{{question.step}}.</span>
+          <span> {{question.smallText}} </span><br><br>
+      </div>
+      <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
+      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
+      <span><td *ngIf="showAction">
+
+        <div class="d-block d-lg-none inlineButton">
+          <form #thisForm (ngSubmit)="performAction(question)">
+            <div class="form-group">
+              <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+                <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
+                <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                <option *ngIf="showClaimButton" value="claim">Claim</option>
+                <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
+                <option *ngIf="showAssignButton" value="assign">Assign</option>
+                <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
+                <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
+                <option *ngIf="showDeleteButton" value="delete">Delete</option>
+                <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
+              </select>
+            </div>
+            <button type="submit" class ="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </span>
+      <hr>
+    </div>
+  </div>
+</div>
+
+
 </div>

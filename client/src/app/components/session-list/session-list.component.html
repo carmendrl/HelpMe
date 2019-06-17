@@ -1,3 +1,4 @@
+<div class="largeScreen">
 <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
 <div class="results">
 <p *ngIf="filter()" class="table-caption">{{label}}</p>
@@ -24,4 +25,28 @@
       </tr>
     </tbody>
   </table>
+</div>
+</div>
+
+
+<!-- mobile view -->
+<div class="smallScreen">
+  <h2 class="inlineHeader">{{header}}
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+    <span *ngIf="isCollapsed" class="badge badge-light">{{sessionsLength()}}</span>
+  </button>
+  </h2>
+<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
+  <div class="results">
+    <div *ngFor = "let session of sessions | sessionfilter: searchText">
+      <span>{{session.course.subjectAndNumber}}- </span>
+      <span>{{session.description}} </span>
+      <span>({{session.professor.LastName}}) </span>
+      <button class="btn btn-primary actionSpace" (click)="viewSession(session)">View</button>
+        </div>
+      <hr>
+    </div>
+  </div>
 </div>

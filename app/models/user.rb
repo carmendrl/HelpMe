@@ -37,6 +37,10 @@ class User < ApplicationRecord
     self.role = new_role
   end
 
+	def full_name
+		return "#{self.first_name} #{self.last_name}"
+	end
+
   private
 
   def set_role_to_none
