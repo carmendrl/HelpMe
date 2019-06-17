@@ -25,9 +25,11 @@ export SENDGRID_PASSWORD=######
 
 Note that the `heroku config` commands above will be helpful to determine the right username and password for a local development machine if multiple apps utilizing Sendgrid through Rails are being installed on the same machine.
 
+Instead of setting these in `~/.bash_profile`, you can also kill the Rails server, and execute the `export` commands from the terminal window before starting Rail.
+
 ###  Configuration for ActiveMailer
 
-In `config/environments.rb`, add the following lines
+In `config/environment.rb`, add the following lines
 ```
 ActionMailer::Base.smtp_settings = {
   :user_name => ENV['SENDGRID_USERNAME'],
@@ -40,4 +42,17 @@ ActionMailer::Base.smtp_settings = {
 }
 ```
 
-It's not clear to me at the moment how the 
+It's not clear to me at the moment how the value of the domain attribute is used.
+
+###  Creating and configuring the mailer
+
+A mailer needs to be created using `rails generate mailer`.  The name *PromotionRequestConfirmationMailer* was used.  A method must be created that sets up data objects that will be used as part of the email.  In this case the name for the method was *promotion_request_confirmed*.
+
+A template layout for the email must be placed in `app/views/promotion_request_confirmation_mailer` that matches the name of the method created above, with a `.html.erb` extension.  In this case the name was `promotion_reqest_confirmed.html.erb`.
+
+###  Sending the email from the controller
+
+In the controller method whose action should cause an email to be sent, you can invoke the mailer like this:
+```
+PromotionRequestConfirmationMailer.with(request_id: @request.id).promotion_request_confirmed.deliver_now
+```

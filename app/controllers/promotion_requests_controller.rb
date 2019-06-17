@@ -32,6 +32,7 @@ class PromotionRequestsController < ApplicationController
 			@request.user.type = 'Professor'
 			@request.user.save!
 
+			PromotionRequestConfirmationMailer.with(request: @request).promotion_request_confirmed.deliver_now
 			render json: @request, include: [:user, :promoted_by]
 	end
 

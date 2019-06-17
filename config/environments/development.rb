@@ -45,4 +45,6 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   ActiveModelSerializers.config.adapter = :json_api
+
+  config.server = "http://localhost:4200"
 end

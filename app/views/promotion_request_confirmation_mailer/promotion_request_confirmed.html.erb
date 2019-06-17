@@ -1,0 +1,13 @@
+<p>
+Dear <%= @request.user.first_name %>,
+</p>
+
+<p>
+<%= @request.promoted_by.full_name %> has approved your request
+for a HelpMe professor account!  The next time you log in to the HelpMe app, you will be a professor.
+</p>
+
+<p>
+If you are willing to receive email notification when new professors create accounts, please
+<a href="<%=Rails.configuration.server%>/user/profile">Update your HelpMe profile</a> to let us know.
+</p>

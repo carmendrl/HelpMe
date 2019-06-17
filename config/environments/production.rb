@@ -81,4 +81,6 @@ Rails.application.configure do
   #  Custom configuration
   #  This is the page that Rails should render for any unmatched route
   config.home_page_path="public/index.html"
+
+	config.server = "https://hopehelpme.herokuapp.com"
 end
