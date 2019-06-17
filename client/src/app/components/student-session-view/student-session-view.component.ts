@@ -28,19 +28,35 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
   private otherQHeader:string = "All Other Questions";
+  //private readOnly: boolean = false;
+
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
-      this.allOtherQs = new Array<Question>();}
+      this.allOtherQs = new Array<Question>();
+  }
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
+
       }
+
+      // checkIfEnded(): boolean{
+      //   let session : LabSession;
+      //   this.sessionService.getSession(this.sessionId).subscribe(r => session = r);
+      //   let currentDate = new Date();
+      //   if(session.endDate >= currentDate){
+      //     return true;
+      //   }
+      //   else{
+      //     return false;
+      //   }
+      // }
 
       checkNotification(datas : any){
         for (let data of datas){

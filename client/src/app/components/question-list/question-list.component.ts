@@ -54,6 +54,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showUnclaimButton: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
+  @Input() public readOnly: boolean = false;
 
   public toggleAnswer: boolean = false;
 

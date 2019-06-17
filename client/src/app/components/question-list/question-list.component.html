@@ -66,7 +66,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
             </div>
 
-            <div class="d-block d-lg-none">
+            <div <!--*ngIf="!readOnly"--> class="d-block d-lg-none">
               <form #thisForm (ngSubmit)="performAction(question);">
                 <div class="form-group">
                   <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
@@ -109,10 +109,10 @@ are input into this model from the student dashboard, student view, and faculty 
           <span> {{question.smallText}} </span><br><br>
       </div>
       <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
-      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
+      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" [styles]="{ border:'none'}" class="ql-editor" style="color:dodgerBlue" readOnly="true"  [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
       <span><td *ngIf="showAction">
 
-        <div class="d-block d-lg-none inlineButton">
+        <div <!--*ngIf="readOnly"--> class="d-block d-lg-none inlineButton">
           <form #thisForm (ngSubmit)="performAction(question)">
             <div class="form-group">
               <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
