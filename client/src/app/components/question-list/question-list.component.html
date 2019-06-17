@@ -67,7 +67,7 @@ are input into this model from the student dashboard, student view, and faculty 
             </div>
 
             <div class="d-block d-lg-none">
-              <form #thisForm (ngSubmit)="performAction(question)">
+              <form #thisForm (ngSubmit)="performAction(question);">
                 <div class="form-group">
                   <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
                     <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>

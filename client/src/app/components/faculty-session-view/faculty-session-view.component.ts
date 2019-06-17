@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
+import { QuestionListComponent } from '../question-list/question-list.component'
 
 @Component({
   selector: 'app-faculty-session-view',
