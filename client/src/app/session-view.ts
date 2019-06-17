@@ -23,7 +23,8 @@ export abstract class SessionView  {
   protected timeFromRefresh: string;
 
   constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
-    this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(questions => {this.questions = questions; this.sortQuestions(this.questions);});
+    this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(
+      questions => {this.questions = questions; this.sortQuestions(this.questions);});
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
     );

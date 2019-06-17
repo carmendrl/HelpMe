@@ -82,7 +82,8 @@ export class QuestionListComponent implements OnInit {
           "modalService":this.modalService,
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
-          "openAssign":this.openAssign
+          "openAssign":this.openAssign,
+          "currentUser": this.currentUser,
         }
       }
 
@@ -130,6 +131,18 @@ export class QuestionListComponent implements OnInit {
         }
         else{
           return this.filteredQuestions.length;
+        }
+      }
+
+      answerUndefined(question:Question){
+        if(question.answer === undefined){
+          return true;
+        }
+        else if(question.answer.id === undefined){
+          return true;
+        }
+        else{ //meaning answer is defined (completely created once)
+          return false;
         }
       }
 
@@ -216,6 +229,7 @@ export class QuestionListComponent implements OnInit {
             ariaLabelledBy: 'modal-edit-answer',
           });
           modal.componentInstance.currentQuestion = question;
+          modal.componentInstance.answererId = this.currentUser.id;
           return from(modal.result);
         }
 

@@ -35,6 +35,6 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.permit(:text, :question_id)
+    params.permit(:text, :question_id, :answerer_id)
   end
 end
