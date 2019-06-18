@@ -12,6 +12,7 @@ import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Question } from '../models/question.model';
 
 import { environment } from '../../environments/environment';
 
@@ -20,10 +21,12 @@ import { environment } from '../../environments/environment';
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
+  copyQuestions: Question[];
 
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
+    this.copyQuestions = new Array<Question>();
   }
 
 //returns a list of all the labsessions
@@ -33,6 +36,24 @@ export class LabSessionService {
       map(r => this.createLabsessionsArray(r["data"], r["included"] )),
       catchError(this.handleError<LabSession[]>(`labSessions`))
     );
+  }
+
+  copyQuestionList(session: LabSession){
+    //for question in array create a new question, change the session it is in, and the post to the new sessions
+    let url: string = `${this.apiHost}/lab_sessions/${session.id}/questions`;
+    for(let question of this.copyQuestions){
+      let tempQuestion = question;
+      tempQuestion.session.id = session.id;
+      let body = {
+        text: tempQuestion.text,
+        step: tempQuestion.step
+      }
+      this.httpClient.post(url, body).pipe(
+        map(r => Question.createFromJSon(r["data"])),
+        catchError(this.handleError<Question>(`copying questions`))
+      )
+    }
+    this.copyQuestions = [];
   }
 
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{

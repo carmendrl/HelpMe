@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import { LabSessionService } from '../../services/labsession.service';
 import { UserService } from '../../services/user.service';
 import { Observable, of, from } from 'rxjs';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -56,6 +57,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
+  @Input() private showCheck: boolean = false;
 
   public toggleAnswer: boolean = false;
 
@@ -65,7 +67,7 @@ export class QuestionListComponent implements OnInit {
 
 
   constructor(private questionService: QuestionService, private userService: UserService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal, private labsessionService: LabSessionService) {
 
       this.userService.CurrentUser$.subscribe(
         u => this.currentUser = u);
@@ -263,5 +265,10 @@ export class QuestionListComponent implements OnInit {
           //
           //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
           // }
+
+          copy(question: Question){
+            //debugger
+            this.labsessionService.copyQuestions.push(question);
+          }
 
         }

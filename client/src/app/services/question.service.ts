@@ -24,6 +24,7 @@ export class QuestionService {
   public newAnswer$ : Subject<Answer>;
   private timeDifference: string;
 
+
   constructor(private httpClient : HttpClient, private labsessionService: LabSessionService,
     private route:ActivatedRoute) {
     this.apiHost = environment.api_base;

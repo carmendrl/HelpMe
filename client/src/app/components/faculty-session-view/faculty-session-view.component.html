@@ -4,32 +4,45 @@
 <div class="btn-group pull-left">
   <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
   <button class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
+  <button  class="btn btn-primary" type="button" (click)="open(content)">Copy Questions to Another Session</button>
 </div>
 
 <section>
   <app-question-list  [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
-  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false"
+  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="true"
   (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate"
+  [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="true"
   [showNumberOfAskers]="true" [showUnclaimButton]="true"
   (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
-  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true"
+  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="true"
   (refreshEvent)="refreshData()" ></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
-  [showDeleteButton]= "true" (refreshEvent)="refreshData()"></app-question-list>
+  [showDeleteButton]= "true" [showCheck]="true" (refreshEvent)="refreshData()"></app-question-list>
 </section>
+
+<ng-template #content let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-search-sessions" aria-labelledBy="modal-search-sessions">Search Labsessions</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-session-search></app-session-search>
+  </div>
+</ng-template>

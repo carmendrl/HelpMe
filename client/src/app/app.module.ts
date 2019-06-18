@@ -37,6 +37,7 @@ import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { QuillModule } from 'ngx-quill';
 
 import { StorageServiceModule } from 'angular-webstorage-service';
+import { SessionSearchComponent } from './components/session-search/session-search.component';
 
 
 const Server = '/api';
@@ -105,6 +106,7 @@ const customNotifierOptions: NotifierOptions = {
     AskQuestionComponent,
     QuestionFilterPipe,
     SessionFilterPipe,
+    SessionSearchComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
