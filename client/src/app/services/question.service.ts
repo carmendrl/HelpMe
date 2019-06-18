@@ -208,21 +208,19 @@ export class QuestionService {
       }
 
 
-      answerAQuestion(question: Question, text: string): Observable<Answer>{
+      answerAQuestion(question: Question, text: string): Observable<Question>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = { text: text };
         var answerer:User;
         return this.httpClient.post(url, body).pipe(
-          map(r => {answerer = User.createFromJSon(r["included"]);
-          question.answer = (Answer.createFromJSon(r["data"]));
-          question.answer.user = answerer; return question.answer }),
-          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r)}),
-          catchError(this.handleError<Answer>(`answer created`))
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => { return question;}),
+          catchError(this.handleError<Question>(`answer created`))
         );
       }
 
       editAnAnswer(question: Question, text: string, answererId:string): Observable<Question>{
-        debugger
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
           text : text,
@@ -230,12 +228,9 @@ export class QuestionService {
         };
         var answerer: User;
         return this.httpClient.put(url, body).pipe(
-          map(r => {answerer = User.createFromJSon(r["included"]);
-          question.answer = (Answer.createFromJSon(r["data"]));
-          question.answer.user = answerer; return question}),
-          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r.answer)}),
-          // map(r => {question.answer.text = text; return question;}),
-          // tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+           map(r => { return question;}),
           catchError(this.handleError<Question>(`answer edited`))
         );
       }
