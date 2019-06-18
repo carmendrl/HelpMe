@@ -54,7 +54,15 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       checkIfEnded(){
         this.currentDate = new Date();
-        this.sessionService.getSession(this.sessionId).subscribe(r => {if(new Date(r.endDate.toString()) <= this.currentDate){this.readOnly = true;}else{this.readOnly = false;}});
+        this.sessionService.getSession(this.sessionId).subscribe(
+          r => {
+            if(new Date(r.endDate.toString()) <= this.currentDate){
+              this.readOnly = true;
+            }
+            else{
+              this.readOnly = false;
+            }
+          });
 
       }
 
