@@ -14,7 +14,6 @@ export class SessionListComponent implements OnInit {
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
   @Input() public isCollapsed: boolean = true;
-  @Input() started: boolean = false;
   private searchText:string;
 
 

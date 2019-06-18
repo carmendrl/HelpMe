@@ -156,6 +156,22 @@ export class LabSessionService {
     );
   }
 
+  getStartDate(token: string): Observable<Date>{
+    let url : string =`${this.apiHost}/lab_sessions`;
+    return this.httpClient.get(url).pipe(
+      map(r => this.extractStartDate(r["data"], token)),
+      catchError(this.handleError<Date>(`labSessions`))
+    );
+  }
+
+  private extractStartDate(r: any[], token: string):Date{
+    var start_date: any = r.find(function(element) {
+      return element["attributes"]["token"] === token;
+    });
+    let newDate = new Date(start_date["attributes"]["start_date"]);
+    return newDate;
+  }
+
   updateEndDate(id: string, date: Date): Observable<LabSession>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};

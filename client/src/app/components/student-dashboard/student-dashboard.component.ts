@@ -16,7 +16,8 @@ export class StudentDashboardComponent implements OnInit {
   private myQuestions : Question[];
   private invalidId: boolean;
   private token: string;
-  @Input() started: boolean = false;
+  private currentDate: Date;
+  private started: boolean;
 
   constructor(private labSessionService : LabSessionService, private questionService: QuestionService,
     private router : Router) { }
@@ -34,17 +35,26 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   joinSess(){
-
+    debugger
+    if(this.started === true){
     this.labSessionService.joinASession(this.token).subscribe(
-      sessionId => {
+      sessionId => {//debugger
         if(sessionId != undefined){
           this.invalidId = false;
-        if(this.started === true){this.router.navigateByUrl(`/lab_sessions/${sessionId}`)};
+         this.router.navigateByUrl(`/lab_sessions/${sessionId}`);
       }
       else{
         this.invalidId = true;
       }
     });
+  };
+  }
+
+  checkIfStarted(){
+    debugger
+    this.currentDate = new Date();
+    //this.currentDate.setDay(undefined);
+    this.labSessionService.getStartDate(this.token).subscribe(r =>{if(this.currentDate < r){debugger;this.started = false}else{debugger;this.started = true;} this.joinSess();});
   }
 
 
