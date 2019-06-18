@@ -30,7 +30,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private otherQHeader:string = "All Other Questions";
   private readOnly: boolean = false;
   private currentDate: Date = new Date();
-  private started: boolean = false;
+  private started: boolean = true;
+  private startDate: Date;
 
 
   constructor(userService: UserService, questionService: QuestionService,
@@ -46,6 +47,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
         this.checkIfEnded();
+        this.checkIfStarted();
       }
 
       checkIfEnded(){
@@ -56,7 +58,18 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       checkIfStarted(){
         this.currentDate = new Date();
-        this.sessionService.getSession(this.sessionId).subscribe(r => {if(new Date(r.startDate.toString()) < this.currentDate){this.started = true;}else{this.started=false;}});
+        this.sessionService.getSession(this.sessionId).subscribe(r => {
+          this.startDate = new Date(r.startDate.toString());
+          let tenBefore = new Date(r.startDate.toString());
+          let tempDate = new Date(r.startDate.toString());
+          tenBefore.setMinutes(tempDate.getMinutes()-10);
+          if(tenBefore < this.currentDate)
+          {
+            this.started = true;
+          }
+          else{this.started=false;}
+        }
+      );
       }
 
       checkNotification(datas : any){

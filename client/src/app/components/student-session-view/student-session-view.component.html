@@ -1,23 +1,27 @@
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
 <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
-<section>
+<section *ngIf="started">
   <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"></app-ask-question>
 </section>
 
-<section>
+<section *ngIf="started">
   <app-question-list [header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false" [readOnly]="readOnly"
   (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
-<section>
+<section *ngIf="started">
   <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
   [filteredQuestions]="faQs" [readOnly]="readOnly" (refreshEvent)="refreshData()"></app-question-list>
 </section>
 
-<section>
+<section *ngIf="started">
   <app-question-list [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
   [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [readOnly]="readOnly"
   (refreshEvent)="refreshData()"></app-question-list>
+</section>
+
+<section *ngIf="!started">
+  <h1>This session is not yet available, please come back on<br>{{startDate | date: 'MM/dd/yyyy'}} at {{startDate | date: 'shortTime'}}</h1>
 </section>

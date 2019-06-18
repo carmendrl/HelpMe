@@ -78,7 +78,7 @@ export class LabSessionService {
 
 
 
-  createNewLabSession(description:String, courseId:string, startDate: Date, endDate: Date): Observable<LabSession> {
+  createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions`;
     let body = {
       description: description,
@@ -168,7 +168,9 @@ export class LabSessionService {
     var start_date: any = r.find(function(element) {
       return element["attributes"]["token"] === token;
     });
+    //debugger
     let newDate = new Date(start_date["attributes"]["start_date"]);
+    //debugger
     return newDate;
   }
 
