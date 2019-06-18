@@ -11,7 +11,7 @@
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
   [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false"
-  (refreshEvent)="refreshData()"></app-question-list>
+  (refreshEvent)="refreshData($event)"></app-question-list>
 </section>
 
 <section>
@@ -19,17 +19,17 @@
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate"
   [showNumberOfAskers]="true" [showUnclaimButton]="true"
-  (refreshEvent)="refreshData()"></app-question-list>
+  (refreshEvent)="refreshData($event)"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true"
-  (refreshEvent)="refreshData()" ></app-question-list>
+  (refreshEvent)="refreshData($event)"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
-  [showDeleteButton]= "true" (refreshEvent)="refreshData()"></app-question-list>
+  [showDeleteButton]= "true" (refreshEvent)="refreshData($event)"></app-question-list>
 </section>

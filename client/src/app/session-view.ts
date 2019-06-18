@@ -29,7 +29,7 @@ export abstract class SessionView  {
       u => this.currentUser = u
     );
     this.sessionId = this.route.snapshot.paramMap.get('id');
-    this.refreshData();
+    this.refreshData({}); //empty object passed in
     this.notifier = notifierService;
   }
 
@@ -38,19 +38,26 @@ export abstract class SessionView  {
   //an abstract class
   abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
 
-  abstract checkNotification( data : any );//allows different notifications depending on the specific user
+  abstract checkNotification( data : any, r:any );//allows different notifications depending on the specific user
 
-  private refreshData(){
-    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {
-      this.checkNotification(data);
+
+  private refreshData(r:any){
+    //often an empty object will be passed in
+    //only time an actual object will be passed in
+    //is when the claimed button is pressed.
+    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
+      'id')).subscribe(data => {
+      this.checkNotification(data, r);
       this.data = data; this.sortQuestions(this.data);
       this.subscribeToData();
       this.time();
     });
   }
 
+
   private subscribeToData(){
-    this.timerSubscription = timer(3000).subscribe(() => this.refreshData());
+    this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
+    //empty object is passed into refreshData
   }
 
   public ngOnDestroy(){

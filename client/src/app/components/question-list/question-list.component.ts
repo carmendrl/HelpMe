@@ -89,7 +89,7 @@ export class QuestionListComponent implements OnInit {
       }
 
       ngOnInit() {
-        this.selectedAction = new Array<string>(this.questions.length);
+        this.selectedAction = new Array<string>();
       }
 
 
@@ -179,16 +179,16 @@ export class QuestionListComponent implements OnInit {
       }
       //main method for all buttons and the dropdown menu
       performAction(q: Question){
-        debugger
         this.currentQuestion = q;
         this.i = this.questions.indexOf(q);
-        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
-        //clear that space in the array 
+        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData(r));
+        //clear that space in the array
         this.selectedAction[this.i]="";
       }
 
-      refreshData(){
-        this.refreshEvent.next();
+      refreshData(r :any){
+        this.refreshEvent.next(r);
+
       }
 
       answerQuestion(question: Question):Observable<any>{

@@ -49,16 +49,22 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r =>
-           { this.checkNotification(this.questions);
+           { this.checkNotification(this.questions, {});
+             //empty object passed in (because claimButton wasn't pressed)
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
       }
 
-      checkNotification(datas : Question[]){
+      checkNotification(datas : Question[], r:any){
+        if(r != undefined && r.question != undefined){
+          //r.question is defined if and only if the claimButton was selected
         for (let data of datas){
           if(this.data){
           for (let q of this.data){
             if (q.id === data.id){
+              if(q.id != r.question.id && data.id != r.question.id){
+                //this checks to make sure that the question is not the one
+                //that the user claimed themselves
               if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                 if(data.claimedBy.id != undefined){
                 if (data.claimedBy.id === this.user.id){
@@ -67,13 +73,35 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
               }
               }
             }
+            }
           }
         }
       }
+    }
+    else{
+      //if any action other than claim was selected
+      for (let data of datas){
+        if(this.data){
+        for (let q of this.data){
+          if (q.id === data.id){
+            if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+              if(data.claimedBy.id != undefined){
+              if (data.claimedBy.id === this.user.id){
+                this.notifier.notify('info', 'You have been assigned a question!');
+              }
+            }
+            }
+          }
+        }
+      }
+    }
+
+    }
       if (this.data && datas.length > this.data.length){
         this.notifier.notify('info', 'A new question has been posted!');
       }
     }
+
 
 
       sortQuestions(questions: Question[]){

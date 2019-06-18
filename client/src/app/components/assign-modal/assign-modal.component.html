@@ -1,7 +1,7 @@
 <!--modal-->
   <div class="modal-header">
     <h4 class="modal-title" id="modal-assign" aria-labelledBy="modal-assign">Assign a Question</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss();thisForm.reset();">
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss();">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -23,7 +23,7 @@
 
 	      <button type="submit"
 	      [disabled]="submitShouldBeDisabled()"
-	      class="btn btn-primary" (click)="assignSelectedUser();thisForm.reset();">Assign to {{selectedUser.FullName}}</button>
+	      class="btn btn-primary" (click)="assignSelectedUser();">Assign to {{selectedUser.FullName}}</button>
 	    </form>
 
 			<div *ngIf="sessionTAs.length === 0" class="alert alert-danger">

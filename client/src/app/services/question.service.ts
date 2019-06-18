@@ -183,12 +183,17 @@ export class QuestionService {
         );
       }
 
-      claimAQuestion(question: Question): Observable<Question>{
+      claimAQuestion(question: Question): Observable<Object>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/claim`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => question.claimedBy = r["data"]["relationships"]["claimed_by"]["data"]),
-          tap(r => this.updatedQuestion$.next(r)),
-          catchError(this.handleError<Question>(`claim id=${question.id}`))
+          map(r => { return {
+            //return object that helps prevent notifications
+            //when a user claims a question themselves
+            question: question,
+            claim: true,
+          }
+        }),
+          catchError(this.handleError<Object>(`claim id=${question.id}`))
         );
       }
       unclaimAQuestion(question: Question): Observable<Question>{
@@ -201,8 +206,9 @@ export class QuestionService {
           status: "pending"
         };
         return this.httpClient.put(url, body).pipe(
-          map(r => {question.claimedBy=undefined;question.status="pending";return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => { return question;}),
           catchError(this.handleError<Question>(`unclaim id=${question.id}`))
         );
       }
