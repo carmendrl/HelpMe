@@ -149,40 +149,42 @@ export class QuestionListComponent implements OnInit {
       }
 
 
-      setAnswer(){
-        this.selectedAction[this.i] = "answer";
+      setAnswer(i:number){
+        this.selectedAction[i] = "answer";
       }
-      setEdit(){
-        this.selectedAction[this.i] = "edit";
+      setEdit(i:number){
+        this.selectedAction[i] = "edit";
       }
-      setClaim(){
-        this.selectedAction[this.i] = "claim";
+      setClaim(i:number){
+        this.selectedAction[i] = "claim";
       }
-      setUnclaim(){
-        this.selectedAction[this.i] = "unclaim";
+      setUnclaim(i:number){
+        this.selectedAction[i] = "unclaim";
       }
 
-      setAssign(){
-        this.selectedAction[this.i] = "assign";
+      setAssign(i:number){
+        this.selectedAction[i] = "assign";
       }
-      setAddFaq(){
-        this.selectedAction[this.i] = "addFaQ";
+      setAddFaq(i:number){
+        this.selectedAction[i] = "addFaQ";
       }
-      setRemoveFaq(){
+      setRemoveFaq(i:number){
         this.selectedAction[this.i] = "removeFaQ";
       }
-      setDelete(){
-        this.selectedAction[this.i] = "delete";
+      setDelete(i:number){
+        this.selectedAction[i] = "delete";
       }
-      setMeToo(){
-        this.selectedAction[this.i] = "meToo";
+      setMeToo(i:number){
+        this.selectedAction[i] = "meToo";
       }
-      //methods for select element in drop down menu
+      //main method for all buttons and the dropdown menu
       performAction(q: Question){
+        debugger
         this.currentQuestion = q;
         this.i = this.questions.indexOf(q);
         this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
-        this.selectedAction[this.i] ="";
+        //clear that space in the array 
+        this.selectedAction[this.i]="";
       }
 
       refreshData(){
