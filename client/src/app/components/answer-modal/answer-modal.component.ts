@@ -1,10 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
-import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
-
+import * as moment from 'moment';
+import { Observable, interval, Subscription, timer } from 'rxjs';
+import { User } from '../../models/user.model';
 
 
 @Component({
@@ -19,16 +20,46 @@ export class AnswerModalComponent implements OnInit {
     text : string;
     blured = false;
     focused = false;
+    lastSaved: string;
+    sub : Subscription;
+    private user : User;
 
   constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal) { }
 
   ngOnInit() {
-  }
+   //this.autoSave(this.currentQuestion.answer.submitted);
+ }
 
-  createAnswerFromForm(){
-    this.saved = true;
-    this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe(r => this.activeModal.close());
-  }
+ isNotAStudent(){
+ if (this.user.Type === "students"){
+   return false;
+ }
+ else{
+   return true
+ }
+ }
+
+ createAnswerFromForm(submitted:boolean){
+   this.saved = true;
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {this.activeModal.close();
+ });
+ }
+
+ autoSave(submitted:boolean){
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {
+     this.save(); this.time();
+   });
+ }
+
+ save(){
+   this.sub = timer(10000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+ }
+
+ time(){
+   this.lastSaved = moment().format('LTS');
+ }
+
+
 
     created(event) {
       // tslint:disable-next-line:no-console

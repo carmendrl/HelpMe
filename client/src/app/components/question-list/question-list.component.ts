@@ -43,16 +43,19 @@ export class QuestionListComponent implements OnInit {
   @Input() private showAction: boolean = true;
   @Input() private showAnswerButton: boolean = false;
   @Input() private showEditButton: boolean = false;
+  @Input() private showFinishButton: boolean = true;
   @Input() private showClaimButton: boolean = false;
   @Input() private showAssignButton: boolean = false;
   @Input() private showFAQButton: boolean = false;
   @Input() private showDeleteButton: boolean = false;
+  @Input() private showDiscardDraftButton: boolean = true;
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
   @Input() private showUnclaimButton: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
+  @Input() public answer : Answer;
 
 
   constructor(private questionService: QuestionService, private userService: UserService,
@@ -64,6 +67,7 @@ export class QuestionListComponent implements OnInit {
         this.actions = {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
+          "finish":  this.finishDraft,
           "claim": this.claimQuestion,
           "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
@@ -77,6 +81,8 @@ export class QuestionListComponent implements OnInit {
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
           "getDismissReason":this.getDismissReason,
+          "discardAnswer": this.deleteAnswer,
+          "currentUser": this.currentUser,
         }
       }
 
@@ -122,13 +128,15 @@ export class QuestionListComponent implements OnInit {
       setEdit(){
         this.selectedAction = "edit";
       }
+      setFinish(){
+        this.selectedAction = "finish";
+      }
       setClaim(){
         this.selectedAction = "claim";
       }
       setUnclaim(){
         this.selectedAction = "unclaim";
       }
-
       setAssign(){
         this.selectedAction = "assign";
       }
@@ -144,22 +152,27 @@ export class QuestionListComponent implements OnInit {
       setMeToo(){
         this.selectedAction = "meToo";
       }
+      setDiscard(){
+        this.selectedAction = "discardAnswer";
+      }
       //methods for select element in drop down menu
       performAction(q: Question){
         this.currentQuestion = q;
         this.actions[this.selectedAction](q);
       }
 
-
       answerQuestion(question: Question){
         this.openAnswer(AnswerModalComponent, question);
-
       }
 
       editQuestion(question: Question){
         this.openEdit(EditModalComponent, question);
-
       }
+
+      finishDraft(question: Question){
+        this.openEdit(EditModalComponent, question);
+      }
+
       claimQuestion(question: Question){
         this.questionService.claimAQuestion(question).subscribe();
       }
@@ -186,9 +199,40 @@ export class QuestionListComponent implements OnInit {
       }
       meTooQuestion(question: Question){
         this.questionService.addMeToo(question, true, this.currentUser).subscribe();
-
+      }
+      deleteAnswer(question: Question){
+        this.questionService.deleteADraft(question).subscribe();
       }
 
+        getAnswerText(question : Question): string{
+          if(question.answer != undefined){
+          if (question.answer.submitted){
+            return question.answer.text;
+          }
+          else{
+            return "draft";
+          }
+        }
+        return "";
+      }
+
+
+      checkSubmitted(question:Question){
+        if (question.answer != undefined){
+          if(question.answer.submitted){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+        return false;
+      }
+
+
+
+      // submittedAnswer(){
+      // }
 
       //Edit Modal methods
       openEdit(content, question: Question){
@@ -206,6 +250,7 @@ export class QuestionListComponent implements OnInit {
         }, (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
         });
+        modal.componentInstance.user = this.currentUser;
       }
 
 
@@ -232,6 +277,7 @@ export class QuestionListComponent implements OnInit {
           }, (reason) => {
             this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
           });
+          modal.componentInstance.user = this.currentUser;
         }
 
 

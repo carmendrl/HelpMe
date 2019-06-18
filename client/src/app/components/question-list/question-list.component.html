@@ -49,18 +49,22 @@ are input into this model from the student dashboard, student view, and faculty 
             </ul>
           </td>
           <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
+          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="getAnswerText(question)"> </quill-editor></td>
+
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
+
           <td *ngIf="showAction">
             <div class="d-none d-lg-block d-xl-block">
-              <button  *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-              <button  *ngIf="showEditButton && question.answer != undefined " (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-              <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-              <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
+              <button *ngIf="showAnswerButton && question.answer === undefined" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
+              <button *ngIf="showEditButton && question.answer != undefined && !checkSubmitted(question)" (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button *ngIf="showFinishButton && question.answer != undefined && checkSubmitted(question)"(click)="setFinish(); performAction(question)" class="btn btn-primary actionSpace">Finish Draft</button>
+              <button *ngIf="showDiscardDraftButton && question.answer != undefined && checkSubmitted(question)" (click)="setDiscard(); performAction(question)" class="btn btn-primary actionSpace">Discard Draft</button>
+              <button *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
+              <button *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
               <button *ngIf="showFAQButton && !question.faq" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
               <button *ngIf="showFAQButton && question.faq" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-              <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
+              <button *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
             </div>
 
@@ -69,7 +73,9 @@ are input into this model from the student dashboard, student view, and faculty 
                 <div class="form-group">
                   <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
                     <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
-                    <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
+                    <option *ngIf="showEditButton && !checkSubmitted(question)" value="edit">Edit Answer</option>
+                    <option *ngIf="showFinishButton && checkSubmitted(question)" value="finish">Finish Draft</option>
+                    <option *ngIf="showDiscardDraftButton && checkSubmitted(question)" value="discardAnswer">Discard Draft</option>
                     <option *ngIf="showClaimButton" value="claim">Claim</option>
                     <option *ngIf="showAssignButton" value="assign">Assign</option>
                     <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
@@ -82,6 +88,7 @@ are input into this model from the student dashboard, student view, and faculty 
               </form>
             </div>
           </td>
+
         </tr>
       </tbody>
     </table>

@@ -10,12 +10,14 @@
     <!-- form -->
     <form class="needs-validation" novalidate>
       <div class="form-group">
+        <p>Last saved: {{lastSaved}}</p>
         Answer:
         <!-- <input type="text" [(ngModel)]="text" required> -->
         <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm()">Save</button>
+        <button *ngIf="isNotAStudent()" type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(false)">Save Draft</button>
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm(true)">Save</button>
       </div>
     </form>
   </div>

@@ -47,7 +47,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
+        this.questionService.getUpdatedQuestion$.subscribe(r => {debugger; this.checkNotification(this.questions); this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
       }
 

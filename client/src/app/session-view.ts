@@ -64,6 +64,4 @@ export abstract class SessionView  {
   time(){
     this.timeFromRefresh = moment().format('LTS');
   }
-
-
 }

@@ -10,7 +10,8 @@ import { LabSession } from '../../models/lab_session.model';
   styleUrls: ['./session-list.component.scss']
 })
 export class SessionListComponent implements OnInit {
-
+  private searchText:string;
+  
   @Input() private sessions : LabSession[];
   @Input() private label : string = "Matching Sessions";
 

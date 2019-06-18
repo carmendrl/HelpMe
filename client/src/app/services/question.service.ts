@@ -197,9 +197,11 @@ export class QuestionService {
       }
 
 
-      answerAQuestion(question: Question, text: string): Observable<Answer>{
+      answerAQuestion(question: Question, text: string, saved: boolean): Observable<Answer>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
-        let body = { text: text };
+        let body = {
+          text: text,
+          submitted: saved};
         var answerer:User;
         return this.httpClient.post(url, body).pipe(
           map(r => {answerer = User.createFromJSon(r["included"]);
@@ -210,15 +212,24 @@ export class QuestionService {
         );
       }
 
-      editAnAnswer(question: Question, text: string): Observable<Question>{
+      editAnAnswer(question: Question, text: string, saved: boolean): Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
-          text : text
+          text : text,
+          submitted : saved
         };
         return this.httpClient.put(url, body).pipe(
           map(r => {question.answer.text = text; return question;}),
           tap(r => this.updatedQuestion$.next(r)),
           catchError(this.handleError<Question>(`answer edited`))
+        );
+      }
+
+      deleteADraft(question:Question): Observable<boolean>{
+        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
+        return this.httpClient.delete(url).pipe(
+          map(r => true),
+          catchError(this.handleError<boolean>(`delete answer id=${question.answer.id}`))
         );
       }
 

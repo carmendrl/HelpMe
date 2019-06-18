@@ -7,15 +7,16 @@
 
 <section>
   <app-question-list [header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false"></app-question-list>
+  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false"   [showFinishButton]="false" [showDiscardDraftButton]="false"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
-  [filteredQuestions]="faQs"></app-question-list>
+  [filteredQuestions]="faQs"   [showFinishButton]="false" [showDiscardDraftButton]="false"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"></app-question-list>
+  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs"
+  [showFinishButton]="false" [showDiscardDraftButton]="false"></app-question-list>
 </section>
