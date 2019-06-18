@@ -6,7 +6,6 @@ import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
 import { CourseService } from '../../services/course.service';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
-
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -38,6 +37,7 @@ export class StartSessionComponent implements OnInit {
   private copied : boolean = false;
 
 
+
   constructor( @Inject(DOCUMENT) public document: Document,
   private router : Router, private labSessionService: LabSessionService, private courseService: CourseService, private modalService: NgbModal){
 
@@ -61,13 +61,13 @@ export class StartSessionComponent implements OnInit {
     }
     }
 
-    createStartEnd(){
-      this.fullStartDate = this.start_date.year +"-"+ this.start_date.month  +"-"+ this.start_date.day +"T"+ this.start_time.hour +":"+
-       this.start_time.minute +":"+ this.start_time.second +"Z";
-       this.fullEndDate = this.end_date.year +"-"+ this.end_date.month  +"-"+ this.end_date.day +"T"+ this.end_time.hour +":"+
-        this.end_time.minute +":"+ this.end_time.second +"Z";
+      createStartEnd(){
+        this.fullStartDate = this.start_date.year +"-"+ this.start_date.month  +"-"+ this.start_date.day +"T"+ (this.start_time.hour+ 4) +":"+
+         this.start_time.minute +":"+ this.start_time.second +"Z";
+         this.fullEndDate = this.end_date.year +"-"+ this.end_date.month  +"-"+ this.end_date.day +"T"+ (this.end_time.hour+4) +":"+
+          this.end_time.minute +":"+ this.end_time.second +"Z";
 
-    }
+      }
     compareStartEnd(){
       //Converts the numbers to correctly formated strings and then changes them to numbers
       let startDate:string = ""+this.start_date.year + this.formatDigit(this.start_date.month) +

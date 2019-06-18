@@ -1,7 +1,11 @@
 <div [ngSwitch]="currentUser.Username">
 
   <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" class="loginForm" >
-    <div class="row form-group">
+		<div class="alert alert-info" *ngIf="loggedInGuard.urlAfterLogin != ''">
+			You must log in before navigating to this page.
+		</div>
+
+		<div class="row form-group">
       <div class="col-12 col-sm-2">
         <label for="Email">Email Address</label>
       </div>

@@ -49,13 +49,18 @@ export class UserService {
   private apiHost : string;
 
   private noUser : User;
+	private loggedInUser : User;
 
 	readonly KEY_USER : string = "USER";
 
   constructor (private httpClient : HttpClient, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
       this._currentUser$ = new ReplaySubject<User> (1);
+
+			this._currentUser$.subscribe (u => this.loggedInUser = u);
+			
       this.apiHost = environment.api_base;
       this.noUser = new User ();
+			this.loggedInUser = this.noUser;
       this.noUser.Username = "";
 
 			console.log ("UserService: looking for user information in local storage");
@@ -82,6 +87,10 @@ export class UserService {
   get CurrentUser$() : Observable<User> {
     return this._currentUser$;
   }
+
+	get IsUserLoggedIn() : boolean {
+		return this.loggedInUser != this.noUser;
+	}
 
   login (emailAddress : string, password : string) : Observable<ApiResponse<User>> {
     let url : string =`${this.apiHost}/users/sign_in`;

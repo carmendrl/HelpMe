@@ -10,7 +10,9 @@ import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
-import { QuestionListComponent } from '../question-list/question-list.component'
+import { QuestionListComponent } from '../question-list/question-list.component';
+import * as moment from 'moment';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -36,7 +38,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService,
+     sessionService:LabSessionService, private titleService: Title) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -53,6 +56,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
              //empty object passed in (because claimButton wasn't pressed)
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
+         this.titleService.setTitle(`Session View - Help Me`);
       }
 
       checkNotification(datas : Question[], r:any){
@@ -151,7 +155,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         }
       }
       setEndDate(){
-        this.currentTime = new Date();
+        this.currentTime = moment().utc().toDate();
+        //debugger
         this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
       }
       assign(question: Question, user: User){

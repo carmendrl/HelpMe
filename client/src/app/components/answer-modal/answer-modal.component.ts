@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
 import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
-
+import { Title }     from '@angular/platform-browser';
 
 
 @Component({
@@ -12,7 +12,7 @@ import { Answer } from '../../models/answer.model';
   templateUrl: './answer-modal.component.html',
   styleUrls: ['./answer-modal.component.scss']
 })
-export class AnswerModalComponent implements OnInit {
+export class AnswerModalComponent implements OnInit, OnDestroy {
   @Input() private currentQuestion : Question;
     closeResult: string;
     saved : boolean = false;
@@ -20,9 +20,15 @@ export class AnswerModalComponent implements OnInit {
     blured = false;
     focused = false;
 
-  constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal) { }
+  constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal,
+              private titleService: Title) { }
 
   ngOnInit() {
+    this.titleService.setTitle('Add Answer - Help Me');
+  }
+
+  ngOnDestroy(){
+    this.titleService.setTitle('Session View - Help Me');
   }
 
   createAnswerFromForm(){

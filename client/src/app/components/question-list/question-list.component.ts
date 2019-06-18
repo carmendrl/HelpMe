@@ -55,6 +55,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showUnclaimButton: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
+  @Input() private readOnly: boolean = false;
 
   public toggleAnswer: boolean = false;
 
@@ -98,15 +99,15 @@ export class QuestionListComponent implements OnInit {
         return this.timeDifference = moment(question.date).fromNow();
       }
 
-      // private stepTextTime(question: Question): Object[]{
-      //   console.log();
-      //   let tempArray = new Array<Object>();
-      //   this.timeDifference = moment(question.date).fromNow();
-      //   tempArray.push(question.text);
-      //   //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
-      //   this.step = question.step;
-      //   return tempArray;
-      // }
+      private stepTextTime(question: Question): Object[]{
+        console.log();
+        let tempArray = new Array<Object>();
+        this.timeDifference = moment(question.date).fromNow();
+        tempArray.push(question.text);
+        //tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
+        this.step = question.step;
+        return tempArray;
+      }
 
       checkIfCollapsed():string{
         if(this.isCollapsed){

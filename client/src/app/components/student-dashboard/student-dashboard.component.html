@@ -1,6 +1,6 @@
 <section>
   <h2>Join a session</h2><br>
-  <form #thisForm="ngForm" (ngSubmit)="joinSess()" class="form-inline">
+  <form #thisForm="ngForm" (ngSubmit)="joinSess(content)" class="form-inline">
     <label>Enter a 6-digit Session Code:</label>
     <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="joinSession" name="token" [(ngModel)]="token" required>
     <button type="submit"  [disabled]="!(thisForm.valid)" class="btn btn-primary form-control ml-1">Join</button>
@@ -20,3 +20,15 @@
   <h2>My Questions</h2>
   <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
 </section>
+
+<ng-template #content let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-not-started" aria-labelledBy="modal-not-started">Please Wait</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>This session has not started yet. Please wait.</p>
+  </div>
+</ng-template>
