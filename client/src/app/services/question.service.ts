@@ -266,8 +266,9 @@ export class QuestionService {
     assignQuestion(user: User, question: Question): Observable<Question>{
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
       return this.httpClient.post(url, {user_id: user.id}).pipe(
-        map(r => {question.claimedBy = user; return question;}),
-        tap(r => this.updatedQuestion$.next(r)),
+        //non-updated question is returned, but because an Observable is returned,
+        //it will trigger a refresh and the updated question/answer will be displayed
+        map(r => {return question;}),
         catchError(this.handleError<Question>(`assigned =${question.id}`))
       )
     }
