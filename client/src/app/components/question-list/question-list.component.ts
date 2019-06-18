@@ -169,7 +169,7 @@ export class QuestionListComponent implements OnInit {
         this.selectedAction[i] = "addFaQ";
       }
       setRemoveFaq(i:number){
-        this.selectedAction[this.i] = "removeFaQ";
+        this.selectedAction[i] = "removeFaQ";
       }
       setDelete(i:number){
         this.selectedAction[i] = "delete";

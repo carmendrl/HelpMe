@@ -59,7 +59,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         if(r != undefined && r.question != undefined){
           //r.question is defined if and only if the claimButton was selected
         for (let data of datas){
-          if(this.data){
+          if(this.data && data.answer !=undefined){
+            //must check that answer is undefined,
+            //otherwise assigned notification will pop up even question has been answered
+            //and is simply moving between lists (e.g. to/from FAQ)
           for (let q of this.data){
             if (q.id === data.id){
               if(q.id != r.question.id && data.id != r.question.id){
@@ -81,7 +84,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     else{
       //if any action other than claim was selected
       for (let data of datas){
-        if(this.data){
+        if(this.data && data.answer !=undefined){
+          //must check that answer is undefined,
+          //otherwise assigned notification will pop up even question has been answered
+          //and is simply moving between lists (e.g. to/from FAQ)
         for (let q of this.data){
           if (q.id === data.id){
             if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
