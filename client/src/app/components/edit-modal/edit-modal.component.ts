@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
 import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
+import { Title }     from '@angular/platform-browser';
+
 
 
 @Component({
@@ -11,7 +13,7 @@ import { Answer } from '../../models/answer.model';
   templateUrl: './edit-modal.component.html',
   styleUrls: ['./edit-modal.component.scss']
 })
-export class EditModalComponent implements OnInit {
+export class EditModalComponent implements OnInit, OnDestroy {
   private currentQuestion : Question;
   private answererId:string;
   closeResult: string;
@@ -20,10 +22,15 @@ export class EditModalComponent implements OnInit {
   focused = false;
 
   constructor(private activeModal: NgbActiveModal, private questionService: QuestionService,
-    private modalService: NgbModal) {
+    private modalService: NgbModal, private titleService: Title) {
   }
 
   ngOnInit() {
+    this.titleService.setTitle('Edit Answer - Help Me');
+  }
+
+  ngOnDestroy(){
+    this.titleService.setTitle('Session View - Help Me');
   }
 
   editAnswerFromForm(){

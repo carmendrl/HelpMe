@@ -12,6 +12,7 @@ import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import * as moment from 'moment';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -37,7 +38,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService,
+     sessionService:LabSessionService, private titleService: Title) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -53,6 +55,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
            { this.checkNotification(this.questions);
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
+         this.titleService.setTitle(`Session View - Help Me`);
       }
 
       checkNotification(datas : Question[]){

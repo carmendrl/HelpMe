@@ -11,6 +11,7 @@ import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import { AskQuestionComponent } from '../ask-question/ask-question.component';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-student-session-view',
@@ -33,7 +34,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService, private titleService: Title) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -45,6 +46,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
         this.checkIfEnded();
+        this.titleService.setTitle(`Session View - Help Me`);
       }
 
       checkIfEnded(){

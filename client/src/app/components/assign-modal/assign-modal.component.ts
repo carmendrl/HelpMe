@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 
 import { UserService } from '../../services/user.service';
@@ -8,6 +8,8 @@ import { LabSessionService } from '../../services/labsession.service';
 import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
 import { LabSession } from '../../models/lab_session.model';
+import { Title }     from '@angular/platform-browser';
+
 
 
 @Component({
@@ -15,7 +17,7 @@ import { LabSession } from '../../models/lab_session.model';
   templateUrl: './assign-modal.component.html',
   styleUrls: ['./assign-modal.component.scss']
 })
-export class AssignModalComponent implements OnInit {
+export class AssignModalComponent implements OnInit, OnDestroy {
   @Input() private currentQuestion: Question;
   closeResult: string;
   private sessionTAs : User[] = [];
@@ -25,7 +27,7 @@ export class AssignModalComponent implements OnInit {
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService:
-    QuestionService, private userService : UserService) {}
+    QuestionService, private userService : UserService, private titleService: Title) {}
 
   ngOnInit() {
     this.userService.CurrentUser$.subscribe (
@@ -33,6 +35,12 @@ export class AssignModalComponent implements OnInit {
         this.currentUser = u;
         this.loadSessionUsers();
       })
+
+      this.titleService.setTitle('Assign a Question - Help Me');
+  }
+
+  ngOnDestroy(){
+    this.titleService.setTitle('Session View - Help Me');
   }
 
   private loadSessionUsers() : void {
