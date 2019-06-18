@@ -1,45 +1,10 @@
-class TextMatcherService
-	def initialize
-		@filter = Stopwords::Snowball::Filter.new "en"
-	end
-
-  def score(search_text, question_text)
-		search_words = search_text.downcase.split
-		question_words = question_text.downcase.split
-
-		#  Eliminate common stop words
-		filtered_search_words = @filter.filter(search_words).to_set
-		puts "Filtered search words"
-		filtered_search_words.each do |w|
-			puts w
-		end
-
-		filtered_question_words = @filter.filter(question_words).to_set
-		puts "Filtered question words"
-		filtered_question_words.each do |w|
-			puts w
-		end
-
-		#  Count how many of the search_words appear in filtered_question_words
-		matches = filtered_search_words.count { |w| filtered_question_words.include? w}
-
-		puts "Matches = #{matches}"
-		return 1.0*matches / filtered_search_words.length
-	end
-
-	def match(text)
-
-		text = "This is the way to Grandmother's house"
-		return @filter.filter(text.split)
-	end
-end
-
-class QuestionsController < ApplicationController
+class TextMatcherController < ApplicationController
   before_action :authenticate_user!
   before_action :find_question!, except: [:index, :create, :show_user_questions]
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
+		@matcher = TextMatcherService.new
     render json: sess.questions.order(created_at: :asc), each_serializer: QuestionSerializer, include: [:lab_session, 'lab_session.course', 'lab_session.users', :answer]
   end
 
