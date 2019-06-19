@@ -21,12 +21,12 @@ import { environment } from '../../environments/environment';
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
-  copyQuestions: Question[];
+  public copyQuestions = new Array<Question>();;
 
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
-    this.copyQuestions = new Array<Question>();
+    //this.copyQuestions = new Array<Question>();
   }
 
 //returns a list of all the labsessions
@@ -37,6 +37,8 @@ export class LabSessionService {
       catchError(this.handleError<LabSession[]>(`labSessions`))
     );
   }
+
+
 
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();

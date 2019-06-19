@@ -89,7 +89,7 @@ export class QuestionListComponent implements OnInit {
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
           "currentUser": this.currentUser,
-          "copy": this.copyQuestion
+          "copy": this.copy
         }
       }
 
@@ -213,7 +213,8 @@ export class QuestionListComponent implements OnInit {
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
-      copyQuestion(question: Question){
+      copy(question: Question): any{
+        debugger
         this.labsessionService.copyQuestions.push(question);
       }
 
@@ -253,10 +254,5 @@ export class QuestionListComponent implements OnInit {
           //
           //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
           // }
-
-          copy(question: Question){
-            //debugger
-            this.labsessionService.copyQuestions.push(question);
-          }
 
         }
