@@ -21,7 +21,7 @@ export abstract class SessionView  {
   protected sessionId: string;
   protected readonly notifier: NotifierService;
   protected timeFromRefresh: string;
-  private pauseRefresh: boolean;
+  protected pauseRefresh: boolean;
 
   constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(
@@ -47,15 +47,17 @@ export abstract class SessionView  {
       //often an empty object will be passed in
       //only time an actual object will be passed in
       //is when the claimed button is pressed.
-      this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
-        'id')).subscribe(data => {
-          this.checkNotification(data, r);
-          this.data = data; this.sortQuestions(this.data);
-          if(!(this.pauseRefresh)){
-            this.subscribeToData();
-            this.time();
-          }
-        });
+      if(!(this.pauseRefresh)){
+        this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
+          'id')).subscribe(data => {
+            this.checkNotification(data, r);
+            this.data = data; this.sortQuestions(this.data);
+            if(!(this.pauseRefresh)){
+              this.subscribeToData();
+              this.time();
+            }
+          });
+        }
       }
 
 

@@ -32,6 +32,7 @@ export class QuestionListComponent implements OnInit {
   private searchText:string;
   private step: string;
   private i:number;
+  private copied: boolean;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -67,8 +68,8 @@ export class QuestionListComponent implements OnInit {
 
 
 
-  constructor(private questionService: QuestionService, private userService: UserService,
-    private modalService: NgbModal, private labsessionService: LabSessionService) {
+  constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
+    private modalService: NgbModal) {
 
       this.userService.CurrentUser$.subscribe(
         u => this.currentUser = u);
@@ -84,6 +85,7 @@ export class QuestionListComponent implements OnInit {
           "delete": this.deleteQuestion,
           "meToo": this.meTooQuestion,
           "questionService": this.questionService,
+          "labsessionService": this.labsessionService,
           "modalService":this.modalService,
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
@@ -213,9 +215,9 @@ export class QuestionListComponent implements OnInit {
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
-      copy(question: Question): any{
-        debugger
+      copy(question: Question){
         this.labsessionService.copyQuestions.push(question);
+        this.copied = true;
       }
 
       //Edit Modal methods
