@@ -62,55 +62,55 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       checkNotification(datas : Question[], r:any){
         if(r != undefined && r.question != undefined){
           //r.question is defined if and only if the claimButton was selected
-        for (let data of datas){
-          if(this.data && data.answer ===undefined){
-            //must check that answer is undefined,
-            //otherwise assigned notification will pop up even question has been answered
-            //and is simply moving between lists (e.g. to/from FAQ)
-          for (let q of this.data){
-            if (q.id === data.id){
-              if(q.id != r.question.id && data.id != r.question.id){
-                //this checks to make sure that the question is not the one
-                //that the user claimed themselves
-              if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
-                if(data.claimedBy.id != undefined){
-                if (data.claimedBy.id === this.user.id){
-                  this.notifier.notify('info', 'You have been assigned a question!');
+          for (let data of datas){
+            if(this.data && data.answer ===undefined){
+              //must check that answer is undefined,
+              //otherwise assigned notification will pop up even question has been answered
+              //and is simply moving between lists (e.g. to/from FAQ)
+              for (let q of this.data){
+                if (q.id === data.id){
+                  if(q.id != r.question.id && data.id != r.question.id){
+                    //this checks to make sure that the question is not the one
+                    //that the user claimed themselves
+                    if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+                      if(data.claimedBy.id != undefined){
+                        if (data.claimedBy.id === this.user.id){
+                          this.notifier.notify('info', 'You have been assigned a question!');
+                        }
+                      }
+                    }
+                  }
                 }
               }
-              }
-            }
             }
           }
         }
-      }
-    }
-    else{
-      //if any action other than claim was selected
-      for (let data of datas){
-        if(this.data && data.answer ===undefined){
-          //must check that answer is undefined,
-          //otherwise assigned notification will pop up even question has been answered
-          //and is simply moving between lists (e.g. to/from FAQ)
-        for (let q of this.data){
-          if (q.id === data.id){
-            if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
-              if(data.claimedBy.id != undefined){
-              if (data.claimedBy.id === this.user.id){
-                this.notifier.notify('info', 'You have been assigned a question!');
+        else{
+          //if any action other than claim was selected
+          for (let data of datas){
+            if(this.data && data.answer ===undefined){
+              //must check that answer is undefined,
+              //otherwise assigned notification will pop up even question has been answered
+              //and is simply moving between lists (e.g. to/from FAQ)
+              for (let q of this.data){
+                if (q.id === data.id){
+                  if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+                    if(data.claimedBy.id != undefined){
+                      if (data.claimedBy.id === this.user.id){
+                        this.notifier.notify('info', 'You have been assigned a question!');
+                      }
+                    }
+                  }
+                }
               }
-            }
             }
           }
         }
-      }
-    }
 
-    }
-      if (this.data && datas.length > this.data.length){
-        this.notifier.notify('info', 'A new question has been posted!');
+        if (this.data && datas.length > this.data.length){
+          this.notifier.notify('info', 'A new question has been posted!');
+        }
       }
-    }
 
 
 

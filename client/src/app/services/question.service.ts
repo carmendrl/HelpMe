@@ -177,8 +177,9 @@ export class QuestionService {
           faq : faQ
         };
         return this.httpClient.put(url, body).pipe(
-          map(r => {question.text = text; question.faq = faQ;return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => {return question;}),
           catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
         );
       }
@@ -244,8 +245,7 @@ export class QuestionService {
       addMeToo(question: Question, meToo: boolean, user: User) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => {question.meToo = meToo; question.otherAskers.push(user); return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          map(r => {return question;}),
           catchError(this.handleError<Question>(`meToo status changed=${question.id}`))
         );
       }

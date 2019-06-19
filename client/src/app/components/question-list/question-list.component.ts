@@ -150,41 +150,20 @@ export class QuestionListComponent implements OnInit {
       }
 
 
-      setAnswer(i:number){
-        this.selectedAction[i] = "answer";
-      }
-      setEdit(i:number){
-        this.selectedAction[i] = "edit";
-      }
-      setClaim(i:number){
-        this.selectedAction[i] = "claim";
-      }
-      setUnclaim(i:number){
-        this.selectedAction[i] = "unclaim";
+      //main method for all buttons and the dropdown menu
+      performSelectedAction(q: Question, i: number){
+        this.currentQuestion = q;
+        //paused - emit event t- flag  - boolean to ignore certain clock ticks -
+        //on open event for the dropdown - (onshow)
+        this.actions[this.selectedAction[i]](q).subscribe(r => this.refreshData(r));
+        //restart
+        //clear that space in the array
+        this.selectedAction[i]="";
       }
 
-      setAssign(i:number){
-        this.selectedAction[i] = "assign";
-      }
-      setAddFaq(i:number){
-        this.selectedAction[i] = "addFaQ";
-      }
-      setRemoveFaq(i:number){
-        this.selectedAction[i] = "removeFaQ";
-      }
-      setDelete(i:number){
-        this.selectedAction[i] = "delete";
-      }
-      setMeToo(i:number){
-        this.selectedAction[i] = "meToo";
-      }
-      //main method for all buttons and the dropdown menu
-      performAction(q: Question){
-        this.currentQuestion = q;
-        this.i = this.questions.indexOf(q);
-        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData(r));
-        //clear that space in the array
-        this.selectedAction[this.i]="";
+      performAction (q: Question, i:number, action : string) {
+        this.selectedAction[i] = action;
+        this.performSelectedAction(q, i);
       }
 
       refreshData(r :any){
