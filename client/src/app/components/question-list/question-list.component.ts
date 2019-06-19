@@ -61,6 +61,7 @@ export class QuestionListComponent implements OnInit {
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
 
 
@@ -153,11 +154,8 @@ export class QuestionListComponent implements OnInit {
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
-        //paused - emit event t- flag  - boolean to ignore certain clock ticks -
-        //on open event for the dropdown - (onshow)
-        this.actions[this.selectedAction[i]](q).subscribe(r => this.refreshData(r));
-        //restart
-        //clear that space in the array
+        this.setPauseRefresh(true);
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
       }
 
@@ -169,6 +167,12 @@ export class QuestionListComponent implements OnInit {
       refreshData(r :any){
         this.refreshEvent.next(r);
 
+      }
+
+      setPauseRefresh(r: boolean){
+        //allow for refresh to be paused (true)
+        //or for it to be unpause (false)
+        this.pauseRefresh.next(r);
       }
 
       answerQuestion(question: Question):Observable<any>{
