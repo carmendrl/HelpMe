@@ -6,6 +6,7 @@ import * as HttpStatus from 'http-status-codes';
 import { UserService } from '../../services/user.service';
 import { ApiResponse } from '../../services/api-response';
 import { LoggedinGuard } from '../../auth/loggedin.guard';
+import { Title }     from '@angular/platform-browser';
 
 import { User } from '../../models/user.model';
 
@@ -29,7 +30,7 @@ export class LoginComponent implements OnInit {
   private time: number = 0;
 
 
-  constructor(public userService : UserService, public router : Router, private loggedInGuard : LoggedinGuard) {
+  constructor(public titleService: Title, public userService : UserService, public router : Router, private loggedInGuard : LoggedinGuard) {
     this.failedLogin = false;
 
     this.currentUser = new User();
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
     this.userService.CurrentUser$.subscribe(
       u => this.currentUser = u
     );
+    this.titleService.setTitle('Log into Help Me');
   }
 
   emailIsValid() : boolean {

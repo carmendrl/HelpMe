@@ -38,7 +38,6 @@ import { QuillModule } from 'ngx-quill';
 
 import { StorageServiceModule } from 'angular-webstorage-service';
 
-
 const Server = '/api';
 
 //Custom angular notifier options
@@ -106,6 +105,7 @@ const customNotifierOptions: NotifierOptions = {
     QuestionFilterPipe,
     SessionFilterPipe,
   ],
+
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
   ],
