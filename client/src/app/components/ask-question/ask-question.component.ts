@@ -12,7 +12,7 @@ import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
   private possibleMatches: Question[] = new Array<Question>();
-  private step: number;
+  private step: string;
   private questionMessage: string;
   private message: SafeHtml;
   blured = false;
@@ -20,6 +20,7 @@ export class AskQuestionComponent implements OnInit {
   @Input() session: string;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
 }
@@ -29,6 +30,9 @@ export class AskQuestionComponent implements OnInit {
 }
 
   open(content){
+    //refresh is paused
+    this.setPauseRefresh(true);
+
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -48,11 +52,15 @@ export class AskQuestionComponent implements OnInit {
 
   createQuestion(){
     this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe(
-      r => this.refreshData());
+      r => {this.setPauseRefresh(false);this.refreshData()});
   }
 
   refreshData(){
     this.refreshEvent.next();
+  }
+
+  setPauseRefresh(r: boolean){
+    this.pauseRefresh.next(r);
   }
 
     created(event) {

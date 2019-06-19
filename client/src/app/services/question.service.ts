@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from './api-response';
 import * as moment from 'moment';
 //import { SafeHtml } from '@angular/platform-browser';
 
@@ -23,6 +24,7 @@ export class QuestionService {
   public updatedQuestion$ : Subject<Question>;
   public newAnswer$ : Subject<Answer>;
   private timeDifference: string;
+
 
   constructor(private httpClient : HttpClient, private labsessionService: LabSessionService,
     private route:ActivatedRoute) {
@@ -177,18 +179,24 @@ export class QuestionService {
           faq : faQ
         };
         return this.httpClient.put(url, body).pipe(
-          map(r => {question.text = text; question.faq = faQ;return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => {return question;}),
           catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
         );
       }
 
-      claimAQuestion(question: Question): Observable<Question>{
+      claimAQuestion(question: Question): Observable<Object>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/claim`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => question.claimedBy = r["data"]["relationships"]["claimed_by"]["data"]),
-          tap(r => this.updatedQuestion$.next(r)),
-          catchError(this.handleError<Question>(`claim id=${question.id}`))
+          map(r => { return {
+            //return object that helps prevent notifications
+            //when a user claims a question themselves
+            question: question,
+            claim: true,
+          }
+        }),
+          catchError(this.handleError<Object>(`claim id=${question.id}`))
         );
       }
       unclaimAQuestion(question: Question): Observable<Question>{
@@ -201,28 +209,27 @@ export class QuestionService {
           status: "pending"
         };
         return this.httpClient.put(url, body).pipe(
-          map(r => {question.claimedBy=undefined;question.status="pending";return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => { return question;}),
           catchError(this.handleError<Question>(`unclaim id=${question.id}`))
         );
       }
 
 
-      answerAQuestion(question: Question, text: string): Observable<Answer>{
+      answerAQuestion(question: Question, text: string): Observable<Question>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = { text: text };
         var answerer:User;
         return this.httpClient.post(url, body).pipe(
-          map(r => {answerer = User.createFromJSon(r["included"]);
-          question.answer = (Answer.createFromJSon(r["data"]));
-          question.answer.user = answerer; return question.answer }),
-          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r)}),
-          catchError(this.handleError<Answer>(`answer created`))
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+          map(r => { return question;}),
+          catchError(this.handleError<Question>(`answer created`))
         );
       }
 
       editAnAnswer(question: Question, text: string, answererId:string): Observable<Question>{
-        debugger
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
           text : text,
@@ -230,12 +237,9 @@ export class QuestionService {
         };
         var answerer: User;
         return this.httpClient.put(url, body).pipe(
-          map(r => {answerer = User.createFromJSon(r["included"]);
-          question.answer = (Answer.createFromJSon(r["data"]));
-          question.answer.user = answerer; return question}),
-          tap(r => {this.updatedQuestion$.next(question); this.newAnswer$.next(r.answer)}),
-          // map(r => {question.answer.text = text; return question;}),
-          // tap(r => this.updatedQuestion$.next(r)),
+          //non-updated question is returned, but because an Observable is returned,
+          //it will trigger a refresh and the updated question/answer will be displayed
+           map(r => { return question;}),
           catchError(this.handleError<Question>(`answer edited`))
         );
       }
@@ -243,30 +247,51 @@ export class QuestionService {
       addMeToo(question: Question, meToo: boolean, user: User) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => {question.meToo = meToo; question.otherAskers.push(user); return question;}),
-          tap(r => this.updatedQuestion$.next(r)),
+          map(r => {return question;}),
           catchError(this.handleError<Question>(`meToo status changed=${question.id}`))
         );
       }
 
-      askQuestion(text:string, session: string, step: number) : Observable<Question>{
+      askQuestion(text:string, session: any, step: string) : Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
+        let quest = new Question();
+        let lab = new LabSession();
+        quest.session = lab;
+        quest.text = text;
+        quest.session.id = session;
+        quest.step = step;
         let body = {
           text : text,
           step: step
         };
         return this.httpClient.post(url, body).pipe(
-          map(r => Question.createFromJSon(r["data"])),
-          catchError(this.handleError<Question>(`question created`))
+          map(r => {
+            let quest: Question = Question.createFromJSon(r["data"]);
+            let response: ApiResponse<Question> = new ApiResponse<Question> (true, quest);
+            return response;
+          }),
+          catchError(r => this.handleCopyQuestionsError(r,quest))
         );
       }
 
+      private handleCopyQuestionsError(error: any, quest: Question) : Observable<ApiResponse<Question>>{
+        let apiResponse: ApiResponse<Question> = new ApiResponse<Question> (false);
+        apiResponse.Data = quest;
+        if(error instanceof HttpErrorResponse){
+          apiResponse.addErrorsFromHttpError(error);
+        }
+        else{
+          apiResponse.addError("An unknown error occurred");
+        }
+        return of(apiResponse);
+      }
 
     assignQuestion(user: User, question: Question): Observable<Question>{
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
       return this.httpClient.post(url, {user_id: user.id}).pipe(
-        map(r => {question.claimedBy = user; return question;}),
-        tap(r => this.updatedQuestion$.next(r)),
+        //non-updated question is returned, but because an Observable is returned,
+        //it will trigger a refresh and the updated question/answer will be displayed
+        map(r => {return question;}),
         catchError(this.handleError<Question>(`assigned =${question.id}`))
       )
     }

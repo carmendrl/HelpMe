@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import { LabSessionService } from '../../services/labsession.service';
 import { UserService } from '../../services/user.service';
 import { Observable, of, from } from 'rxjs';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -31,6 +32,7 @@ export class QuestionListComponent implements OnInit {
   private searchText:string;
   private step: string;
   private i:number;
+  private copied: boolean;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -56,15 +58,17 @@ export class QuestionListComponent implements OnInit {
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
+  @Input() private showCheck: boolean = false;
 
   public toggleAnswer: boolean = false;
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
 
 
-  constructor(private questionService: QuestionService, private userService: UserService,
+  constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
     private modalService: NgbModal) {
 
       this.userService.CurrentUser$.subscribe(
@@ -81,16 +85,18 @@ export class QuestionListComponent implements OnInit {
           "delete": this.deleteQuestion,
           "meToo": this.meTooQuestion,
           "questionService": this.questionService,
+          "labsessionService": this.labsessionService,
           "modalService":this.modalService,
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
           "currentUser": this.currentUser,
+          "copy": this.copy
         }
       }
 
       ngOnInit() {
-        this.selectedAction = new Array<string>(this.questions.length);
+        this.selectedAction = new Array<string>();
       }
 
 
@@ -150,44 +156,28 @@ export class QuestionListComponent implements OnInit {
       }
 
 
-      setAnswer(){
-        this.selectedAction[this.i] = "answer";
-      }
-      setEdit(){
-        this.selectedAction[this.i] = "edit";
-      }
-      setClaim(){
-        this.selectedAction[this.i] = "claim";
-      }
-      setUnclaim(){
-        this.selectedAction[this.i] = "unclaim";
-      }
-
-      setAssign(){
-        this.selectedAction[this.i] = "assign";
-      }
-      setAddFaq(){
-        this.selectedAction[this.i] = "addFaQ";
-      }
-      setRemoveFaq(){
-        this.selectedAction[this.i] = "removeFaQ";
-      }
-      setDelete(){
-        this.selectedAction[this.i] = "delete";
-      }
-      setMeToo(){
-        this.selectedAction[this.i] = "meToo";
-      }
-      //methods for select element in drop down menu
-      performAction(q: Question){
+      //main method for all buttons and the dropdown menu
+      performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
-        this.i = this.questions.indexOf(q);
-        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
-        this.selectedAction[this.i] ="";
+        this.setPauseRefresh(true);
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
+        this.selectedAction[i]="";
       }
 
-      refreshData(){
-        this.refreshEvent.next();
+      performAction (q: Question, i:number, action : string) {
+        this.selectedAction[i] = action;
+        this.performSelectedAction(q, i);
+      }
+
+      refreshData(r :any){
+        this.refreshEvent.next(r);
+
+      }
+
+      setPauseRefresh(r: boolean){
+        //allow for refresh to be paused (true)
+        //or for it to be unpause (false)
+        this.pauseRefresh.next(r);
       }
 
       answerQuestion(question: Question):Observable<any>{
@@ -225,7 +215,10 @@ export class QuestionListComponent implements OnInit {
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
-
+      copy(question: Question){
+        this.labsessionService.copyQuestions.push(question);
+        this.copied = true;
+      }
 
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{

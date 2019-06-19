@@ -54,7 +54,15 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       checkIfEnded(){
         this.currentDate = new Date();
-        this.sessionService.getSession(this.sessionId).subscribe(r => {if(new Date(r.endDate.toString()) <= this.currentDate){this.readOnly = true;}else{this.readOnly = false;}});
+        this.sessionService.getSession(this.sessionId).subscribe(
+          r => {
+            if(new Date(r.endDate.toString()) <= this.currentDate){
+              this.readOnly = true;
+            }
+            else{
+              this.readOnly = false;
+            }
+          });
 
       }
 
@@ -93,8 +101,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               }
               //if the answer to your question was editted (even if it was editted by yourself)
               else{
-                debugger
-                if(q.answer.text != data.answer.text && q.answer.user.id != this.currentUser.id){
+                if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
                     this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
                   }
