@@ -38,24 +38,6 @@ export class LabSessionService {
     );
   }
 
-  copyQuestionList(session: LabSession){
-    //for question in array create a new question, change the session it is in, and the post to the new sessions
-    let url: string = `${this.apiHost}/lab_sessions/${session.id}/questions`;
-    for(let question of this.copyQuestions){
-      let tempQuestion = question;
-      tempQuestion.session.id = session.id;
-      let body = {
-        text: tempQuestion.text,
-        step: tempQuestion.step
-      }
-      this.httpClient.post(url, body).pipe(
-        map(r => Question.createFromJSon(r["data"])),
-        catchError(this.handleError<Question>(`copying questions`))
-      )
-    }
-    this.copyQuestions = [];
-  }
-
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
 

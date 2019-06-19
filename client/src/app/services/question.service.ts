@@ -12,6 +12,7 @@ import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
 import { ActivatedRoute } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from './api-response';
 import * as moment from 'moment';
 //import { SafeHtml } from '@angular/platform-browser';
 
@@ -250,18 +251,39 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, session: string, step: number) : Observable<Question>{
+      askQuestion(text:string, session: any, step: string) : Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
+        let quest = new Question();
+        let lab = new LabSession();
+        quest.session = lab;
+        quest.text = text;
+        quest.session.id = session;
+        quest.step = step;
         let body = {
           text : text,
           step: step
         };
         return this.httpClient.post(url, body).pipe(
-          map(r => Question.createFromJSon(r["data"])),
-          catchError(this.handleError<Question>(`question created`))
+          map(r => {
+            let quest: Question = Question.createFromJSon(r["data"]);
+            let response: ApiResponse<Question> = new ApiResponse<Question> (true, quest);
+            return response;
+          }),
+          catchError(r => this.handleCopyQuestionsError(r,quest))
         );
       }
 
+      private handleCopyQuestionsError(error: any, quest: Question) : Observable<ApiResponse<Question>>{
+        let apiResponse: ApiResponse<Question> = new ApiResponse<Question> (false);
+        apiResponse.Data = quest;
+        if(error instanceof HttpErrorResponse){
+          apiResponse.addErrorsFromHttpError(error);
+        }
+        else{
+          apiResponse.addError("An unknown error occurred");
+        }
+        return of(apiResponse);
+      }
 
     assignQuestion(user: User, question: Question): Observable<Question>{
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
