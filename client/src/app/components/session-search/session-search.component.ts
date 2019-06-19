@@ -51,7 +51,7 @@ export class SessionSearchComponent implements OnInit {
     let sessionSelected = this.selectedSession;
 
     let copyQuestions = this.labSessionService.copyQuestions;
-    debugger
+    //debugger
     let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.selectedSession.id, question.step));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value

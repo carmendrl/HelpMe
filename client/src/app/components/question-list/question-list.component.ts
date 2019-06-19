@@ -160,6 +160,7 @@ export class QuestionListComponent implements OnInit {
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
+        debugger
         this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
       }
@@ -216,6 +217,7 @@ export class QuestionListComponent implements OnInit {
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
       copy(question: Question){
+        //debugger;
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
       }

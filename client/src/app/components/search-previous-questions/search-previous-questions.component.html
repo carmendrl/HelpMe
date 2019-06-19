@@ -3,7 +3,7 @@
     <div *ngIf = "!sessionReloaded">
       Loading list of labsessions
     </div>
-    
+
 		<div *ngIf = "sessionReloaded">
 
 	    <form  #thisForm="ngForm" *ngIf="sessions.length > 0">
@@ -17,7 +17,7 @@
         <div class="form-group row no-gutters">
           <label>Questions:</label>
           <app-question-list [header]= "SessionQuestions" [showClaimedBy]= "true"
-          [showAnswer]="true"[questions]="sessionQuestions" [filteredQuestions]="sessionQuestions"
+          [showAnswer]="true"[questions]="loadSessionQuestions(selectedSession)" [filteredQuestions]="loadSessionQuestions(selectedSession)"
           [showCheck]="true">
         </app-question-list>
         </div>

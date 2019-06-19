@@ -64,7 +64,8 @@ are input into this model from the student dashboard, student view, and faculty 
               <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" >Remove FAQ</button>
               <button  *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace">Me Too!</button>
-              <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> 
+              <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
+              <input *ngIf="showCheck" type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
             </div>
 
             <div *ngIf="!readOnly" class="d-block d-lg-none">
@@ -80,10 +81,11 @@ are input into this model from the student dashboard, student view, and faculty 
                     <option *ngIf="showFAQButton && question.faq && !answerUndefined(question)" value="removeFaQ">Remove FAQ</option>
                     <option *ngIf="showDeleteButton" value="delete">Delete</option>
                     <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
-                    <option *ngIf="showCopy" value="copy">Copy</option>
+                    <!-- <option *ngIf="showCopy" value="copy">Copy</option> -->
                   </select>
+                  <input type="checkbox" class="form-check-input" id="copy">Copy
                 </div>
-                <button type="submit" class ="btn btn-primary">Submit</button>
+                <button *ngIf="showCheck" type="submit" class ="btn btn-primary">Submit</button>
               </form>
             </div>
           </td>
