@@ -38,6 +38,7 @@ import { QuillModule } from 'ngx-quill';
 
 import { StorageServiceModule } from 'angular-webstorage-service';
 import { SessionSearchComponent } from './components/session-search/session-search.component';
+import { SearchPreviousQuestionsComponent } from './components/search-previous-questions/search-previous-questions.component';
 
 
 const Server = '/api';
@@ -107,6 +108,7 @@ const customNotifierOptions: NotifierOptions = {
     QuestionFilterPipe,
     SessionFilterPipe,
     SessionSearchComponent,
+    SearchPreviousQuestionsComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule

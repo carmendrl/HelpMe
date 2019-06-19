@@ -6,6 +6,7 @@
   <button class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
   <button  class="btn btn-primary" type="button" (click)="showCheck = !showCheck;pauseRefresh===true;">Copy Questions to Another Session</button>
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="open(content);pauseRefresh===false">Select a Session</button>
+  <button class="btn btn-primary" type="button" (click)="open2(content2);">Search for Questions to Add</button>
 </div>
 
 <section>
@@ -46,5 +47,17 @@
   </div>
   <div class="modal-body">
     <app-session-search></app-session-search>
+  </div>
+</ng-template>
+
+<ng-template #content2 let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-search-previous-questions" aria-labelledBy="modal-search-previous-questions">Search Labsessions</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-search-previous-questions></app-search-previous-questions>
   </div>
 </ng-template>
