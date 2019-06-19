@@ -55,20 +55,20 @@ are input into this model from the student dashboard, student view, and faculty 
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction && !readOnly">
             <div class="d-none d-lg-block d-xl-block">
-              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-              <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-              <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-              <button *ngIf="showUnclaimButton" (click)="setUnclaim(); performAction(question)" class="btn btn-primary actionSpace">Unclaim</button>
-              <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-              <button *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-              <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-              <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
-              <input *ngIf="showCheck" type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
+              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
+              <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
+              <button *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>
+              <button  *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace">Assign</button>
+              <button *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" class="btn btn-primary actionSpace">Add FAQ</button>
+              <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" >Remove FAQ</button>
+              <button  *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace">Me Too!</button>
+              <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy')"> <label *ngIf="showCheck">Copy</label>
             </div>
 
             <div *ngIf="!readOnly" class="d-block d-lg-none">
-              <form #thisForm (ngSubmit)="performAction(question)">
+              <form #thisForm (ngSubmit)="performSelectedAction(question, i)">
                 <div class="form-group">
                   <select [(ngModel)] = "selectedAction[i]" name="actionList" class="form-control">
                     <option *ngIf="showAnswerButton && answerUndefined(question)" value="answer">Answer</option>
@@ -80,6 +80,7 @@ are input into this model from the student dashboard, student view, and faculty 
                     <option *ngIf="showFAQButton && question.faq && !answerUndefined(question)" value="removeFaQ">Remove FAQ</option>
                     <option *ngIf="showDeleteButton" value="delete">Delete</option>
                     <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
+                    <option *ngIf="showCopy" value="copy">Copy</option>
                   </select>
                 </div>
                 <button type="submit" class ="btn btn-primary">Submit</button>
@@ -104,7 +105,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
   <div class="results">
-    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
       <div>
           <span *ngIf="question.step">{{question.step}}.</span>
           <span> {{question.smallText}} </span><br><br>
@@ -114,9 +115,9 @@ are input into this model from the student dashboard, student view, and faculty 
       <span><td *ngIf="showAction && !readOnly">
 
         <div class="d-block d-lg-none inlineButton">
-          <form #thisForm (ngSubmit)="performAction(question)">
+          <form #thisForm (ngSubmit)="performSelectedAction(question, i)">
             <div class="form-group">
-              <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
+              <select [(ngModel)] = "selectedAction[i]" name="actionList" class="form-control">
                 <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
                 <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
                 <option *ngIf="showClaimButton" value="claim">Claim</option>

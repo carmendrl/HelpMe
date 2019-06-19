@@ -13,6 +13,7 @@ import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -40,7 +41,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService, private modalService: NgbModal) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService,
+     sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -53,31 +55,66 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       ngOnInit() {
         this.questionService.getUpdatedQuestion$.subscribe(r =>
-           { this.checkNotification(this.questions);
+           { this.checkNotification(this.questions, {});
+             //empty object passed in (because claimButton wasn't pressed)
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
+         this.titleService.setTitle(`Session View - Help Me`);
       }
 
-      checkNotification(datas : Question[]){
-        for (let data of datas){
-          if(this.data){
-          for (let q of this.data){
-            if (q.id === data.id){
-              if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
-                if(data.claimedBy.id != undefined){
-                if (data.claimedBy.id === this.user.id){
-                  this.notifier.notify('info', 'You have been assigned a question!');
+      checkNotification(datas : Question[], r:any){
+        if(r != undefined && r.question != undefined){
+          //r.question is defined if and only if the claimButton was selected
+          for (let data of datas){
+            if(this.data && data.answer ===undefined){
+              //must check that answer is undefined,
+              //otherwise assigned notification will pop up even question has been answered
+              //and is simply moving between lists (e.g. to/from FAQ)
+              for (let q of this.data){
+                if (q.id === data.id){
+                  if(q.id != r.question.id && data.id != r.question.id){
+                    //this checks to make sure that the question is not the one
+                    //that the user claimed themselves
+                    if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+                      if(data.claimedBy.id != undefined){
+                        if (data.claimedBy.id === this.user.id){
+                          this.notifier.notify('info', 'You have been assigned a question!');
+                        }
+                      }
+                    }
+                  }
                 }
-              }
               }
             }
           }
         }
+        else{
+          //if any action other than claim was selected
+          for (let data of datas){
+            if(this.data && data.answer ===undefined){
+              //must check that answer is undefined,
+              //otherwise assigned notification will pop up even question has been answered
+              //and is simply moving between lists (e.g. to/from FAQ)
+              for (let q of this.data){
+                if (q.id === data.id){
+                  if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
+                    if(data.claimedBy.id != undefined){
+                      if (data.claimedBy.id === this.user.id){
+                        this.notifier.notify('info', 'You have been assigned a question!');
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if (this.data && datas.length > this.data.length){
+          this.notifier.notify('info', 'A new question has been posted!');
+        }
       }
-      if (this.data && datas.length > this.data.length){
-        this.notifier.notify('info', 'A new question has been posted!');
-      }
-    }
+
 
 
       sortQuestions(questions: Question[]){

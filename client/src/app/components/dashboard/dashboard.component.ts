@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { Title }     from '@angular/platform-browser';
 
 
 @Component({
@@ -9,10 +10,10 @@ import { UserService } from '../../services/user.service';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor(private userService : UserService) { }
+  constructor(private userService : UserService, private titleService: Title) { }
 
   ngOnInit() {
-    
+     this.titleService.setTitle('Dashboard - Help Me')
   }
 
 }

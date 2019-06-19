@@ -63,6 +63,7 @@ export class QuestionListComponent implements OnInit {
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
 
 
@@ -88,11 +89,12 @@ export class QuestionListComponent implements OnInit {
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
           "currentUser": this.currentUser,
+          "copy": this.copyQuestion
         }
       }
 
       ngOnInit() {
-        this.selectedAction = new Array<string>(this.questions.length);
+        this.selectedAction = new Array<string>();
       }
 
 
@@ -152,44 +154,28 @@ export class QuestionListComponent implements OnInit {
       }
 
 
-      setAnswer(){
-        this.selectedAction[this.i] = "answer";
-      }
-      setEdit(){
-        this.selectedAction[this.i] = "edit";
-      }
-      setClaim(){
-        this.selectedAction[this.i] = "claim";
-      }
-      setUnclaim(){
-        this.selectedAction[this.i] = "unclaim";
-      }
-
-      setAssign(){
-        this.selectedAction[this.i] = "assign";
-      }
-      setAddFaq(){
-        this.selectedAction[this.i] = "addFaQ";
-      }
-      setRemoveFaq(){
-        this.selectedAction[this.i] = "removeFaQ";
-      }
-      setDelete(){
-        this.selectedAction[this.i] = "delete";
-      }
-      setMeToo(){
-        this.selectedAction[this.i] = "meToo";
-      }
-      //methods for select element in drop down menu
-      performAction(q: Question){
+      //main method for all buttons and the dropdown menu
+      performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
-        this.i = this.questions.indexOf(q);
-        this.actions[this.selectedAction[this.i]](q).subscribe(r => this.refreshData());
-        this.selectedAction[this.i] ="";
+        this.setPauseRefresh(true);
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
+        this.selectedAction[i]="";
       }
 
-      refreshData(){
-        this.refreshEvent.next();
+      performAction (q: Question, i:number, action : string) {
+        this.selectedAction[i] = action;
+        this.performSelectedAction(q, i);
+      }
+
+      refreshData(r :any){
+        this.refreshEvent.next(r);
+
+      }
+
+      setPauseRefresh(r: boolean){
+        //allow for refresh to be paused (true)
+        //or for it to be unpause (false)
+        this.pauseRefresh.next(r);
       }
 
       answerQuestion(question: Question):Observable<any>{
@@ -227,7 +213,9 @@ export class QuestionListComponent implements OnInit {
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
-
+      copyQuestion(question: Question){
+        this.labsessionService.copyQuestions.push(question);
+      }
 
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{

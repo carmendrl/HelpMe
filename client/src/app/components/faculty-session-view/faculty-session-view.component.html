@@ -12,7 +12,7 @@
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
   [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="true"
-  (refreshEvent)="refreshData()"></app-question-list>
+  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
@@ -20,19 +20,20 @@
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="true"
   [showNumberOfAskers]="true" [showUnclaimButton]="true"
-  (refreshEvent)="refreshData()"></app-question-list>
+  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="true"
-  (refreshEvent)="refreshData()" ></app-question-list>
+  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
-  [showDeleteButton]= "true" [showCheck]="true" (refreshEvent)="refreshData()"></app-question-list>
+  [showDeleteButton]= "true" [showCheck]="true" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)">
+</app-question-list>
 </section>
 
 <ng-template #content let-modal let-d="dismiss" let-c="close">

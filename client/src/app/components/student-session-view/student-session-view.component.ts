@@ -11,6 +11,7 @@ import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import { AskQuestionComponent } from '../ask-question/ask-question.component';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-student-session-view',
@@ -35,7 +36,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, sessionService:LabSessionService, private titleService: Title) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -47,12 +48,21 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
         this.checkIfEnded();
+        this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
       }
 
       checkIfEnded(){
         this.currentDate = new Date();
-        this.sessionService.getSession(this.sessionId).subscribe(r => {if(new Date(r.endDate.toString()) <= this.currentDate){this.readOnly = true;}else{this.readOnly = false;}});
+        this.sessionService.getSession(this.sessionId).subscribe(
+          r => {
+            if(new Date(r.endDate.toString()) <= this.currentDate){
+              this.readOnly = true;
+            }
+            else{
+              this.readOnly = false;
+            }
+          });
 
       }
 
@@ -91,8 +101,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               }
               //if the answer to your question was editted (even if it was editted by yourself)
               else{
-                debugger
-                if(q.answer.text != data.answer.text && q.answer.user.id != this.currentUser.id){
+                if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
                     this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
                   }
