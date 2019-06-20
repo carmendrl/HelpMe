@@ -1,4 +1,6 @@
 require "set"
+require 'rubygems'
+require 'lingua/stemmer'
 
 class Match
 	attr_accessor :score
@@ -29,6 +31,13 @@ class QuestionsController < ApplicationController
 
 	def initialize
 		@filter = Stopwords::Snowball::Filter.new "en"
+		@stemmer = Lingua::Stemmer.new(:language => "en")
+	end
+
+	def cleanupWords(words)
+		return words.map do |w|
+			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
+		end
 	end
 
 	def score(search_text, question_text)
@@ -38,30 +47,40 @@ class QuestionsController < ApplicationController
 		#  Remove any leading or trailing non-alpha characters
 		#  from the search and question words - to remove ? and . for
 		#  example
-		search_words = search_words.map do |w|
-			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
-		end
+		search_words = cleanupWords(search_words)
+		# search_words = search_words.map do |w|
+		# 	(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
+		# end
 
-		question_words = question_words.map do |w|
-			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
-		end
+		question_words = cleanupWords(question_words)
+		# question_words = question_words.map do |w|
+		# 	(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
+		# end
 
 		#  Eliminate common stop words
 		filtered_search_words = @filter.filter(search_words).to_set
-		puts "Filtered search words"
-		filtered_search_words.each do |w|
-			puts w
-		end
+		# puts "Filtered search words"
+		# filtered_search_words.each do |w|
+		# 	puts w
+		# end
 
-		#  Early out if the whole question consists of stop words
+		#  Early out if the whole search text consists of stop words
 		if filtered_search_words.length == 0
 			return 0
 		end
 
+		filtered_search_words = filtered_search_words.map do |w|
+			@stemmer.stem(w)
+		end
+
 		filtered_question_words = @filter.filter(question_words).to_set
-		puts "Filtered question words"
-		filtered_question_words.each do |w|
-			puts w
+		# puts "Filtered question words"
+		# filtered_question_words.each do |w|
+		# 	puts w
+		# end
+
+		filtered_question_words = filtered_question_words.map do |w|
+			@stemmer.stem(w)
 		end
 
 		#  Count how many of the search_words appear in filtered_question_words
@@ -75,21 +94,26 @@ class QuestionsController < ApplicationController
 		text = params[:q]
 		step = params[:step]
 
-		puts "In matching with q=#{text}"
 		results = SortedSet.new
 
-		@lab_session.questions.each do |q|
-			qText = q.plaintext ? q.plaintext : q.text
-			qScore = self.score(text, qText)
-			if qScore > 0
-				m = Match.new qScore, q
+		candidates = @lab_session.questions.select do |question|
+			question.original_asker.id != current_user.id
+		end
 
-				#  Give extra weight to questions from the same step
-				if step && q.step == step
-					m.score += 1
+		if candidates.length > 0
+			candidates.each do |q|
+				qText = q.plaintext ? q.plaintext : q.text
+				qScore = self.score(text, qText)
+				if qScore > 0
+					m = Match.new qScore, q
+
+					#  Give extra weight to questions from the same step
+					if step && q.step == step
+						m.score += 1
+					end
+
+					results.add m
 				end
-
-				results.add m
 			end
 		end
 
