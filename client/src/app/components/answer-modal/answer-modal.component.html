@@ -14,9 +14,20 @@
         <!-- <input type="text" [(ngModel)]="text" required> -->
         <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
       </div>
-      <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+      <div *ngIf="userService.CurrentUser$ | async as user">
+        <div [ngSwitch]="user.Type">
+          <div *ngSwitchCase="'professors'">
+            <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+          </div>
+        </div>
+        <div [ngSwitch]="user.Type">
+          <div *ngSwitchCase="'TAs'">
+            <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+          </div>
+        </div>
+      </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm();addToFaQs();">Save</button>
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm();">Save</button>
       </div>
     </form>
   </div>

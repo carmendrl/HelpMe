@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
+import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
 import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -21,7 +22,7 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     focused = false;
     private FaQ: boolean;
 
-  constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal,
+  constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
@@ -36,6 +37,7 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
   createAnswerFromForm(){
     this.saved = true;
     this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe(r => this.activeModal.close());
+    this.addToFaQs();
   }
 
     created(event) {
@@ -59,7 +61,6 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
 
     addToFaQs(){
       if(this.FaQ===true){
-        debugger
         this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, true).subscribe();
       }
     }
