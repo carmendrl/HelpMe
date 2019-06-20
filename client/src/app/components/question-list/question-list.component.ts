@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import { LabSessionService } from '../../services/labsession.service';
 import { UserService } from '../../services/user.service';
 import { Observable, of, from } from 'rxjs';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -34,8 +35,11 @@ export class QuestionListComponent implements OnInit {
   private searchText:string;
   private step: string;
   private i:number;
+
   //this variable helps when the dropdown menu is in use.
   private actionSelected:boolean =false; // Because the action of the button happens before the action of the menu closing, this helps make sure that when the menu closes it doesn't interfere with the refresh status for the element.
+  private copied: boolean;
+
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -61,6 +65,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
+  @Input() private showCheck: boolean = false;
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
@@ -68,7 +73,7 @@ export class QuestionListComponent implements OnInit {
 
 
 
-  constructor(private questionService: QuestionService, private userService: UserService,
+  constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
     private modalService: NgbModal) {
 
       this.userService.CurrentUser$.subscribe(
@@ -85,11 +90,13 @@ export class QuestionListComponent implements OnInit {
           "delete": this.deleteQuestion,
           "meToo": this.meTooQuestion,
           "questionService": this.questionService,
+          "labsessionService": this.labsessionService,
           "modalService":this.modalService,
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
           "currentUser": this.currentUser,
+          "copy": this.copy
         }
       }
 
@@ -122,7 +129,7 @@ export class QuestionListComponent implements OnInit {
           return "Close"
         }
       }
-      
+
       filteredQuestionsLength():number{
         if(this.filteredQuestions == undefined){
           return 0;
@@ -181,6 +188,7 @@ export class QuestionListComponent implements OnInit {
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
+        debugger
         this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
       }
@@ -260,7 +268,11 @@ export class QuestionListComponent implements OnInit {
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
-
+      copy(question: Question){
+        //debugger;
+        this.labsessionService.copyQuestions.push(question);
+        this.copied = true;
+      }
 
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{

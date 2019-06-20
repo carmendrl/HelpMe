@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { Title }     from '@angular/platform-browser';
+
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
@@ -21,7 +23,7 @@ export class NewUserComponent implements OnInit {
 	@ViewChild("createprofessor", { static : true})
 	private newProfessorModalContent : ElementRef;
 
-  constructor(private router : Router, private userService : UserService, private modalService : NgbModal) {
+  constructor(private router : Router, private userService : UserService, private titleService: Title, private modalService : NgbModal) {
 		this.newUser = new User();
 		this.newUser.Type = 'Student';
 		this.isProfessor = false;
@@ -30,6 +32,7 @@ export class NewUserComponent implements OnInit {
 	}
 
   ngOnInit() {
+    this.titleService.setTitle('Create an Account - Help Me');
   }
 
 	createNewAccount() : void {

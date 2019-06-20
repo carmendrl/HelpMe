@@ -12,7 +12,7 @@ import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
   private possibleMatches: Question[] = new Array<Question>();
-  private step: number;
+  private step: string;
   private questionMessage: string;
   private message: SafeHtml;
   blured = false;

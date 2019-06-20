@@ -11,6 +11,7 @@ import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
+import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 
@@ -31,15 +32,17 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private description:string;
   private subjectAndNumber:string;
   currentTime: Date;
+  closeResult: string;
   private unclaimedQHeader:string = "Unclaimed Questions";
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
   private otherQHeader:string = "Other Questions";
+  private copying: number;
 
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService,
-     sessionService:LabSessionService, private titleService: Title) {
+     sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -47,7 +50,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.otherQs = new Array<Question>();
       this.currentDate = new Date();
       this.userService.CurrentUser$.subscribe(r => this.user = r);
-
+      this.copying = this.sessionService.copyQuestions.length;
     }
 
       ngOnInit() {
@@ -171,5 +174,32 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           {this.token = session.token,
             this.subjectAndNumber = session.course.subjectAndNumber,
             this.description = session.description});
+      }
+
+      open(content) {
+        let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-search-sessions'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+
+      }
+      open2(content2) {
+        let modal= this.modalService.open(content2, <NgbModalOptions>{ariaLabelledBy: 'modal-search-previous-questions'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+
+      }
+
+      private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+          return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+          return 'by clicking on a backdrop';
+        } else {
+          return  `with: ${reason}`;
+        }
       }
     }

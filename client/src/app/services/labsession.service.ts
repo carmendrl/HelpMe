@@ -12,6 +12,7 @@ import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Question } from '../models/question.model';
 
 import { environment } from '../../environments/environment';
 
@@ -20,10 +21,12 @@ import { environment } from '../../environments/environment';
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
+  public copyQuestions = new Array<Question>();;
 
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
+    //this.copyQuestions = new Array<Question>();
   }
 
 //returns a list of all the labsessions
@@ -34,6 +37,8 @@ export class LabSessionService {
       catchError(this.handleError<LabSession[]>(`labSessions`))
     );
   }
+
+
 
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
