@@ -10,14 +10,14 @@
         <label>Select a Labsession:</label>
 	      <div class="form-group row no-gutters">
 	        <label class="form-label col-md-4" for="description" class="sr-only">Description</label>
-					<select [(ngModel)]="selectedSession" name="selectedSession">
+					<select [(ngModel)]="selectedSession" (change)="loadSessionQuestions()" name="selectedSession">
 						<option *ngFor="let session of sessions" [ngValue]="session">{{session.description}}</option>
 					</select>
 	      </div>
         <div class="form-group row no-gutters">
           <label>Questions:</label>
           <app-question-list [header]= "SessionQuestions" [showClaimedBy]= "true"
-          [showAnswer]="true"[questions]="loadSessionQuestions(selectedSession)" [filteredQuestions]="loadSessionQuestions(selectedSession)"
+          [showAnswer]="true"[questions]="sessionQuestions" [filteredQuestions]="sessionQuestions"
           [showCheck]="true">
         </app-question-list>
         </div>

@@ -46,15 +46,14 @@ export class SearchPreviousQuestionsComponent implements OnInit {
           this.selectedSession = this.sessions[0];
         }
         this.sessionReloaded = true;
-        //this.loadSessionQuestions();
+        this.loadSessionQuestions();
       }
     );
   }
 
-  private loadSessionQuestions(session: LabSession): Question[]{
+  private loadSessionQuestions(): Question[]{
     debugger
-    this.questionService.getSessionQuestions(session.id).subscribe(questions => this.sessionQuestions = questions);
-    return this.sessionQuestions;
+    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => this.sessionQuestions = questions);
   }
 
   copyAllQuestions(){
