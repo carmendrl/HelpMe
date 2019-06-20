@@ -47,6 +47,9 @@ export abstract class SessionView  {
       //often an empty object will be passed in
       //only time an actual object will be passed in
       //is when the claimed button is pressed.
+      //may work better if is on outside of this block - the menu won't close automatically
+      //on first click because of finishing the initial refresh
+      if(!(this.pauseRefresh)){
       this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
         'id')).subscribe(data => {
           this.checkNotification(data, r);
@@ -56,6 +59,7 @@ export abstract class SessionView  {
             this.time();
           }
         });
+      }
       }
 
 
