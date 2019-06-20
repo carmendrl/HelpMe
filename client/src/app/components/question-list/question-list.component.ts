@@ -11,6 +11,7 @@ import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import {EditModalComponent} from '../edit-modal/edit-modal.component';
 import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
 import {AssignModalComponent} from '../assign-modal/assign-modal.component';
+import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import * as moment from 'moment';
 
 
@@ -96,8 +97,14 @@ export class QuestionListComponent implements OnInit {
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
+          "openDelete":this.openDelete,
           "currentUser": this.currentUser,
-          "copy": this.copy
+          "copy": this.copy,
+          "refreshData": this.refreshData,
+          "refreshEvent": this.refreshEvent,
+          "setPauseRefresh":this.setPauseRefresh,
+          "pauseRefresh": this.pauseRefresh,
+
         }
       }
 
@@ -189,8 +196,8 @@ export class QuestionListComponent implements OnInit {
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
-        debugger
-        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
+        this.actions[this.selectedAction[i]](q).subscribe(
+          r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
       }
 
@@ -210,7 +217,6 @@ export class QuestionListComponent implements OnInit {
       }
 
       setPauseRefresh(r: boolean){
-        debugger
         //allow for refresh to be paused (true)
         //or for it to be unpause (false)
         this.pauseRefresh.next(r);
@@ -224,10 +230,8 @@ export class QuestionListComponent implements OnInit {
         else{
           //dropdown closed and another action was not selected
           if(!(this.actionSelected)){
-          debugger
           this.pauseRefresh.next(false);
           //this is necesssary so that timer is initiated once again
-          debugger
           this.refreshEvent.next();
         }
         this.actionSelected = false;
@@ -263,12 +267,13 @@ export class QuestionListComponent implements OnInit {
       }
 
       deleteQuestion(question: Question):Observable<any>{
-        return this.questionService.deleteAQuestion(question);
+        return this.openDelete(DeleteModalComponent, question);
       }
 
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
+
       copy(question: Question){
         //debugger;
         this.labsessionService.copyQuestions.push(question);
@@ -288,6 +293,15 @@ export class QuestionListComponent implements OnInit {
           });
           modal.componentInstance.currentQuestion = question;
           modal.componentInstance.answererId = this.currentUser.id;
+          modal.result.then(
+            (result) => {
+          this.setPauseRefresh(false);
+          this.refreshData(result);
+        }, (reason) => {
+          this.setPauseRefresh(false);
+          this.refreshData(reason);
+        }
+          );
           return from(modal.result);
         }
 
@@ -297,6 +311,15 @@ export class QuestionListComponent implements OnInit {
           let modal= this.modalService.open(content, <NgbModalOptions>{
             ariaLabelledBy: 'modal-create-course'});
           modal.componentInstance.currentQuestion = question;
+          modal.result.then(
+            (result) => {
+          this.setPauseRefresh(false);
+          this.refreshData(result);
+        }, (reason) => {
+          this.setPauseRefresh(false);
+          this.refreshData(reason);
+        }
+          );
           return from(modal.result);
         }
 
@@ -306,8 +329,34 @@ export class QuestionListComponent implements OnInit {
           let modal= this.modalService.open(content,
             <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
             modal.componentInstance.currentQuestion = question;
+            modal.result.then(
+              (result) => {
+            this.setPauseRefresh(false);
+            this.refreshData(result);
+          }, (reason) => {
+            this.setPauseRefresh(false);
+            this.refreshData(reason);
+          }
+            );
             return from(modal.result);
           }
+
+          //Delete Modal method
+          openDelete(content, question: Question):Observable<any>{
+            let modal= this.modalService.open(content,
+              <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+              modal.componentInstance.currentQuestion = question;
+              modal.result.then(
+                (result) => {
+              this.setPauseRefresh(false);
+              this.refreshData(result);
+            }, (reason) => {
+              this.setPauseRefresh(false);
+              this.refreshData(reason);
+            }
+              );
+              return from(modal.result);
+            }
 
 
           // gravatarImageUrl() : string {
