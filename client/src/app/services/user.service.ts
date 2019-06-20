@@ -136,7 +136,6 @@ export class UserService {
 
   createAccount(user : User, requestPromotion: boolean) : Observable<ApiResponse<User>> {
 		let url : string = `${this.apiHost}/users?requestPromotion=${requestPromotion}`;
-
     let body = this.buildCreateAccountBodyFromUser (user);
     return this.httpClient.post(url, body).pipe(
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
