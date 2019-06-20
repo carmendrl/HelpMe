@@ -1,3 +1,7 @@
+class TextMatcherService
+
+end
+
 class LabSessionsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_lab_session!, except: [:index, :create]

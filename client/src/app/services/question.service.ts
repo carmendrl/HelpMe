@@ -172,12 +172,17 @@ export class QuestionService {
         //return temp;
       }
 
-      updateQuestion(question: Question, text: string, faQ: boolean): Observable<ApiResponse<Question>>{
+      updateQuestion(question: Question, text: string, faQ: boolean, plaintext? : string): Observable<ApiResponse<Question>>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
         let body = {
           text : text,
           faq : faQ
         };
+
+				if (plaintext) {
+					body["plaintext"] = plaintext
+				}
+
         return this.httpClient.put(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
           //it will trigger a refresh and the updated question/answer will be displayed
@@ -270,7 +275,7 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, session: any, step: string, faq: boolean, answer: Answer) : Observable<ApiResponse<Question>>{
+      askQuestion(text:string, session: any, step: string, plaintext: string, faq: boolean, answer: Answer) : Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
         let quest = new Question();
         let lab = new LabSession();
@@ -284,7 +289,8 @@ export class QuestionService {
           text : text,
           step: step,
           faq: faq,
-          answer: answer
+          answer: answer,
+					plaintext: plaintext
         };
         return this.httpClient.post(url, body).pipe(
           map(r => {

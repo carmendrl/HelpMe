@@ -12,7 +12,7 @@ export class Question extends Entity{
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: string, private _smallText?: string) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: string, private _smallText?: string, private _plaintext? : string) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -53,6 +53,10 @@ export class Question extends Entity{
   set smallText(text: string) {
     this._smallText = text;
   }
+
+	get plaintext () { return this._plaintext }
+	set plaintext ( text : string) { this._plaintext = text }
+
   get answer() : Answer {
     return this._answer;
   }
@@ -178,6 +182,7 @@ static createFromJSon(o:Object){
   question.id = o["id"];
   question.faq = o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
+	question.plaintext = o["attributes"]["plaintext"];
   question.asker = o["relationships"]["original_asker"]["data"];
   if(o["relationships"]["claimed_by"]!= undefined){
     question.claimedBy = o["relationships"]["claimed_by"]["data"];

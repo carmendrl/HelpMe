@@ -67,7 +67,8 @@ export class QuestionListComponent implements OnInit {
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
   @Input() private allowSelection: boolean = false;
-
+	@Input() private isCollapsible: boolean = true;
+	@Input() private showSearch : boolean = true;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
@@ -111,7 +112,12 @@ export class QuestionListComponent implements OnInit {
         this.toggleAnswer = new Array<boolean>();
       }
 
-
+			headerStyles() {
+				let size : string = this.allowSelection ? "150%" : "100%";
+				return {
+					"font-size": size
+				};
+			}
 
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
@@ -194,8 +200,7 @@ export class QuestionListComponent implements OnInit {
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
-        this.actions[this.selectedAction[i]](q).subscribe(
-          r => {this.setPauseRefresh(false); this.refreshData(r)});
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
       }
 
@@ -272,7 +277,6 @@ export class QuestionListComponent implements OnInit {
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
       copy(question: Question){
-        //debugger;
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
       }
@@ -337,13 +341,4 @@ export class QuestionListComponent implements OnInit {
             );
             return from(modal.result);
           }
-
-
-          // gravatarImageUrl() : string {
-          //     //debugger
-          //
-          //
-          //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-          // }
-
-        }
+}
