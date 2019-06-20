@@ -56,10 +56,12 @@ export class AskQuestionComponent implements OnInit {
     //refresh is paused
     this.setPauseRefresh(true);
 
-    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then(
+			(result) => {
+      	this.reset();
+    	},
+			(reason) => {
+      	this.reset();
     });
   }
 
@@ -96,6 +98,7 @@ export class AskQuestionComponent implements OnInit {
     reset(){
       this.step = undefined;
       this.questionMessage = "";
+			this.possibleMatches = [];
     }
 
 }
