@@ -19,12 +19,14 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     text : string;
     blured = false;
     focused = false;
+    private FaQ: boolean;
 
   constructor(private activeModal: NgbActiveModal, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
     this.titleService.setTitle('Add Answer - Help Me');
+    this.FaQ = false;
   }
 
   ngOnDestroy(){
@@ -53,5 +55,12 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
       console.log('blur', $event)
       this.focused = false
       this.blured = true
+    }
+
+    addToFaQs(){
+      if(this.FaQ===true){
+        debugger
+        this.questionService.updateQuestion(this.currentQuestion, this.currentQuestion.text, true).subscribe();
+      }
     }
 }
