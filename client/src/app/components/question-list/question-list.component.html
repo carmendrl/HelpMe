@@ -83,8 +83,10 @@ are input into this model from the student dashboard, student view, and faculty 
                 <li class ="divider dropdown-divider"></li>
                 <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
               </div>
-              <input *ngIf="showCheck" type="checkbox" class="form-check-input" id="copy">Copy
             </div>
+          </td>
+          <td *ngIf="showCheck">
+            <input type="checkbox" class="form-check-input" id="copy"><label>Copy</label>
           </td>
         </tr>
       </tbody>
