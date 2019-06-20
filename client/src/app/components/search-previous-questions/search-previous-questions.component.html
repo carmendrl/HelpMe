@@ -1,0 +1,51 @@
+<!--modal-->
+  <div class="modal-body">
+    <div *ngIf = "!sessionReloaded">
+      Loading list of labsessions
+    </div>
+
+		<div *ngIf = "sessionReloaded">
+
+	    <form  #thisForm="ngForm" *ngIf="sessions.length > 0">
+        <label>Select a Labsession:</label>
+	      <div class="form-group row no-gutters">
+	        <label class="form-label col-md-4" for="description" class="sr-only">Description</label>
+					<select [(ngModel)]="selectedSession" (change)="loadSessionQuestions()" name="selectedSession">
+						<option *ngFor="let session of sessions" [ngValue]="session">{{session.description}}</option>
+					</select>
+	      </div>
+        <div class="form-group row no-gutters">
+          <section>
+            <app-question-list [header]= "faqHeader" [questions]="FaQs"
+            [filteredQuestions]="FaQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
+            (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+          </section>
+        </div>
+        <div class="form-group row no-gutters">
+          <section>
+            <app-question-list [header]= "answeredQuestionsHeader" [questions]="answeredQs"
+            [filteredQuestions]="answeredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
+            (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+          </section>
+        </div>
+        <div class="form-group row no-gutters">
+          <section>
+            <app-question-list [header]= "notAnsweredHeader" [questions]="notAnsweredQs"
+            [filteredQuestions]="notAnsweredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
+            (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+          </section>
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="copyAllQuestions();">Copy</button>
+	    </form>
+
+			<div *ngIf="sessions.length === 1" class="alert alert-danger">
+				<p>
+					There are no other sessions.
+				</p>
+
+				<p>Click the button below to reload the list of sessions</p>
+
+				<span class="btn btn-outline-primary" (click)="loadSessions()">Reload</span>
+			</div>
+		</div>
+  </div>

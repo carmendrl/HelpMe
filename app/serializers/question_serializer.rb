@@ -4,6 +4,7 @@ class QuestionSerializer < ActiveModel::Serializer
   attribute :status
   attribute :faq
   attribute :step
+	attribute :plaintext
 
   has_one :original_asker
   has_one :answer, if: :answered?

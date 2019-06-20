@@ -6,29 +6,49 @@ import { LabSession } from '../../models/lab_session.model';
 import { Observable, forkJoin } from 'rxjs';
 import { ApiResponse } from '../../services/api-response';
 import { Question } from '../../models/question.model';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
-  selector: 'app-session-search',
-  templateUrl: './session-search.component.html',
-  styleUrls: ['./session-search.component.scss']
+  selector: 'app-search-previous-questions',
+  templateUrl: './search-previous-questions.component.html',
+  styleUrls: ['./search-previous-questions.component.scss']
 })
-export class SessionSearchComponent implements OnInit {
+export class SearchPreviousQuestionsComponent implements OnInit {
 
   closeResult: string;
   private sessions : LabSession[] = [];
   private selectedSession : LabSession = new LabSession();
   private sessionReloaded : boolean = false;
+  private sessionQuestions : Question[];
   private state : string;
+  private sessionId: string;
   private question : Question;
   private errorQuestions: ApiResponse<Question>[];
   private confirmedQuestions: Question[];
-  @Input() private currentLabSession : LabSession;
+  @Input() private currentLabSession : string;
+
+  private FaQs: Question[];
+  private answeredQs: Question[];
+  private notAnsweredQs: Question[];
+  currentDate: Date;
+  faqHeader: string = "FAQs";
+  answeredQuestionsHeader: string = "Answered Questions";
+  notAnsweredHeader: string = "Unanswered Questions";
+
+
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
-    private labSessionService : LabSessionService, private questionService: QuestionService) {}
+    private labSessionService : LabSessionService, private questionService: QuestionService, private route: ActivatedRoute, privatelocation: Location) {
+      this.FaQs = new Array<Question>();
+      this.answeredQs= new Array<Question>();
+      this.notAnsweredQs = new Array<Question>();
+    }
 
   ngOnInit() {
     this.loadSessions();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
   }
 
   private loadSessions() : void {
@@ -41,18 +61,23 @@ export class SessionSearchComponent implements OnInit {
           this.selectedSession = this.sessions[0];
         }
         this.sessionReloaded = true;
+        this.loadSessionQuestions();
       }
     );
   }
 
-  copyAllQuestions(){
+  private loadSessionQuestions(){
     //debugger
+    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions; this.sortQuestions(this.sessionQuestions);});
+  }
+
+  copyAllQuestions(){
     this.state = "copyingQuestions";
     let sessionSelected = this.selectedSession;
 
     let copyQuestions = this.labSessionService.copyQuestions;
-    //debugger
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.selectedSession.id, question.step, question.plaintext, question.faq, question.answer));
+    let tempQuestion: Question;
+    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.plaintext, question.faq, question.answer));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value
 		//  containing all of the questions
@@ -78,5 +103,28 @@ export class SessionSearchComponent implements OnInit {
     return this.selectedSession === undefined;
     //.id == undefined || this.selectedUser.EmailAddress === ""
   }
+
+  sortQuestions(questions: Question[]){
+    this.currentDate=new Date();
+    //clears the array
+    this.FaQs.length = 0;
+    this.answeredQs.length = 0;
+    this.notAnsweredQs.length = 0;
+    for (let question of questions){
+        if(question.isAnswered){
+          if (question.faq){
+            this.FaQs.push(question);
+          }
+          else{
+            this.answeredQs.push(question);
+          }
+        }
+        else{
+          this.notAnsweredQs.push(question);
+        }
+    }
+  }
+
+
 
 }

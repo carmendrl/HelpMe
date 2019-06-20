@@ -11,6 +11,7 @@ import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import {EditModalComponent} from '../edit-modal/edit-modal.component';
 import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
 import {AssignModalComponent} from '../assign-modal/assign-modal.component';
+import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import * as moment from 'moment';
 
 
@@ -22,7 +23,10 @@ import * as moment from 'moment';
 export class QuestionListComponent implements OnInit {
 
   private timeDifference:string;
+  //Each question has own selected action and determinant of whether the answer is showing or not
   private selectedAction: Array<string>;
+  public toggleAnswer: Array<boolean>;
+
   private currentUser : User;
   private currentQuestion: Question;
   private actions;
@@ -32,7 +36,11 @@ export class QuestionListComponent implements OnInit {
   private searchText:string;
   private step: string;
   private i:number;
+
+  //this variable helps when the dropdown menu is in use.
+  private actionSelected:boolean =false; // Because the action of the button happens before the action of the menu closing, this helps make sure that when the menu closes it doesn't interfere with the refresh status for the element.
   private copied: boolean;
+
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -59,9 +67,9 @@ export class QuestionListComponent implements OnInit {
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
-
-  public toggleAnswer: boolean = false;
-
+  @Input() private allowSelection: boolean = false;
+	@Input() private isCollapsible: boolean = true;
+	@Input() private showSearch : boolean = true;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
@@ -90,16 +98,28 @@ export class QuestionListComponent implements OnInit {
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
+          "openDelete":this.openDelete,
           "currentUser": this.currentUser,
-          "copy": this.copy
+          "copy": this.copy,
+          "refreshData": this.refreshData,
+          "refreshEvent": this.refreshEvent,
+          "setPauseRefresh":this.setPauseRefresh,
+          "pauseRefresh": this.pauseRefresh,
+
         }
       }
 
       ngOnInit() {
         this.selectedAction = new Array<string>();
+        this.toggleAnswer = new Array<boolean>();
       }
 
-
+			headerStyles() {
+				let size : string = this.allowSelection ? "150%" : "100%";
+				return {
+					"font-size": size
+				};
+			}
 
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
@@ -124,6 +144,37 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+      filteredQuestionsLength():number{
+        if(this.filteredQuestions == undefined){
+          return 0;
+        }
+        else{
+          return this.filteredQuestions.length;
+        }
+      }
+
+      doToggleAnswer(i:number){
+        //true means answer is showing
+        //false means answer is hidden
+        if(this.toggleAnswer[i] != undefined){
+          this.toggleAnswer[i] = !(this.toggleAnswer[i]);
+        }
+        else{
+          this.toggleAnswer[i] = true;
+        }
+      }
+
+      answerLabel(i:number):string{
+        //true means answer is showing
+        //false means answer is hidden
+        if(this.toggleAnswer[i] == true){
+          return "Close Answer";
+        }
+        else{
+          return "View Answer";
+        }
+      }
+
       filter():boolean{
         if( this.searchText !=undefined && this.searchText!=""){
           return true;
@@ -133,15 +184,6 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
-
-      filteredQuestionsLength():number{
-        if(this.filteredQuestions == undefined){
-          return 0;
-        }
-        else{
-          return this.filteredQuestions.length;
-        }
-      }
 
       answerUndefined(question:Question){
         if(question.answer === undefined){
@@ -164,6 +206,11 @@ export class QuestionListComponent implements OnInit {
         this.selectedAction[i]="";
       }
 
+      performMenuAction(q: Question, i: number, action : string){
+        this.actionSelected = true;
+        this.performAction(q, i, action);
+      }
+
       performAction (q: Question, i:number, action : string) {
         this.selectedAction[i] = action;
         this.performSelectedAction(q, i);
@@ -178,6 +225,22 @@ export class QuestionListComponent implements OnInit {
         //allow for refresh to be paused (true)
         //or for it to be unpause (false)
         this.pauseRefresh.next(r);
+      }
+
+      menuPauseRefresh(event){
+        if(event){
+          //dropdown open
+          this.pauseRefresh.next(true);
+        }
+        else{
+          //dropdown closed and another action was not selected
+          if(!(this.actionSelected)){
+          this.pauseRefresh.next(false);
+          //this is necesssary so that timer is initiated once again
+          this.refreshEvent.next();
+        }
+        this.actionSelected = false;
+        }
       }
 
       answerQuestion(question: Question):Observable<any>{
@@ -209,15 +272,21 @@ export class QuestionListComponent implements OnInit {
       }
 
       deleteQuestion(question: Question):Observable<any>{
-        return this.questionService.deleteAQuestion(question);
+        return this.openDelete(DeleteModalComponent, question);
       }
 
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
+
       copy(question: Question){
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
+      }
+      copyAll(questions: Question[]){
+        for(let question of questions){
+          this.labsessionService.copyQuestions.push(question);
+        }
       }
 
       //Edit Modal methods
@@ -228,6 +297,15 @@ export class QuestionListComponent implements OnInit {
           });
           modal.componentInstance.currentQuestion = question;
           modal.componentInstance.answererId = this.currentUser.id;
+          modal.result.then(
+            (result) => {
+          this.setPauseRefresh(false);
+          this.refreshData(result);
+        }, (reason) => {
+          this.setPauseRefresh(false);
+          this.refreshData(reason);
+        }
+          );
           return from(modal.result);
         }
 
@@ -237,6 +315,15 @@ export class QuestionListComponent implements OnInit {
           let modal= this.modalService.open(content, <NgbModalOptions>{
             ariaLabelledBy: 'modal-create-course'});
           modal.componentInstance.currentQuestion = question;
+          modal.result.then(
+            (result) => {
+          this.setPauseRefresh(false);
+          this.refreshData(result);
+        }, (reason) => {
+          this.setPauseRefresh(false);
+          this.refreshData(reason);
+        }
+          );
           return from(modal.result);
         }
 
@@ -246,8 +333,34 @@ export class QuestionListComponent implements OnInit {
           let modal= this.modalService.open(content,
             <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
             modal.componentInstance.currentQuestion = question;
+            modal.result.then(
+              (result) => {
+            this.setPauseRefresh(false);
+            this.refreshData(result);
+          }, (reason) => {
+            this.setPauseRefresh(false);
+            this.refreshData(reason);
+          }
+            );
             return from(modal.result);
           }
+
+          //Delete Modal method
+          openDelete(content, question: Question):Observable<any>{
+            let modal= this.modalService.open(content,
+              <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+              modal.componentInstance.currentQuestion = question;
+              modal.result.then(
+                (result) => {
+              this.setPauseRefresh(false);
+              this.refreshData(result);
+            }, (reason) => {
+              this.setPauseRefresh(false);
+              this.refreshData(reason);
+            }
+              );
+              return from(modal.result);
+            }
 
 
           // gravatarImageUrl() : string {
