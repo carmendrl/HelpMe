@@ -1,5 +1,6 @@
 <div class="float-right d-inline-block clearfix" ngbDropdown *ngIf="userService.CurrentUser$ | async as user">
   <div *ngIf="user.Username.length > 0">
+  <div>
     <button class="btn btn-outline-default" id="accountDropdown" ngbDropdownToggle>
       <!--  At screen size xs, we'll just show the profile icon  -->
       <!-- <span class="fas fa-user"></span> -->
