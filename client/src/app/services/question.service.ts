@@ -172,7 +172,7 @@ export class QuestionService {
         //return temp;
       }
 
-      updateQuestion(question: Question, text: string, faQ: boolean): Observable<Question>{
+      updateQuestion(question: Question, text: string, faQ: boolean): Observable<ApiResponse<Question>>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
         let body = {
           text : text,
@@ -181,9 +181,24 @@ export class QuestionService {
         return this.httpClient.put(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
           //it will trigger a refresh and the updated question/answer will be displayed
-          map(r => {return question;}),
-          catchError(this.handleError<Question>(`updateQuestion id=${question.id}`))
+          map(r => {
+            let response: ApiResponse<Question> = new ApiResponse<Question> (true, question);
+            return response;
+          }),
+          catchError(r => this.handleQuestionsError(r,question))
         );
+      }
+
+      private handleQuestionsError(error: any, quest: Question) : Observable<ApiResponse<Question>>{
+        let apiResponse: ApiResponse<Question> = new ApiResponse<Question> (false);
+        apiResponse.Data = quest;
+        if(error instanceof HttpErrorResponse){
+          apiResponse.addErrorsFromHttpError(error);
+        }
+        else{
+          apiResponse.addError("An unknown error occurred");
+        }
+        return of(apiResponse);
       }
 
       claimAQuestion(question: Question): Observable<Object>{
@@ -217,15 +232,18 @@ export class QuestionService {
       }
 
 
-      answerAQuestion(question: Question, text: string): Observable<Question>{
+      answerAQuestion(question: Question, text: string): Observable<ApiResponse<Question>>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = { text: text };
         var answerer:User;
         return this.httpClient.post(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
           //it will trigger a refresh and the updated question/answer will be displayed
-          map(r => { return question;}),
-          catchError(this.handleError<Question>(`answer created`))
+          map(r => {
+            let response: ApiResponse<Question> = new ApiResponse<Question> (true, question);
+            return response;
+          }),
+          catchError(r => this.handleQuestionsError(r,question))
         );
       }
 
@@ -252,7 +270,7 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, session: any, step: string) : Observable<ApiResponse<Question>>{
+      askQuestion(text:string, session: any, step: string, faq: boolean, answer: Answer) : Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
         let quest = new Question();
         let lab = new LabSession();
@@ -260,9 +278,13 @@ export class QuestionService {
         quest.text = text;
         quest.session.id = session;
         quest.step = step;
+        quest.faq= faq;
+        quest.answer = answer;
         let body = {
           text : text,
-          step: step
+          step: step,
+          faq: faq,
+          answer: answer
         };
         return this.httpClient.post(url, body).pipe(
           map(r => {
@@ -270,21 +292,11 @@ export class QuestionService {
             let response: ApiResponse<Question> = new ApiResponse<Question> (true, quest);
             return response;
           }),
-          catchError(r => this.handleCopyQuestionsError(r,quest))
+          catchError(r => this.handleQuestionsError(r,quest))
         );
       }
 
-      private handleCopyQuestionsError(error: any, quest: Question) : Observable<ApiResponse<Question>>{
-        let apiResponse: ApiResponse<Question> = new ApiResponse<Question> (false);
-        apiResponse.Data = quest;
-        if(error instanceof HttpErrorResponse){
-          apiResponse.addErrorsFromHttpError(error);
-        }
-        else{
-          apiResponse.addError("An unknown error occurred");
-        }
-        return of(apiResponse);
-      }
+
 
     assignQuestion(user: User, question: Question): Observable<Question>{
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;

@@ -66,6 +66,7 @@ export class QuestionListComponent implements OnInit {
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
+  @Input() private allowSelection: boolean = false;
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
@@ -274,6 +275,11 @@ export class QuestionListComponent implements OnInit {
         //debugger;
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
+      }
+      copyAll(questions: Question[]){
+        for(let question of questions){
+          this.labsessionService.copyQuestions.push(question);
+        }
       }
 
       //Edit Modal methods
