@@ -1,5 +1,6 @@
 class RegistrationsController < DeviseTokenAuth::RegistrationsController
-  before_action :authenticate_user!, only: [:show, :promote, :demote, :find_user]
+  #before_action :authenticate_user!, only: [:show, :promote, :demote, :find_user]
+  before_action :authenticate_user!, except: [:create]
 
   #  Create a promotion request if requested
 	def create

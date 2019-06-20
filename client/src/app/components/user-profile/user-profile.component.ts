@@ -48,6 +48,10 @@ export class UserProfileComponent implements OnInit {
 			return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
 	}
 
+  viewProfile(){
+    this.router.navigateByUrl(`user/profile`);
+  }
+
   private handleLogoutResponse(wasLoggedOut : boolean) {
     if (wasLoggedOut) {
       this.router.navigateByUrl("/");
