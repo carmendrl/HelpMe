@@ -20,8 +20,8 @@
       <!--  <div class="form-inline">
       <input type="text" id="tags" class="form-control"/><br>
       <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
-      <button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
-      <button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
+      <button type="button" class="btn btn-primary" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
+      <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
     </form>
     <section>
         <label *ngIf="!possibleMatches.length===0">Possible Matches</label>
