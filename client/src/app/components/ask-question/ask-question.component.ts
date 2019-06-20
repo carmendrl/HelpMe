@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Question } from '../../models/question.model';
+import { Answer } from '../../models/answer.model';
 import { QuestionService } from '../../services/question.service';
 import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
@@ -13,8 +14,10 @@ export class AskQuestionComponent implements OnInit {
   closeResult: string;
   private possibleMatches: Question[] = new Array<Question>();
   private step: string;
+  private faq: boolean = false;
   private questionMessage: string;
   private message: SafeHtml;
+  private answer: Answer;
   blured = false;
   focused = false;
   @Input() session: string;
@@ -51,7 +54,7 @@ export class AskQuestionComponent implements OnInit {
   }
 
   createQuestion(){
-    this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe(
+    this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.faq, this.answer).subscribe(
       r => {this.setPauseRefresh(false);this.refreshData()});
   }
 

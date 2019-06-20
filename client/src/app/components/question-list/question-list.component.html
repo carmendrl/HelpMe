@@ -7,12 +7,23 @@ are input into this model from the student dashboard, student view, and faculty 
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 <div class="largeScreen">
-<h2 class="inlineHeader">{{header}}
+  <div *ngIf="!allowSelection">
+<h2  class="inlineHeader">{{header}}
   <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
   [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
   <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
 </button>
 </h2>
+</div>
+
+<div *ngIf="allowSelection">
+<h6  class="inlineHeader">{{header}}
+<button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+[attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+<span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+</button>
+</h6>
+</div>
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
@@ -32,7 +43,8 @@ are input into this model from the student dashboard, student view, and faculty 
           <th *ngIf="showTags">Tags</th>
           <th *ngIf="showTimeInQueue">Time in queue</th>
           <th *ngIf="showAnswer">Answer</th>
-          <th *ngIf="showAction && !readOnly">Action</th>
+          <th *ngIf="showAction && !readOnly && !allowSelection">Action</th>
+          <th *ngIf="showCheck"><input type="checkbox" (click)="copyAll(filteredQuestions)">Copy All</th>
         </tr>
       </thead>
       <tbody>
@@ -53,7 +65,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
-          <td *ngIf="showAction && !readOnly">
+          <td *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
               <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
               <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
@@ -65,9 +77,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button  *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace">Me Too!</button>
               <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
-              <input *ngIf="showCheck" type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
             </div>
-
             <div *ngIf="!readOnly" class="d-block d-lg-none">
               <form #thisForm (ngSubmit)="performSelectedAction(question, i)">
                 <div class="form-group">
@@ -88,7 +98,12 @@ are input into this model from the student dashboard, student view, and faculty 
                 <button *ngIf="showCheck" type="submit" class ="btn btn-primary">Submit</button>
               </form>
             </div>
-          </td>
+            </td>
+            <td *ngIf="showCheck">
+              <div class="d-none d-lg-block d-xl-block">
+                <input type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
+              </div>
+            </td>
         </tr>
       </tbody>
     </table>

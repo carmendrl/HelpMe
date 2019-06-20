@@ -20,7 +20,6 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   closeResult: string;
   private sessions : LabSession[] = [];
   private selectedSession : LabSession = new LabSession();
-  private selectedQuestion : Question = new Question();
   private sessionReloaded : boolean = false;
   private sessionQuestions : Question[];
   private state : string;
@@ -30,9 +29,22 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private confirmedQuestions: Question[];
   @Input() private currentLabSession : string;
 
+  private FaQs: Question[];
+  private answeredQs: Question[];
+  private notAnsweredQs: Question[];
+  currentDate: Date;
+  faqHeader: string = "FAQs";
+  answeredQuestionsHeader: string = "Answered Questions";
+  notAnsweredHeader: string = "Unanswered Questions";
+
+
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
-    private labSessionService : LabSessionService, private questionService: QuestionService, private route: ActivatedRoute, privatelocation: Location) {}
+    private labSessionService : LabSessionService, private questionService: QuestionService, private route: ActivatedRoute, privatelocation: Location) {
+      this.FaQs = new Array<Question>();
+      this.answeredQs= new Array<Question>();
+      this.notAnsweredQs = new Array<Question>();
+    }
 
   ngOnInit() {
     this.loadSessions();
@@ -56,7 +68,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
 
   private loadSessionQuestions(){
     //debugger
-    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => this.sessionQuestions = questions);
+    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions; this.sortQuestions(this.sessionQuestions);});
   }
 
   copyAllQuestions(){
@@ -64,7 +76,8 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     let sessionSelected = this.selectedSession;
 
     let copyQuestions = this.labSessionService.copyQuestions;
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step));
+    let tempQuestion: Question;
+    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.faq, question.answer));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value
 		//  containing all of the questions
@@ -90,5 +103,28 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     return this.selectedSession === undefined;
     //.id == undefined || this.selectedUser.EmailAddress === ""
   }
+
+  sortQuestions(questions: Question[]){
+    this.currentDate=new Date();
+    //clears the array
+    this.FaQs.length = 0;
+    this.answeredQs.length = 0;
+    this.notAnsweredQs.length = 0;
+    for (let question of questions){
+        if(question.isAnswered){
+          if (question.faq){
+            this.FaQs.push(question);
+          }
+          else{
+            this.answeredQs.push(question);
+          }
+        }
+        else{
+          this.notAnsweredQs.push(question);
+        }
+    }
+  }
+
+
 
 }
