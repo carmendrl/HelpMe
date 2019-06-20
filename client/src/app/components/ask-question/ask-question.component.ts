@@ -33,10 +33,17 @@ export class AskQuestionComponent implements OnInit {
     //refresh is paused
     this.setPauseRefresh(true);
 
-    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
+    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then(
+      (result) => {
+        debugger
       this.closeResult = `Closed with: ${result}`;
+      this.setPauseRefresh(false);
+      this.refreshData();
     }, (reason) => {
+      debugger
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.setPauseRefresh(false);
+      this.refreshData();
     });
   }
 
