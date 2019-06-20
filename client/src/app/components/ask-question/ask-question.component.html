@@ -16,7 +16,7 @@
 					<input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
 				</div>
 			</div>
-      <!-- <label>Your Question</label> -->
+
      <!-- <quill-editor  class="qEditor smallScreen" format="json" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor> -->
       <quill-editor class="qEditor" format="json" name="askQuestion"[(ngModel)]="questionMessage"
 					[styles]="{height: '200px'}" (onEditorCreated)="created($event)"
@@ -29,13 +29,7 @@
       <input type="text" id="tags" class="form-control"/><br>
       <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
 
-
     <div *ngIf="possibleMatches.length > 0" id="possibleMatches">
-				<!-- <h2>Possibly matching questions</h2>
-				<p *ngIf="possibleMatches.length == 0">
-					No matching questions were found
-				</p> -->
-
 				<app-question-list
 					[isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
 					[showMeTooButton]="true" [showSearch]="false" [header]="'Possibly matching questions'"
@@ -43,8 +37,10 @@
 				</app-question-list>
     </div>
 
-		<button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
-		<button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
+			<button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
+		</div>
 	</form>
   </div>
 </ng-template>
