@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { NewUserComponent } from './components/new-user/new-user.component';
 import { PromoteUserComponent } from './components/promote-user/promote-user.component';
 import { ConfirmPromotionRequestComponent } from './components/confirm-promotion-request/confirm-promotion-request.component';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
 const routes : Routes = [
   {
@@ -25,7 +26,11 @@ const routes : Routes = [
 	{
 		'path': 'confirm-promotions',
 		'component': ConfirmPromotionRequestComponent
-	}
+	},
+  {
+    'path': 'user/profile',
+    'component': EditProfileComponent
+  }
 ];
 
 @NgModule({

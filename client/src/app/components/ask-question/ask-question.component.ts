@@ -17,7 +17,7 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
   private possibleMatches: Question[] = new Array<Question>();
-  private step: number;
+  private step: string;
   private questionMessage: string;
   private message: SafeHtml;
 
@@ -28,6 +28,7 @@ export class AskQuestionComponent implements OnInit {
 	private editor : any;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal, private questionService: QuestionService, private labSessionService : LabSessionService, private sanitizer: DomSanitizer) {
 		this.editorContentChanged$ = new Subject<string> ();
@@ -52,6 +53,9 @@ export class AskQuestionComponent implements OnInit {
 	}
 
   open(content){
+    //refresh is paused
+    this.setPauseRefresh(true);
+
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -70,9 +74,8 @@ export class AskQuestionComponent implements OnInit {
   }
 
   createQuestion(){
-		this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText()).subscribe(
-			r => this.refreshData()
-		);
+    this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText()).subscribe(
+      r => {this.setPauseRefresh(false);this.refreshData()});
   }
 
   refreshData(){
@@ -83,6 +86,9 @@ export class AskQuestionComponent implements OnInit {
 		this.editor = event;
 	}
 
+	setPauseRefresh(r: boolean){
+		this.pauseRefresh.next(r);
+	}
 	private editorContentChanged (event) {
 		this.editorContentChanged$.next(event.text);
 	}

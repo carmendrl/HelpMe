@@ -78,4 +78,5 @@ export class SessionListComponent implements OnInit {
         return "Close"
       }
     }
+
 }

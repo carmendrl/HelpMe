@@ -22,10 +22,12 @@ import { environment } from '../../environments/environment';
 export class LabSessionService {
   private apiHost : string;
   public _newLabSession$: Subject<LabSession>;
+  public copyQuestions = new Array<Question>();;
 
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
+    //this.copyQuestions = new Array<Question>();
   }
 
 //returns a list of all the labsessions
@@ -36,6 +38,8 @@ export class LabSessionService {
       catchError(this.handleError<LabSession[]>(`labSessions`))
     );
   }
+
+
 
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
@@ -179,6 +183,24 @@ export class LabSessionService {
 			map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
       catchError(this.handleError<LabSession>(`getSession id=${id}`))
     );
+  }
+
+  getStartDate(token: string): Observable<Date>{
+    let url : string =`${this.apiHost}/lab_sessions`;
+    return this.httpClient.get(url).pipe(
+      map(r => this.extractStartDate(r["data"], token)),
+      catchError(this.handleError<Date>(`labSessions`))
+    );
+  }
+
+  private extractStartDate(r: any[], token: string):Date{
+    var start_date: any = r.find(function(element) {
+      return element["attributes"]["token"] === token;
+    });
+    //debugger
+    let newDate = new Date(start_date["attributes"]["start_date"]);
+    //debugger
+    return newDate;
   }
 
   updateEndDate(id: string, date: Date): Observable<LabSession>{

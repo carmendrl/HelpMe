@@ -182,6 +182,7 @@ static createFromJSon(o:Object){
   question.id = o["id"];
   question.faq = o["attributes"]["faq"];
   question.status = o["attributes"]["status"];
+	question.plaintext = o["attributes"]["plaintext"];
   question.asker = o["relationships"]["original_asker"]["data"];
   if(o["relationships"]["claimed_by"]!= undefined){
     question.claimedBy = o["relationships"]["claimed_by"]["data"];

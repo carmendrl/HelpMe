@@ -1,0 +1,90 @@
+
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+<div class="container bootstrap snippets">
+<div class="row">
+  <div class="col-xs-12 col-sm-9">
+    <form class="form-horizontal">
+      <button type="back" class="btn btn-primary" [routerLink]="['/dashboard']">Back</button>
+      <h2 style="text-align:center"> Edit Profile </h2>
+        <div class="panel panel-default">
+          <div class="panel-body text-center">
+           <img class="rounded-circle" [src]="gravatarImageUrl(user)"/>
+          </div>
+        </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">User info</h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="firstName">First Name</label>
+            <div class="col-sm-10">
+              <input type="text" name="firstName" class="form-control" [(ngModel)]="user.FirstName" >
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="lastName">Last Name</label>
+            <div class="col-sm-10">
+              <input type="text" name="lastName" class="form-control" [(ngModel)]="user.LastName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="username">Username</label>
+            <div class="col-sm-10">
+              <input type="text" name="username" class="form-control" [(ngModel)]="user.Username">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">Contact info</h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="email">Email address</label>
+            <div class="col-sm-10">
+              <input type="email" name="email" class="form-control" [(ngModel)]="user.EmailAddress">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+        <h4 class="panel-title">Security</h4>
+        </div>
+        <div class="panel-body">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="currentPassword">Current password</label>
+            <div class="col-sm-10">
+              <input type="password" name="currentPassword" class="form-control" [(ngModel)]="currentPassword">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="password">New password</label>
+            <div class="col-sm-10">
+              <input type="password" name="password" class="form-control" [(ngModel)]="user.Password">
+            </div>
+          </div>
+          <div *ngIf= "checkIfNotStudent()" class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox_1">
+                <label for="checkbox_1">I want to be notified when there is a new professor account request</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 col-sm-offset-2">
+              <button type="submit" class="btn btn-primary" (click)="editProfileFromForm()">Submit</button>
+              <button type="reset" class="btn btn-default" (click)="cancelEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+</div>

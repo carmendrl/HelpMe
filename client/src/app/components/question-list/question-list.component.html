@@ -7,11 +7,11 @@ are input into this model from the student dashboard, student view, and faculty 
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 <div class="largeScreen">
-<h2 class="inlineHeader">{{header}}
-  <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-</button>
+  <h2 class="inlineHeader">{{header}}
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+  </button>
 </h2>
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
@@ -32,7 +32,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <th *ngIf="showTags">Tags</th>
           <th *ngIf="showTimeInQueue">Time in queue</th>
           <th *ngIf="showAnswer">Answer</th>
-          <th *ngIf="showAction">Action</th>
+          <th *ngIf="showAction && !readOnly">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -53,37 +53,40 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
-          <td *ngIf="showAction">
+          <td *ngIf="showAction && !readOnly">
             <div class="d-none d-lg-block d-xl-block">
-              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="setAnswer(); performAction(question)" class="btn btn-primary actionSpace">Add Answer</button>
-              <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="setEdit(); performAction(question)" class="btn btn-primary actionSpace">Edit Answer</button>
-              <button  *ngIf="showClaimButton" (click)="setClaim(); performAction(question)" class="btn btn-primary actionSpace">Claim</button>
-              <button *ngIf="showUnclaimButton" (click)="setUnclaim(); performAction(question)" class="btn btn-primary actionSpace">Unclaim</button>
-              <button  *ngIf="showAssignButton" (click)="setAssign(); performAction(question)" class="btn btn-primary actionSpace">Assign</button>
-              <button *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="setAddFaq(); performAction(question)" class="btn btn-primary actionSpace">Add FAQ</button>
-              <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="setRemoveFaq(); performAction(question)" class="btn btn-primary actionSpace" >Remove FAQ</button>
-              <button  *ngIf="showDeleteButton" (click)="setDelete(); performAction(question)" class="btn btn-primary actionSpace">Delete</button>
-              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="setMeToo(); performAction(question)" class="btn btn-primary actionSpace">Me Too!</button>
+              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
+              <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
+              <button *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>
+              <button  *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace">Assign</button>
+              <button *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" class="btn btn-primary actionSpace">Add FAQ</button>
+              <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" >Remove FAQ</button>
+              <button  *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace">Me Too!</button>
+              <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
+              <input *ngIf="showCheck" type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
             </div>
 
-            <div class="d-block d-lg-none">
-              <form #thisForm (ngSubmit)="performAction(question);">
-                <div class="form-group">
-                  <select [(ngModel)] = "selectedAction[i]" name="actionList" class="form-control">
-                    <option *ngIf="showAnswerButton && answerUndefined(question)" value="answer">Answer</option>
-                    <option *ngIf="showEditButton && !answerUndefined(question)" value="edit">Edit</option>
-                    <option *ngIf="showClaimButton" value="claim">Claim</option>
-                    <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
-                    <option *ngIf="showAssignButton" value="assign">Assign</option>
-                    <option *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" value="addFaQ">Add FAQ</option>
-                    <option *ngIf="showFAQButton && question.faq && !answerUndefined(question)" value="removeFaQ">Remove FAQ</option>
-                    <option *ngIf="showDeleteButton" value="delete">Delete</option>
-                    <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
-                  </select>
-                </div>
-                <button type="submit" class ="btn btn-primary">Submit</button>
-              </form>
+            <div ngbDropdown *ngIf="!readOnly" class="d-block d-lg-none" autoClose="inside" (openChange)="menuPauseRefresh($event)">
+              <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select Action</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                <button ngbDropdownItem *ngIf="showAnswerButton && answerUndefined(question)" (click)="performMenuAction(question, i, 'answer')">Add Answer</button>
+                <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+                <button ngbDropdownItem *ngIf="showClaimButton" (click)="performMenuAction(question, i, 'claim')" >Claim</button>
+                <button ngbDropdownItem *ngIf="showUnclaimButton" (click)="performMenuAction(question, i, 'unclaim')">Unclaim</button>
+                <button ngbDropdownItem *ngIf="showAssignButton" (click)="performMenuAction(question, i, 'assign')" >Assign</button>
+                <button ngbDropdownItem *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'addFaQ')">Add FAQ</button>
+                <button ngbDropdownItem *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'removeFaQ')">Remove FAQ</button>
+                <button ngbDropdownItem *ngIf="showDeleteButton" (click)="performMenuAction(question, i, 'delete')" >Delete</button>
+                <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo')">Me Too!</button>
+                <li class ="divider dropdown-divider"></li>
+                <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
+              </div>
             </div>
+          </td>
+          <td *ngIf="showCheck">
+            <input type="checkbox" class="form-check-input" id="copy"><label>Copy</label>
           </td>
         </tr>
       </tbody>
@@ -99,41 +102,43 @@ are input into this model from the student dashboard, student view, and faculty 
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
-  </h2>
+</h2>
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
   <div class="results">
-    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText ">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
       <div>
-          <span *ngIf="question.step">{{question.step}}.</span>
-          <span> {{question.smallText}} </span><br><br>
+        <span *ngIf="question.step">{{question.step}}.</span>
+        <span> {{question.smallText}} </span><br><br>
       </div>
-      <button *ngIf="question.answer != undefined" class="btn btn-primary inlineButton" (click)="toggleAnswer = !toggleAnswer" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">View Answer</button>
-      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor><br *ngIf="question.answer != undefined"><br *ngIf="question.answer != undefined">
-      <span><td *ngIf="showAction">
+      <button *ngIf="question.answer != undefined" class="btn btn-primary" (click)="doToggleAnswer(i)" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">{{answerLabel(i)}}</button>
+      <span><td *ngIf="showAction && !readOnly">
 
-        <div class="d-block d-lg-none inlineButton">
-          <form #thisForm (ngSubmit)="performAction(question)">
-            <div class="form-group">
-              <select [(ngModel)] = "selectedAction" name="actionList" class="form-control">
-                <option *ngIf="showAnswerButton && question.answer === undefined" value="answer">Answer</option>
-                <option *ngIf="showEditButton && question.answer != undefined" value="edit">Edit</option>
-                <option *ngIf="showClaimButton" value="claim">Claim</option>
-                <option *ngIf="showUnclaimButton" value="unclaim">Unclaim</option>
-                <option *ngIf="showAssignButton" value="assign">Assign</option>
-                <option *ngIf="showFAQButton && question.faq" value="removeFaQ">Remove FAQ</option>
-                <option *ngIf="showFAQButton && !question.faq" value="addFaQ">Add FAQ</option>
-                <option *ngIf="showDeleteButton" value="delete">Delete</option>
-                <option *ngIf="showMeTooButton && question.answer == undefined"value="meToo">Me Too</option>
-              </select>
-            </div>
-            <button type="submit" class ="btn btn-primary">Submit</button>
-          </form>
+        <div ngbDropdown  *ngIf="showAction && !readOnly" class="d-block d-lg-none inlineButton" autoClose="inside" (openChange)="menuPauseRefresh($event)">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select Action</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem *ngIf="showAnswerButton && answerUndefined(question)" (click)="performMenuAction(question, i, 'answer')">Add Answer</button>
+            <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+            <button ngbDropdownItem *ngIf="showClaimButton" (click)="performMenuAction(question, i, 'claim')" >Claim</button>
+            <button ngbDropdownItem *ngIf="showUnclaimButton" (click)="performMenuAction(question, i, 'unclaim')">Unclaim</button>
+            <button ngbDropdownItem *ngIf="showAssignButton" (click)="performMenuAction(question, i, 'assign')" >Assign</button>
+            <button ngbDropdownItem *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'addFaQ')">Add FAQ</button>
+            <button ngbDropdownItem *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'removeFaQ')">Remove FAQ</button>
+            <button ngbDropdownItem *ngIf="showDeleteButton" (click)="performMenuAction(question, i, 'delete')" >Delete</button>
+            <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo')">Me Too!</button>
+            <li class ="divider dropdown-divider"></li>
+            <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
+          </div>
         </div>
-      </span>
-      <hr>
-    </div>
+      </td>
+      <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer[i]"
+      class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}"
+      [modules]="{toolbar: false}" [placeholder]="''" format="json"
+      [ngModel]="question.answerText"></quill-editor>
+    </span>
+    <hr>
   </div>
+</div>
 </div>
 
 

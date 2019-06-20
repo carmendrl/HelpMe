@@ -46,6 +46,7 @@ export class PromoteUserResponse {
 @Injectable()
 export class UserService {
   private _currentUser$: Subject<User>;
+	private _currentPassword$: Subject<string>;
   private apiHost : string;
 
   private noUser : User;
@@ -55,9 +56,11 @@ export class UserService {
 
   constructor (private httpClient : HttpClient, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
       this._currentUser$ = new ReplaySubject<User> (1);
+			this._currentPassword$ = new ReplaySubject<string>(1);
 
 			this._currentUser$.subscribe (u => this.loggedInUser = u);
-			
+			this._currentPassword$.subscribe(p => this.loggedInUser.Password = p);
+
       this.apiHost = environment.api_base;
       this.noUser = new User ();
 			this.loggedInUser = this.noUser;
@@ -78,6 +81,7 @@ export class UserService {
 				u.Username = previousUser._username;
 				u.Type = previousUser._type;
 				this._currentUser$.next(u);
+				this._currentPassword$.next(u.Password);
 			}
 			else {
 				console.log("UserService: No saved user information in local storage");
@@ -87,7 +91,9 @@ export class UserService {
   get CurrentUser$() : Observable<User> {
     return this._currentUser$;
   }
-
+	get CurrrentPassword$() : Observable<string>{
+		return this._currentPassword$;
+	}
 	get IsUserLoggedIn() : boolean {
 		return this.loggedInUser != this.noUser;
 	}
@@ -121,7 +127,8 @@ export class UserService {
 			finalize( () => {
 					console.log("UserService: clearing logged in user");
 					this.localStorage.remove(this.KEY_USER);
-					this._currentUser$.next(this.noUser)
+					this._currentUser$.next(this.noUser);
+					this._currentPassword$.next(this.noUser.Password);
 				}
 			)
 		);
@@ -151,6 +158,37 @@ export class UserService {
     return of(apiResponse);
   }
 
+////////////////////////////////////////////////////////////////////////
+ editUserProfile (user:User, email:string, username:string, firstName:string, lastName:string, password:string) : Observable<ApiResponse<User>>{
+		let url: string = `${this.apiHost}/users`;
+
+		let body = {
+			email: email,
+			username: username,
+			first_name: firstName,
+			last_name: lastName,
+			password:password
+		};
+		return this.httpClient.put(url, body).pipe(
+			tap(r => this.updateLoggedInUserFromResponse(r["data"])),
+			map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
+			catchError(error => this.handleCreateAccountError(error))
+		);
+	}
+
+	// editUserPassword(user : User, password:string){
+	// 	let url: string = `${this.apiHost}/users/password/edit`;
+	// 	let body = {
+	// 		password:password
+	// 	};
+	// 	return this.httpClient.put(url,body).pipe(
+	// 	tap(r => this.updateLoggedInUserFromResponse(r["data"])),
+	// 	map(r => new ApiResponse<User>(true, this.buildCreateAccountBodyFromUser(user))),
+	// 	catchError(error => this.handleCreateAccountError(error))
+	// );
+	// }
+////////////////////////////////////////////////////////////////////////
+
 	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
 		let url : string = `${this.apiHost}/system/users/find?q=${email}`;
 		if (user_type) {
@@ -179,6 +217,7 @@ export class UserService {
 			console.log("UserService:  Saving logged in user information to local storage");
 			this.localStorage.set(this.KEY_USER, u);
       this._currentUser$.next(u);
+			this._currentPassword$.next(u.Password);
   }
 
   private handleLoginError (error) : Observable<ApiResponse<User>> {

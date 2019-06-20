@@ -21,50 +21,69 @@ export abstract class SessionView  {
   protected sessionId: string;
   protected readonly notifier: NotifierService;
   protected timeFromRefresh: string;
+  protected pauseRefresh: boolean;
 
   constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(
       questions => {this.questions = questions; this.sortQuestions(this.questions);});
-    this.userService.CurrentUser$.subscribe(
-      u => this.currentUser = u
-    );
-    this.sessionId = this.route.snapshot.paramMap.get('id');
-    this.refreshData();
-    this.notifier = notifierService;
-  }
-
-  //want to make this abstract method but must make this an abstract createNewLabSession
-  //to make this an abstract class can't have a constructor because can't instantiate
-  //an abstract class
-  abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
-
-  abstract checkNotification( data : any );//allows different notifications depending on the specific user
-
-  private refreshData(){
-    this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(data => {
-      this.checkNotification(data);
-      this.data = data; this.sortQuestions(this.data);
-      this.subscribeToData();
-      this.time();
-    });
-  }
-
-  private subscribeToData(){
-    this.timerSubscription = timer(3000).subscribe(() => this.refreshData());
-  }
-
-  public ngOnDestroy(){
-    if (this.questionSubscription){
-      this.questionSubscription.unsubscribe();
+      this.userService.CurrentUser$.subscribe(
+        u => this.currentUser = u
+      );
+      this.pauseRefresh = false;
+      this.sessionId = this.route.snapshot.paramMap.get('id');
+      this.refreshData({}); //empty object passed in
+      this.notifier = notifierService;
     }
-    if (this.timerSubscription){
-      this.timerSubscription.unsubscribe();
+
+    //want to make this abstract method but must make this an abstract createNewLabSession
+    //to make this an abstract class can't have a constructor because can't instantiate
+    //an abstract class
+    abstract sortQuestions(questions: Question[]); //may switch to specific user attribute such as type or id
+
+    abstract checkNotification( data : any, r:any );//allows different notifications depending on the specific user
+
+
+    private refreshData(r:any){
+      //often an empty object will be passed in
+      //only time an actual object will be passed in
+      //is when the claimed button is pressed.
+
+      if(!(this.pauseRefresh)){
+      this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
+        'id')).subscribe(data => {
+          this.checkNotification(data, r);
+          this.data = data; this.sortQuestions(this.data);
+          if(!(this.pauseRefresh)){
+            this.subscribeToData();
+            this.time();
+          }
+        });
+      }
+      }
+
+
+      private subscribeToData(){
+        this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
+        //empty object is passed into refreshData
+      }
+
+      setPauseRefresh(r:boolean){
+        this.pauseRefresh = r;
+
+      }
+
+      public ngOnDestroy(){
+        if (this.questionSubscription){
+          this.questionSubscription.unsubscribe();
+        }
+        if (this.timerSubscription){
+          this.timerSubscription.unsubscribe();
+        }
+      }
+
+      time(){
+        this.timeFromRefresh = moment().format('LTS');
+      }
+
+
     }
-  }
-
-  time(){
-    this.timeFromRefresh = moment().format('LTS');
-  }
-
-
-}
