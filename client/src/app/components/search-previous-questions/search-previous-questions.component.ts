@@ -7,6 +7,8 @@ import { Observable, forkJoin } from 'rxjs';
 import { ApiResponse } from '../../services/api-response';
 import { Question } from '../../models/question.model';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-search-previous-questions',
@@ -22,18 +24,19 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private sessionReloaded : boolean = false;
   private sessionQuestions : Question[];
   private state : string;
+  private sessionId: string;
   private question : Question;
   private errorQuestions: ApiResponse<Question>[];
   private confirmedQuestions: Question[];
-  @Input() private currentLabSession : LabSession;
+  @Input() private currentLabSession : string;
 
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
-    private labSessionService : LabSessionService, private questionService: QuestionService) {}
+    private labSessionService : LabSessionService, private questionService: QuestionService, private route: ActivatedRoute, privatelocation: Location) {}
 
   ngOnInit() {
     this.loadSessions();
-    //this.loadSessionQuestions();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
   }
 
   private loadSessions() : void {
@@ -51,19 +54,17 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     );
   }
 
-  private loadSessionQuestions(): Question[]{
-    debugger
+  private loadSessionQuestions(){
+    //debugger
     this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => this.sessionQuestions = questions);
   }
 
   copyAllQuestions(){
-    //debugger
     this.state = "copyingQuestions";
     let sessionSelected = this.selectedSession;
 
     let copyQuestions = this.labSessionService.copyQuestions;
-    debugger
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.selectedSession.id, question.step));
+    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value
 		//  containing all of the questions
