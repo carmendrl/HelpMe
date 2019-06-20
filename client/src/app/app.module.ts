@@ -39,6 +39,7 @@ import { QuillModule } from 'ngx-quill';
 import { StorageServiceModule } from 'angular-webstorage-service';
 import { SessionSearchComponent } from './components/session-search/session-search.component';
 import { SearchPreviousQuestionsComponent } from './components/search-previous-questions/search-previous-questions.component';
+import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 
 const Server = '/api';
 
@@ -108,6 +109,7 @@ const customNotifierOptions: NotifierOptions = {
     SessionFilterPipe,
     SessionSearchComponent,
     SearchPreviousQuestionsComponent,
+    DeleteModalComponent,
   ],
 
   imports: [
@@ -128,6 +130,6 @@ const customNotifierOptions: NotifierOptions = {
     LoginComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent]
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent]
 })
 export class AppModule { }

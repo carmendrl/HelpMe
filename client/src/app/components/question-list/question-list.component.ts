@@ -11,6 +11,7 @@ import { debounceTime, distinctUntilChanged, mergeMap } from 'rxjs/operators';
 import {EditModalComponent} from '../edit-modal/edit-modal.component';
 import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
 import {AssignModalComponent} from '../assign-modal/assign-modal.component';
+import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import * as moment from 'moment';
 
 
@@ -97,6 +98,7 @@ export class QuestionListComponent implements OnInit {
           "openEdit":this.openEdit,
           "openAnswer":this.openAnswer,
           "openAssign":this.openAssign,
+          "openDelete":this.openDelete,
           "currentUser": this.currentUser,
           "copy": this.copy,
           "refreshData": this.refreshData,
@@ -270,12 +272,13 @@ export class QuestionListComponent implements OnInit {
       }
 
       deleteQuestion(question: Question):Observable<any>{
-        return this.questionService.deleteAQuestion(question);
+        return this.openDelete(DeleteModalComponent, question);
       }
 
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
+
       copy(question: Question){
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
@@ -341,4 +344,30 @@ export class QuestionListComponent implements OnInit {
             );
             return from(modal.result);
           }
-}
+
+          //Delete Modal method
+          openDelete(content, question: Question):Observable<any>{
+            let modal= this.modalService.open(content,
+              <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+              modal.componentInstance.currentQuestion = question;
+              modal.result.then(
+                (result) => {
+              this.setPauseRefresh(false);
+              this.refreshData(result);
+            }, (reason) => {
+              this.setPauseRefresh(false);
+              this.refreshData(reason);
+            }
+              );
+              return from(modal.result);
+            }
+
+
+          // gravatarImageUrl() : string {
+          //     //debugger
+          //
+          //
+          //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+          // }
+
+        }
