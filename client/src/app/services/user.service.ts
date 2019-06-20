@@ -158,6 +158,17 @@ export class UserService {
     return of(apiResponse);
   }
 
+promoteToTA(user: User){
+	let url: string = `${this.apiHost}/system/users/promote`;
+
+	let body = {
+		user_id: user.id
+	};
+	return this.httpClient.post(url, body).pipe(
+		map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
+		catchError(error => this.handleCreateAccountError(error))
+	);
+}
 ////////////////////////////////////////////////////////////////////////
  editUserProfile (user:User, email:string, username:string, firstName:string, lastName:string, password:string) : Observable<ApiResponse<User>>{
 		let url: string = `${this.apiHost}/users`;

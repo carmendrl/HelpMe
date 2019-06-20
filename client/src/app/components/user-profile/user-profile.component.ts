@@ -5,6 +5,8 @@ import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
 import { Md5 } from 'ts-md5/dist/md5';
+import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-user-profile',
@@ -14,8 +16,9 @@ import { Md5 } from 'ts-md5/dist/md5';
 export class UserProfileComponent implements OnInit {
 
   private currentUser: User;
+  closeResult: string;
 
-  constructor(private userService : UserService, private router : Router) {
+  constructor(private userService : UserService, private router : Router, private modalService: NgbModal) {
 
   }
 
@@ -55,6 +58,25 @@ export class UserProfileComponent implements OnInit {
   private handleLogoutResponse(wasLoggedOut : boolean) {
     if (wasLoggedOut) {
       this.router.navigateByUrl("/");
+    }
+  }
+
+  open(content) {
+    let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-search-sessions'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+
+  }
+
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return  `with: ${reason}`;
     }
   }
 }

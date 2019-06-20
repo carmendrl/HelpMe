@@ -39,6 +39,7 @@ import { QuillModule } from 'ngx-quill';
 import { StorageServiceModule } from 'angular-webstorage-service';
 import { SessionSearchComponent } from './components/session-search/session-search.component';
 import { SearchPreviousQuestionsComponent } from './components/search-previous-questions/search-previous-questions.component';
+import { CreateTAComponent } from './components/create-ta/create-ta.component';
 
 const Server = '/api';
 
@@ -108,6 +109,7 @@ const customNotifierOptions: NotifierOptions = {
     SessionFilterPipe,
     SessionSearchComponent,
     SearchPreviousQuestionsComponent,
+    CreateTAComponent,
   ],
 
   imports: [
