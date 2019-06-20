@@ -170,12 +170,17 @@ export class QuestionService {
         //return temp;
       }
 
-      updateQuestion(question: Question, text: string, faQ: boolean): Observable<Question>{
+      updateQuestion(question: Question, text: string, faQ: boolean, plaintext? : string): Observable<Question>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
         let body = {
           text : text,
           faq : faQ
         };
+
+				if (plaintext) {
+					body["plaintext"] = plaintext
+				}
+
         return this.httpClient.put(url, body).pipe(
           map(r => {question.text = text; question.faq = faQ;return question;}),
           tap(r => this.updatedQuestion$.next(r)),
@@ -222,7 +227,6 @@ export class QuestionService {
       }
 
       editAnAnswer(question: Question, text: string, answererId:string): Observable<Question>{
-        debugger
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
           text : text,
@@ -249,11 +253,12 @@ export class QuestionService {
         );
       }
 
-      askQuestion(text:string, session: string, step: number) : Observable<Question>{
+      askQuestion(text:string, session: string, step: number, plaintext: string) : Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${session}/questions`;
         let body = {
           text : text,
-          step: step
+          step: step,
+					plaintext: plaintext
         };
         return this.httpClient.post(url, body).pipe(
           map(r => Question.createFromJSon(r["data"])),

@@ -7,11 +7,13 @@ import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
 import { LabSession } from '../models/lab_session.model';
 import { Course } from '../models/course.model';
 import { User } from '../models/user.model';
+import { Question } from '../models/question.model';
 import { map, catchError, tap, delay, timeout } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ApiResponse } from './api-response';
 
 import { environment } from '../../environments/environment';
 
@@ -76,7 +78,30 @@ export class LabSessionService {
     return session;
   }
 
+	findMatchingQuestions (lab_session_id: string, searchText : string, step: string) : Observable<ApiResponse<Question[]>>{
+		let url: string = `${this.apiHost}/lab_sessions/${lab_session_id}/questions/matching?q=${searchText}`;
+		if (step) {
+			url = `${url}&step=${step}`
+		}
 
+		url = encodeURI(url);
+		return this.httpClient.get(url).pipe(
+			map(r => r["data"].map(q => Question.createFromJSon(q))),
+			map(qArray => new ApiResponse<Question[]> (true, qArray)),
+			catchError(r => this.handleMatchingQuestionsError (r))
+		);
+	}
+
+	handleMatchingQuestionsError (response) : Observable<ApiResponse<Question[]>> {
+		let apiResponse : ApiResponse<Question[]> = new ApiResponse<Question[]> (false);
+		if (response instanceof HttpErrorResponse) {
+			apiResponse.addErrorsFromHttpError (<HttpErrorResponse> response);
+		}
+		else {
+			apiResponse.addError ("Unable to load potential matches");
+		}
+		return of(apiResponse);
+	}
 
   createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<LabSession> {
     let url : string =`${this.apiHost}/lab_sessions`;

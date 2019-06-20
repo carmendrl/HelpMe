@@ -1,8 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ContentChild } from '@angular/core';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import { LabSessionService } from '../../services/labsession.service';
 import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
+//import {QuillEditorComponent} from '../../../../node_modules/ngx-quill/src/quill-editor.component';
+
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ask-question',
@@ -15,18 +20,36 @@ export class AskQuestionComponent implements OnInit {
   private step: number;
   private questionMessage: string;
   private message: SafeHtml;
-  blured = false;
-  focused = false;
+
   @Input() session: string;
+
+	private editorContentChanged$ : Subject<string>;
+
+	private editor : any;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
 
-  constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
-}
+  constructor(private modalService: NgbModal, private questionService: QuestionService, private labSessionService : LabSessionService, private sanitizer: DomSanitizer) {
+		this.editorContentChanged$ = new Subject<string> ();
+	}
 
   ngOnInit() {
+		this.editorContentChanged$.pipe(
+			debounceTime (200),
+			distinctUntilChanged(),
+			filter (text => text.trim().split(" ").length > 1)
+		).subscribe (text => this.lookForMatchingQuestions (text));
+	}
 
-}
+	private lookForMatchingQuestions (text : string) {
+		console.log(text);
+		this.labSessionService.findMatchingQuestions (this.session, text, String(this.step)).pipe (
+				tap(response => response.Data.forEach(e => console.log(e)))
+			).subscribe(
+			response => this.possibleMatches = response.Data
+		);
+
+	}
 
   open(content){
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-ask-question'}).result.then((result) => {
@@ -47,39 +70,26 @@ export class AskQuestionComponent implements OnInit {
   }
 
   createQuestion(){
-    this.questionService.askQuestion(this.questionMessage, this.session, this.step).subscribe(
-      r => this.refreshData());
+		this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText()).subscribe(
+			r => this.refreshData()
+		);
   }
 
   refreshData(){
     this.refreshEvent.next();
   }
 
-    created(event) {
-      // tslint:disable-next-line:no-console
-      console.log(event)
-    }
+	created(event) {
+		this.editor = event;
+	}
 
-    focus($event) {
-      // tslint:disable-next-line:no-console
-      console.log('focus', $event)
-      this.focused = true
-      this.blured = false
-    }
-
-    blur($event) {
-      // tslint:disable-next-line:no-console
-      console.log('blur', $event)
-      this.focused = false
-      this.blured = true
-    }
+	private editorContentChanged (event) {
+		this.editorContentChanged$.next(event.text);
+	}
 
     reset(){
       this.step = undefined;
       this.questionMessage = "";
-
     }
-
-
 
 }

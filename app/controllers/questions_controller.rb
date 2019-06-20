@@ -1,17 +1,53 @@
-class TextMatcherService
+require "set"
+
+class Match
+	attr_accessor :score
+	attr_accessor :question
+
+	def initialize (s, q)
+		self.score = s
+		self.question = q
+	end
+
+	def <(m)
+		return self.score < m.score
+	end
+
+	def >(m)
+		return self.score > m.score
+	end
+
+	def ==(m)
+		return self.score == m.score
+	end
+end
+
+class QuestionsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :find_question!, except: [:index, :create, :show_user_questions, :matching]
+	before_action :find_lab_session!, only: [:matching]
+
 	def initialize
 		@filter = Stopwords::Snowball::Filter.new "en"
 	end
 
-  def score(search_text, question_text)
+	def score(search_text, question_text)
 		search_words = search_text.downcase.split
 		question_words = question_text.downcase.split
+		question_words = question_words.map do |w|
+			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
+		end
 
 		#  Eliminate common stop words
 		filtered_search_words = @filter.filter(search_words).to_set
 		puts "Filtered search words"
 		filtered_search_words.each do |w|
 			puts w
+		end
+
+		#  Early out if the whole question consists of stop words
+		if filtered_search_words.length == 0
+			return 0
 		end
 
 		filtered_question_words = @filter.filter(question_words).to_set
@@ -27,16 +63,30 @@ class TextMatcherService
 		return 1.0*matches / filtered_search_words.length
 	end
 
-	def match(text)
+	def matching
+		text = params[:q]
+		step = params[:step]
 
-		text = "This is the way to Grandmother's house"
-		return @filter.filter(text.split)
+		puts "In matching with q=#{text}"
+		results = SortedSet.new
+
+		@lab_session.questions.each do |q|
+			qText = q.plaintext ? q.plaintext : q.text
+			qScore = self.score(text, qText)
+			if qScore > 0
+				m = Match.new qScore, q
+
+				#  Give extra weight to questions from the same step
+				if step && q.step == step
+					m.score += 1
+				end
+
+				results.add m
+			end
+		end
+
+		render json: results.map { |m| m.question}, include: [:original_asker]
 	end
-end
-
-class QuestionsController < ApplicationController
-  before_action :authenticate_user!
-  before_action :find_question!, except: [:index, :create, :show_user_questions]
 
   def index
     sess = current_user.lab_sessions.find(params[:lab_session_id])
@@ -122,10 +172,15 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.permit(:text, :lab_session_id, :claimed_by_id, :faq, :step)
+    params.permit(:text, :lab_session_id, :claimed_by_id, :faq, :step, :plaintext)
   end
 
   def find_question!
     @question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
   end
+
+	def find_lab_session!
+		@lab_session = LabSession.find(params[:lab_session_id])
+	end
+
 end
