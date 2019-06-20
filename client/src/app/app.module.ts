@@ -110,11 +110,8 @@ const customNotifierOptions: NotifierOptions = {
     SessionFilterPipe,
     SessionSearchComponent,
     SearchPreviousQuestionsComponent,
-<<<<<<< HEAD
     CreateTAComponent,
-=======
     DeleteModalComponent,
->>>>>>> a1ba248739206170cc377e8b14ee9e52f97398cc
   ],
 
   imports: [
