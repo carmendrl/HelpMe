@@ -66,7 +66,8 @@ export class QuestionListComponent implements OnInit {
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
-
+	@Input() private isCollapsible: boolean = true;
+	@Input() private showSearch : boolean = true;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();

@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~angular-notifier/styles.scss";
-$hopeOrange: #f46a1f;
+@import "~variables.scss";
 
 section {
   border-bottom: $hopeOrange 1px solid;

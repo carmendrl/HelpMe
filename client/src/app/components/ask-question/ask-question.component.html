@@ -28,21 +28,23 @@
       <!--  <div class="form-inline">
       <input type="text" id="tags" class="form-control"/><br>
       <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
-      <button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
-      <button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
-    </form>
-    <section>
-				<h2>Possibly matching questions</h2>
+
+
+    <div *ngIf="possibleMatches.length > 0" id="possibleMatches">
+				<!-- <h2>Possibly matching questions</h2>
 				<p *ngIf="possibleMatches.length == 0">
 					No matching questions were found
-				</p>
+				</p> -->
 
-				<app-question-list *ngIf="possibleMatches.length > 0"
-					[isCollapsed]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
-					[showMeTooButton]="true"
+				<app-question-list
+					[isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
+					[showMeTooButton]="true" [showSearch]="false" [header]="'Possibly matching questions'"
 				>
 				</app-question-list>
+    </div>
 
-    </section>
+		<button type="button" class="btn btn-primary actionSpace" (click)="createQuestion();d('Cross click');this.reset();">Submit Question</button>
+		<button type="button" class="btn btn-primary actionSpace" (click)="d('Cross click')">Cancel</button>
+	</form>
   </div>
 </ng-template>

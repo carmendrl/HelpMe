@@ -34,6 +34,14 @@ class QuestionsController < ApplicationController
 	def score(search_text, question_text)
 		search_words = search_text.downcase.split
 		question_words = question_text.downcase.split
+
+		#  Remove any leading or trailing non-alpha characters
+		#  from the search and question words - to remove ? and . for
+		#  example
+		search_words = search_words.map do |w|
+			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
+		end
+
 		question_words = question_words.map do |w|
 			(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
 		end

@@ -8,15 +8,17 @@ are input into this model from the student dashboard, student view, and faculty 
 </head> -->
 <div class="largeScreen">
   <h2 class="inlineHeader">{{header}}
+		<div *ngIf="isCollapsible" class="collapseContainer">
     <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
+	</div>
 </h2>
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <p *ngIf="filter()" class="table-caption">Matching Questions</p>
     <table class="table table-striped">
@@ -98,13 +100,15 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- mobile view -->
 <div class="smallScreen">
   <h2 class="inlineHeader">{{header}}
+		<div *ngIf="isCollapsible" class="collapseContainer">
     <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
+	</div>
 </h2>
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
       <div>
