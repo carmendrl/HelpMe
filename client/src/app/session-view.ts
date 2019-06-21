@@ -35,7 +35,6 @@ export abstract class SessionView  {
       this.notifier = notifierService;
     }
 
-<<<<<<< HEAD
     //want to make this abstract method but must make this an abstract createNewLabSession
     //to make this an abstract class can't have a constructor because can't instantiate
     //an abstract class
@@ -88,11 +87,3 @@ export abstract class SessionView  {
 
 
     }
-=======
-  time(){
-    this.timeFromRefresh = moment().format('LTS');
-  }
-
-
-}
->>>>>>> parent of 7de0950... autoSave changes

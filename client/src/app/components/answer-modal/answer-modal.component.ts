@@ -2,17 +2,12 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
-import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
-<<<<<<< HEAD
 import { Title }     from '@angular/platform-browser';
 import * as moment from 'moment';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import { User } from '../../models/user.model';
-=======
-
->>>>>>> parent of 7de0950... autoSave changes
 
 
 @Component({
@@ -27,19 +22,15 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     text : string;
     blured = false;
     focused = false;
-<<<<<<< HEAD
     private FaQ: boolean;
     lastSaved: string;
     sub : Subscription;
     private user : User;
-=======
->>>>>>> parent of 7de0950... autoSave changes
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
-<<<<<<< HEAD
   this.titleService.setTitle('Add Answer - Help Me');
   this.FaQ = false;
    //this.autoSave(this.currentQuestion.answer.submitted);
@@ -80,14 +71,7 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
    this.lastSaved = moment().format('LTS');
  }
 
-=======
-  }
->>>>>>> parent of 7de0950... autoSave changes
 
-  createAnswerFromForm(){
-    this.saved = true;
-    this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe(r => this.activeModal.close());
-  }
 
     created(event) {
       // tslint:disable-next-line:no-console
