@@ -26,7 +26,8 @@ export class EditProfileComponent implements OnInit {
   private lastName:string;
   private username:string;
   private email: string;
-  private pass:string;
+  private password: string;
+  private confirmPassword:string;
 
   @ViewChild("success", { static : true})
 	private successModalContent : ElementRef;
@@ -42,6 +43,9 @@ export class EditProfileComponent implements OnInit {
     this.lastName = this.user.LastName;
     this.username = this.user.Username;
     this.email = this.user.EmailAddress;
+    this.password = this.user.Password;
+    this.confirmPassword = "";
+
   }
 
   ngOnInit() {
@@ -73,24 +77,12 @@ export class EditProfileComponent implements OnInit {
     this.saved = true;
     this.userService.editUserProfile(this.user, this.email,
     this.username, this.firstName, this.lastName,
-    this.user.Password).subscribe
+    this.password).subscribe
     (r => {
       if(r.Successful){
         this.showSuccessModal();
       };
     });
-  }
-
-  checkCurrentPassword (p:string): boolean{
-    if(p != undefined && p.length > 0){
-    if (p === this.currentPassword){
-      return true;
-    }
-    else{
-      return false;
-    }
-    return false;
-  }
   }
 
   gravatarImageUrl (user: User) : string {

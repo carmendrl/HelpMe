@@ -57,21 +57,21 @@
         </div>
         <div class="panel-body">
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="currentPassword">Current password</label>
-            <div class="col-sm-10">
-              <input type="password" name="currentPassword" class="form-control" [(ngModel)]="currentPassword">
-              <!-- <div [hidden]="checkCurrentPassword(pass)">
-                <p *ngIf="!checkCurrentPassword(pass)"> Incorrect password.</p>
-                </div> -->
-            </div>
-          </div>
-          <div class="form-group">
             <label class="col-sm-2 control-label" for="password">New password</label>
             <div class="col-sm-10">
-              <input type="password" name="password" class="form-control" #passwordField="ngModel" [(ngModel)]="user.Password" rquired minlength="8">
+              <input type="password" name="password" class="form-control" #passwordField="ngModel" [(ngModel)]="password" rquired minlength="8">
             <div [hidden]="passwordField.valid || passwordField.pristine">
               <p *ngIf="passwordField.errors && passwordField.errors.minlength">Password must be at least 8 characters</p>
             </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="confirmPassword">Confirm password</label>
+            <div class="col-sm-10">
+              <input type="password" name="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" required>
+              <div>
+                <p *ngIf="confirmPassword !== password && confirmPassword.length > 0"> Passwords don't match </p>
+                </div>
             </div>
           </div>
           <div *ngIf= "checkIfNotStudent()" class="form-group">
