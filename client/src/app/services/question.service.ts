@@ -237,11 +237,9 @@ export class QuestionService {
       }
 
 
-      answerAQuestion(question: Question, text: string, saved: boolean): Observable<Answer>{
+      answerAQuestion(question: Question, text: string): Observable<Answer>{
         let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
-        let body = {
-          text: text,
-          submitted: saved};
+        let body = { text: text };
         var answerer:User;
         return this.httpClient.post(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
@@ -254,12 +252,19 @@ export class QuestionService {
         );
       }
 
+<<<<<<< HEAD
       editAnAnswer(question: Question, text: string, saved: boolean, answererId:string): Observable<Question>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
           text : text,
           submitted : saved,
           answerer_id: answererId
+=======
+      editAnAnswer(question: Question, text: string): Observable<Question>{
+        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
+        let body = {
+          text : text
+>>>>>>> parent of 7de0950... autoSave changes
         };
         var answerer: User;
         return this.httpClient.put(url, body).pipe(
@@ -267,14 +272,6 @@ export class QuestionService {
           //it will trigger a refresh and the updated question/answer will be displayed
            map(r => { return question;}),
           catchError(this.handleError<Question>(`answer edited`))
-        );
-      }
-
-      deleteADraft(question:Question): Observable<boolean>{
-        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
-        return this.httpClient.delete(url).pipe(
-          map(r => true),
-          catchError(this.handleError<boolean>(`delete answer id=${question.answer.id}`))
         );
       }
 
