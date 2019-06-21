@@ -23,6 +23,8 @@ Rails.application.routes.draw do
 	  resources :lab_sessions do
 	    delete "leave", on: :member, to: "lab_session_memberships#destroy"
 
+			get "questions/matching", to: "questions#matching"
+
 	    resources :questions do
 	      member do
 	        post "claim"

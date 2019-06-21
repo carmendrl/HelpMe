@@ -38,9 +38,8 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   joinSess(content){
-    debugger
     this.labSessionService.joinASession(this.token).subscribe(
-      sessionId => {debugger;
+      sessionId => {
         if(sessionId != undefined){
           this.invalidId = false;
       }
@@ -57,7 +56,6 @@ export class StudentDashboardComponent implements OnInit {
       {
         let tenBefore = new Date(r.toString());
         tenBefore.setMinutes(r.getMinutes()-10);
-        debugger
         if(this.currentDate < tenBefore){
           this.started = false;
           this.open(content);

@@ -77,7 +77,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
 
     let copyQuestions = this.labSessionService.copyQuestions;
     let tempQuestion: Question;
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.faq, question.answer));
+    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.plaintext, question.faq, question.answer));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value
 		//  containing all of the questions

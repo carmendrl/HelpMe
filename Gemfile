@@ -38,3 +38,8 @@ end
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'rack-cors', require: 'rack/cors'
+
+#  Provide stopword support for when we are looking for similar questions
+gem "stopwords-filter", require: 'stopwords'
+
+gem "ruby-stemmer"

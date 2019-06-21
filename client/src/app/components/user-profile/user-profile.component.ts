@@ -47,7 +47,7 @@ export class UserProfileComponent implements OnInit {
       user.Role="ta"
     }
   }
-  
+
 	gravatarImageUrl (user: User) : string {
 			let email : string = user.EmailAddress;
 			//debugger

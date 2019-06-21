@@ -5,6 +5,10 @@ import { Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { ApiResponse } from '../../../services/api-response';
+import * as HttpStatus from 'http-status-codes';
+import { LoggedinGuard } from '../../../auth/loggedin.guard';
+
 
 @Component({
   selector: 'app-edit-profile',
@@ -15,14 +19,33 @@ export class EditProfileComponent implements OnInit {
   private user: User;
   saved : boolean = false;
   private currentPassword: string;
-  //private updatedUser: User;
+  private failedEdit : boolean;
+  private wantsNotifications : boolean;
+  private createAccountErrorMessage : string;
+  private firstName : string;
+  private lastName:string;
+  private username:string;
+  private email: string;
+  private password: string;
+  private confirmPassword:string;
 
-  // @ViewChild("createprofessor", { static : true})
-  // private newProfessorModalContent : ElementRef;
+  @ViewChild("success", { static : true})
+	private successModalContent : ElementRef;
 
-  constructor(private router : Router, private userService: UserService, private titleService:Title, private modalService : NgbModal) {
+  constructor(private router : Router, private userService: UserService, private titleService:Title,
+     private modalService : NgbModal, private loggedInGuard : LoggedinGuard) {
     this.userService.CurrentUser$.subscribe(r => this.user = r);
-    this.userService.CurrrentPassword$.subscribe(p => this.user.Password = p);
+    this.userService.CurrrentPassword$.subscribe(p => this.currentPassword = p);
+    this.failedEdit = false;
+    this.wantsNotifications =false;
+    this.createAccountErrorMessage = "";
+    this.firstName = this.user.FirstName;
+    this.lastName = this.user.LastName;
+    this.username = this.user.Username;
+    this.email = this.user.EmailAddress;
+    this.password = this.user.Password;
+    this.confirmPassword = "";
+
   }
 
   ngOnInit() {
@@ -40,28 +63,27 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
+  private showSuccessModal () : void {
+		let options : NgbModalOptions = {
+			centered: true
+		}
+		this.modalService.open(this.successModalContent, options).result.then(
+			(result) => this.userService.logout().subscribe((result) => this.router.navigateByUrl('/login'))
+		);
+	}
+
   editProfileFromForm(){
+    debugger
     this.saved = true;
-    this.userService.editUserProfile(this.user, this.user.EmailAddress,
-    this.user.Username, this.user.FirstName, this.user.LastName, this.user.Password).subscribe();
-
+    this.userService.editUserProfile(this.user, this.email,
+    this.username, this.firstName, this.lastName,
+    this.password).subscribe
+    (r => {
+      if(r.Successful){
+        this.showSuccessModal();
+      };
+    });
   }
-
-  // private showSubmittedModal(){
-  //   let options : NgbModalOptions = {
-  //     centered:true
-  //   }
-  //
-  //   this.modalService.open(this.newProfessorModalContent, options).result.then(
-	// 		(result) => this.router.navigateByUrl('/dashboard'),
-	// 		(result) => this.router.navigateByUrl('/')
-	// 	);
-  //
-  // }
-
-  // cancelEdit(){
-  //   this.saved=false;
-  // }
 
   gravatarImageUrl (user: User) : string {
       let email : string = user.EmailAddress;

@@ -7,27 +7,19 @@ are input into this model from the student dashboard, student view, and faculty 
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 <div class="largeScreen">
-  <div *ngIf="!allowSelection">
-<h2  class="inlineHeader">{{header}}
-  <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-  <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-</button>
+  <h2 [ngStyle]="headerStyles()" class="inlineHeader">{{header}}
+		<div *ngIf="isCollapsible" class="collapseContainer">
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+  </button>
+	</div>
 </h2>
-</div>
-
-<div *ngIf="allowSelection">
-<h6  class="inlineHeader">{{header}}
-<button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-[attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-<span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-</button>
-</h6>
 </div>
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <p *ngIf="filter()" class="table-caption">Matching Questions</p>
     <table class="table table-striped">
@@ -94,7 +86,7 @@ are input into this model from the student dashboard, student view, and faculty 
                 <li class ="divider dropdown-divider"></li>
                 <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
               </div>
-              
+
             </div>
             <button *ngIf="showCheck" type="submit" class ="btn btn-primary">Submit</button>
           </td>
@@ -108,18 +100,19 @@ are input into this model from the student dashboard, student view, and faculty 
     </table>
   </div>
 </div>
-</div>
 
 <!-- mobile view -->
 <div class="smallScreen">
   <h2 class="inlineHeader">{{header}}
+		<div *ngIf="isCollapsible" class="collapseContainer">
     <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
+	</div>
 </h2>
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
       <div>

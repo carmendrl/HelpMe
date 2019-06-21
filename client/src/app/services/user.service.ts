@@ -109,7 +109,7 @@ export class UserService {
       //timeout(5000), //possible other way to have login delay messsage possibly displayed.
       //delay(20000), //This is here to test for login delay messages
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-      map(r => {
+      map(r => {debugger
 				let user : User = User.createFromJSon(r["data"]);
 				return new ApiResponse<User>(true, user)
 			}),
@@ -213,19 +213,6 @@ private handlePromoteTAError(error) : Observable<ApiResponse<User>> {
 			catchError(error => this.handleCreateAccountError(error))
 		);
 	}
-
-	// editUserPassword(user : User, password:string){
-	// 	let url: string = `${this.apiHost}/users/password/edit`;
-	// 	let body = {
-	// 		password:password
-	// 	};
-	// 	return this.httpClient.put(url,body).pipe(
-	// 	tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-	// 	map(r => new ApiResponse<User>(true, this.buildCreateAccountBodyFromUser(user))),
-	// 	catchError(error => this.handleCreateAccountError(error))
-	// );
-	// }
-////////////////////////////////////////////////////////////////////////
 
 	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
 		let url : string = `${this.apiHost}/system/users/find?q=${email}`;
