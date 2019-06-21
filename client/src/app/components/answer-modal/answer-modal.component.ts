@@ -2,10 +2,12 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
-import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
 import { Title }     from '@angular/platform-browser';
+import * as moment from 'moment';
+import { Observable, interval, Subscription, timer } from 'rxjs';
+import { User } from '../../models/user.model';
 
 
 @Component({
@@ -21,24 +23,55 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     blured = false;
     focused = false;
     private FaQ: boolean;
+    lastSaved: string;
+    sub : Subscription;
+    private user : User;
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Add Answer - Help Me');
-    this.FaQ = false;
-  }
+  this.titleService.setTitle('Add Answer - Help Me');
+  this.FaQ = false;
+   //this.autoSave(this.currentQuestion.answer.submitted);
+ }
 
-  ngOnDestroy(){
-    this.titleService.setTitle('Session View - Help Me');
-  }
+ ngOnDestroy(){
+   this.titleService.setTitle('Session View - Help Me');
+ }
 
-  createAnswerFromForm(){
-    this.saved = true;
-    this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe(r => this.activeModal.close());
-    this.addToFaQs();
-  }
+
+ isNotAStudent(){
+ if (this.user.Type === "students"){
+   return false;
+ }
+ else{
+   return true
+ }
+ }
+
+ createAnswerFromForm(submitted:boolean){
+   this.saved = true;
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {this.activeModal.close();
+ });
+  this.addToFaQs();
+ }
+
+ autoSave(submitted:boolean){
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {
+     this.save(); this.time();
+   });
+ }
+
+ save(){
+   this.sub = timer(10000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+ }
+
+ time(){
+   this.lastSaved = moment().format('LTS');
+ }
+
+
 
     created(event) {
       // tslint:disable-next-line:no-console

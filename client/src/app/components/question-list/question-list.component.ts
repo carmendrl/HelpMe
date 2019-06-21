@@ -55,10 +55,12 @@ export class QuestionListComponent implements OnInit {
   @Input() private showAction: boolean = true;
   @Input() private showAnswerButton: boolean = false;
   @Input() private showEditButton: boolean = false;
+  @Input() private showFinishButton: boolean = true;
   @Input() private showClaimButton: boolean = false;
   @Input() private showAssignButton: boolean = false;
   @Input() private showFAQButton: boolean = false;
   @Input() private showDeleteButton: boolean = false;
+  @Input() private showDiscardDraftButton: boolean = true;
   @Input() private showMeTooButton: boolean = false;
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
@@ -70,6 +72,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private allowSelection: boolean = false;
 	@Input() private isCollapsible: boolean = true;
 	@Input() private showSearch : boolean = true;
+  @Input() public answer : Answer;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
@@ -85,6 +88,7 @@ export class QuestionListComponent implements OnInit {
         this.actions = {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
+          "finish":  this.finishDraft,
           "claim": this.claimQuestion,
           "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
@@ -106,6 +110,9 @@ export class QuestionListComponent implements OnInit {
           "setPauseRefresh":this.setPauseRefresh,
           "pauseRefresh": this.pauseRefresh,
 
+          "getDismissReason":this.getDismissReason,
+          "discardAnswer": this.deleteAnswer,
+          "currentUser": this.currentUser,
         }
       }
 
@@ -247,6 +254,10 @@ export class QuestionListComponent implements OnInit {
         return this.openAnswer(AnswerModalComponent, question);
       }
 
+      finishDraft(question: Question){
+        this.openEdit(EditModalComponent, question);
+      }
+
       editQuestion(question: Question):Observable<any>{
         return this.openEdit(EditModalComponent, question);
       }
@@ -274,9 +285,37 @@ export class QuestionListComponent implements OnInit {
       deleteQuestion(question: Question):Observable<any>{
         return this.openDelete(DeleteModalComponent, question);
       }
-
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
+      }
+
+      deleteAnswer(question: Question){
+        this.questionService.deleteADraft(question).subscribe();
+      }
+
+        getAnswerText(question : Question): string{
+          if(question.answer != undefined){
+          if (question.answer.submitted){
+            return question.answer.text;
+          }
+          else{
+            return "draft";
+          }
+        }
+        return "";
+      }
+
+
+      checkSubmitted(question:Question){
+        if (question.answer != undefined){
+          if(question.answer.submitted){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+        return false;
       }
 
       copy(question: Question){
@@ -288,6 +327,10 @@ export class QuestionListComponent implements OnInit {
           this.labsessionService.copyQuestions.push(question);
         }
       }
+
+
+      // submittedAnswer(){
+      // }
 
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{

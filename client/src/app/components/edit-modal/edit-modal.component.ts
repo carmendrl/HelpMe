@@ -1,12 +1,14 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { Question } from '../../models/question.model';
-import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
 import { Title }     from '@angular/platform-browser';
 
 
+import { User } from '../../models/user.model';
+import { Observable, interval, Subscription, timer } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-edit-modal',
@@ -20,6 +22,10 @@ export class EditModalComponent implements OnInit, OnDestroy {
   saved : boolean = false;
   blured = false;
   focused = false;
+  lastSavedTime:string;
+  sub : Subscription;
+  private user : User;
+
 
   constructor(private activeModal: NgbActiveModal, private questionService: QuestionService,
     private modalService: NgbModal, private titleService: Title) {
@@ -27,17 +33,46 @@ export class EditModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.titleService.setTitle('Edit Answer - Help Me');
+    debugger
+    //this.autoSave(this.currentQuestion.answer.submitted);
+    this.save();
   }
 
   ngOnDestroy(){
     this.titleService.setTitle('Session View - Help Me');
+    this.sub.unsubscribe();
   }
 
-  editAnswerFromForm(){
-    this.saved = true;
-    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text,
-      this.answererId).subscribe(
-      r => this.activeModal.close());
+  isNotAStudent(){
+      if (this.user.Type === "students"){
+        return false;
+      }
+      else{
+        return true;
+      }
+  }
+
+  editAnswerFromForm(submitted:boolean){
+    this.currentQuestion.answer.submitted = submitted;
+    this.sub.unsubscribe();
+    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text, submitted).subscribe(r => this.activeModal.close()
+  );
+  }
+
+  autoSave(submitted:boolean){
+
+    this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text, submitted).subscribe(r => {
+      console.log("In auto save");
+      this.save(); this.time();
+    });
+  }
+
+  save(){
+    this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+  }
+
+  time(){
+    this.lastSavedTime = moment().format('LTS');
   }
 
   created(event) {
@@ -58,4 +93,5 @@ export class EditModalComponent implements OnInit, OnDestroy {
     this.focused = false
     this.blured = true
   }
+
 }
