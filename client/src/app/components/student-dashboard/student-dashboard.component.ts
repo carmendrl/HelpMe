@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LabSessionService } from '../../services/labsession.service';
 import { QuestionService } from '../../services/question.service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { LabSession } from '../../models/lab_session.model';
 import { Question } from '../../models/question.model';
@@ -21,7 +22,7 @@ export class StudentDashboardComponent implements OnInit {
   private started: boolean;
   closeResult: string;
 
-  constructor(private labSessionService : LabSessionService, private questionService: QuestionService,private modalService: NgbModal,
+  constructor(private labSessionService : LabSessionService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
     private router : Router) { }
 
   ngOnInit() {

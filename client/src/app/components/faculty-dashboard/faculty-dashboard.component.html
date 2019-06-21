@@ -5,9 +5,13 @@ Session "Lab 1" for "CSCI 150" currently active.
 
 
 <section>
-<app-start-session></app-start-session>
+  <app-start-session></app-start-session>
 </section>
-
+<div *ngIf="userService.CurrentUser$ | async as user">
+  <div *ngIf="user.Role==='ta'">
+    <app-student-dashboard></app-student-dashboard>
+  </div>
+</div>
 <h2>Find a session</h2>
 
 <app-session-list [sessions]="pastSessions"></app-session-list>

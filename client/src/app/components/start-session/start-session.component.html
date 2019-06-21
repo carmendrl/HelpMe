@@ -1,3 +1,4 @@
+<div *ngIf="userService.CurrentUser$ | async as user">
 <body onload="myFunction">
   <div *ngIf="coursesRetrieved && startCourse.length>0">
   <h2>Start a session</h2>
@@ -16,7 +17,7 @@
       </div>
       <div>
         <!--button that opens modal-->
-        <a class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        <a *ngIf="user.Role!='ta'" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
         </div>
     </div>
 
@@ -138,7 +139,9 @@
   </ng-template>
 
 
-  <div *ngIf="coursesRetrieved && startCourse.length===0">
+  <div *ngIf="coursesRetrieved && startCourse.length===0 && user.Role!='ta'">
     <h4>Create A Course</h4><br>
     <app-create-course-form></app-create-course-form>
   </div>
+  </body>
+</div>
