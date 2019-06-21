@@ -38,6 +38,16 @@ export class UserProfileComponent implements OnInit {
       user.ActingAsStudent = true;
     }
   }
+
+  switchRoles(user: User){
+    if(user.Role==="ta"){
+      user.Role="none"
+    }
+    else{
+      user.Role="ta"
+    }
+  }
+  
 	gravatarImageUrl (user: User) : string {
 			let email : string = user.EmailAddress;
 			//debugger

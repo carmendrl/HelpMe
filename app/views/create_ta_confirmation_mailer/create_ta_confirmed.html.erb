@@ -1,15 +1,15 @@
 <p>
-Dear <%= @request.user.first_name %>,
+Dear <%= @user.first_name %>,
 </p>
 
 <p>
-<%= @request.promoted_by.full_name %> has made you a TA account
+<%= @instructor.full_name %> has made you a TA account
 for a HelpMe!
 </p>
 
 <p>
-  Your email is: <strong> <%= @request.user.email  %> </strong> <br>
-  Your password is: <strong> <%= @request.user.password %> </strong>
+  Your email is: <strong> <%= @user.email  %> </strong> <br>
+  Your password is: <strong> <%= @user.password %> </strong>
 </p>
 
 <p>

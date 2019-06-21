@@ -4,6 +4,7 @@ import {DOCUMENT} from '@angular/common';
 import {Course} from '../../models/course.model';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
+import { UserService } from '../../services/user.service';
 import { CourseService } from '../../services/course.service';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../environments/environment';
@@ -39,7 +40,7 @@ export class StartSessionComponent implements OnInit {
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService, private modalService: NgbModal){
+  private router : Router, private labSessionService: LabSessionService, private userService: UserService, private courseService: CourseService, private modalService: NgbModal){
 
   }
 

@@ -34,11 +34,13 @@ export class AddAuthorizationInterceptorService implements HttpInterceptor {
     //  the headers in it
 		let createAccountRegEx = RegExp("\/users(\\?.*)?$")
 
+    let creatingTA: boolean  = request.url.endsWith ('?accountType=ta');
+
     // let creatingAccount : boolean = request.url.endsWith("/users") && request.method === "POST";
     let creatingAccount : boolean = createAccountRegEx.test(request.url) && request.method === "POST";
     let signingIn : boolean = request.url.endsWith("/users/sign_in") && request.method === "POST";
 
-    if (creatingAccount || signingIn) {
+    if ((creatingAccount && !creatingTA) || signingIn) {
       return next.handle(request).pipe (
         filter( e => e instanceof HttpResponse),
         tap (e => this.setAccessTokensFromResponse(<HttpResponse<any>> e))

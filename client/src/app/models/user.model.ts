@@ -85,6 +85,7 @@ export class User extends Entity{
     user.EmailAddress = o["attributes"]["email"];
     user.FirstName = o["attributes"]["first_name"];
     user.LastName = o["attributes"]["last_name"];
+    debugger
 		user.Role = o["attributes"]["role"];
     return user;
   }

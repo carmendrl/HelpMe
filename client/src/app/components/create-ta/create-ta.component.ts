@@ -27,14 +27,16 @@ export class CreateTAComponent implements OnInit {
     let email = this.email.substring(0,this.email.indexOf('@')) + "+ta" + this.email.substring(this.email.indexOf('@'));
     let password = Math.random().toString(32).slice(2);
     password = password.substring(0,8);
+    debugger;
     let user = new User();
     user.FirstName = this.firstName;
     user.LastName = this.lastName;
-    user.EmailAddress = this.email;
-    this.userService.createAccount(user, false).subscribe();
-    this.userService.findUserByEmail(this.email).subscribe(user => {debugger;this.tempUser = user;debugger;});
-    for(let user of this.tempUsers){this.tempUser = user;}
-    this.userService.promoteToTA(this.tempUser).subscribe();
+    user.EmailAddress = email;
+    user.Password = password;
+    user.Username = this.firstName +"_"+this.lastName;
+    user.Type = "Student";
+    this.userService.createTA(user).subscribe(user => {debugger;this.userService.promoteToTA(user.Data.id).subscribe();debugger});
+
     this.modalService.dismissAll();
 }
 

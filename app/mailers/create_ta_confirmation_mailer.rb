@@ -1,15 +1,13 @@
 class CreateTaConfirmationMailer < ApplicationMailer
   def create_ta_confirmed
-    @request = params[:request]
-
-    puts "In mailer request is #{@request}"
-    puts "In mail promoted_by is #{@request.promoted_by}"
+    @user = params[:user]
+    @instructor = params[:instructor]
 
     @subject = 'You are now a TA in the HelpMe App!'
-    @from = "#{@request.promoted_by.first_name} #{@request.promoted_by.last_name} <#{@request.promoted_by.email}>"
+    @from = "#{@instructor.first_name} #{@instructor.last_name} <#{@instructor.email}>"
 
     mail(
-      to: @request.user.email,
+      to: @user.email,
       from: @from,
       subject: @subject
     )

@@ -22,7 +22,7 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
     if current_user.professor?
       user.set_role(:ta)
       user.save!
-      CreateTaConfirmationMailer.with(request: @request).create_ta_confirmed.deliver_now
+      CreateTaConfirmationMailer.with(user: user, instructor: current_user).create_ta_confirmed.deliver_now
       render json: user
     else
       render_cannot_perform_operation("Must be a professor to promote a student.")
