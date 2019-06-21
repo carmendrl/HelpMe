@@ -54,10 +54,14 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
+<<<<<<< HEAD
         this.questionService.getUpdatedQuestion$.subscribe(r =>
            { this.checkNotification(this.questions, {});
              //empty object passed in (because claimButton wasn't pressed)
              this.sortQuestions(this.questions)});
+=======
+        this.questionService.getUpdatedQuestion$.subscribe(r => {this.checkNotification(this.questions); this.sortQuestions(this.questions)});
+>>>>>>> parent of 7de0950... autoSave changes
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
       }

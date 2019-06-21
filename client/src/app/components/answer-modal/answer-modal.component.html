@@ -10,7 +10,6 @@
     <!-- form -->
     <form class="needs-validation" novalidate>
       <div class="form-group">
-        <p>Last saved: {{lastSaved}}</p>
         Answer:
         <!-- <input type="text" [(ngModel)]="text" required> -->
         <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
@@ -28,8 +27,12 @@
         </div>
       </div>
       <div class="modal-footer">
+<<<<<<< HEAD
         <button *ngIf="isNotAStudent()" type="button" class="btn btn-outline-dark" [disabled]="text === undefined || text.length <= 1" (click)="createAnswerFromForm(false)">Save Draft</button>
         <button type="button" [disabled]="text === undefined || text.length <= 1" class="btn btn-outline-dark" (click)="createAnswerFromForm(true)">Save</button>
+=======
+        <button type="button" class="btn btn-outline-dark" (click)="createAnswerFromForm()">Save</button>
+>>>>>>> parent of 7de0950... autoSave changes
       </div>
     </form>
   </div>
