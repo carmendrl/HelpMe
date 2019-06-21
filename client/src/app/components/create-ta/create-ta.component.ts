@@ -25,8 +25,7 @@ export class CreateTAComponent implements OnInit {
   createTA(){
     let newLastName = this.lastName + "(TA)";
     let email = this.email.substring(0,this.email.indexOf('@')) + "+ta" + this.email.substring(this.email.indexOf('@'));
-    let password = Math.random().toString(32).slice(2);
-    password = password.substring(0,8);
+    let password = this.generatePassword(this.email);
     debugger;
     let user = new User();
     user.FirstName = this.firstName;
@@ -40,5 +39,18 @@ export class CreateTAComponent implements OnInit {
     this.modalService.dismissAll();
 }
 
-  //generateRandom()
+  generatePassword(email: string){
+    var newEmail: string = "";
+    for(var i = 0; i < email.length; i++){
+      if(i%2==1){
+        newEmail+= email.charAt(i);
+      }
+    }
+    var newEmail2: string = "";
+    for(var i = 0; i < newEmail.length; i++){
+      newEmail2 += newEmail.charAt(i+1);
+    }
+    newEmail2 += newEmail.charAt(0);
+    return newEmail2.substring(0,8);
+  }
 }
