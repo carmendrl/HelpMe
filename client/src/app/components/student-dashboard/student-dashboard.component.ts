@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { LabSession } from '../../models/lab_session.model';
 import { Question } from '../../models/question.model';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+import { ApiResponse } from '../../services/api-response';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -14,16 +15,24 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 })
 export class StudentDashboardComponent implements OnInit {
 
-  private sessions : LabSession[];
+  private sessions : ApiResponse<LabSession[]>;
   private myQuestions : Question[];
   private invalidId: boolean;
   private token: string;
   private currentDate: Date;
   private started: boolean;
+  private state: string;
+  private errorSessions: ApiResponse<LabSession[]>;
+  private loadedSessions: LabSession[];
+  private sessionMessage: string[];
+  private loadSessionError: boolean;
   closeResult: string;
 
   constructor(private labSessionService : LabSessionService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
-    private router : Router) { }
+    private router : Router) {
+    this.sessions = new ApiResponse<LabSession[]>(false);
+    this.sessions.Data = new Array<LabSession>();
+  }
 
   ngOnInit() {
     this.labSessionService.labSessions().subscribe (

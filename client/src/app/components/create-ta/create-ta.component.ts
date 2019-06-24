@@ -54,19 +54,15 @@ export class CreateTAComponent implements OnInit {
 });
 //this.handleCreateTAResponse(ta
 
-
 }
 
 private handleCreateTAResponse (ta : ApiResponse<User>) {
-  debugger
   if (!ta.Successful) {
     this.state = "errorCreatingTA";
     this.errorUser = ta;
     this.createdUser = <User>ta.Data;
     this.createTAmessageError = ta.ErrorMessages;
     this.createTAError = true;
-    debugger
-    debugger
   }
   else {
     this.state = "created";
