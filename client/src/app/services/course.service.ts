@@ -8,7 +8,7 @@ import { User } from '../models/user.model';
 import { of } from 'rxjs/observable/of';
 import { map, tap, catchError } from 'rxjs/operators';
 import { Subject } from 'rxjs/Subject';
-
+import { ApiResponse } from './api-response';
 import { environment } from '../../environments/environment';
 
 //start of CourseService class
@@ -23,13 +23,29 @@ export class CourseService {
   }
 
 //returns a list of all the courses
-  coursesList() : Observable<Course[]>{
+  coursesList() : Observable<ApiResponse<Course[]>>{
     let url : string =`${this.apiHost}/courses`;
-
+    var courses = new Array<Course>();
     return this.httpClient.get(url).pipe(
-      map(r => this.createCoursesArray(r["data"], r["included"])),
-      catchError(this.handleError<Course[]>(`courses`))
+      map(r => {
+        courses = this.createCoursesArray(r["data"], r["included"]);
+        let response : ApiResponse<Course[]> = new ApiResponse<Course[]>(true, courses);
+        return response;
+      }),
+      catchError(r => this.handleGetCourses(r, courses))
     );
+  }
+
+  private handleGetCourses(error: any, courses: Course[]): Observable<ApiResponse<Course[]>>{
+    let apiResponse: ApiResponse<Course[]> = new ApiResponse<Course[]>(false);
+    apiResponse.Data = courses;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occured");
+    }
+    return of(apiResponse);
   }
 
   private createCoursesArray(objects : Object[], i: any[]) : Course[]{
@@ -79,8 +95,9 @@ export class CourseService {
     }
 
     //returns the course
-    postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<Course> {
+    postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<ApiResponse<Course>> {
       let url : string=`${this.apiHost}/courses`;
+      var course: Course;
       let body= {
         title: title,
         subject: subject,
@@ -88,34 +105,31 @@ export class CourseService {
         semester: semester
       };
       return this.httpClient.post(url, body).pipe(
-        map(r => this.createNewCourse(r["data"], r["included"])),
-        catchError(this.handleError<Course>(`post new course`))
+        map(r => {
+          course = this.createNewCourse(r["data"], r["included"]);
+          let response : ApiResponse<Course> = new ApiResponse<Course>(true, course);
+          return response;
+        }),
+        catchError(r => this.handleNewCourseError(r, course))
       );
+    }
+
+    private handleNewCourseError(error: any, course: Course): Observable<ApiResponse<Course>>{
+      let apiResponse: ApiResponse<Course> = new ApiResponse<Course>(false);
+      apiResponse.Data = course;
+      if(error instanceof HttpErrorResponse){
+        apiResponse.addErrorsFromHttpError(error);
+      }
+      else{
+        apiResponse.addError("Unknown error occured");
+      }
+      return of(apiResponse);
     }
 
     get newCourse$() : Observable<Course>{
       return this._newCourse$;
     }
 
-//handles errors
-    private handleCreateAccountError (error) : Observable<boolean> {
-      if (error instanceof HttpErrorResponse) {
-        let httpError = <HttpErrorResponse> error;
-        let errorMessage : string = "The account was not created for the following reasons:";
-        let reasons = error.error.errors.full_messages.join(", ");
-        console.log(reasons);
-      }
-      return of(false);
-    }
 
-    private handleError<T> (operation = 'operation', result?: T) {
-      return (error: any): Observable<T> => {
-        // TODO: send the error to remote logging infrastructure
-        console.error(error); // log to console instead
-
-        // Let the app keep running by returning an empty result.
-        return of(result as T);
-      };
-
-    }
+  
   }

@@ -37,7 +37,7 @@ export class LabSessionService {
     return this.httpClient.get(url).pipe(
       map(r => {
         lArray  =  this.createLabsessionsArray(r["data"], r["included"]);
-        let response: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(true, lArray)
+        let response: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(true, lArray);
         return response;
       }),
       catchError(r => this.handleLabsessionsError(r, lArray))
