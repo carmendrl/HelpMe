@@ -13,7 +13,7 @@
 <div *ngIf="userService.CurrentUser$ | async as user">
 <section *ngIf="user.Role!='ta'">
   <h2>View past sessions</h2>
-  <app-session-list [sessions]="sessions"></app-session-list>
+  <app-session-list [sessions]="sessions.Data"></app-session-list>
 </section>
 
 <section *ngIf="user.Role!='ta'">

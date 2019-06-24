@@ -15,17 +15,24 @@ import { Question } from '../../models/question.model';
 export class SessionSearchComponent implements OnInit {
 
   closeResult: string;
-  private sessions : LabSession[] = [];
+  private sessions : ApiResponse<LabSession[]>;
   private selectedSession : LabSession = new LabSession();
   private sessionReloaded : boolean = false;
   private state : string;
   private question : Question;
   private errorQuestions: ApiResponse<Question>[];
   private confirmedQuestions: Question[];
+  private stateLabSessions: string;
+  private errorSessions: ApiResponse<LabSession[]>;
+  private loadedSessions: LabSession[];
+  private sessionMessage: string[];
+  private loadSessionError: boolean;
   @Input() private currentLabSession : LabSession;
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
-    private labSessionService : LabSessionService, private questionService: QuestionService) {}
+    private labSessionService : LabSessionService, private questionService: QuestionService) {
+      this.sessions.Data = new Array<LabSession>();
+    }
 
   ngOnInit() {
     this.loadSessions();
@@ -36,15 +43,28 @@ export class SessionSearchComponent implements OnInit {
 
     this.labSessionService.labSessions().subscribe (
       s => {
-        this.sessions = s;
-        if (this.sessions.length > 0) {
-          this.selectedSession = this.sessions[0];
+        this.sessions.Data = s.Data;
+        if (this.sessions.Data.length > 0) {
+          this.selectedSession = this.sessions.Data[0];
+          this.handleLoadSessions(s);
         }
         this.sessionReloaded = true;
       }
     );
   }
-
+  private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
+    if(!sessions.Successful){
+      this.stateLabSessions = "errorLoadingSessions";
+      this.errorSessions = sessions;
+      this.loadedSessions = <LabSession[]>sessions.Data;
+      this.sessionMessage = sessions.ErrorMessages;
+      this.loadSessionError = true;
+    }
+    else{
+      this.stateLabSessions = "loaded";
+      this.loadedSessions = <LabSession[]>sessions.Data;
+    }
+  }
   copyAllQuestions(){
     //debugger
     this.state = "copyingQuestions";

@@ -13,5 +13,8 @@
     <label for="emailAddress">TA Email Address</label>
     <input type="email" class="form-control" id="emailAddress" name="email" [(ngModel)]="email" placeholder="Email">
   </div>
-  <button class="btn btn-primary" type="submit" (click)="createTA()">Create</button>
+  <button class="btn btn-primary"  [disabled]="thisForm.invalid" type="submit" (click)="createTA()">Create</button>
+  <div *ngIf="createTAError" class="alert alert-danger">
+    {{createTAmessageError}}
+  </div>
 </form>
