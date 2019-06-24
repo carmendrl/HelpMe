@@ -1,10 +1,21 @@
 <div *ngIf="userService.CurrentUser$ | async as user">
-  <div [ngSwitch]="user.Type">
+  <!-- <div [ngSwitch]="user.Type">
     <div *ngSwitchCase="'professors'">
       <app-faculty-session-view></app-faculty-session-view>
     </div>
     <div *ngSwitchCase="'students'">
       <app-student-session-view></app-student-session-view>
     </div>
+  </div>
+</div> -->
+  <div *ngIf="user.Type==='professors'">
+    <app-faculty-session-view></app-faculty-session-view>
+  </div>
+  <div *ngIf="user.Type==='students' && user.Role==='ta'">
+    <app-faculty-session-view></app-faculty-session-view>
+    <!-- <app-student-dashboard></app-student-dashboard> -->
+  </div>
+  <div *ngIf="user.Type==='students' && user.Role==='none'">
+    <app-student-session-view></app-student-session-view>
   </div>
 </div>

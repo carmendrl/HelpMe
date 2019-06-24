@@ -3,7 +3,7 @@
 <div class="container bootstrap snippets">
 <div class="row">
   <div class="col-xs-12 col-sm-9">
-    <form class="form-horizontal">
+    <form class="form-horizontal" #thisForm="ngForm">
       <button type="back" class="btn btn-primary" [routerLink]="['/dashboard']">Back</button>
       <h2 style="text-align:center"> Edit Profile </h2>
         <div class="panel panel-default">
@@ -19,19 +19,19 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="firstName">First Name</label>
             <div class="col-sm-10">
-              <input type="text" name="firstName" class="form-control" [(ngModel)]="user.FirstName" >
+              <input type="text" name="firstName" class="form-control" [(ngModel)]="firstName" >
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label" for="lastName">Last Name</label>
             <div class="col-sm-10">
-              <input type="text" name="lastName" class="form-control" [(ngModel)]="user.LastName">
+              <input type="text" name="lastName" class="form-control" [(ngModel)]="lastName">
             </div>
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label" for="username">Username</label>
             <div class="col-sm-10">
-              <input type="text" name="username" class="form-control" [(ngModel)]="user.Username">
+              <input type="text" name="username" class="form-control" [(ngModel)]="username">
             </div>
           </div>
         </div>
@@ -45,7 +45,7 @@
           <div class="form-group">
             <label class="col-sm-2 control-label" for="email">Email address</label>
             <div class="col-sm-10">
-              <input type="email" name="email" class="form-control" [(ngModel)]="user.EmailAddress">
+              <input type="email" name="email" class="form-control" [(ngModel)]="email">
             </div>
           </div>
         </div>
@@ -57,29 +57,34 @@
         </div>
         <div class="panel-body">
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="currentPassword">Current password</label>
+            <label class="col-sm-2 control-label" for="password">New password</label>
             <div class="col-sm-10">
-              <input type="password" name="currentPassword" class="form-control" [(ngModel)]="currentPassword">
+              <input type="password" name="password" class="form-control" #passwordField="ngModel" [(ngModel)]="password" rquired minlength="8">
+            <div [hidden]="passwordField.valid || passwordField.pristine">
+              <p *ngIf="passwordField.errors && passwordField.errors.minlength">Password must be at least 8 characters</p>
+            </div>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label" for="password">New password</label>
+            <label class="col-sm-2 control-label" for="confirmPassword">Confirm password</label>
             <div class="col-sm-10">
-              <input type="password" name="password" class="form-control" [(ngModel)]="user.Password">
+              <input type="password" name="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" required>
+              <div>
+                <p *ngIf="confirmPassword !== password && confirmPassword.length > 0"> Passwords don't match </p>
+                </div>
             </div>
           </div>
           <div *ngIf= "checkIfNotStudent()" class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
               <div class="checkbox">
-                <input type="checkbox" id="checkbox_1">
+                <input type="checkbox" [(ngModel)]="wantsNotifications" name="wantsNotifications" id="wantsNotifications">
                 <label for="checkbox_1">I want to be notified when there is a new professor account request</label>
               </div>
             </div>
           </div>
           <div class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
-              <button type="submit" class="btn btn-primary" (click)="editProfileFromForm()">Submit</button>
-              <button type="reset" class="btn btn-default" (click)="cancelEdit()">Cancel</button>
+              <button type="submit" class="btn btn-primary" (click)="editProfileFromForm() && showSuccessModal()">Submit</button>
             </div>
           </div>
         </div>
@@ -88,3 +93,21 @@
   </div>
 </div>
 </div>
+<ng-template #success let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="createprofessor-header">Profile has been updated</h4>
+	</div>
+
+	<div class="modal-body">
+		<p>Your changes have been saved successfully! Please log in again.
+
+		</p>
+	</div>
+
+	<div class="modal-footer">
+
+		<button class="btn btn-primary" (click)="modal.close('Modal closed')">Ok</button>
+
+	</div>
+
+</ng-template>

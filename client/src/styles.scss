@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~angular-notifier/styles.scss";
-$hopeOrange: #f46a1f;
+@import "~variables.scss";
 
 section {
   border-bottom: $hopeOrange 1px solid;
@@ -32,4 +32,9 @@ input[type='text'], input[type='password'], input[type='email'] {
 }
 .btn:hover {
 	cursor:pointer;
+}
+
+/*  Don't add top padding to the QuillEditor content container when it's just displaying content */
+.ql-editor[contenteditable="false"] {
+	padding-top: 0px !important;
 }

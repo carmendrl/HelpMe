@@ -29,8 +29,7 @@ Instead of setting these in `~/.bash_profile`, you can also kill the Rails serve
 
 ###  Configuration for ActiveMailer
 
-In `config/environment.rb`, add the following lines
-```
+In `config/environment.rb`, add the following lines```
 ActionMailer::Base.smtp_settings = {
   :user_name => ENV['SENDGRID_USERNAME'],
   :password => ENV['SENDGRID_PASSWORD'],

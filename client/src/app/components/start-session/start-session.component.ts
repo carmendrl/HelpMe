@@ -4,9 +4,11 @@ import {DOCUMENT} from '@angular/common';
 import {Course} from '../../models/course.model';
 import { LabSession } from '../../models/lab_session.model';
 import { LabSessionService } from '../../services/labsession.service';
+import { UserService } from '../../services/user.service';
 import { CourseService } from '../../services/course.service';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { environment } from '../../../environments/environment';
+import { ApiResponse } from '../../services/api-response';
 
 @Component({
   selector: 'app-start-session',
@@ -22,7 +24,7 @@ export class StartSessionComponent implements OnInit {
   private startCourse : Course[];
   private generatedCode: string;
   private newSessionDescription:string;
-  private newSession: LabSession;
+  private newSession: ApiResponse<LabSession>;
   private newCourse: Course;
   private todayYear: number;
   private selectedCourse : Course;
@@ -35,11 +37,16 @@ export class StartSessionComponent implements OnInit {
   private startBeforeEnd: boolean;
   private coursesRetrieved: boolean = false;
   private copied : boolean = false;
+  private state: string;
+  private errorSession: ApiResponse<LabSession>;
+  private createSession: LabSession;
+  private sessionMessage: string[];
+  private createSessionError: boolean;
 
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
-  private router : Router, private labSessionService: LabSessionService, private courseService: CourseService, private modalService: NgbModal){
+  private router : Router, private labSessionService: LabSessionService, private userService: UserService, private courseService: CourseService, private modalService: NgbModal){
 
   }
 
@@ -57,10 +64,23 @@ export class StartSessionComponent implements OnInit {
     this.compareStartEnd();
       if(this.startBeforeEnd){
     this.labSessionService.createNewLabSession(this.description, this.selectedCourse.id, this.fullStartDate, this.fullEndDate).subscribe(
-      r => {this.newSession = r; this.generatedCode=this.newSession.token; this.newSessionDescription=this.newSession.description});
+      r => {this.newSession = r; this.generatedCode=this.newSession.Data.token; this.newSessionDescription=this.newSession.Data.description; this.handleCreateSessionError(r)});
     }
     }
 
+    private handleCreateSessionError(session: ApiResponse<LabSession>){
+      if(!session.Successful){
+        this.state = "errorCreatingSession";
+        this.errorSession = session
+        this.createSession = <LabSession>session.Data;
+        this.sessionMessage = session.ErrorMessages;
+        this.createSessionError = true;
+      }
+      else{
+        this.state = "loaded";
+        this.createSession = <LabSession>session.Data;
+      }
+    }
       createStartEnd(){
         this.fullStartDate = this.start_date.year +"-"+ this.start_date.month  +"-"+ this.start_date.day +"T"+ (this.start_time.hour+ 4) +":"+
          this.start_time.minute +":"+ this.start_time.second +"Z";
@@ -96,7 +116,7 @@ export class StartSessionComponent implements OnInit {
     copySessionCode(){
       this.copied = true;
       let selBox = this.document.createElement('textarea');
-      selBox.value=this.newSession.token;
+      selBox.value=this.newSession.Data.token;
       this.document.body.appendChild(selBox);
       selBox.focus();
       selBox.select();
@@ -107,7 +127,7 @@ export class StartSessionComponent implements OnInit {
     copySessionLink(){
       this.copied = true;
       let selBox = this.document.createElement('textarea');
-      let url =`${environment.server}/lab_sessions/${this.newSession.id}`;
+      let url =`${environment.server}/lab_sessions/${this.newSession.Data.id}`;
       selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
       this.document.body.appendChild(selBox);
       selBox.focus();

@@ -1,0 +1,20 @@
+<form  #thisForm="ngForm">
+  <h4>Create a New TA Account</h4>
+  <br>
+  <div class="form-group">
+    <label for="firstName">TA First Name:</label>
+    <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="firstName" placeholder="First Name">
+  </div>
+  <div class="form-group">
+    <label for="lastName">TA Last Name:</label>
+    <input type="text" class="form-control" id="LastName" name="lastName" [(ngModel)]="lastName" placeholder="Last Name">
+  </div>
+  <div class="form-group">
+    <label for="emailAddress">TA Email Address</label>
+    <input type="email" class="form-control" id="emailAddress" name="email" [(ngModel)]="email" placeholder="Email">
+  </div>
+  <button class="btn btn-primary"  [disabled]="thisForm.invalid" type="submit" (click)="createTA()">Create</button>
+  <div *ngIf="createTAError" class="alert alert-danger">
+    {{createTAmessageError}}
+  </div>
+</form>

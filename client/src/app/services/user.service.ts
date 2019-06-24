@@ -109,7 +109,7 @@ export class UserService {
       //timeout(5000), //possible other way to have login delay messsage possibly displayed.
       //delay(20000), //This is here to test for login delay messages
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-      map(r => {
+      map(r => {debugger
 				let user : User = User.createFromJSon(r["data"]);
 				return new ApiResponse<User>(true, user)
 			}),
@@ -136,7 +136,6 @@ export class UserService {
 
   createAccount(user : User, requestPromotion: boolean) : Observable<ApiResponse<User>> {
 		let url : string = `${this.apiHost}/users?requestPromotion=${requestPromotion}`;
-
     let body = this.buildCreateAccountBodyFromUser (user);
     return this.httpClient.post(url, body).pipe(
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
@@ -145,7 +144,15 @@ export class UserService {
     );
   }
 
-	private handleCreateAccountError (error) : Observable<ApiResponse<User>> {
+	createTA(user : User) : Observable<ApiResponse<User>> {
+		let url : string = `${this.apiHost}/users?accountType=ta`;
+    let body = this.buildCreateAccountBodyFromUser(user);
+    return this.httpClient.post(url, body).pipe(
+      map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
+      catchError(error => this.handleCreateAccountError(error))
+    );
+  }
+	private handleCreateAccountError (error: any) : Observable<ApiResponse<User>> {
 		let apiResponse : ApiResponse<User> = new ApiResponse<User> (false);
 
     if (error instanceof HttpErrorResponse) {
@@ -158,6 +165,37 @@ export class UserService {
     return of(apiResponse);
   }
 
+promoteToTA(user: string){
+	let url: string = `${this.apiHost}/system/users/promote`;
+
+	let body = {
+		user_id: user
+	};
+	debugger
+	return this.httpClient.post(url, body).pipe(
+		map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
+		catchError(error => this.handlePromoteTAError(error))
+	);
+}
+
+private handlePromoteTAError(error) : Observable<ApiResponse<User>> {
+	let apiResponse : ApiResponse<User> = new ApiResponse<User> (false);
+
+	if (error instanceof HttpErrorResponse) {
+		apiResponse.HttpStatusCode = error.status;
+
+		if (error.status == HttpStatus.UNAUTHORIZED) {
+			apiResponse.Successful = true;
+			return of(apiResponse);
+		}
+		else {
+			apiResponse.addError("An unexpected error occurred while tryign to promote to TA.  If this problem persists, please contact the HelpMe administrators");
+			return of(apiResponse);
+		}
+	}
+
+	return of(apiResponse);
+}
 ////////////////////////////////////////////////////////////////////////
  editUserProfile (user:User, email:string, username:string, firstName:string, lastName:string, password:string) : Observable<ApiResponse<User>>{
 		let url: string = `${this.apiHost}/users`;
@@ -175,19 +213,6 @@ export class UserService {
 			catchError(error => this.handleCreateAccountError(error))
 		);
 	}
-
-	// editUserPassword(user : User, password:string){
-	// 	let url: string = `${this.apiHost}/users/password/edit`;
-	// 	let body = {
-	// 		password:password
-	// 	};
-	// 	return this.httpClient.put(url,body).pipe(
-	// 	tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-	// 	map(r => new ApiResponse<User>(true, this.buildCreateAccountBodyFromUser(user))),
-	// 	catchError(error => this.handleCreateAccountError(error))
-	// );
-	// }
-////////////////////////////////////////////////////////////////////////
 
 	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
 		let url : string = `${this.apiHost}/system/users/find?q=${email}`;

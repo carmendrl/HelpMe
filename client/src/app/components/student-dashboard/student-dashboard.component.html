@@ -10,17 +10,17 @@
     Token is invalid.
   </div>
 </section>
-
-<section>
+<div *ngIf="userService.CurrentUser$ | async as user">
+<section *ngIf="user.Role!='ta'">
   <h2>View past sessions</h2>
-  <app-session-list [sessions]="sessions"></app-session-list>
+  <app-session-list [sessions]="sessions.Data"></app-session-list>
 </section>
 
-<section>
+<section *ngIf="user.Role!='ta'">
   <h2>My Questions</h2>
   <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
 </section>
-
+</div>
 <ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-not-started" aria-labelledBy="modal-not-started">Please Wait</h4>

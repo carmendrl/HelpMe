@@ -95,5 +95,4 @@ else{
         this.timeFromRefresh = moment().format('LTS');
       }
 
-
-    }
+}

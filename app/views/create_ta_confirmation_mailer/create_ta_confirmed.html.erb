@@ -1,0 +1,36 @@
+<head>
+  <script>
+    function generatePassword(email: string){
+      var newEmail: string = "";
+      for(var i = 0; i < email.length; i++){
+        if(i%2==1){
+          newEmail+= email.charAt(i);
+        }
+      }
+      var newEmail2: string = "";
+      for(var i = 0; i < newEmail.length; i++){
+        newEmail2 += newEmail.charAt(i+1);
+      }
+      newEmail2 += newEmail.charAt(0);
+      return newEmail2.substring(0,8);
+    }
+  </script>
+</head>
+
+<p>
+Dear <%= @user.first_name %>,
+</p>
+
+<p>
+<%= @instructor.full_name %> has made you a TA account
+for a HelpMe!
+</p>
+
+<p>
+  Your email is: <strong> <%= @user.email  %> </strong> <br>
+  Your password is: <strong> <script type="text/javascript">generatePassword(@user.email)</script>  </strong>
+</p>
+
+<p>
+  Thank you for using HelpMe.
+</p>

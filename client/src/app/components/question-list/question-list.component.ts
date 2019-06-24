@@ -69,8 +69,12 @@ export class QuestionListComponent implements OnInit {
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
   @Input() private allowSelection: boolean = false;
+	@Input() private isCollapsible: boolean = true;
+	@Input() private showSearch : boolean = true;
+  @Input() public answer : Answer;
+  @Input() public showFinishButton: boolean = true;
+  @Input() public showDiscardDraftButton: boolean = true;
   @Input() private playSound: boolean =false;
-
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
@@ -86,6 +90,8 @@ export class QuestionListComponent implements OnInit {
         this.actions = {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
+          "finish": this.finishDraft,
+          "discardAnswer": this.deleteAnswer,
           "claim": this.claimQuestion,
           "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
@@ -115,7 +121,12 @@ export class QuestionListComponent implements OnInit {
         this.toggleAnswer = new Array<boolean>();
       }
 
-
+			headerStyles() {
+				let size : string = this.allowSelection ? "150%" : "100%";
+				return {
+					"font-size": size
+				};
+			}
 
       private timeDiff(question: Question) : string{
         return this.timeDifference = moment(question.date).fromNow();
@@ -193,13 +204,11 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
-
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
-        this.actions[this.selectedAction[i]](q).subscribe(
-          r => {this.setPauseRefresh(false); this.refreshData(r)});
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
         if(this.playSound){this.audioService.playSilentAudio();}
       }
@@ -249,6 +258,10 @@ export class QuestionListComponent implements OnInit {
         return this.openEdit(EditModalComponent, question);
       }
 
+      finishDraft(question:Question): Observable<any>{
+        return this.openEdit(EditModalComponent, question);
+      }
+
       claimQuestion(question: Question):Observable<any>{
         return this.questionService.claimAQuestion(question);
       }
@@ -277,6 +290,10 @@ export class QuestionListComponent implements OnInit {
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
 
+      deleteAnswer(question: Question){
+        return this.questionService.deleteADraft(question);
+      }
+
       copy(question: Question){
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
@@ -285,6 +302,18 @@ export class QuestionListComponent implements OnInit {
         for(let question of questions){
           this.labsessionService.copyQuestions.push(question);
         }
+      }
+
+      getAnswerText(question : Question): string{
+          if(question.answer != undefined){
+          if (question.answer.submitted){
+            return question.answer.text;
+          }
+          else{
+            return "draft";
+          }
+        }
+        return "";
       }
 
       //Edit Modal methods
@@ -309,27 +338,9 @@ export class QuestionListComponent implements OnInit {
 
 
         //Assign Modal methods
-        openAssign(content, question:Question):Observable<any> {
-          let modal= this.modalService.open(content, <NgbModalOptions>{
-            ariaLabelledBy: 'modal-create-course'});
-          modal.componentInstance.currentQuestion = question;
-          modal.result.then(
-            (result) => {
-          this.setPauseRefresh(false);
-          this.refreshData(result);
-        }, (reason) => {
-          this.setPauseRefresh(false);
-          this.refreshData(reason);
-        }
-          );
-          return from(modal.result);
-        }
-
-
-        //Answer Modal methods
-        openAnswer(content, question: Question):Observable<any>{
-          let modal= this.modalService.open(content,
-            <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+          openAssign(content, question:Question):Observable<any> {
+            let modal= this.modalService.open(content, <NgbModalOptions>{
+              ariaLabelledBy: 'modal-create-course'});
             modal.componentInstance.currentQuestion = question;
             modal.result.then(
               (result) => {
@@ -342,6 +353,23 @@ export class QuestionListComponent implements OnInit {
             );
             return from(modal.result);
           }
+
+          //Answer Modal methods
+              openAnswer(content, question: Question):Observable<any>{
+                let modal= this.modalService.open(content,
+                  <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+                  modal.componentInstance.currentQuestion = question;
+                  modal.result.then(
+                    (result) => {
+                  this.setPauseRefresh(false);
+                  this.refreshData(result);
+                }, (reason) => {
+                  this.setPauseRefresh(false);
+                  this.refreshData(reason);
+                }
+                  );
+                  return from(modal.result);
+                }
 
           //Delete Modal method
           openDelete(content, question: Question):Observable<any>{
@@ -359,6 +387,19 @@ export class QuestionListComponent implements OnInit {
               );
               return from(modal.result);
             }
+
+        checkSubmitted(question:Question){
+        if (question.answer != undefined){
+          if(question.answer.submitted){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+        return false;
+      }
+
 
 
           // gravatarImageUrl() : string {

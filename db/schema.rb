@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190610135140) do
+ActiveRecord::Schema.define(version: 20190620141114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20190610135140) do
     t.uuid "question_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "draft", null: false
+    t.boolean "submitted", default: false, null: false
   end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -83,6 +85,7 @@ ActiveRecord::Schema.define(version: 20190610135140) do
     t.string "status", default: "pending", null: false
     t.boolean "faq", default: false, null: false
     t.string "step"
+    t.string "plaintext"
   end
 
   create_table "questions_tags", id: false, force: :cascade do |t|
@@ -123,6 +126,7 @@ ActiveRecord::Schema.define(version: 20190610135140) do
     t.string "role", default: "none", null: false
     t.string "first_name", default: "", null: false
     t.string "last_name", default: "", null: false
+    t.boolean "toBeNotified", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true

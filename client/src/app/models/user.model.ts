@@ -10,7 +10,8 @@ export class User extends Entity{
     _id? : string,
     private _password? : string,
     private _role? : string,
-    private _actingAsStudent? : boolean
+    private _actingAsStudent? : boolean,
+    private _toBeNotified? : boolean
 	)
   {
     super (_id);
@@ -76,16 +77,28 @@ export class User extends Entity{
     this._actingAsStudent = b;
   }
 
+  get ToBeNotified(): boolean{
+    return this._toBeNotified;
+  }
+
+  set ToBeNotified(b: boolean){
+    this._toBeNotified = b;
+  }
+
   static createFromJSon(o : Object){
     let user = new User();
 
     user.Type = o["type"];
     user.id = o["id"];
-    user.Username = o["attributes"]["username"];
-    user.EmailAddress = o["attributes"]["email"];
-    user.FirstName = o["attributes"]["first_name"];
-    user.LastName = o["attributes"]["last_name"];
-		user.Role = o["attributes"]["role"];
+    let src = o["attributes"] ? o["attributes"] : o;
+
+    user.Username = src["username"];
+    user.EmailAddress = src["email"];
+    user.FirstName =src["first_name"];
+    user.LastName = src["last_name"];
+		user.Role = src["role"];
+    user.ToBeNotified = src["toBeNotified"];
+
     return user;
   }
 
