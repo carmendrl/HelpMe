@@ -32,20 +32,8 @@ export class CourseService {
         let response : ApiResponse<Course[]> = new ApiResponse<Course[]>(true, courses);
         return response;
       }),
-      catchError(r => this.handleGetCourses(r, courses))
+      catchError(r => this.handleCoursesError(r, courses))
     );
-  }
-
-  private handleGetCourses(error: any, courses: Course[]): Observable<ApiResponse<Course[]>>{
-    let apiResponse: ApiResponse<Course[]> = new ApiResponse<Course[]>(false);
-    apiResponse.Data = courses;
-    if(error instanceof HttpErrorResponse){
-      apiResponse.addErrorsFromHttpError(error);
-    }
-    else{
-      apiResponse.addError("An unknown error occured");
-    }
-    return of(apiResponse);
   }
 
   private createCoursesArray(objects : Object[], i: any[]) : Course[]{
@@ -110,26 +98,37 @@ export class CourseService {
           let response : ApiResponse<Course> = new ApiResponse<Course>(true, course);
           return response;
         }),
-        catchError(r => this.handleNewCourseError(r, course))
+        catchError(r => this.handleCourseError(r, course))
       );
-    }
-
-    private handleNewCourseError(error: any, course: Course): Observable<ApiResponse<Course>>{
-      let apiResponse: ApiResponse<Course> = new ApiResponse<Course>(false);
-      apiResponse.Data = course;
-      if(error instanceof HttpErrorResponse){
-        apiResponse.addErrorsFromHttpError(error);
-      }
-      else{
-        apiResponse.addError("Unknown error occured");
-      }
-      return of(apiResponse);
     }
 
     get newCourse$() : Observable<Course>{
       return this._newCourse$;
     }
 
+//error handlers
+private handleCoursesError(error: any, courses: Course[]): Observable<ApiResponse<Course[]>>{
+  let apiResponse: ApiResponse<Course[]> = new ApiResponse<Course[]>(false);
+  apiResponse.Data = courses;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError("An unknown error occured");
+  }
+  return of(apiResponse);
+}
 
-  
+private handleCourseError(error: any, course: Course): Observable<ApiResponse<Course>>{
+  let apiResponse: ApiResponse<Course> = new ApiResponse<Course>(false);
+  apiResponse.Data = course;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError("Unknown error occured");
+  }
+  return of(apiResponse);
+}
+
   }

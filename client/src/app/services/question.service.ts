@@ -51,11 +51,16 @@ export class QuestionService {
   //   question.smallText = tempArray;
   // }
 
-  questionList() : Observable<Question[]> {
+  questionList() : Observable<ApiResponse<Question[]>> {
     let url :string = `${this.apiHost}/user/questions`;
+    let questions: Question[];
     return this.httpClient.get(url).pipe(
-      map(r=>this.createArray(r["data"], r["included"])),
-      catchError(this.handleError<Question[]>(`questions`))
+      map(r=>{
+        questions = this.createArray(r["data"], r["included"]);
+        let response : ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
+        return response;
+    }),
+      catchError(r => this.handleQuestionsError(r,questions))
     );
   }
 
@@ -153,24 +158,34 @@ export class QuestionService {
 
       }
 
-      getSessionQuestions(id : string) : Observable<Question[]>{
+      getSessionQuestions(id : string) : Observable<ApiResponse<Question[]>>{
         let url: string = `${this.apiHost}/lab_sessions/${id}/questions`;
+        var questions= new Array<Question>();
         return this.httpClient.get(url).pipe(
-          map(r => this.createArray(r['data'], r['included'])),
-          catchError(this.handleError<Question[]>(`getSessionQuestions id=${id}`))
+          map(r => {
+            questions = this.createArray(r['data'], r['included']);
+            let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
+            return response;
+          }),
+          catchError(r => this.handleQuestionsError(r, questions))
         );
       }
 
       //deletes a question
-      deleteAQuestion(question: Question): Observable<boolean>{
+      deleteAQuestion(question: Question): Observable<ApiResponse<boolean>>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
-        //let temp = question;
+        var deleted: boolean;
         return this.httpClient.delete(url).pipe(
-          map(r => true),
-          catchError(this.handleError<boolean>(`delete question id=${question.id}`))
+          map(r => {
+            deleted = true;
+            let response: ApiResponse<boolean> = new ApiResponse<boolean>(true, deleted);
+            return response;
+          }),
+          catchError(r => this.handleBooleanQuestionError(r,deleted))
         );
-        //return temp;
       }
+
+
 
       updateQuestion(question: Question, text: string, faQ: boolean, plaintext? : string): Observable<ApiResponse<Question>>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
@@ -190,36 +205,33 @@ export class QuestionService {
             let response: ApiResponse<Question> = new ApiResponse<Question> (true, question);
             return response;
           }),
-          catchError(r => this.handleQuestionsError(r,question))
+          catchError(r => this.handleQuestionError(r,question))
         );
       }
 
-      private handleQuestionsError(error: any, quest: Question) : Observable<ApiResponse<Question>>{
-        let apiResponse: ApiResponse<Question> = new ApiResponse<Question> (false);
-        apiResponse.Data = quest;
-        if(error instanceof HttpErrorResponse){
-          apiResponse.addErrorsFromHttpError(error);
-        }
-        else{
-          apiResponse.addError("An unknown error occurred");
-        }
-        return of(apiResponse);
-      }
 
-      claimAQuestion(question: Question): Observable<Object>{
+      claimAQuestion(question: Question): Observable<ApiResponse<Object>>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/claim`;
+        var claimed: Object;
         return this.httpClient.post(url, {}).pipe(
-          map(r => { return {
+          map(r => {
+
+            claimed = {
             //return object that helps prevent notifications
             //when a user claims a question themselves
             question: question,
             claim: true,
-          }
+          };
+          let response : ApiResponse<Object> = new ApiResponse<Object>(true, claimed);
+          return response;
         }),
-          catchError(this.handleError<Object>(`claim id=${question.id}`))
+          catchError(r => this.handleObjectQuestionError(r, claimed))
         );
       }
-      unclaimAQuestion(question: Question): Observable<Question>{
+
+
+
+      unclaimAQuestion(question: Question): Observable<ApiResponse<Question>>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
         let user = new User();
         let body = {
@@ -231,10 +243,14 @@ export class QuestionService {
         return this.httpClient.put(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
           //it will trigger a refresh and the updated question/answer will be displayed
-          map(r => { return question;}),
-          catchError(this.handleError<Question>(`unclaim id=${question.id}`))
+          map(r => {
+            let response : ApiResponse<Question> = new ApiResponse<Question>(true);
+            return response;
+          }),
+          catchError(r => this.handleQuestionError(r, question))
         );
       }
+
 
       answerAQuestion(question: Question, text: string, saved: boolean): Observable<ApiResponse<Question>>{
               let url : string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
@@ -249,11 +265,11 @@ export class QuestionService {
               let response: ApiResponse<Question> = new ApiResponse<Question> (true, question);
               return response;
             }),
-            catchError(r => this.handleQuestionsError(r,question))
+            catchError(r => this.handleQuestionError(r,question))
           );
             }
 
-      editAnAnswer(question: Question, text: string, saved: boolean, answererId:string): Observable<Question>{
+      editAnAnswer(question: Question, text: string, saved: boolean, answererId:string): Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
         let body = {
           text : text,
@@ -264,24 +280,35 @@ export class QuestionService {
         return this.httpClient.put(url, body).pipe(
           //non-updated question is returned, but because an Observable is returned,
           //it will trigger a refresh and the updated question/answer will be displayed
-          map(r => {question.answer.text = text; question.answer.submitted =saved; return question;}),
-          catchError(this.handleError<Question>(`answer edited`))
+          map(r => {
+            question.answer.text = text;
+            question.answer.submitted =saved;
+            let response: ApiResponse<Question> = new ApiResponse<Question>(true, question);
+            return response;
+          }),
+          catchError(r => this.handleQuestionError(r, question))
         );
       }
 
-      deleteADraft(question:Question): Observable<boolean>{
+      deleteADraft(question:Question): Observable<ApiResponse<boolean>>{
        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/answer`;
        return this.httpClient.delete(url).pipe(
-         map(r => true),
-         catchError(this.handleError<boolean>(`delete answer id=${question.answer.id}`))
+         map(r => {
+           let response: ApiResponse<boolean> = new ApiResponse<boolean>(true, true);
+           return response;
+         }),
+         catchError(r => this.handleBooleanQuestionError(r, false))
        );
      }
 
-      addMeToo(question: Question, meToo: boolean, user: User) : Observable<Question>{
+      addMeToo(question: Question, meToo: boolean, user: User) : Observable<ApiResponse<Question>>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/askers`;
         return this.httpClient.post(url, {}).pipe(
-          map(r => {return question;}),
-          catchError(this.handleError<Question>(`meToo status changed=${question.id}`))
+          map(r => {
+            let response: ApiResponse<Question> = new ApiResponse<Question>(true, question);
+            return response;
+          }),
+          catchError(r => this.handleQuestionError(r, question))
         );
       }
 
@@ -308,40 +335,85 @@ export class QuestionService {
             let response: ApiResponse<Question> = new ApiResponse<Question> (true, quest);
             return response;
           }),
-          catchError(r => this.handleQuestionsError(r,quest))
+          catchError(r => this.handleQuestionError(r,quest))
         );
       }
 
 
 
-    assignQuestion(user: User, question: Question): Observable<Question>{
+    assignQuestion(user: User, question: Question): Observable<ApiResponse<Question>>{
       let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/assign`;
       return this.httpClient.post(url, {user_id: user.id}).pipe(
         //non-updated question is returned, but because an Observable is returned,
         //it will trigger a refresh and the updated question/answer will be displayed
-        map(r => {return question;}),
-        catchError(this.handleError<Question>(`assigned =${question.id}`))
+        map(r => {
+          let response: ApiResponse<Question> = new ApiResponse<Question>(true, question);
+          return response;
+        }),
+        catchError(r => this.handleQuestionError(r, question))
       )
     }
 
-    findQuestionByText (text : string) : Observable <Question[]>{
+    findQuestionByText (text : string) : Observable<ApiResponse<Question[]>>{
       let url: string = `${this.apiHost}/user/questions`;
+      var questions: Question[];
       return this.httpClient.get(url).pipe(
-        map(r => this.createArray(r['data'], r['included'])),
-        catchError(this.handleError<Question[]>(`getSessionQuestions`))
+        map(r => {
+          questions = this.createArray(r['data'], r['included']);
+          let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true,questions);
+          return response;
+      }),
+        catchError(r => this.handleQuestionsError(r, questions))
       );
     }
 
-      //handles errors
-      private handleError<T> (operation = 'operation', result?: T) {
-        return (error: any): Observable<T> => {
 
-          // TODO: send the error to remote logging infrastructure
-          console.error(error); // log to console instead
+//error handlers
+private handleQuestionsError(error: any, quest: Question[]) : Observable<ApiResponse<Question[]>>{
+  let apiResponse: ApiResponse<Question[]> = new ApiResponse<Question[]> (false);
+  apiResponse.Data = quest;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError("An unknown error occurred");
+  }
+  return of(apiResponse);
+}
 
-          // Let the app keep running by returning an empty result.
-          return of(result as T);
-        };
-      }
+private handleBooleanQuestionError(error: any, deleted: boolean): Observable<ApiResponse<boolean>>{
+  let apiResponse: ApiResponse<boolean> = new ApiResponse<boolean>(false);
+  apiResponse.Data = deleted;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError(error);
+  }
+  return of(apiResponse);
+}
 
+private handleObjectQuestionError(error: any, object: Object): Observable<ApiResponse<Object>>{
+  let apiResponse : ApiResponse<Object> = new ApiResponse<Object>(false);
+  apiResponse.Data = object;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError("An unnknown error occured");
+  }
+  return of(apiResponse);
+}
+
+private handleQuestionError(error: any, question: Question): Observable<ApiResponse<Question>>{
+  let apiResponse: ApiResponse<Question> = new ApiResponse<Question>(false);
+  apiResponse.Data = question;
+  if(error instanceof HttpErrorResponse){
+    apiResponse.addErrorsFromHttpError(error);
+  }
+  else{
+    apiResponse.addError(error);
+  }
+  return of(apiResponse);
+}
     }

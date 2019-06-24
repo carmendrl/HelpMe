@@ -117,11 +117,14 @@ export class UserService {
     );
   }
 
-  logout () : Observable<boolean> {
+  logout () : Observable<ApiResponse<boolean>> {
     let url : string = `${this.apiHost}/users/sign_out`;
     return this.httpClient.delete(url).pipe(
-			map( r => true),
-      catchError(error => of(false)),
+			map( r => {
+				let response: ApiResponse<boolean> = new ApiResponse<boolean>(true,true);
+				return response;
+			}),
+      catchError(r => this.handleBooleanUserError(r, false)),
 			//  Regardless of success of failure, remove the key that makes it look like the user is
 			//  logged in and tell the application that no user is logged in
 			finalize( () => {
@@ -214,14 +217,19 @@ private handlePromoteTAError(error) : Observable<ApiResponse<User>> {
 		);
 	}
 
-	findUserByEmail (email : string, user_type? : string) : Observable<User[]> {
+	findUserByEmail (email : string, user_type? : string) : Observable<ApiResponse<User[]>> {
 		let url : string = `${this.apiHost}/system/users/find?q=${email}`;
 		if (user_type) {
 			url = `${url}&type=${user_type}`;
 		}
-
+		var uArray: User[];
 		return this.httpClient.get(url).pipe(
-			map(r => r["data"].map (o => User.createFromJSon(o)))
+			map(r => {
+				uArray = url["data"].map (o => User.createFromJSon(o));
+				let response : ApiResponse<User[]> = new ApiResponse<User[]>(true, uArray);
+				return response;
+		}),
+		catchError(r => this.handleUsersError(r, uArray))
 		)
 	}
 
@@ -336,6 +344,30 @@ private handlePromoteTAError(error) : Observable<ApiResponse<User>> {
 			return of(response);
 		}
 		return of(new PromoteUserResponse(true));
+	}
+
+	private handleBooleanUserError(error: any, b: boolean): Observable<ApiResponse<boolean>>{
+		let apiResponse: ApiResponse<boolean> = new ApiResponse<boolean>(false);
+		apiResponse.Data = b;
+		if(error instanceof HttpErrorResponse){
+			apiResponse.addErrorsFromHttpError(error);
+		}
+		else{
+			apiResponse.addError("An unknown error has occured");
+		}
+		return of(apiResponse);
+	}
+
+	private handleUsersError(error: any, users: User[]): Observable<ApiResponse<User[]>>{
+		let apiResponse: ApiResponse<User[]> = new ApiResponse<User[]>(false);
+		apiResponse.Data = users;
+		if(error instanceof HttpErrorResponse){
+			apiResponse.addErrorsFromHttpError(error);
+		}
+		else{
+			apiResponse.addError("An unknown error has occured");
+		}
+		return of(apiResponse);
 	}
 
 }
