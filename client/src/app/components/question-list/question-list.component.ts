@@ -65,15 +65,14 @@ export class QuestionListComponent implements OnInit {
   @Input() private showUnclaimButton: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
-<<<<<<< HEAD
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
   @Input() private allowSelection: boolean = false;
 	@Input() private isCollapsible: boolean = true;
 	@Input() private showSearch : boolean = true;
   @Input() public answer : Answer;
-=======
->>>>>>> parent of 7de0950... autoSave changes
+  @Input() public showFinishButton: boolean = true;
+  @Input() public showDiscardDraftButton: boolean = true;
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
@@ -89,6 +88,8 @@ export class QuestionListComponent implements OnInit {
         this.actions = {
           "answer": this.answerQuestion,
           "edit": this.editQuestion,
+          "finish": this.finishDraft,
+          "discardAnswer": this.deleteAnswer,
           "claim": this.claimQuestion,
           "unclaim": this.unclaimQuestion,
           "assign": this.assignQuestion,
@@ -110,7 +111,6 @@ export class QuestionListComponent implements OnInit {
           "setPauseRefresh":this.setPauseRefresh,
           "pauseRefresh": this.pauseRefresh,
 
-          "getDismissReason":this.getDismissReason,
         }
       }
 
@@ -202,37 +202,12 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
-
-<<<<<<< HEAD
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
         this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
-=======
-      setAnswer(){
-        this.selectedAction = "answer";
-      }
-      setEdit(){
-        this.selectedAction = "edit";
-      }
-      setClaim(){
-        this.selectedAction = "claim";
-      }
-      setUnclaim(){
-        this.selectedAction = "unclaim";
-      }
-
-      setAssign(){
-        this.selectedAction = "assign";
-      }
-      setAddFaq(){
-        this.selectedAction = "addFaQ";
-      }
-      setRemoveFaq(){
-        this.selectedAction = "removeFaQ";
->>>>>>> parent of 7de0950... autoSave changes
       }
 
       performMenuAction(q: Question, i: number, action : string){
@@ -244,7 +219,6 @@ export class QuestionListComponent implements OnInit {
         this.selectedAction[i] = action;
         this.performSelectedAction(q, i);
       }
-<<<<<<< HEAD
 
       refreshData(r :any){
         this.refreshEvent.next(r);
@@ -276,32 +250,13 @@ export class QuestionListComponent implements OnInit {
       answerQuestion(question: Question):Observable<any>{
         return this.openAnswer(AnswerModalComponent, question);
       }
-=======
-      //methods for select element in drop down menu
-      performAction(q: Question){
-        this.currentQuestion = q;
-        this.actions[this.selectedAction](q);
-      }
-
-
-      answerQuestion(question: Question){
-        this.openAnswer(AnswerModalComponent, question);
-
-      }
-
-      editQuestion(question: Question){
-        this.openEdit(EditModalComponent, question);
->>>>>>> parent of 7de0950... autoSave changes
-
-      }
-<<<<<<< HEAD
 
       editQuestion(question: Question):Observable<any>{
         return this.openEdit(EditModalComponent, question);
-=======
-      claimQuestion(question: Question){
-        this.questionService.claimAQuestion(question).subscribe();
->>>>>>> parent of 7de0950... autoSave changes
+      }
+
+      finishDraft(question:Question): Observable<any>{
+        return this.openEdit(EditModalComponent, question);
       }
 
       claimQuestion(question: Question):Observable<any>{
@@ -327,19 +282,13 @@ export class QuestionListComponent implements OnInit {
       deleteQuestion(question: Question):Observable<any>{
         return this.openDelete(DeleteModalComponent, question);
       }
-<<<<<<< HEAD
+
       meTooQuestion(question: Question):Observable<any>{
         return this.questionService.addMeToo(question, true, this.currentUser);
       }
 
       deleteAnswer(question: Question){
-        this.questionService.deleteADraft(question).subscribe();
-      }
-=======
-      meTooQuestion(question: Question){
-        this.questionService.addMeToo(question, true, this.currentUser).subscribe();
->>>>>>> parent of 7de0950... autoSave changes
-
+        return this.questionService.deleteADraft(question);
       }
 
       copy(question: Question){
@@ -352,12 +301,23 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+      getAnswerText(question : Question): string{
+          if(question.answer != undefined){
+          if (question.answer.submitted){
+            return question.answer.text;
+          }
+          else{
+            return "draft";
+          }
+        }
+        return "";
+      }
+
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{
         let modal = this.modalService.open(content,
           <NgbModalOptions>{
             ariaLabelledBy: 'modal-edit-answer',
-<<<<<<< HEAD
           });
           modal.componentInstance.currentQuestion = question;
           modal.componentInstance.answererId = this.currentUser.id;
@@ -365,27 +325,6 @@ export class QuestionListComponent implements OnInit {
             (result) => {
           this.setPauseRefresh(false);
           this.refreshData(result);
-=======
-          }
-        );
-
-        modal.componentInstance.currentQuestion = question;
-
-        modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-      }
-
-
-      //Assign Modal methods
-      openAssign(content, question:Question) {
-        let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-create-course'});
-        modal.componentInstance.currentQuestion = question;
-        modal.result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
->>>>>>> parent of 7de0950... autoSave changes
         }, (reason) => {
           this.setPauseRefresh(false);
           this.refreshData(reason);
@@ -396,35 +335,9 @@ export class QuestionListComponent implements OnInit {
 
 
         //Assign Modal methods
-        openAssign(content, question:Question):Observable<any> {
-          let modal= this.modalService.open(content, <NgbModalOptions>{
-            ariaLabelledBy: 'modal-create-course'});
-          modal.componentInstance.currentQuestion = question;
-<<<<<<< HEAD
-          modal.result.then(
-            (result) => {
-          this.setPauseRefresh(false);
-          this.refreshData(result);
-        }, (reason) => {
-          this.setPauseRefresh(false);
-          this.refreshData(reason);
-=======
-          modal.result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-          }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-          });
->>>>>>> parent of 7de0950... autoSave changes
-        }
-          );
-          return from(modal.result);
-        }
-
-
-        //Answer Modal methods
-        openAnswer(content, question: Question):Observable<any>{
-          let modal= this.modalService.open(content,
-            <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+          openAssign(content, question:Question):Observable<any> {
+            let modal= this.modalService.open(content, <NgbModalOptions>{
+              ariaLabelledBy: 'modal-create-course'});
             modal.componentInstance.currentQuestion = question;
             modal.result.then(
               (result) => {
@@ -437,6 +350,23 @@ export class QuestionListComponent implements OnInit {
             );
             return from(modal.result);
           }
+
+          //Answer Modal methods
+              openAnswer(content, question: Question):Observable<any>{
+                let modal= this.modalService.open(content,
+                  <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+                  modal.componentInstance.currentQuestion = question;
+                  modal.result.then(
+                    (result) => {
+                  this.setPauseRefresh(false);
+                  this.refreshData(result);
+                }, (reason) => {
+                  this.setPauseRefresh(false);
+                  this.refreshData(reason);
+                }
+                  );
+                  return from(modal.result);
+                }
 
           //Delete Modal method
           openDelete(content, question: Question):Observable<any>{
@@ -454,6 +384,19 @@ export class QuestionListComponent implements OnInit {
               );
               return from(modal.result);
             }
+
+        checkSubmitted(question:Question){
+        if (question.answer != undefined){
+          if(question.answer.submitted){
+            return false;
+          }
+          else{
+            return true;
+          }
+        }
+        return false;
+      }
+
 
 
           // gravatarImageUrl() : string {

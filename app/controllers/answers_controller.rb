@@ -35,11 +35,9 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-<<<<<<< HEAD
-    params.permit(:text, :question_id, :answerer_id)
-    params.permit(:text, :question_id, :submitted)
-=======
-    params.permit(:text, :question_id)
->>>>>>> parent of 7de0950... autoSave changes
+    params.permit(:text, :question_id, :answerer_id, :submitted)
+    #params.permit(:text, :question_id, :answerer_id, :submitted)
+    #params.permit(:text, :question_id, :submitted)
+    #params.permit(:text, :question_id)
   end
 end
