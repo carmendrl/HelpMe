@@ -20,7 +20,9 @@ export class CreateTAComponent implements OnInit {
   private state : string;
   private errorUser: ApiResponse<User>;
   private createdUser: User;
-  private createTAmessage: string[];
+  private createTAmessageSuccess: string;
+  private createTAmessageError: string[];
+  private createTAError: boolean;
 
 
   constructor(private userService: UserService, private modalService: NgbModal) { }
@@ -40,24 +42,36 @@ export class CreateTAComponent implements OnInit {
     user.Password = password;
     user.Username = this.firstName +"_"+this.lastName;
     user.Type = "Student";
-    this.userService.createTA(user).subscribe(user => {this.handleCreateTAResponse(user);this.userService.promoteToTA(user.Data.id).subscribe(user => {this.handleCreateTAResponse(user)})});
+    this.userService.createTA(user).subscribe(user => {this.handleCreateTAResponse(user);
+      if(this.state!="errorCreatingTA"){
+        this.userService.promoteToTA(user.Data.id).subscribe(user => {
+          this.handleCreateTAResponse(user);
+          if(this.createTAError === false){
+            this.modalService.dismissAll();
+    }
+  }
+)};
+});
+//this.handleCreateTAResponse(ta
 
-    //this.handleCreateTAResponse(ta);
 
-    this.modalService.dismissAll();
 }
 
 private handleCreateTAResponse (ta : ApiResponse<User>) {
+  debugger
   if (!ta.Successful) {
     this.state = "errorCreatingTA";
     this.errorUser = ta;
     this.createdUser = <User>ta.Data;
-    this.createTAmessage = ta.ErrorMessages;
+    this.createTAmessageError = ta.ErrorMessages;
+    this.createTAError = true;
+    debugger
+    debugger
   }
   else {
     this.state = "created";
     this.createdUser = <User>ta.Data;
-    this.createTAmessage = "successfully created";
+    this.createTAmessageSuccess = "successfully created";
   }
 }
 
