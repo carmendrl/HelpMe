@@ -263,9 +263,7 @@ export class LabSessionService {
     var start_date: any = r.find(function(element) {
       return element["attributes"]["token"] === token;
     });
-    //debugger
     let newDate = new Date(start_date["attributes"]["start_date"]);
-    //debugger
     return newDate;
   }
 

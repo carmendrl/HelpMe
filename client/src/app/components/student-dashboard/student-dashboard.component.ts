@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LabSessionService } from '../../services/labsession.service';
 import { QuestionService } from '../../services/question.service';
+import { AudioService } from '../../services/audio.service';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { LabSession } from '../../models/lab_session.model';

@@ -20,7 +20,7 @@
         <td>{{session.description}}</td>
         <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}" triggers="mouseenter:mouseleave" popoverTitle= "Session Code">Copy Code</span>
            <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
-           <span (click)="viewSession(session)"  class="btn btn-primary actionSpace">View</span>
+           <span (click)="viewSession(session);audioService.playSilentAudio()"  class="btn btn-primary actionSpace">View</span>
         </td>
       </tr>
     </tbody>
@@ -44,7 +44,7 @@
       <span>{{session.course.subjectAndNumber}}- </span>
       <span>{{session.description}} </span>
       <span>({{session.professor.LastName}}) </span>
-      <button class="btn btn-primary actionSpace" (click)="viewSession(session)">View</button>
+      <button class="btn btn-primary actionSpace" (click)="viewSession(session);playSlientAudio();">View</button>
         </div>
       <hr>
     </div>

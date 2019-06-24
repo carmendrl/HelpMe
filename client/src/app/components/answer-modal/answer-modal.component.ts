@@ -2,10 +2,12 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { QuestionService } from '../../services/question.service';
 import { UserService } from '../../services/user.service';
 import { Question } from '../../models/question.model';
-import { Observable } from 'rxjs/Observable';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { Answer } from '../../models/answer.model';
 import { Title }     from '@angular/platform-browser';
+import * as moment from 'moment';
+import { Observable, interval, Subscription, timer } from 'rxjs';
+import { User } from '../../models/user.model';
 
 
 @Component({
@@ -21,24 +23,45 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     blured = false;
     focused = false;
     private FaQ: boolean;
+    lastSavedTime: string;
+    sub : Subscription;
+    private user : User;
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
-    this.titleService.setTitle('Add Answer - Help Me');
-    this.FaQ = false;
-  }
+  this.titleService.setTitle('Add Answer - Help Me');
+  this.FaQ = false;
+  this.save()
+ }
 
-  ngOnDestroy(){
-    this.titleService.setTitle('Session View - Help Me');
-  }
+ ngOnDestroy(){
+   this.titleService.setTitle('Session View - Help Me');
+   this.sub.unsubscribe();
+ }
 
-  createAnswerFromForm(){
-    this.saved = true;
-    this.questionService.answerAQuestion(this.currentQuestion, this.text).subscribe(r => this.activeModal.close());
-    this.addToFaQs();
-  }
+ createAnswerFromForm(submitted:boolean){
+   this.sub.unsubscribe();
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {this.activeModal.close();
+ });
+  this.addToFaQs();
+ }
+
+ autoSave(submitted:boolean){
+   this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {
+     this.save(); this.time();
+   });
+ }
+
+ save(){
+   this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+ }
+
+ time(){
+   this.lastSavedTime = moment().format('LTS');
+ }
+
 
     created(event) {
       // tslint:disable-next-line:no-console

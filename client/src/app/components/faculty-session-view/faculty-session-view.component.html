@@ -1,3 +1,11 @@
+<label class="d-inline-block">Notification Sounds:</label>
+<div class="onoffswitch">
+    <input #myonoffswitch type="checkbox" (change)="toggleAudio()"  name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <h4 class="center">The current session code is {{token}}</h4>
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
@@ -8,12 +16,13 @@
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
 </div>
+<br>
 <section>
   <app-question-list  [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
   [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck"
-  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
@@ -21,20 +30,20 @@
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
   [showNumberOfAskers]="true" [showUnclaimButton]="true"
-  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck"
-  (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
-  [showDeleteButton]= "true" [showCheck]="showCheck" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)">
-</app-question-list>
+  [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
+  (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
 </section>
 
 <ng-template #content let-modal let-d="dismiss" let-c="close">

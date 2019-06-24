@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(version: 20190620141114) do
     t.uuid "question_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status", default: "draft", null: false
+    t.boolean "submitted", default: false, null: false
   end
 
   create_table "courses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
