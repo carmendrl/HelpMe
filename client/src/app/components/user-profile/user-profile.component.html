@@ -21,7 +21,7 @@
       <button  *ngIf="user.Type==='professors'" class="dropdown-item" (click)="switchTypes(user)">Switch to Student View</button>
       <button  *ngIf="user.ActingAsStudent === true" class="dropdown-item" (click)="switchTypes(user)">Switch to Professor View</button>
       <button  *ngIf="user.Role==='ta'" class="dropdown-item" (click)="switchRoles(user)">Switch to Student View</button>
-      <button  *ngIf="user.Role==='none'" class="dropdown-item" (click)="switchRoles(user)">Switch to TA View</button>
+      <button  *ngIf="user.Role==='none' && user.Type==='students'" class="dropdown-item" (click)="switchRoles(user)">Switch to TA View</button>
       <button *ngIf="user.Type==='professors'" class="dropdown-item" (click)="open(content)">Create a TA account</button>
       <button class="dropdown-item" (click)="logout()">Log out</button>
     </div>

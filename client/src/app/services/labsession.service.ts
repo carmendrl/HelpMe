@@ -31,12 +31,29 @@ export class LabSessionService {
   }
 
 //returns a list of all the labsessions
-  labSessions() : Observable<LabSession[]> {
+  labSessions() : Observable<ApiResponse<LabSession[]>>{
     let url : string =`${this.apiHost}/lab_sessions`;
+    var lArray = new Array<LabSession>();
     return this.httpClient.get(url).pipe(
-      map(r => this.createLabsessionsArray(r["data"], r["included"] )),
-      catchError(this.handleError<LabSession[]>(`labSessions`))
+      map(r => {
+        lArray  =  this.createLabsessionsArray(r["data"], r["included"]);
+        let response: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(true, lArray)
+        return response;
+      }),
+      catchError(r => this.handleLabsessionsError(r, lArray))
     );
+  }
+
+  private handleLabsessionsError(error:any, lArray: LabSession[]): Observable<ApiResponse<LabSession[]>>{
+    let apiResponse: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(false);
+    apiResponse.Data = lArray;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occured while fetching labsessions");
+    }
+    return of(apiResponse);
   }
 
 
@@ -107,8 +124,9 @@ export class LabSessionService {
 		return of(apiResponse);
 	}
 
-  createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<LabSession> {
+  createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<ApiResponse<LabSession>> {
     let url : string =`${this.apiHost}/lab_sessions`;
+    let lab: LabSession;
     let body = {
       description: description,
       course_id: courseId,
@@ -116,11 +134,27 @@ export class LabSessionService {
       end_date: endDate
     };
     return this.httpClient.post(url, body).pipe(
-      map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
-			tap(ls => this._newLabSession$.next(ls)),
-			catchError(this.handleError<LabSession>(`accesssingTokenAndId`))
+      map(r => {
+        lab = this.createNewLabSessionFromJson(r["data"], r["included"]);
+        let response: ApiResponse<LabSession> = new ApiResponse<LabSession>(true, lab);
+        return response;
+      }),
+			tap(ls => this._newLabSession$.next(ls.Data)),
+			catchError(r => this.handleLabsessionError(r, lab))
     );
 
+  }
+
+  private handleLabsessionError(error: any, lab: LabSession): Observable<ApiResponse<LabSession>>{
+    let apiResponse: ApiResponse<LabSession> = new ApiResponse<LabSession>(false);
+    apiResponse.Data = lab;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occurred");
+    }
+    return of(apiResponse);
   }
 
   createNewLabSessionFromJson(r: Object, includedResponses:any[]): LabSession{
@@ -197,9 +231,7 @@ export class LabSessionService {
     var start_date: any = r.find(function(element) {
       return element["attributes"]["token"] === token;
     });
-    //debugger
     let newDate = new Date(start_date["attributes"]["start_date"]);
-    //debugger
     return newDate;
   }
 

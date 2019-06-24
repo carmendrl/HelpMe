@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Inject } from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import { Router } from '@angular/router';
 import { LabSessionService } from '../../services/labsession.service';
+import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
 
 @Component({
@@ -19,7 +20,8 @@ export class SessionListComponent implements OnInit {
 
 
   private copied: boolean = false;
-  constructor(@Inject(DOCUMENT) public document: Document,  private router : Router) { }
+  constructor(@Inject(DOCUMENT) public document: Document,  private router : Router,
+  private audioService:AudioService) { }
 
   ngOnInit() {
   }
@@ -50,6 +52,7 @@ export class SessionListComponent implements OnInit {
   viewSession(s:LabSession){
     this.router.navigateByUrl(`/lab_sessions/${s.id}`);
   }
+
 
   filter():boolean{
     if( this.searchText !=undefined && this.searchText!=""){

@@ -15,7 +15,7 @@ are input into this model from the student dashboard, student view, and faculty 
   </button>
 	</div>
 </h2>
-</div>
+
 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
@@ -54,13 +54,15 @@ are input into this model from the student dashboard, student view, and faculty 
             </ul>
           </td>
           <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="question.answerText"> </quill-editor></td>
+          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="getAnswerText(question)"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
               <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
-              <button  *ngIf="showEditButton && !answerUndefined(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button  *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
+              <button  *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>
               <button  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
               <button *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>
               <button  *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace">Assign</button>
@@ -75,7 +77,9 @@ are input into this model from the student dashboard, student view, and faculty 
               <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select Action</button>
               <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
                 <button ngbDropdownItem *ngIf="showAnswerButton && answerUndefined(question)" (click)="performMenuAction(question, i, 'answer')">Add Answer</button>
-                <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+                <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+                <button ngbDropdownItem *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performMenuAction(question, i, 'finish')">Finish Draft</button>
+                <button ngbDropdownItem *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performMenuAction(question, i, 'discardAnswer')">Discard Draft</button>
                 <button ngbDropdownItem *ngIf="showClaimButton" (click)="performMenuAction(question, i, 'claim')" >Claim</button>
                 <button ngbDropdownItem *ngIf="showUnclaimButton" (click)="performMenuAction(question, i, 'unclaim')">Unclaim</button>
                 <button ngbDropdownItem *ngIf="showAssignButton" (click)="performMenuAction(question, i, 'assign')" >Assign</button>
@@ -93,12 +97,13 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showCheck">
             <div class="d-none d-lg-block d-xl-block">
               <input type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
-            </div>
-          </td>
+              </div>
+              </td>
         </tr>
       </tbody>
     </table>
   </div>
+</div>
 </div>
 
 <!-- mobile view -->
@@ -126,7 +131,9 @@ are input into this model from the student dashboard, student view, and faculty 
           <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Select Action</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button ngbDropdownItem *ngIf="showAnswerButton && answerUndefined(question)" (click)="performMenuAction(question, i, 'answer')">Add Answer</button>
-            <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+            <button ngbDropdownItem *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performMenuAction(question, i, 'edit')">Edit Answer</button>
+            <button ngbDropdownItem *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performMenuAction(question, i, 'finish')">Finish Draft</button>
+            <button ngbDropdownItem *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performMenuAction(question, i, 'discardAnswer')">Discard Draft</button>
             <button ngbDropdownItem *ngIf="showClaimButton" (click)="performMenuAction(question, i, 'claim')" >Claim</button>
             <button ngbDropdownItem *ngIf="showUnclaimButton" (click)="performMenuAction(question, i, 'unclaim')">Unclaim</button>
             <button ngbDropdownItem *ngIf="showAssignButton" (click)="performMenuAction(question, i, 'assign')" >Assign</button>
@@ -148,6 +155,5 @@ are input into this model from the student dashboard, student view, and faculty 
   </div>
 </div>
 </div>
-
 
 </div>

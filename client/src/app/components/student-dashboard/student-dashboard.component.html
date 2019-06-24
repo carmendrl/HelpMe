@@ -1,6 +1,6 @@
 <section>
   <h2>Join a session</h2><br>
-  <form #thisForm="ngForm" (ngSubmit)="joinSess(content)" class="form-inline">
+  <form #thisForm="ngForm" (ngSubmit)="joinSess(content);audioService.playSilentAudio()" class="form-inline">
     <label>Enter a 6-digit Session Code:</label>
     <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="joinSession" name="token" [(ngModel)]="token" required>
     <button type="submit"  [disabled]="!(thisForm.valid)" class="btn btn-primary form-control ml-1">Join</button>
@@ -13,7 +13,7 @@
 <div *ngIf="userService.CurrentUser$ | async as user">
 <section *ngIf="user.Role!='ta'">
   <h2>View past sessions</h2>
-  <app-session-list [sessions]="sessions"></app-session-list>
+  <app-session-list [sessions]="sessions.Data"></app-session-list>
 </section>
 
 <section *ngIf="user.Role!='ta'">

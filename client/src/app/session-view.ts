@@ -8,6 +8,7 @@ import { User } from './models/user.model';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from './services/labsession.service';
+import { AudioService } from './services/audio.service';
 import { LabSession } from './models/lab_session.model';
 import * as moment from 'moment';
 
@@ -22,8 +23,11 @@ export abstract class SessionView  {
   protected readonly notifier: NotifierService;
   protected timeFromRefresh: string;
   protected pauseRefresh: boolean;
+  protected isRefreshing: boolean;
 
-  constructor(protected userService : UserService, protected questionService: QuestionService,  private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService, protected sessionService:LabSessionService) {
+  constructor(protected userService : UserService, protected questionService: QuestionService,
+    private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService,
+    protected sessionService:LabSessionService, protected audioService: AudioService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(
       questions => {this.questions = questions; this.sortQuestions(this.questions);});
       this.userService.CurrentUser$.subscribe(
@@ -47,7 +51,11 @@ export abstract class SessionView  {
       //often an empty object will be passed in
       //only time an actual object will be passed in
       //is when the claimed button is pressed.
-
+if(this.isRefreshing){
+return;
+}
+else{
+  this.isRefreshing =true;
       if(!(this.pauseRefresh)){
       this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
         'id')).subscribe(data => {
@@ -59,6 +67,8 @@ export abstract class SessionView  {
           }
         });
       }
+      this.isRefreshing =false;
+    }
       }
 
 
@@ -85,5 +95,4 @@ export abstract class SessionView  {
         this.timeFromRefresh = moment().format('LTS');
       }
 
-
-    }
+}
