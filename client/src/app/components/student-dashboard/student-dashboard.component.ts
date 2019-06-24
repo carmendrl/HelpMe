@@ -24,8 +24,11 @@ export class StudentDashboardComponent implements OnInit {
   private state: string;
   private errorSessions: ApiResponse<LabSession[]>;
   private loadedSessions: LabSession[];
+  private joinSessionError: boolean;
+  private stateLabSession: string;
+  private errorSession: ApiResponse<string>;
+  private joinSession: string;
   private sessionMessage: string[];
-  private loadSessionError: boolean;
   closeResult: string;
 
   constructor(private labSessionService : LabSessionService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
@@ -55,10 +58,22 @@ export class StudentDashboardComponent implements OnInit {
       else{
         this.invalidId = true;
       }
-      this.checkIfStarted(sessionId, content);
+      this.checkIfStarted(sessionId.Data, content);
   })
 }
-
+private handleJoinSession(sessionId: ApiResponse<string>){
+  if(!sessionId.Successful){
+    this.stateLabSession = "errorJoiningSession";
+    this.errorSession = sessionId;
+    this.joinSession = <string>sessionId.Data;
+    this.sessionMessage = sessionId.ErrorMessages;
+    this.joinSessionError = true;
+  }
+  else{
+    this.stateLabSession = "loaded";
+    this.joinSession = <string>sessionId.Data;
+  }
+}
   checkIfStarted(id: string, content){
     this.currentDate = new Date();
     this.labSessionService.getStartDate(this.token).subscribe(r =>

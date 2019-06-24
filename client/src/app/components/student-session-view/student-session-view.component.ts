@@ -12,6 +12,7 @@ import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import { AskQuestionComponent } from '../ask-question/ask-question.component';
 import { Title }     from '@angular/platform-browser';
+import { ApiResponse } from '../../services/api-response';
 
 @Component({
   selector: 'app-student-session-view',
@@ -33,6 +34,12 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
+
+  private state: string;
+  private errorSession: ApiResponse<LabSession>;
+  private loadedSession : LabSession;
+  private sessionMessage : string[];
+  private loadSessionError: boolean;
 
 
   constructor(userService: UserService, questionService: QuestionService,
@@ -56,12 +63,13 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.currentDate = new Date();
         this.sessionService.getSession(this.sessionId).subscribe(
           r => {
-            if(new Date(r.endDate.toString()) <= this.currentDate){
+            if(new Date(r.Data.endDate.toString()) <= this.currentDate){
               this.readOnly = true;
             }
             else{
               this.readOnly = false;
             }
+            this.getSessionError(r);
           });
 
       }
@@ -69,15 +77,16 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       checkIfStarted(){
         this.currentDate = new Date();
         this.sessionService.getSession(this.sessionId).subscribe(r => {
-          this.startDate = new Date(r.startDate.toString());
-          let tenBefore = new Date(r.startDate.toString());
-          let tempDate = new Date(r.startDate.toString());
+          this.startDate = new Date(r.Data.startDate.toString());
+          let tenBefore = new Date(r.Data.startDate.toString());
+          let tempDate = new Date(r.Data.startDate.toString());
           tenBefore.setMinutes(tempDate.getMinutes()-10);
           if(tenBefore < this.currentDate)
           {
             this.started = true;
           }
           else{this.started=false;}
+          this.getSessionError(r);
         }
       );
       }
@@ -147,9 +156,22 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       getSessionDescription(){
         this.sessionService.getSession(this.sessionId).subscribe(session =>
-          {this.subjectAndNumber = session.course.subjectAndNumber,
-            this.description = session.description});
+          {this.subjectAndNumber = session.Data.course.subjectAndNumber,
+            this.description = session.Data.description, this.getSessionError(session)});
           }
 
+      private getSessionError(session: ApiResponse<LabSession>){
+        if(!session.Successful){
+            this.state = "errorLoadingSession";
+            this.errorSession = session;
+            this.loadedSession = <LabSession>session.Data;
+            this.sessionMessage = session.ErrorMessages;
+            this.loadSessionError = true;
+          }
+          else{
+            this.state = "loaded";
+            this.loadedSession = <LabSession>session.Data;
+          }
+        }
 
         }
