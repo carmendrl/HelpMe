@@ -1,3 +1,11 @@
+<label class="d-inline-block">Notification Sounds:</label>
+<div class="onoffswitch">
+    <input #myonoffswitch type="checkbox" (change)="toggleAudio()"  name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+    <label class="onoffswitch-label" for="myonoffswitch">
+        <span class="onoffswitch-inner"></span>
+        <span class="onoffswitch-switch"></span>
+    </label>
+</div>
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <h4 class="center">The current session code is {{token}}</h4>
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
@@ -9,18 +17,6 @@
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
 </div>
 <br>
-<br>
-
-<label class="d-inline-block">Notification Sounds:</label>
-<div class="onoffswitch">
-    <input #myonoffswitch type="checkbox" (change)="toggleAudio()"  name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
-</div>
-
-
 <section>
   <app-question-list  [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"

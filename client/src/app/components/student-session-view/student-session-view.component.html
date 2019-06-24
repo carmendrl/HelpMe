@@ -1,8 +1,3 @@
-<h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
-<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
-<button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button>
-<br>
-<br>
 <label class="d-inline-block">Notification Sounds:</label>
 <div class="onoffswitch">
     <input #myonoffswitch type="checkbox" (change)="toggleAudio()"  name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch">
@@ -11,6 +6,9 @@
         <span class="onoffswitch-switch"></span>
     </label>
 </div>
+<h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
+<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
+<button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button>
 <br>
 <section *ngIf="started">
   <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
