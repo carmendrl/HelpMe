@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { LabSessionService } from '../../services/labsession.service';
 import { QuestionService } from '../../services/question.service';
+import { AudioService } from '../../services/audio.service';
 import { Router } from '@angular/router';
 import { LabSession } from '../../models/lab_session.model';
 import { Question } from '../../models/question.model';
@@ -21,8 +22,8 @@ export class StudentDashboardComponent implements OnInit {
   private started: boolean;
   closeResult: string;
 
-  constructor(private labSessionService : LabSessionService, private questionService: QuestionService,private modalService: NgbModal,
-    private router : Router) { }
+  constructor(private labSessionService : LabSessionService, private questionService: QuestionService,
+    private modalService: NgbModal, private audioService:AudioService, private router : Router) { }
 
   ngOnInit() {
     this.labSessionService.labSessions().subscribe (
@@ -37,9 +38,8 @@ export class StudentDashboardComponent implements OnInit {
   }
 
   joinSess(content){
-    debugger
     this.labSessionService.joinASession(this.token).subscribe(
-      sessionId => {debugger;
+      sessionId => {
         if(sessionId != undefined){
           this.invalidId = false;
       }
@@ -50,13 +50,13 @@ export class StudentDashboardComponent implements OnInit {
   })
 }
 
+
   checkIfStarted(id: string, content){
     this.currentDate = new Date();
     this.labSessionService.getStartDate(this.token).subscribe(r =>
       {
         let tenBefore = new Date(r.toString());
         tenBefore.setMinutes(r.getMinutes()-10);
-        debugger
         if(this.currentDate < tenBefore){
           this.started = false;
           this.open(content);

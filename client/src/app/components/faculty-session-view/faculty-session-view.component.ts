@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { NotifierService } from 'angular-notifier';
 import { LabSessionService } from '../../services/labsession.service';
+import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
 import { QuestionListComponent } from '../question-list/question-list.component';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
@@ -38,12 +39,15 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private faqHeader:string = "Frequently Asked Questions";
   private otherQHeader:string = "Other Questions";
   private copying: number;
+  private playSound: boolean;
+
+  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
 
 
-  constructor(userService: UserService, questionService: QuestionService,
+  constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService,
      sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
-      super(userService, questionService, route, location, notifierService, sessionService);
+      super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.unclaimedQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.faQs = new Array<Question>();
@@ -54,6 +58,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
+        this.playSound = true;
         this.questionService.getUpdatedQuestion$.subscribe(r =>
            { this.checkNotification(this.questions, {});
              //empty object passed in (because claimButton wasn't pressed)
@@ -78,6 +83,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                     if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                       if(data.claimedBy.id != undefined){
                         if (data.claimedBy.id === this.user.id){
+                          if(this.playSound){this.audioService.playProfessorAudio();}
                           this.notifier.notify('info', 'You have been assigned a question!');
                         }
                       }
@@ -100,6 +106,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                   if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                     if(data.claimedBy.id != undefined){
                       if (data.claimedBy.id === this.user.id){
+                        if(this.playSound){this.audioService.playProfessorAudio();}
                         this.notifier.notify('info', 'You have been assigned a question!');
                       }
                     }
@@ -111,6 +118,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         }
 
         if (this.data && datas.length > this.data.length){
+          if(this.playSound){this.audioService.playProfessorAudio();}
           this.notifier.notify('info', 'A new question has been posted!');
         }
       }
@@ -159,14 +167,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
       setEndDate(){
         this.currentTime = moment().utc().toDate();
-        //debugger
         this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
-      }
-      assign(question: Question, user: User){
-        question.claimedBy = user;
-      }
-
-      delete(question: Question){
       }
 
       getSessionCodeAndDescription(){
@@ -202,4 +203,11 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
           return  `with: ${reason}`;
         }
       }
+
+
+      toggleAudio():boolean{
+        this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
+        return this.playSound;
+      }
+
     }

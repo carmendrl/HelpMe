@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { User } from '../../models/user.model';
 import { Question } from '../../models/question.model';
 import { QuestionService } from '../../services/question.service';
+import { AudioService } from '../../services/audio.service';
 import { LabSessionService } from '../../services/labsession.service';
 import { UserService } from '../../services/user.service';
 import { Observable, of, from } from 'rxjs';
@@ -68,6 +69,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private readOnly: boolean = false;
   @Input() private showCheck: boolean = false;
   @Input() private allowSelection: boolean = false;
+  @Input() private playSound: boolean =false;
 
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
@@ -76,7 +78,7 @@ export class QuestionListComponent implements OnInit {
 
 
   constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
-    private modalService: NgbModal) {
+    private audioService: AudioService, private modalService: NgbModal) {
 
       this.userService.CurrentUser$.subscribe(
         u => this.currentUser = u);
@@ -199,6 +201,7 @@ export class QuestionListComponent implements OnInit {
         this.actions[this.selectedAction[i]](q).subscribe(
           r => {this.setPauseRefresh(false); this.refreshData(r)});
         this.selectedAction[i]="";
+        if(this.playSound){this.audioService.playSilentAudio();}
       }
 
       performMenuAction(q: Question, i: number, action : string){
@@ -275,7 +278,6 @@ export class QuestionListComponent implements OnInit {
       }
 
       copy(question: Question){
-        //debugger;
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
       }
