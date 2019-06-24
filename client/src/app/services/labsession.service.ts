@@ -251,12 +251,29 @@ export class LabSessionService {
     return of(apiResponse);
   }
 
-  getStartDate(token: string): Observable<Date>{
+  getStartDate(token: string): Observable<ApiResponse<Date>>{
     let url : string =`${this.apiHost}/lab_sessions`;
+    var date: Date;
     return this.httpClient.get(url).pipe(
-      map(r => this.extractStartDate(r["data"], token)),
-      catchError(this.handleError<Date>(`labSessions`))
+      map(r => {
+        date = this.extractStartDate(r["data"], token);
+        let response: ApiResponse<Date> = new ApiResponse<Date>(true, date);
+        return response;
+      }),
+      catchError(r => this.handleGetDateError(r, date))
     );
+  }
+
+  private handleGetDateError(error: any, date: Date){
+    let apiResponse: ApiResponse<Date> = new ApiResponse<Date>(false);
+    apiResponse.Data = date;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occured");
+    }
+    return of(apiResponse);
   }
 
   private extractStartDate(r: any[], token: string):Date{
@@ -267,25 +284,18 @@ export class LabSessionService {
     return newDate;
   }
 
-  updateEndDate(id: string, date: Date): Observable<LabSession>{
+  updateEndDate(id: string, date: Date): Observable<ApiResponse<LabSession>>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};
+    var session: LabSession;
     return this.httpClient.put<LabSession>(url, body).pipe(
-      map(r => {LabSession.createFromJSon(r); return r;}),
-      catchError(this.handleError<LabSession>(`change endDate`))
+      map(r => {
+        session = LabSession.createFromJSon(r);
+        let response : ApiResponse<LabSession> = new ApiResponse<LabSession>(true, session);
+        return response;
+      }),
+      catchError(r => this.handleGetSessionError(r,session))
     );
   }
 
-//handles errors
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
 }

@@ -31,6 +31,11 @@ export class StudentDashboardComponent implements OnInit {
   private joinSession: string;
   private sessionMessage: string[];
   closeResult: string;
+  private stateDate : string;
+  private errorDate: ApiResponse<Date>;
+  private getDate : Date;
+  private dateMessage : string[];
+  private getDateError : boolean;
 
   constructor(private labSessionService : LabSessionService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
     private router : Router) {
@@ -80,7 +85,7 @@ private handleJoinSession(sessionId: ApiResponse<string>){
     this.labSessionService.getStartDate(this.token).subscribe(r =>
       {
         let tenBefore = new Date(r.toString());
-        tenBefore.setMinutes(r.getMinutes()-10);
+        tenBefore.setMinutes(r.Data.getMinutes()-10);
         if(this.currentDate < tenBefore){
           this.started = false;
           this.open(content);
@@ -89,10 +94,24 @@ private handleJoinSession(sessionId: ApiResponse<string>){
           this.started = true;
           this.router.navigateByUrl(`/lab_sessions/${id}`);
         }
+        this.handleGetDate(r);
         }
       );
   }
 
+  private handleGetDate(date: ApiResponse<Date>){
+    if(!date.Successful){
+      this.stateDate = "errorGettingDate";
+      this.errorDate = date;
+      this.getDate = <Date>date.Data;
+      this.dateMessage = date.ErrorMessages;
+      this.getDateError = true;
+    }
+    else{
+      this.state = "loaded";
+      this.getDate = <Date>date.Data;
+    }
+  }
   open(content) {
     let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-not-started'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
