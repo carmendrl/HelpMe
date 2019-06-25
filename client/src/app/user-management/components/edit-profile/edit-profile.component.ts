@@ -73,7 +73,6 @@ export class EditProfileComponent implements OnInit {
 	}
 
   editProfileFromForm(){
-    debugger
     this.saved = true;
     this.userService.editUserProfile(this.user, this.email,
     this.username, this.firstName, this.lastName,
