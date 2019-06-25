@@ -80,6 +80,7 @@ export class UserService {
 				u.EmailAddress = previousUser._emailAddress;
 				u.Username = previousUser._username;
 				u.Type = previousUser._type;
+				u.Role = previousUser._role;
 				this._currentUser$.next(u);
 				this._currentPassword$.next(u.Password);
 			}
