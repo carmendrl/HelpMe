@@ -25,8 +25,8 @@ export class FacultyDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.labSessionService.labSessions().subscribe(
-      sessions =>{debugger;
-        this.pastSessions.Data = this.pastSessions.Data.concat(sessions.Data); this.handleLoadSessions(sessions);debugger;}) ;
+      sessions =>{;
+        this.pastSessions.Data = this.pastSessions.Data.concat(sessions.Data); this.handleLoadSessions(sessions);}) ;
 
     this.labSessionService.newLabSession$.subscribe(
       session =>
