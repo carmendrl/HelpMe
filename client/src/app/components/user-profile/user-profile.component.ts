@@ -62,7 +62,7 @@ export class UserProfileComponent implements OnInit {
 	}
 
   viewProfile(){
-    this.router.navigateByUrl(`user/profile`);
+    this.router.navigateByUrl('/users/profile');
   }
 
   private handleLogoutResponse(wasLoggedOut : boolean) {

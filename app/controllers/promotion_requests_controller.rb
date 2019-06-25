@@ -18,6 +18,7 @@ class PromotionRequestsController < ApplicationController
 					:user => user,
 					:promoted_by => current_user
 				)
+
 				render json: promotion_code
 		else
 			render_cannot_perform_operation("Must be a professor to create a promotion to professor request")

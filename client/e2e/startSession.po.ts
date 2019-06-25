@@ -2,21 +2,6 @@ import { browser, by, element, Key} from 'protractor';
 
 export class StartSession{
   navigateTo(){
-    return browser.get('/login');
-  }
-
-  getEmailTextbox() {
-    return element(by.name('Email'));
-  }
-  getPasswordTextbox() {
-    return element(by.name('Password'));
-  }
-
-  getSubmitButton(){
-      return element(by.css('.loginButton'));
-  }
-
-  navigateTo2(){
     return browser.get('/dashboard');
   }
 

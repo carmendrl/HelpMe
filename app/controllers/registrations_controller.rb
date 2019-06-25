@@ -7,9 +7,15 @@ class RegistrationsController < DeviseTokenAuth::RegistrationsController
 		super
 		if params["requestPromotion"] == 'true'
 			user = User.where(:email => params["email"]).first
-			PromotionRequest.create!(
+			request = PromotionRequest.create!(
 				:user => user
 			)
+
+			@recipients = Professor.where(:toBeNotified => true)
+			@recipients.each do |recipient|
+				puts "Sending an email about new account"
+				NotifyProfessorsOfPromotionRequestMailer.with(request: request, recipient: recipient).notify_professors_of_promotion_request.deliver_now
+			end
 		end
 	end
 

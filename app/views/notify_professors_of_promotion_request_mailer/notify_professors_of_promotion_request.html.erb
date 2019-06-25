@@ -1,0 +1,6 @@
+<p>
+<%= @request.user.full_name %> has requested to be a
+professor in the HelpMe application.  If you know
+that <%= @request.user.first_name %> should be granted
+professor access, please click <%= link_to 'here', "#{Rails.configuration.server}/users/confirm-promotion/#{@request.id}" %> to confirm.
+</p>
