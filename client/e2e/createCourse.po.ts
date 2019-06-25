@@ -63,6 +63,14 @@ export class CreateCourse{
   }
 
   getSaveButton(){
-    return element(by.css('.saveButton'))
+    return element(by.css('.saveButton'));
+  }
+
+  getUserProfile(){
+    return element(by.tagName('app-user-profile'));
+  }
+
+  getLogOut(){
+    return element(by.name('logOut'));
   }
 }

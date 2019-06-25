@@ -2,7 +2,7 @@ import { browser, by, element, Key} from 'protractor';
 
 export class StartSession{
   navigateTo(){
-    return browser.get('/dasboard');
+    return browser.get('/dashboard');
   }
 
   getPageTitle(){

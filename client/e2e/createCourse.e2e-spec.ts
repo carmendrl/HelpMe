@@ -12,7 +12,7 @@ describe('create course modal opens', () => {
 
   it('should open modal', () => {
    page.navigateTo();
-  page.getEmailTextbox().sendKeys('professorlogin@test.com');
+  page.getEmailTextbox().sendKeys('p@test.com');
      page.getPasswordTextbox().sendKeys('password');
    page.getSubmitButton().click();
 
@@ -31,8 +31,10 @@ describe('create course modal opens', () => {
   );
 });
 
- it('should successfully create a course',() =>{
-   page.
- }
+//   it('should logOut', () => {
+//     page.getUserProfile();
+//     page.getLogOut().click();
+//   }
+// );
 
 });

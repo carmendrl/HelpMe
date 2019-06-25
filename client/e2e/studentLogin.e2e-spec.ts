@@ -1,19 +1,34 @@
 import { browser } from 'protractor';
-import { StudentDashboardComponent } from './components/student-dashboard.component';
-import { SessionListComponent } from './components/session-list.component';
+import { StudentLogin } from './studentLogin.po';
 
-describe('student dashboard', function () ){
-  let page: StudentDashboard;
+describe('student dashboard', () => {
+  let page: StudentLogin;
 
   beforeEach(() => {
-    page = new StudentDashboard();
+    page = new StudentLogin();
   });
 
   it('should go to StudentDashboard', () => {
     page.navigateTo();
-
+    //page.getSubmitButton().click();
     expect(page.getJoinSess()).toBeTruthy();
-    expect(page.getSessionList()).toBeTruthy();;
+    expect(page.getSessionList()).toBeTruthy();
 
   });
+
+//   it('should logOut', () => {
+//     page.getUserProfile();
+//     page.getLogOut().click();
+//   }
+// );
+
+it('should display right title',() =>{
+  page.navigateTo();
+  page.getPageTitle()
+  .then((title:string) => {
+    expect(title).toEqual('Dashboard - Help Me');
+  }
+);
+
+});
 });
