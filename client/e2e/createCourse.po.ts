@@ -12,7 +12,7 @@ export class CreateCourse{
   }
 
   getForm(){
-      return element(by.css('.loginForm'));
+      return element(by.css('.createCourseForm'));
   }
 
   getSubmitButton(){
@@ -43,7 +43,7 @@ export class CreateCourse{
   }
 
   getTitleTextBox(){
-    return element(by.name('title'));
+    return element(by.name('Title'));
   }
 
   getSubjectTextBox(){
@@ -59,18 +59,22 @@ export class CreateCourse{
   }
 
   getSemester(){
-    return element(by.css)
+    return element(by.css('.june'));
   }
 
   getSaveButton(){
     return element(by.css('.saveButton'));
   }
 
-  getUserProfile(){
+  getProfileMenuComponent(){
     return element(by.tagName('app-user-profile'));
   }
 
-  getLogOut(){
-    return element(by.name('logOut'));
+  getProfileMenu() {
+    return element(by.css('.menu'));
+  }
+
+  getLogoutButton(){
+    return element(by.css('.logout'));
   }
 }

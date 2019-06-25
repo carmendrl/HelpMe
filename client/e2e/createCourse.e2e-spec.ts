@@ -12,10 +12,9 @@ describe('create course modal opens', () => {
 
   it('should open modal', () => {
    page.navigateTo();
-  page.getEmailTextbox().sendKeys('p@test.com');
-     page.getPasswordTextbox().sendKeys('password');
    page.getSubmitButton().click();
-
+   page.getEmailTextbox().sendKeys('p@test.com');
+   page.getPasswordTextbox().sendKeys('password');
     page.getCreateCourseButton().click();
 
     expect(page.getOpenModalElement()).toBeTruthy();
@@ -31,10 +30,11 @@ describe('create course modal opens', () => {
   );
 });
 
-//   it('should logOut', () => {
-//     page.getUserProfile();
-//     page.getLogOut().click();
-//   }
-// );
+  it('should logOut', () => {
+    page.getUserProfile();
+    page.getLogOut().click();
+  }
+);
+
 
 });

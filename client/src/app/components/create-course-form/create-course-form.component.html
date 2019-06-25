@@ -2,7 +2,7 @@
   <form class="needs-validation createCourseForm" novalidate>
       <div class="form-group">
         Title:
-        <input type="text" class="form-control" name="title" [(ngModel)]="this.title" required><br>
+        <input type="text" class="form-control" name="Title" [(ngModel)]="this.title" required><br>
 
         Subject:
         <input type="text" class="form-control" name="subject" [(ngModel)]="this.subject" required><br>
@@ -14,7 +14,7 @@
         <input type="radio" name="semester" value="08" [(ngModel)]="this.semester">Fall<br>
         <input type="radio" name="semester" value="01" [(ngModel)]="this.semester">Spring <br>
         <input type="radio" name="semester" value="05" [(ngModel)]="this.semester">May<br>
-        <input type="radio" name="semester" value="06" [(ngModel)]="this.semester">June<br>
+        <input class="june" type="radio" name="semester" value="06" [(ngModel)]="this.semester">June<br>
         <input type="radio" name="semester" value="07" [(ngModel)]="this.semester">July<br><br>
         Year:
         <input type="text" id="date" class="form-control" name="year" [(ngModel)]="this.todayYear" required>
