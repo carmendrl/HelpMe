@@ -12,9 +12,8 @@ describe('create course modal opens', () => {
 
   it('should open modal', () => {
    page.navigateTo();
-   page.getSubmitButton().click();
-   page.getEmailTextbox().sendKeys('p@test.com');
-   page.getPasswordTextbox().sendKeys('password');
+  page.getEmailTextbox().sendKeys('p@test.com');
+  page.getPasswordTextbox().sendKeys('password');
    page.getSubmitButton().click();
 
     page.getCreateCourseButton().click();
@@ -31,12 +30,40 @@ describe('create course modal opens', () => {
     }
   );
 });
-  it('should logOut', () => {
-    page.getProfileMenuComponent();
-    page.getProfileMenu();
-    page.getLogoutButton().click();
-  }
-);
 
+ it('should successfully create a course',() =>{
+   page.getCreateCourseButton().click();
+   page.getTitleTextBox().sendKeys('Testing Course Form');
+   page.getSubjectTextBox().sendKeys('Test');
+   page.getNumberTextBox().sendKeys('01');
+   page.getSemester().click();
+   page.getYearTextBox().sendKeys('2019');
+   page.getSaveButton().click();
+   let form = page.getForm().getAttribute('class');
+   expect(form).toContain('ng-valid');
+ });
+
+ it('create form should be invalid',() =>{
+ page.navigateTo2();
+ page.getCreateCourseButton().click();
+ page.getTitleTextBox().sendKeys('Testing Course Form');
+ page.getSubjectTextBox().sendKeys('Test');
+ page.getSemester().click();
+ page.getYearTextBox().sendKeys('2019');;
+ page.getSaveButton().click();
+ let form = page.getForm().getAttribute('class');
+ expect(form).toContain('ng-invalid');
+});
+
+it('should open profile menu',() =>{
+  page.navigateTo2();
+  expect(page.getProfileMenuComponent()).toBeTruthy();
+  expect(page.getProfileMenu()).toBeTruthy();
+});
+
+it('should log out', () =>{
+  page.getProfileMenu().click();
+  page.getLogoutButton().click();
+});
 
 });
