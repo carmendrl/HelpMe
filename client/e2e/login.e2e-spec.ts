@@ -33,7 +33,6 @@ it('Login form should be invalid', () => {
    page.getPasswordTextbox().sendKeys('password');
    let form = page.getForm().getAttribute('class');
    expect(form).toContain('ng-valid');
-   page.getSubmitButton().click();
 });
 
 });
