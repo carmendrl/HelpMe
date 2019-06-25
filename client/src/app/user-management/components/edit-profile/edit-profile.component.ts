@@ -34,18 +34,20 @@ export class EditProfileComponent implements OnInit {
 
   constructor(private router : Router, private userService: UserService, private titleService:Title,
      private modalService : NgbModal, private loggedInGuard : LoggedinGuard) {
-    this.userService.CurrentUser$.subscribe(r => this.user = r);
-    this.userService.CurrrentPassword$.subscribe(p => this.currentPassword = p);
+    this.userService.CurrentUser$.subscribe(r =>
+			{
+				this.user = r;
+				this.firstName = this.user.FirstName;
+				this.lastName = this.user.LastName;
+				this.username = this.user.Username;
+				this.email = this.user.EmailAddress;
+				this.password = this.user.Password;
+			}
+		);
     this.failedEdit = false;
     this.wantsNotifications =false;
     this.createAccountErrorMessage = "";
-    this.firstName = this.user.FirstName;
-    this.lastName = this.user.LastName;
-    this.username = this.user.Username;
-    this.email = this.user.EmailAddress;
-    this.password = this.user.Password;
-    this.confirmPassword = "";
-
+  	this.confirmPassword = "";
   }
 
   ngOnInit() {
@@ -73,8 +75,6 @@ export class EditProfileComponent implements OnInit {
 	}
 
   editProfileFromForm(){
-    debugger
-    this.saved = true;
     this.userService.editUserProfile(this.user, this.email,
     this.username, this.firstName, this.lastName,
     this.password).subscribe
@@ -84,17 +84,4 @@ export class EditProfileComponent implements OnInit {
       };
     });
   }
-
-  gravatarImageUrl (user: User) : string {
-      let email : string = user.EmailAddress;
-      let matches = email.match(/(.*)\+.*@hope\.edu$/i);
-      if (matches && matches.length > 1) {
-        email = `${matches[1]}@hope.edu`;
-      }
-      let hashedEmail : string = <string> Md5.hashStr(email);
-      hashedEmail = hashedEmail.toLowerCase();
-
-      return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-  }
-
 }
