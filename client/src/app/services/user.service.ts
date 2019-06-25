@@ -46,7 +46,6 @@ export class PromoteUserResponse {
 @Injectable()
 export class UserService {
   private _currentUser$: Subject<User>;
-	private _currentPassword$: Subject<string>;
   private apiHost : string;
 
   private noUser : User;
@@ -56,10 +55,8 @@ export class UserService {
 
   constructor (private httpClient : HttpClient, @Inject(environment.local_storage_mode) private localStorage : StorageService) {
       this._currentUser$ = new ReplaySubject<User> (1);
-			this._currentPassword$ = new ReplaySubject<string>(1);
 
 			this._currentUser$.subscribe (u => this.loggedInUser = u);
-			this._currentPassword$.subscribe(p => this.loggedInUser.Password = p);
 
       this.apiHost = environment.api_base;
       this.noUser = new User ();
@@ -82,7 +79,6 @@ export class UserService {
 				u.Type = previousUser._type;
 				u.Role = previousUser._role;
 				this._currentUser$.next(u);
-				this._currentPassword$.next(u.Password);
 			}
 			else {
 				console.log("UserService: No saved user information in local storage");
@@ -92,9 +88,7 @@ export class UserService {
   get CurrentUser$() : Observable<User> {
     return this._currentUser$;
   }
-	get CurrrentPassword$() : Observable<string>{
-		return this._currentPassword$;
-	}
+
 	get IsUserLoggedIn() : boolean {
 		return this.loggedInUser != this.noUser;
 	}
@@ -110,7 +104,7 @@ export class UserService {
       //timeout(5000), //possible other way to have login delay messsage possibly displayed.
       //delay(20000), //This is here to test for login delay messages
       tap(r => this.updateLoggedInUserFromResponse(r["data"])),
-      map(r => {debugger
+      map(r => {
 				let user : User = User.createFromJSon(r["data"]);
 				return new ApiResponse<User>(true, user)
 			}),
@@ -132,7 +126,6 @@ export class UserService {
 					console.log("UserService: clearing logged in user");
 					this.localStorage.remove(this.KEY_USER);
 					this._currentUser$.next(this.noUser);
-					this._currentPassword$.next(this.noUser.Password);
 				}
 			)
 		);
@@ -175,7 +168,6 @@ promoteToTA(user: string){
 	let body = {
 		user_id: user
 	};
-	debugger
 	return this.httpClient.post(url, body).pipe(
 		map(r => new ApiResponse<User>(true, User.createFromJSon(r["data"]))),
 		catchError(error => this.handlePromoteTAError(error))
@@ -251,7 +243,6 @@ private handlePromoteTAError(error) : Observable<ApiResponse<User>> {
 			console.log("UserService:  Saving logged in user information to local storage");
 			this.localStorage.set(this.KEY_USER, u);
       this._currentUser$.next(u);
-			this._currentPassword$.next(u.Password);
   }
 
   private handleLoginError (error) : Observable<ApiResponse<User>> {

@@ -28,7 +28,7 @@ const routes : Routes = [
 		'component': ConfirmPromotionRequestComponent
 	},
   {
-    'path': 'user/profile',
+    'path': 'profile',
     'component': EditProfileComponent
   }
 ];
