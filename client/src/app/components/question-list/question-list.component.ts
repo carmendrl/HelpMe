@@ -78,6 +78,8 @@ export class QuestionListComponent implements OnInit {
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
+  @Output() public claimedQEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public openCloseEvent: EventEmitter<any> = new EventEmitter();
 
 
 
@@ -143,12 +145,12 @@ export class QuestionListComponent implements OnInit {
       }
 
       checkIfCollapsed():string{
-        if(this.isCollapsed){
-          return "Open";
-        }
-        else{
-          return "Close"
-        }
+        return this.isCollapsed ? "Open": "Close";
+      }
+
+      checkCollapsed():boolean{
+        this.header === "My Questions" ? this.openCloseEvent.next() : this.isCollapsed = !this.isCollapsed;
+        return this.isCollapsed;
       }
 
       filteredQuestionsLength():number{
@@ -208,8 +210,9 @@ export class QuestionListComponent implements OnInit {
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
         this.setPauseRefresh(true);
-        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r)});
-        this.selectedAction[i]="";
+        this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r);
+          if (this.selectedAction[i] ==="claim") {this.scrollToClaimedQ()};
+          this.selectedAction[i]="";});
         if(this.playSound){this.audioService.playSilentAudio();}
       }
 
@@ -232,6 +235,10 @@ export class QuestionListComponent implements OnInit {
         //allow for refresh to be paused (true)
         //or for it to be unpause (false)
         this.pauseRefresh.next(r);
+      }
+
+      scrollToClaimedQ(){
+        this.claimedQEvent.next();
       }
 
       menuPauseRefresh(event){

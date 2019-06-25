@@ -22,28 +22,31 @@
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
   [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
+  (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
-<section>
-  <app-question-list [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
+<section #claimedQuestions>
+  <app-question-list #claimedQs [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
-  [showNumberOfAskers]="true" [showUnclaimButton]="true"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true"
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
+  (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
+  (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <section>
   <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
   [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
-  (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
+  (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <ng-template #content let-modal let-d="dismiss" let-c="close">

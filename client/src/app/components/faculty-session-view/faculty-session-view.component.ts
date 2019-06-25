@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -40,6 +40,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
   private otherQHeader:string = "Other Questions";
+  //private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
 
@@ -51,6 +52,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
+  @ViewChild('claimedQuestions',{static: false}) private claimedQuestions;
 
 
 
@@ -232,6 +234,22 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       toggleAudio():boolean{
         this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
         return this.playSound;
+      }
+
+      scrollToClaimedQ():boolean{
+        //When a claim action is performed, this method should relatively scroll to that question in teh MyQs lists
+        //so that instructors can easily claim and then answer.
+        //method many not be sufficient if professor has claimed more questions than fit on the screen
+        this.claimedQuestions.nativeElement.scrollIntoView();
+        this.claimedCollapsed = false;
+        return this.claimedCollapsed;
+
+      }
+      changeCollapseState():boolean{
+        //method used to control collapse state of My Questions question-list
+        //(when either toggle button is clicked or a question is claimed)
+        this.claimedCollapsed = !this.claimedCollapsed;
+        return this.claimedCollapsed;
       }
 
     }
