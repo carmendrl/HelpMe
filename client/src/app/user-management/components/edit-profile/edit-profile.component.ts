@@ -75,6 +75,7 @@ export class EditProfileComponent implements OnInit {
 	}
 
   editProfileFromForm(){
+    this.saved = true;
     this.userService.editUserProfile(this.user, this.email,
     this.username, this.firstName, this.lastName,
     this.password).subscribe

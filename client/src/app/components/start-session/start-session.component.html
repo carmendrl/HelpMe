@@ -2,7 +2,7 @@
 <body onload="myFunction">
   <div *ngIf="coursesRetrieved && startCourse.length>0">
   <h2>Start a session</h2>
-  <form #thisForm="ngForm" (ngSubmit)="startSession(); open2(content2)">
+  <form #thisForm="ngForm" (ngSubmit)="startSession(); open2(content2)" class="startSessionForm">
     <div class="row form-group">
 
       <div class="col-12 col-sm-2">
@@ -10,14 +10,14 @@
       </div>
 
       <div class="inline-block col-12 col-sm-8">
-        <select [(ngModel)] = "selectedCourse" class="form-control" name="selectedCourse">
+        <select [(ngModel)] = "selectedCourse" class="form-control selectACourse" name="selectedCourse">
           <option *ngFor="let course of startCourse" [selected]= "course" [ngValue]="course"> {{course.subjectAndNumber}} </option>
         </select>
 
       </div>
       <div>
         <!--button that opens modal-->
-        <a *ngIf="user.Role!='ta'" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        <a *ngIf="user.Role!='ta'" name= "createCourseButton" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
         </div>
     </div>
 
@@ -87,7 +87,7 @@
 
     <div class="row form-group">
       <div class="col">
-        <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary">Start</button>
+        <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary startSessionButton">Start</button>
       </div>
     </div>
 

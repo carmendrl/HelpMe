@@ -12,7 +12,7 @@ export class CreateCourse{
   }
 
   getForm(){
-      return element(by.css('.loginForm'));
+      return element(by.css('.createCourseForm'));
   }
 
   getSubmitButton(){
@@ -27,7 +27,7 @@ export class CreateCourse{
   }
 
   getCreateCourseButton(){
-    return element(by.css('app-start-session .createCourseButton'));
+    return element(by.css('.createCourseButton'));
   }
 
   getOpenModalElement() {
@@ -38,4 +38,43 @@ export class CreateCourse{
     return element(by.css('.createCourseForm'));
   }
 
+  getPageTitle(){
+    return browser.getTitle();
+  }
+
+  getTitleTextBox(){
+    return element(by.name('Title'));
+  }
+
+  getSubjectTextBox(){
+    return element(by.name('subject'));
+  }
+
+  getNumberTextBox(){
+    return element(by.name('number'));
+  }
+
+  getYearTextBox(){
+    return element(by.name('year'));
+  }
+
+  getSemester(){
+    return element(by.css('.june'));
+  }
+
+  getSaveButton(){
+    return element(by.css('.saveButton'));
+  }
+
+  getProfileMenuComponent(){
+    return element(by.tagName('app-user-profile'));
+  }
+
+  getProfileMenu() {
+    return element(by.css('.menu'));
+  }
+
+  getLogoutButton(){
+    return element(by.css('.logout'));
+  }
 }
