@@ -11,6 +11,7 @@ import { Title }     from '@angular/platform-browser';
 import { User } from '../../models/user.model';
 
 import { timer } from 'rxjs/observable/timer';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -86,8 +87,10 @@ export class LoginComponent implements OnInit {
   }
 
 loginTimer(){
-  const source = timer(0,1000);
-  const subscribe = source.subscribe(val => this.time=val);
+	if (environment.production) {
+		const source = timer(0,1000);
+	  const subscribe = source.subscribe(val => this.time = val);
+	}
 }
 
 }

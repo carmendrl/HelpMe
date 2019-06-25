@@ -18,7 +18,7 @@ import { Location } from '@angular/common';
 export class SearchPreviousQuestionsComponent implements OnInit {
 
   closeResult: string;
-  private sessions : ApiResponse<LabSession[]>;
+  private sessions : LabSession[];
   private selectedSession : LabSession = new LabSession();
   private sessionReloaded : boolean = false;
   private sessionQuestions : Question[];
@@ -33,6 +33,12 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private sessionMessage: string[];
   private loadSessionError: boolean;
   @Input() private currentLabSession : string;
+
+  private state: string;
+  private getQuestions : Question[];
+  private questionMessage : string[];
+  private getQuestionsError: boolean;
+  private errorGetQuestions: ApiResponse<Question[]>;
 
   private FaQs: Question[];
   private answeredQs: Question[];
@@ -49,7 +55,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
       this.FaQs = new Array<Question>();
       this.answeredQs= new Array<Question>();
       this.notAnsweredQs = new Array<Question>();
-      this.sessions.Data = new Array<LabSession>();
+      this.sessions = new Array<LabSession>();
     }
 
   ngOnInit() {
@@ -62,9 +68,9 @@ export class SearchPreviousQuestionsComponent implements OnInit {
 
     this.labSessionService.labSessions().subscribe (
       s => {
-        this.sessions.Data = s.Data;
-        if (this.sessions.Data.length > 0) {
-          this.selectedSession = this.sessions.Data[0];
+        this.sessions = s.Data;
+        if (this.sessions.length > 0) {
+          this.selectedSession = this.sessions[0];
           this.handleLoadSessions(s);
         }
         this.sessionReloaded = true;
@@ -72,23 +78,10 @@ export class SearchPreviousQuestionsComponent implements OnInit {
       }
     );
   }
-  private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
-    if(!sessions.Successful){
-      this.stateLabSessions = "errorLoadingSessions";
-      this.errorSessions = sessions;
-      this.loadedSessions = <LabSession[]>sessions.Data;
-      this.sessionMessage = sessions.ErrorMessages;
-      this.loadSessionError = true;
-    }
-    else{
-      this.stateLabSessions = "loaded";
-      this.loadedSessions = <LabSession[]>sessions.Data;
-    }
-  }
 
   private loadSessionQuestions(){
     //debugger
-    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions; this.sortQuestions(this.sessionQuestions);});
+    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions.Data; this.sortQuestions(this.sessionQuestions);this.handleGetQuestionsError(questions)});
   }
 
 
@@ -108,17 +101,6 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     this.modalService.dismissAll();
   }
 
-  private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
-		if (qArray.some(r => !r.Successful)) {
-			this.stateQuestions = "errorCopyingQuesstion";
-			this.errorQuestions = qArray.filter(r => !r.Successful);
-			this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
-		}
-		else {
-			this.stateQuestions = "copied";
-			this.confirmedQuestions =qArray.map(r => <Question> r.Data);
-		}
-	}
 
   submitShouldBeDisabled() : boolean {
     return this.selectedSession === undefined;
@@ -146,6 +128,44 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     }
   }
 
+//error handlers
+private handleGetQuestionsError(questions: ApiResponse<Question[]>){
+  if(!questions.Successful){
+    this.state = "errorGettingQuestions";
+    this.errorGetQuestions = questions;
+    this.getQuestions = <Question[]>questions.Data;
+    this.questionMessage = questions.ErrorMessages;
+    this.getQuestionsError = true;
+  }
+  else{
+    this.state = "loaded";
+    this.getQuestions = <Question[]>questions.Data;
+  }
+}
+private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
+  if (qArray.some(r => !r.Successful)) {
+    this.stateQuestions = "errorCopyingQuestion";
+    this.errorQuestions = qArray.filter(r => !r.Successful);
+    this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
+  }
+  else {
+    this.stateQuestions = "copied";
+    this.confirmedQuestions =qArray.map(r => <Question> r.Data);
+  }
+}
 
+private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
+  if(!sessions.Successful){
+    this.stateLabSessions = "errorLoadingSessions";
+    this.errorSessions = sessions;
+    this.loadedSessions = <LabSession[]>sessions.Data;
+    this.sessionMessage = sessions.ErrorMessages;
+    this.loadSessionError = true;
+  }
+  else{
+    this.stateLabSessions = "loaded";
+    this.loadedSessions = <LabSession[]>sessions.Data;
+  }
+}
 
 }

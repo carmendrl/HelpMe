@@ -37,7 +37,17 @@ export class StudentDashboardComponent implements OnInit {
   private dateMessage : string[];
   private getDateError : boolean;
 
-  constructor(private labSessionService : LabSessionService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
+  private stateLabSessions : string;
+  private getSessions : LabSession[];
+  private getSessionsError : boolean;
+
+  private stateQuestions: string;
+  private errorQuestions : ApiResponse<Question[]>;
+  private getQuestions:Question[];
+  private questionMessage: string[];
+  private getQuestionsError : boolean;
+
+  constructor(private labSessionService : LabSessionService, audioService: AudioService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
     private router : Router) {
     this.sessions = new ApiResponse<LabSession[]>(false);
     this.sessions.Data = new Array<LabSession>();
@@ -45,11 +55,11 @@ export class StudentDashboardComponent implements OnInit {
 
   ngOnInit() {
     this.labSessionService.labSessions().subscribe (
-      sessions => this.sessions = sessions
+      sessions => {this.sessions = sessions; this.handleGetSessions(sessions);}
     );
 
     this.questionService.questionList().subscribe (
-      questions => this.myQuestions = questions
+      questions => {this.myQuestions = questions.Data; this.handleGetQuestionsError(questions);}
     );
     this.invalidId= false;
 
@@ -66,19 +76,6 @@ export class StudentDashboardComponent implements OnInit {
       }
       this.checkIfStarted(sessionId.Data, content);
   })
-}
-private handleJoinSession(sessionId: ApiResponse<string>){
-  if(!sessionId.Successful){
-    this.stateLabSession = "errorJoiningSession";
-    this.errorSession = sessionId;
-    this.joinSession = <string>sessionId.Data;
-    this.sessionMessage = sessionId.ErrorMessages;
-    this.joinSessionError = true;
-  }
-  else{
-    this.stateLabSession = "loaded";
-    this.joinSession = <string>sessionId.Data;
-  }
 }
   checkIfStarted(id: string, content){
     this.currentDate = new Date();
@@ -131,4 +128,46 @@ private handleJoinSession(sessionId: ApiResponse<string>){
     }
   }
 
+//error handlers
+
+private handleJoinSession(sessionId: ApiResponse<string>){
+  if(!sessionId.Successful){
+    this.stateLabSession = "errorJoiningSession";
+    this.errorSession = sessionId;
+    this.joinSession = <string>sessionId.Data;
+    this.sessionMessage = sessionId.ErrorMessages;
+    this.joinSessionError = true;
+  }
+  else{
+    this.stateLabSession = "loaded";
+    this.joinSession = <string>sessionId.Data;
+  }
+}
+private handleGetSessions(sessions: ApiResponse<LabSession[]>){
+  if(!sessions.Successful){
+    this.stateLabSessions = "errorGettingSession";
+    this.errorSessions = sessions;
+    this.getSessions = <LabSession[]>sessions.Data;
+    this.sessionMessage = sessions.ErrorMessages;
+    this.getSessionsError = true;
+  }
+  else{
+    this.stateLabSessions = "loaded";
+    this.getSessions = <LabSession[]>sessions.Data;
+  }
+}
+
+private handleGetQuestionsError(questions: ApiResponse<Question[]>){
+  if(!questions.Successful){
+    this.stateQuestions = "errorGettingQuestions";
+    this.errorQuestions = questions;
+    this.getQuestions = <Question[]>questions.Data;
+    this.questionMessage = questions.ErrorMessages;
+    this.getQuestionsError = true;
+  }
+  else{
+    this.stateQuestions = "loaded";
+    this.getQuestions= <Question[]>questions.Data;
+  }
+}
 }

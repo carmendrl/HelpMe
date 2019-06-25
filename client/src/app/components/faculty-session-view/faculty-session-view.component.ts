@@ -45,12 +45,12 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private playSound: boolean;
 
 
-
-  private state: string;
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
   private sessionMessage: string[];
   private loadSessionError: boolean;
+
+
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
   @ViewChild('claimedQuestions',{static: false}) private claimedQuestions;
 

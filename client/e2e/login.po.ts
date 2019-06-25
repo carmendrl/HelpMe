@@ -15,6 +15,10 @@ export class LoginPage {
     }
 
     getSubmitButton(){
-        return element(by.css('.loginInButton'));
+        return element(by.css('.loginButton'));
+    }
+
+    getPageTitle(){
+      return browser.getTitle();
     }
 }

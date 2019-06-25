@@ -21,20 +21,20 @@ import { ApiResponse } from '../../services/api-response';
 export class AssignModalComponent implements OnInit, OnDestroy {
   @Input() private currentQuestion: Question;
   closeResult: string;
-  private sessionTAs : ApiResponse<User[]>;
+  private sessionTAs : User[];
   private selectedUser : User = new User();
   private sessionReloaded : boolean = false;
   private currentUser : User;
   private state: string;
-  private errorUsers: ApiResponse<User[]>;
-  private loadUsers: User[];
+  private errorUsers: ApiResponse<LabSession>;
+  private loadUsers: LabSession;
   private userMessage : string[];
   private loadUserError: boolean;
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService:
     QuestionService, private userService : UserService, private titleService: Title) {
-      this.sessionTAs = new ApiResponse<User[]>(false);
+      this.sessionTAs = new Array<User>();
     }
 
   ngOnInit() {
@@ -57,29 +57,31 @@ export class AssignModalComponent implements OnInit, OnDestroy {
 
     this.labSessionService.getSession(labSessionId).subscribe (
       s => {
-        this.sessionTAs.Data = s.Data.members.filter(
+      debugger;
+        this.sessionTAs = s.Data.members.filter(
           u => (u.Type == 'professors' || u.Role == 'ta') && u.id != this.currentUser.id
         );
-        if (this.sessionTAs.Data.length > 0) {
-          this.selectedUser = this.sessionTAs.Data[0];
+        debugger;
+        if (this.sessionTAs.length > 0) {
+          this.selectedUser = this.sessionTAs[0];
         }
-        this.handleLoadSessionUsersError(this.sessionTAs);
+        this.handleLoadSessionUsersError(s);
         this.sessionReloaded = true;
       }
     );
   }
 
-  private handleLoadSessionUsersError(users: ApiResponse<User[]>){
+  private handleLoadSessionUsersError(users: ApiResponse<LabSession>){
     if(!users.Successful){
       this.state = "errorLoadingUser";
       this.errorUsers = users;
-      this.loadUsers = <User[]>users.Data;
+      this.loadUsers = <LabSession>users.Data;
       this.userMessage = users.ErrorMessages;
       this.loadUserError = true;
     }
     else{
       this.state = "loaded";
-      this.loadUsers = <User[]>users.Data;
+      this.loadUsers = <LabSession>users.Data;
     }
   }
 
