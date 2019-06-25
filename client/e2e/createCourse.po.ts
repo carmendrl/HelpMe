@@ -27,7 +27,7 @@ export class CreateCourse{
   }
 
   getCreateCourseButton(){
-    return element(by.css('app-start-session .createCourseButton'));
+    return element(by.css('.createCourseButton'));
   }
 
   getOpenModalElement() {
@@ -38,4 +38,31 @@ export class CreateCourse{
     return element(by.css('.createCourseForm'));
   }
 
+  getPageTitle(){
+    return browser.getTitle();
+  }
+
+  getTitleTextBox(){
+    return element(by.name('title'));
+  }
+
+  getSubjectTextBox(){
+    return element(by.name('subject'));
+  }
+
+  getNumberTextBox(){
+    return element(by.name('number'));
+  }
+
+  getYearTextBox(){
+    return element(by.name('year'));
+  }
+
+  getSemester(){
+    return element(by.css)
+  }
+
+  getSaveButton(){
+    return element(by.css('.saveButton'))
+  }
 }
