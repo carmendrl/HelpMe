@@ -18,12 +18,16 @@
 
     <div ngbDropdownMenu>
       <button class="dropdown-item" (click)="viewProfile()">Edit Profile</button>
-      <button  *ngIf="user.Type==='professors'" class="dropdown-item" (click)="switchTypes(user)">Switch to Student View</button>
-      <button  *ngIf="user.ActingAsStudent === true" class="dropdown-item" (click)="switchTypes(user)">Switch to Professor View</button>
+      <button  *ngIf="user.Type==='professors'" class="dropdown-item switchToStudent" (click)="switchTypes(user)">Switch to Student View</button>
+      <button  *ngIf="user.ActingAsStudent === true" class="dropdown-item switchToProf" (click)="switchTypes(user)">Switch to Professor View</button>
       <button  *ngIf="user.Role==='ta'" class="dropdown-item" (click)="switchRoles(user)">Switch to Student View</button>
       <button  *ngIf="user.Role==='none' && user.Type==='students'" class="dropdown-item" (click)="switchRoles(user)">Switch to TA View</button>
       <button *ngIf="user.Type==='professors'" class="dropdown-item" (click)="open(content)">Create a TA account</button>
+<<<<<<< HEAD
+      <button name="logOut" class="dropdown-item" (click)="logout()">Log out</button>
+=======
       <button class="dropdown-item logout" (click)="logout()">Log out</button>
+>>>>>>> af175184bf19d22367ffed9448dd1b684a7abac8
     </div>
   </div>
 

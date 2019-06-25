@@ -1,16 +1,8 @@
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container bootstrap snippets">
 <div class="row">
   <div class="col-xs-12 col-sm-9">
     <form class="form-horizontal" #thisForm="ngForm">
-      <button type="back" class="btn btn-primary" [routerLink]="['/dashboard']">Back</button>
-      <h2 style="text-align:center"> Edit Profile </h2>
-        <div class="panel panel-default">
-          <div class="panel-body text-center">
-           <img class="rounded-circle" [src]="gravatarImageUrl(user)"/>
-          </div>
-        </div>
+      <h2> Edit Your Profile </h2>
+
       <div class="panel panel-default">
         <div class="panel-heading">
         <h4 class="panel-title">User info</h4>
@@ -78,7 +70,7 @@
             <div class="col-sm-10 col-sm-offset-2">
               <div class="checkbox">
                 <input type="checkbox" [(ngModel)]="wantsNotifications" name="wantsNotifications" id="wantsNotifications">
-                <label for="checkbox_1">I want to be notified when there is a new professor account request</label>
+                <label for="wantsNotifications">I want to be notified when there is a new professor account request</label>
               </div>
             </div>
           </div>
@@ -92,7 +84,7 @@
     </form>
   </div>
 </div>
-</div>
+
 <ng-template #success let-modal>
 	<div class="modal-header">
 		<h4 class="modal-title" id="createprofessor-header">Profile has been updated</h4>
