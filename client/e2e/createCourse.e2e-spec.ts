@@ -16,7 +16,7 @@ describe('create course modal opens', () => {
    page.getEmailTextbox().sendKeys('p@test.com');
    page.getPasswordTextbox().sendKeys('password');
    page.getSubmitButton().click();
-   
+
     page.getCreateCourseButton().click();
 
     expect(page.getOpenModalElement()).toBeTruthy();
@@ -31,7 +31,6 @@ describe('create course modal opens', () => {
     }
   );
 });
-
   it('should logOut', () => {
     page.getProfileMenuComponent();
     page.getProfileMenu();
