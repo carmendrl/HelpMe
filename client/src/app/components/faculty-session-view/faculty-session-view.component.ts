@@ -40,7 +40,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
   private otherQHeader:string = "Other Questions";
-  //private claimedCollapsed:boolean = true;
+  private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
 
