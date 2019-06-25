@@ -21,14 +21,30 @@ export class JoinSession{
   navigateTo2(){
     return browser.get('/dashboard');
   }
+  getStudentDashboard(){
+    return element(by.tagName('app-student-dashboard'));
+  }
   getTextBox(){
     return element(by.name('token'));
   }
   getJoinButton(){
     return element(by.name('join'));
   }
-
+  getJoinForm(){
+    return element(by.name('joinSessForm'));
+  }
   getPageTitle(){
     return browser.getTitle();
+  }
+  getProfileMenuComponent(){
+    return element(by.tagName('app-user-profile'));
+  }
+
+  getProfileMenu() {
+    return element(by.css('.menu'));
+  }
+
+  getLogoutButton(){
+    return element(by.css('.logout'));
   }
 }

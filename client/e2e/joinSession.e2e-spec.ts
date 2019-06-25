@@ -13,18 +13,31 @@ describe('join a session', () => {
     //login
     page.navigateTo();
     page.getSubmitButton().click();
-    page.getEmailTextbox().sendKeys('p@test.com');
+    page.getEmailTextbox().sendKeys('s@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
 
     //join session
+    page.getStudentDashboard();
+    page.getJoinForm();
     page.getTextBox().sendKeys('8bd201');
     page.getJoinButton().click();
-    page.getPageTitle().
-    then((title:string) => {
-      expect(title).toEqual('Session View - HelpMe');
-    });
+    browser.sleep(1000);
+    page.getPageTitle()
+    .then((title:string) => {
+      expect(title).toEqual('Session View - Help Me');
+    }
   });
 
+  it('should open profile menu',() =>{
+    page.navigateTo2();
+    expect(page.getProfileMenuComponent()).toBeTruthy();
+    expect(page.getProfileMenu()).toBeTruthy();
+  });
+
+  it('should log out', () =>{
+    page.getProfileMenu().click();
+    page.getLogoutButton().click();
+  });
   // it('should say session has not started yet')
 })

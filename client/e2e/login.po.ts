@@ -1,7 +1,7 @@
 import { browser, by, element } from 'protractor';
 export class LoginPage {
     navigateTo(){
-        return browser.get('/dashboard');
+        return browser.get('/login');
     }
     getEmailTextbox() {
       return element(by.name('Email'));
