@@ -40,12 +40,12 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
+        <tr name="questions" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>
           <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
-          <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" [ngModel]="question.text"> </quill-editor></td>
+          <td><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor></td>
           <td *ngIf="showAskedBy">{{question.asker.FullName}}</td>
           <td *ngIf="showClaimedBy">{{question.claimedBy.FullName}}</td>
           <td *ngIf="showTags">
@@ -69,7 +69,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" class="btn btn-primary actionSpace">Add FAQ</button>
               <button *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" >Remove FAQ</button>
               <button  *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
-              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace">Me Too!</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
               <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
             </div>
 

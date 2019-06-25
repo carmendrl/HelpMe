@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 //import { StartSessionComponent } from '././components/start-session.component';
 //import { CreateCourseFormComponent } from '././components/create-course-component.component'
 
-describe('create course modal opens', () => {
+xdescribe('create course modal opens', () => {
   let page: CreateCourse;
 
   beforeEach(() => {
