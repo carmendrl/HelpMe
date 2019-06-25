@@ -43,6 +43,11 @@ export class StartSessionComponent implements OnInit {
   private sessionMessage: string[];
   private createSessionError: boolean;
 
+  private errorCourses: ApiResponse<Course[]>;
+  private getCourses : Course[];
+  private courseMessage : string[];
+  private getCoursesError : boolean;
+
 
 
   constructor( @Inject(DOCUMENT) public document: Document,
@@ -53,11 +58,23 @@ export class StartSessionComponent implements OnInit {
   ngOnInit() {
     this.startBeforeEnd =true;
     this.courseService.coursesList().subscribe(
-      courses => {this.coursesRetrieved=true; this.startCourse = courses; if (courses.length> 0){this.selectedCourse = this.startCourse[0]}});
-      this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c});
+      courses => {this.coursesRetrieved=true; this.startCourse = courses.Data; if (courses.Data.length> 0){this.selectedCourse = this.startCourse[0];this.handleGetCoursesError(courses)}});
+      this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c;});
     }
 
-
+    private handleGetCoursesError(courses: ApiResponse<Course[]>){
+      if(!courses.Successful){
+        this.state = "errorGettingCourses";
+        this.errorCourses = courses;
+        this.getCourses = <Course[]>courses.Data;
+        this.courseMessage = courses.ErrorMessages;
+        this.getCoursesError = true;
+      }
+      else{
+        this.state = "loaded";
+        this.getCourses = <Course[]>courses.Data;
+      }
+    }
 
   startSession(){
     this.createStartEnd();

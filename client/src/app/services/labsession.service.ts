@@ -37,24 +37,13 @@ export class LabSessionService {
     return this.httpClient.get(url).pipe(
       map(r => {
         lArray  =  this.createLabsessionsArray(r["data"], r["included"]);
-        let response: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(true, lArray)
+        let response: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(true, lArray);
         return response;
       }),
       catchError(r => this.handleLabsessionsError(r, lArray))
     );
   }
 
-  private handleLabsessionsError(error:any, lArray: LabSession[]): Observable<ApiResponse<LabSession[]>>{
-    let apiResponse: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(false);
-    apiResponse.Data = lArray;
-    if(error instanceof HttpErrorResponse){
-      apiResponse.addErrorsFromHttpError(error);
-    }
-    else{
-      apiResponse.addError("An unknown error occured while fetching labsessions");
-    }
-    return of(apiResponse);
-  }
 
 
 
@@ -145,18 +134,6 @@ export class LabSessionService {
 
   }
 
-  private handleLabsessionError(error: any, lab: LabSession): Observable<ApiResponse<LabSession>>{
-    let apiResponse: ApiResponse<LabSession> = new ApiResponse<LabSession>(false);
-    apiResponse.Data = lab;
-    if(error instanceof HttpErrorResponse){
-      apiResponse.addErrorsFromHttpError(error);
-    }
-    else{
-      apiResponse.addError("An unknown error occurred");
-    }
-    return of(apiResponse);
-  }
-
   createNewLabSessionFromJson(r: Object, includedResponses:any[]): LabSession{
 	  var course: Object = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r["attributes"]["course_id"];
@@ -193,14 +170,19 @@ export class LabSessionService {
 }
 
 //allows a user to join a session with a token and returns a session id
-  joinASession(token: String): Observable<string>{
+  joinASession(token: String): Observable<ApiResponse<string>>{
     let url: string = `${this.apiHost}/lab_sessions/join/${token}`;
+    var id: string;
     let body = {
       token: token
     };
     return this.httpClient.post(url, body).pipe(
-      map(r => this.extractSessionId(r["data"])),
-      catchError(this.handleError<string>(`joining a lab session`))
+      map(r => {
+        id = this.extractSessionId(r["data"]);
+        let response: ApiResponse<string> = new ApiResponse<string>(true, id);
+        return response;
+      }),
+      catchError(r => this.handleStringLabSessionError(r, id))
     );
   }
 
@@ -209,21 +191,30 @@ export class LabSessionService {
     return id;
   }
 
-  getSession(id: string): Observable<LabSession>{
+  getSession(id: string): Observable<ApiResponse<LabSession>>{
     let url = `${this.apiHost}/lab_sessions/${id}`;
 		let response;
-
+    let session: LabSession;
     return this.httpClient.get<LabSession>(url).pipe(
-			map(r => this.createNewLabSessionFromJson(r["data"], r["included"])),
-      catchError(this.handleError<LabSession>(`getSession id=${id}`))
+			map(r => {
+        session = this.createNewLabSessionFromJson(r["data"], r["included"]);
+        let response: ApiResponse<LabSession> = new ApiResponse<LabSession>(true, session);
+        return response;
+      }),
+      catchError(r => this.handleLabsessionError(r,session))
     );
   }
 
-  getStartDate(token: string): Observable<Date>{
+  getStartDate(token: string): Observable<ApiResponse<Date>>{
     let url : string =`${this.apiHost}/lab_sessions`;
+    var date: Date;
     return this.httpClient.get(url).pipe(
-      map(r => this.extractStartDate(r["data"], token)),
-      catchError(this.handleError<Date>(`labSessions`))
+      map(r => {
+        date = this.extractStartDate(r["data"], token);
+        let response: ApiResponse<Date> = new ApiResponse<Date>(true, date);
+        return response;
+      }),
+      catchError(r => this.handleDateLabSessionError(r, date))
     );
   }
 
@@ -235,25 +226,67 @@ export class LabSessionService {
     return newDate;
   }
 
-  updateEndDate(id: string, date: Date): Observable<LabSession>{
+  updateEndDate(id: string, date: Date): Observable<ApiResponse<LabSession>>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};
+    var session: LabSession;
     return this.httpClient.put<LabSession>(url, body).pipe(
-      map(r => {LabSession.createFromJSon(r); return r;}),
-      catchError(this.handleError<LabSession>(`change endDate`))
+      map(r => {
+        session = LabSession.createFromJSon(r);
+        let response : ApiResponse<LabSession> = new ApiResponse<LabSession>(true, session);
+        return response;
+      }),
+      catchError(r => this.handleLabsessionError(r,session))
     );
   }
 
-//handles errors
-  private handleError<T> (operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+  //error handlers
+  private handleLabsessionsError(error:any, lArray: LabSession[]): Observable<ApiResponse<LabSession[]>>{
+    let apiResponse: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(false);
+    apiResponse.Data = lArray;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occured while fetching labsessions");
+    }
+    return of(apiResponse);
   }
+
+  private handleLabsessionError(error: any, lab: LabSession): Observable<ApiResponse<LabSession>>{
+    let apiResponse: ApiResponse<LabSession> = new ApiResponse<LabSession>(false);
+    apiResponse.Data = lab;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occurred");
+    }
+    return of(apiResponse);
+  }
+
+  private handleStringLabSessionError(error: any, id: string): Observable<ApiResponse<string>>{
+    let apiResponse: ApiResponse<string> = new ApiResponse<string>(false);
+    apiResponse.Data = id;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occurred");
+    }
+    return of(apiResponse);
+  }
+
+  private handleDateLabSessionError(error: any, date: Date){
+    let apiResponse: ApiResponse<Date> = new ApiResponse<Date>(false);
+    apiResponse.Data = date;
+    if(error instanceof HttpErrorResponse){
+      apiResponse.addErrorsFromHttpError(error);
+    }
+    else{
+      apiResponse.addError("An unknown error occured");
+    }
+    return of(apiResponse);
+  }
+
 }

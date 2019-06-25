@@ -11,6 +11,7 @@ import { LabSessionService } from './services/labsession.service';
 import { AudioService } from './services/audio.service';
 import { LabSession } from './models/lab_session.model';
 import * as moment from 'moment';
+import { ApiResponse } from './services/api-response';
 
 
 export abstract class SessionView  {
@@ -25,11 +26,17 @@ export abstract class SessionView  {
   protected pauseRefresh: boolean;
   protected isRefreshing: boolean;
 
+  protected state: string;
+  private getQuestions : Question[];
+  private questionMessage : string[];
+  private getQuestionsError: boolean;
+  private errorGetQuestions: ApiResponse<Question[]>;
+
   constructor(protected userService : UserService, protected questionService: QuestionService,
     private route: ActivatedRoute, privatelocation: Location, protected notifierService: NotifierService,
     protected sessionService:LabSessionService, protected audioService: AudioService) {
     this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get('id')).subscribe(
-      questions => {this.questions = questions; this.sortQuestions(this.questions);});
+      questions => {this.questions = questions.Data; this.sortQuestions(questions.Data);this.handleGetQuestionsError(questions)});
       this.userService.CurrentUser$.subscribe(
         u => this.currentUser = u
       );
@@ -59,12 +66,13 @@ else{
       if(!(this.pauseRefresh)){
       this.questionSubscription = this.questionService.getSessionQuestions(this.route.snapshot.paramMap.get(
         'id')).subscribe(data => {
-          this.checkNotification(data, r);
-          this.data = data; this.sortQuestions(this.data);
+          this.checkNotification(data.Data, r);
+          this.data = data.Data; this.sortQuestions(this.data);
           if(!(this.pauseRefresh)){
             this.subscribeToData();
             this.time();
           }
+          this.handleGetQuestionsError(data);
         });
       }
       this.isRefreshing =false;
@@ -95,4 +103,18 @@ else{
         this.timeFromRefresh = moment().format('LTS');
       }
 
+
+      private handleGetQuestionsError(questions: ApiResponse<Question[]>){
+        if(!questions.Successful){
+          this.state = "errorGettingQuestions";
+          this.errorGetQuestions = questions;
+          this.getQuestions = <Question[]>questions.Data;
+          this.questionMessage = questions.ErrorMessages;
+          this.getQuestionsError = true;
+        }
+        else{
+          this.state = "loaded";
+          this.getQuestions = <Question[]>questions.Data;
+        }
+      }
 }

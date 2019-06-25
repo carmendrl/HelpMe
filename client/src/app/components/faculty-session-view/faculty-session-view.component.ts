@@ -15,6 +15,8 @@ import { QuestionListComponent } from '../question-list/question-list.component'
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
+import { ApiResponse } from '../../services/api-response';
+
 
 @Component({
   selector: 'app-faculty-session-view',
@@ -41,7 +43,15 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private copying: number;
   private playSound: boolean;
 
+
+  private errorSession: ApiResponse<LabSession>;
+  private loadedSession: LabSession;
+  private sessionMessage: string[];
+  private loadSessionError: boolean;
+
+
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
+
 
 
   constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
@@ -172,9 +182,23 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       getSessionCodeAndDescription(){
         this.sessionService.getSession(this.sessionId).subscribe(session =>
-          {this.token = session.token,
-            this.subjectAndNumber = session.course.subjectAndNumber,
-            this.description = session.description});
+          {this.token = session.Data.token,
+            this.subjectAndNumber = session.Data.course.subjectAndNumber,
+            this.description = session.Data.description, this.getSessionError(session)});
+      }
+
+      private getSessionError(session: ApiResponse<LabSession>){
+        if(!session.Successful){
+          this.state = "errorLoadingSession";
+          this.errorSession = session;
+          this.loadedSession = <LabSession>session.Data;
+          this.sessionMessage = session.ErrorMessages;
+          this.loadSessionError = true;
+        }
+        else{
+          this.state = "loaded";
+          this.loadedSession = <LabSession>session.Data;
+        }
       }
 
       open(content) {

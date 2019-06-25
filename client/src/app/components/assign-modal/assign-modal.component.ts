@@ -9,6 +9,7 @@ import { Question } from '../../models/question.model';
 import { User } from '../../models/user.model';
 import { LabSession } from '../../models/lab_session.model';
 import { Title }     from '@angular/platform-browser';
+import { ApiResponse } from '../../services/api-response';
 
 
 
@@ -20,14 +21,21 @@ import { Title }     from '@angular/platform-browser';
 export class AssignModalComponent implements OnInit, OnDestroy {
   @Input() private currentQuestion: Question;
   closeResult: string;
-  private sessionTAs : User[] = [];
+  private sessionTAs : User[];
   private selectedUser : User = new User();
   private sessionReloaded : boolean = false;
   private currentUser : User;
+  private state: string;
+  private errorUsers: ApiResponse<LabSession>;
+  private loadUsers: LabSession;
+  private userMessage : string[];
+  private loadUserError: boolean;
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService:
-    QuestionService, private userService : UserService, private titleService: Title) {}
+    QuestionService, private userService : UserService, private titleService: Title) {
+      this.sessionTAs = new Array<User>();
+    }
 
   ngOnInit() {
     this.userService.CurrentUser$.subscribe (
@@ -49,15 +57,32 @@ export class AssignModalComponent implements OnInit, OnDestroy {
 
     this.labSessionService.getSession(labSessionId).subscribe (
       s => {
-        this.sessionTAs = s.members.filter(
+      debugger;
+        this.sessionTAs = s.Data.members.filter(
           u => (u.Type == 'professors' || u.Role == 'ta') && u.id != this.currentUser.id
         );
+        debugger;
         if (this.sessionTAs.length > 0) {
           this.selectedUser = this.sessionTAs[0];
         }
+        this.handleLoadSessionUsersError(s);
         this.sessionReloaded = true;
       }
     );
+  }
+
+  private handleLoadSessionUsersError(users: ApiResponse<LabSession>){
+    if(!users.Successful){
+      this.state = "errorLoadingUser";
+      this.errorUsers = users;
+      this.loadUsers = <LabSession>users.Data;
+      this.userMessage = users.ErrorMessages;
+      this.loadUserError = true;
+    }
+    else{
+      this.state = "loaded";
+      this.loadUsers = <LabSession>users.Data;
+    }
   }
 
   assignSelectedUser(){

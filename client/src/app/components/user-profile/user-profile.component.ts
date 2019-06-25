@@ -26,7 +26,7 @@ export class UserProfileComponent implements OnInit {
 
   logout () : void {
     this.userService.logout().subscribe (
-      success => this.handleLogoutResponse(success)
+      success => this.handleLogoutResponse(success.Data)
     );
   }
 
