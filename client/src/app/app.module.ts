@@ -24,6 +24,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FacultyDashboardComponent } from './components/faculty-dashboard/faculty-dashboard.component';
 import { StartSessionComponent } from './components/start-session/start-session.component';
 import { CourseService } from './services/course.service';
+import { RoutingHelperService } from './services/routing-helper.service';
+
 import { CreateCourseFormComponent } from './components/create-course-form/create-course-form.component';
 import { SessionViewComponent } from './components/session-view/session-view.component';
 import { StudentSessionViewComponent } from './components/student-session-view/student-session-view.component';
@@ -123,6 +125,7 @@ const customNotifierOptions: NotifierOptions = {
     QuestionService,
     CourseService,
     NgbActiveModal,
+		RoutingHelperService,
     Title,
     {
       provide: HTTP_INTERCEPTORS, useClass: AddAuthorizationInterceptorService, multi: true

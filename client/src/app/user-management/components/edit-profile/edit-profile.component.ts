@@ -6,9 +6,9 @@ import { UserService } from '../../../services/user.service';
 import { Md5 } from 'ts-md5/dist/md5';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { ApiResponse } from '../../../services/api-response';
-import * as HttpStatus from 'http-status-codes';
-import { LoggedinGuard } from '../../../auth/loggedin.guard';
+import { RoutingHelperService } from '../../../services/routing-helper.service';
 
+import * as HttpStatus from 'http-status-codes';
 
 @Component({
   selector: 'app-edit-profile',
@@ -33,7 +33,7 @@ export class EditProfileComponent implements OnInit {
 	private successModalContent : ElementRef;
 
   constructor(private router : Router, private userService: UserService, private titleService:Title,
-     private modalService : NgbModal, private loggedInGuard : LoggedinGuard) {
+     private modalService : NgbModal, private routingHelper : RoutingHelperService) {
     this.userService.CurrentUser$.subscribe(r =>
 			{
 				this.user = r;
@@ -85,4 +85,13 @@ export class EditProfileComponent implements OnInit {
       };
     });
   }
+
+	onCancelClicked () : void {
+		if (this.routingHelper.PreviousURL) {
+			this.router.navigateByUrl(this.routingHelper.PreviousURL);
+		}
+		else {
+			this.router.navigateByUrl('/');
+		}
+	}
 }

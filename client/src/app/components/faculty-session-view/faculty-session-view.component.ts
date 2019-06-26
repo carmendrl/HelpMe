@@ -43,6 +43,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
+  private ended: boolean;
 
 
   private errorSession: ApiResponse<LabSession>;
@@ -77,10 +78,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
+         this.checkIfEnded();
       }
 
       checkNotification(datas : Question[], r:any){
-        debugger
         if(r != undefined && r._data != undefined && r._data.question != undefined){
           //r.data.question is defined if and only if the claimButton was selected
           //in the "claim case" An ApiResponse<Object> is returned,
@@ -184,6 +185,21 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         this.currentTime = moment().utc().toDate();
         this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
       }
+
+      checkIfEnded(){
+        this.currentDate = new Date();
+        this.sessionService.getSession(this.sessionId).subscribe(
+          r => {
+            if(new Date(r.Data.endDate.toString()) <= this.currentDate){
+              this.ended = true;
+            }
+            else{
+              this.ended = false;
+            }
+            this.getSessionError(r);
+          });
+
+        }
 
       getSessionCodeAndDescription(){
         this.sessionService.getSession(this.sessionId).subscribe(session =>

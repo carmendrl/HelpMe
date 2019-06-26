@@ -5,6 +5,8 @@ import * as HttpStatus from 'http-status-codes';
 
 import { UserService } from '../../services/user.service';
 import { ApiResponse } from '../../services/api-response';
+import { RoutingHelperService } from '../../services/routing-helper.service';
+
 import { LoggedinGuard } from '../../auth/loggedin.guard';
 import { Title }     from '@angular/platform-browser';
 
@@ -31,7 +33,7 @@ export class LoginComponent implements OnInit {
   private time: number = 0;
 
 
-  constructor(public titleService: Title, public userService : UserService, public router : Router, private loggedInGuard : LoggedinGuard) {
+  constructor(public titleService: Title, public userService : UserService, public router : Router, private loggedInGuard : LoggedinGuard, private routingHelper: RoutingHelperService) {
     this.failedLogin = false;
 
     this.currentUser = new User();
@@ -57,10 +59,10 @@ export class LoginComponent implements OnInit {
 					this.router.navigateByUrl(this.loggedInGuard.urlAfterLogin);
 				}
 				else if (response.Data.Type == 'professors') {
-					this.router.navigateByUrl("/confirm-promotions");
+					this.routingHelper.goToConfirmPromotionRequests();
 				}
 				else {
-					this.router.navigateByUrl("/dashboard");
+					this.routingHelper.goToDashboard();
 				}
 	    }
 		}
@@ -86,11 +88,11 @@ export class LoginComponent implements OnInit {
     )
   }
 
-loginTimer(){
-	if (environment.production) {
-		const source = timer(0,1000);
-	  const subscribe = source.subscribe(val => this.time = val);
+	loginTimer(){
+		if (environment.production) {
+			const source = timer(0,1000);
+		  const subscribe = source.subscribe(val => this.time = val);
+		}
 	}
-}
 
 }
