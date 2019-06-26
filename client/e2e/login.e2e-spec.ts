@@ -1,5 +1,5 @@
 import { LoginPage } from './login.po';
-describe('Login tests', () => {
+xdescribe('Login tests', () => {
     let page: LoginPage;
 
     beforeEach(() => {
@@ -15,7 +15,7 @@ describe('Login tests', () => {
     });
 
     it('Login form should be valid student', () => {
-     page.getEmailTextbox().sendKeys('studentlogin@test.com');
+     page.getEmailTextbox().sendKeys('s@test.com');
      page.getPasswordTextbox().sendKeys('password');
      let form = page.getForm().getAttribute('class');
      expect(form).toContain('ng-valid');
@@ -29,7 +29,7 @@ it('Login form should be invalid', () => {
       expect(form).toContain('ng-invalid');
   });
   it('Login form should be valid professor', () => {
-   page.getEmailTextbox().sendKeys('professorlogin@test.com');
+   page.getEmailTextbox().sendKeys('p@test.com');
    page.getPasswordTextbox().sendKeys('password');
    let form = page.getForm().getAttribute('class');
    expect(form).toContain('ng-valid');

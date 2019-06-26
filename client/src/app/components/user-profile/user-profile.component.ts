@@ -40,6 +40,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   switchRoles(user: User){
+    user.ActingAsStudent = true;
     if(user.Role==="ta"){
       user.Role="none"
     }
