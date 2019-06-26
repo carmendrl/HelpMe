@@ -73,7 +73,7 @@ export class ProfQuestionFunctionsPage {
 return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).count();
 }
 
-    getClaimedQuestion(i:number){
+    getMyQuestion(i:number){
       return this.getMyQuestionComponent().all(by.id('questionRow')).get(i);
     }
 
