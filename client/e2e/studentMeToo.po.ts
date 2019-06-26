@@ -11,38 +11,38 @@ export class StudentMeToo{
     return element(by.name('Password'));
   }
 
-  getForm(){
-      return element(by.css('.createCourseForm'));
-  }
-
   getSubmitButton(){
       return element(by.css('.loginButton'));
   }
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
-  getSession(){
-    return element(by.css('sessionList'));
-  }
   getViewButton(){
-    return element(by.name('view'));
+    return this.getSessionList().element(by.name('view'));
   }
-  getAllQuestionsList(){
+  getOtherQuestionsList(){
     return element(by.name('otherQs'));
   }
-  getMeTooButton(){
+  getOtherOpen(){
+    return this.getOtherQuestionsList().element(by.name('open'));
+  }
+  getQuestion(i){
+    return this.getOtherQuestionsList().all(by.id('questionRow')).get(i)
+  }
+  getMeTooButton(i){
     return element(by.name('meToo'));
   }
   getMyQuestionsList(){
+    this.navigateTo();
+    this.getViewButton().click();
     return element(by.name('myQs'));
   }
-  getQuestion(){
-    return element(by.name('questions')).all(by.model('questionText'));
+  getMyQslength(){
+    return this.getMyQuestionsList().all(by.id('questionRow')).count();
   }
-  getStudentSessionView(){
-    return element(by.tagName('app-student-session-view'));
+  getOtherQslength(){
+    return this.getOtherQuestionsList().all(by.id('questionRow')).count();
   }
-
   getProfileMenuComponent(){
     return element(by.tagName('app-user-profile'));
   }
@@ -53,17 +53,5 @@ export class StudentMeToo{
 
   getLogoutButton(){
     return element(by.css('.logout'));
-  }
-  getTable(){
-    return element(by.css('table'));
-  }
-  getButtons(){
-    return element(by.name('buttons'));
-  }
-  getOpenButton(){
-    return element(by.name('open'));
-  }
-  getQuestionListHeader(){
-    return element(by.name('questionListHeader'));
   }
 }

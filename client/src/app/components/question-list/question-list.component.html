@@ -59,7 +59,7 @@ are input into this model from the student dashboard, student view, and faculty 
           then these class d-*_block may have to changed accordingly-->
           <td name="buttons" *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
-              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
+              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace" name="answer">Add Answer</button>
               <button  *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
               <button  *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
               <button  *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>

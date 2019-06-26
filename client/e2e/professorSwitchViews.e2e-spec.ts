@@ -1,7 +1,7 @@
 import { ProfessorSwitchViews } from './professorSwitchViews.po';
 import { browser, Key } from 'protractor';
 
-describe('Switch Views tests for Professor', () => {
+xdescribe('Switch Views tests for Professor', () => {
   let page: ProfessorSwitchViews;
 
   beforeEach(() => {
