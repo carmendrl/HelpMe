@@ -63,10 +63,10 @@ are input into this model from the student dashboard, student view, and faculty 
               <button  *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
               <button  *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
               <button  *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>
-              <button id="claimButton"  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
-              <button id="unclaimButton" *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>
+              <button id="claimButton"  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace" name="claim">Claim</button>
+              <button id="unclaimButton" *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace" name="unclaim">Unclaim</button>
               <button id="assignButton" *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace">Assign</button>
-              <button id="addFaqButton" *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" class="btn btn-primary actionSpace">Add FAQ</button>
+              <button id="addFaqButton" *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" name="addFaq" class="btn btn-primary actionSpace">Add FAQ</button>
               <button id="removeFaqButton" *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" >Remove FAQ</button>
               <button id="deleteButton" *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace">Delete</button>
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
