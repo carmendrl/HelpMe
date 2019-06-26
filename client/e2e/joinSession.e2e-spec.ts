@@ -13,20 +13,19 @@ describe('join a session', () => {
     //login
     page.navigateTo();
     page.getSubmitButton().click();
-    page.getEmailTextbox().sendKeys('s@test.com');
+    page.getEmailTextbox().sendKeys('studentlogin@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
 
     //join session
     page.getStudentDashboard();
     page.getJoinForm();
-    page.getTextBox().sendKeys('8bd201');
+    page.getTextBox().sendKeys('2fdccf');
     page.getJoinButton().click();
-    browser.sleep(1000);
     page.getPageTitle()
     .then((title:string) => {
       expect(title).toEqual('Session View - Help Me');
-    }
+    });
   });
 
   it('should open profile menu',() =>{

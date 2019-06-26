@@ -10,6 +10,7 @@ import { Title }     from '@angular/platform-browser';
 import { User } from '../../models/user.model';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import * as moment from 'moment';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -66,7 +67,9 @@ export class EditModalComponent implements OnInit, OnDestroy {
   }
 
   save(){
-    this.sub = timer(3000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+    if(environment.production){
+      this.sub = timer(3000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+    }
   }
 
   time(){

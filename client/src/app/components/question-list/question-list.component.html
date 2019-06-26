@@ -9,7 +9,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <div class="largeScreen">
   <h2 [ngStyle]="headerStyles()" class="inlineHeader">{{header}}
 		<div *ngIf="isCollapsible" class="collapseContainer">
-    <button class="btn btn-primary inlineButton" (click)="checkCollapsed()"
+    <button id= "collapseButton" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
@@ -60,8 +60,8 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
               <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
-              <button  *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
-              <button  *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
+              <button id="editButton" *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
+              <button id="finishButton" *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
               <button  *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>
               <button id="claimButton"  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
               <button id="unclaimButton" *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>

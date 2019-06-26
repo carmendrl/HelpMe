@@ -40,4 +40,10 @@ export class ProfessorSwitchViews{
   getBackButton(){
     return element(by.css('.back'));
   }
+  getCurrentUrl(){
+    return browser.getCurrentUrl();
+  }
+  getLogoutButton(){
+    return element(by.css('.logout'));
+  }
 }
