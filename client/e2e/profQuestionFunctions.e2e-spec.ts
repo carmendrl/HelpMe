@@ -5,6 +5,7 @@ describe('Professor Question Functions', () => {
   beforeEach(() => {
     page = new ProfQuestionFunctionsPage();
   });
+  //must login and log out every time.
 
 
   it('Click on viewButton of first lab session and take to correct url', () => {
@@ -18,7 +19,8 @@ describe('Professor Question Functions', () => {
     });
   });
 
-
+//re-do navigate to page - like main refresh - also compare actual question content
+//rather than just list length
   it('should have right title',() =>{
     page.navigateToLab1();
     page.getPageTitle().then((title:string) =>{
@@ -31,6 +33,7 @@ describe('Professor Question Functions', () => {
     page.navigateToLab1();
     let a = page.getLengthOfMyQs().then((i:number) => {return i+1});
     let b = page.getLengthOfUnclaimedQs().then((i:number) => {return i-1});
+    page.slowDown();
     page.getClaimButton(page.getUnclaimedQuestion(0)).click();
     expect(page.getLengthOfUnclaimedQs()).toBe(b);
     expect(page.getLengthOfMyQs()).toBe(a);
@@ -41,7 +44,10 @@ describe('Professor Question Functions', () => {
     page.navigateToLab1();
     let a = page.getLengthOfMyQs().then((i:number) => {return i-1});
     let b = page.getLengthOfUnclaimedQs().then((i:number) => {return i+1});
-    page.getClaimButton(page.getMyQuestion(0)).click();
+    page.slowDown();
+    page.getCollapseButton(page.getMyQuestionComponent()).click();
+    page.slowDown();
+    page.getUnclaimButton(page.getMyQuestion(0)).click();
     expect(page.getLengthOfUnclaimedQs()).toBe(b);
     expect(page.getLengthOfMyQs()).toBe(a);
   });
@@ -50,6 +56,7 @@ describe('Professor Question Functions', () => {
     //need to make sure enough questions in the list.
     page.navigateToLab1();
     let b = page.getLengthOfUnclaimedQs().then((i:number) => {return i-1});
+    page.slowDown();
     page.getDeleteButton(page.getUnclaimedQuestion(0)).click();
     expect(page.getLengthOfUnclaimedQs()).toBe(b);
   });
