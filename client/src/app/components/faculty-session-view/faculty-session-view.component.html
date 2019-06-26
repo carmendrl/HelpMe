@@ -18,7 +18,7 @@
 </div>
 <br>
 <section>
-  <app-question-list  [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
+  <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
   [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck"
@@ -27,7 +27,7 @@
 </section>
 
 <section #claimedQuestions>
-  <app-question-list #claimedQs [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
+  <app-question-list #claimedQs id="claimedQs" [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
   [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true"
@@ -36,14 +36,14 @@
 </section>
 
 <section>
-  <app-question-list [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
+  <app-question-list id="faqs" [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <section>
-  <app-question-list [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
+  <app-question-list id="otherQs" [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
   [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>

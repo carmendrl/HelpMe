@@ -9,6 +9,10 @@ export class StartSession{
     return browser.getTitle();
   }
 
+  getStartSessionComponent(){
+    return element(by.tagName('app-start-session'));
+  }
+
   getForm(){
     return element(by.css('.startSessionForm'));
   }
@@ -21,16 +25,28 @@ export class StartSession{
     return element(by.name('dp'));
   }
 
-  getStartTimePicker(){
-    return element(by.name('start_time'));
+  getStartTimePickerHour(){
+    return element(by.name('start_time')).element(by.css('.ngb-tp-hour')).element(by.tagName('input'));
+  }
+
+  getStartTimePickerMinute(){
+    return element(by.name('start_time')).element(by.css('.ngb-tp-minute')).element(by.tagName('input'));
   }
 
   getEndDateTextBox(){
     return element(by.name('p'));
   }
 
-  getEndTimePicker(){
-    return element(by.name('end_time'));
+  getEndTimePickerHour(){
+    return element(by.name('end_time')).element(by.css('.ngb-tp-hour')).element(by.tagName('input'));
+  }
+
+  getEndTimePickerMinute(){
+    return element(by.name('end_time')).element(by.css('.ngb-tp-minute')).element(by.tagName('input'));
+  }
+
+  getPMButton(){
+    return element(by.name('end_time')).element(by.css('.btn-outline-primary'));
   }
 
   getStartSessionButton(){
@@ -38,8 +54,14 @@ export class StartSession{
   }
 
   getCourseDropdown(){
+    return element(by.css('.selectACourse'));
+ }
+  selectACourse(){
     return element(by.name('selectedCourse'));
-  // }
+  }
+  select(){
+    return this.selectACourse().sendKeys('t');
+  }
   // getCourseName(){
   //   return element(by.css())
   // }

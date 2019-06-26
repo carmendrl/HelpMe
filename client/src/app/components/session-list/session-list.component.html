@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
+      <tr id="tableRow" class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
         <td>{{session.startDate | date:'EEE LLL dd'}}</td>
         <td>{{session.course.subjectAndNumber}}</td>
         <td>{{session.professor.FullName}}</td>
