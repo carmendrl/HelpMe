@@ -1,7 +1,7 @@
 import { StudentQuestions } from './studentQuestions.po';
 import { browser } from 'protractor';
 
-describe('test ask and answer questions', () => {
+xdescribe('test ask and answer questions', () => {
   let page: StudentQuestions;
 
   beforeEach(() => {

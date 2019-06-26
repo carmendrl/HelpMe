@@ -7,9 +7,9 @@ are input into this model from the student dashboard, student view, and faculty 
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
 <div class="largeScreen">
-  <h2 [ngStyle]="headerStyles()" class="inlineHeader">{{header}}
+  <h2 name="questionListHeader"[ngStyle]="headerStyles()" class="inlineHeader">{{header}}
 		<div *ngIf="isCollapsible" class="collapseContainer">
-    <button class="btn btn-primary inlineButton" (click)="checkCollapsed()"
+    <button name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
   </button>
@@ -57,7 +57,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="getAnswerText(question)"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
-          <td *ngIf="showAction && !readOnly &&!allowSelection">
+          <td name="buttons" *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
               <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
               <button  *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>

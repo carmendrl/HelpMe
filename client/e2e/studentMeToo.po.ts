@@ -4,6 +4,20 @@ export class StudentMeToo{
   navigateTo(){
     return browser.get('/dashboard');
   }
+  getEmailTextbox() {
+    return element(by.name('Email'));
+  }
+  getPasswordTextbox() {
+    return element(by.name('Password'));
+  }
+
+  getForm(){
+      return element(by.css('.createCourseForm'));
+  }
+
+  getSubmitButton(){
+      return element(by.css('.loginButton'));
+  }
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
@@ -27,5 +41,29 @@ export class StudentMeToo{
   }
   getStudentSessionView(){
     return element(by.tagName('app-student-session-view'));
+  }
+
+  getProfileMenuComponent(){
+    return element(by.tagName('app-user-profile'));
+  }
+
+  getProfileMenu() {
+    return element(by.css('.menu'));
+  }
+
+  getLogoutButton(){
+    return element(by.css('.logout'));
+  }
+  getTable(){
+    return element(by.css('table'));
+  }
+  getButtons(){
+    return element(by.name('buttons'));
+  }
+  getOpenButton(){
+    return element(by.name('open'));
+  }
+  getQuestionListHeader(){
+    return element(by.name('questionListHeader'));
   }
 }
