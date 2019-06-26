@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { LabSessionService } from '../../services/labsession.service';
 import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-session-list',
@@ -40,7 +41,7 @@ export class SessionListComponent implements OnInit {
   copySessionLink(s:LabSession){
     this.copied = true;
     let selBox = this.document.createElement('textarea');
-    let url ="www.YouDidIT....."+s.id+".....com";
+    let url = `${environment.server}/lab_sessions/${s.id}`;
     selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
     this.document.body.appendChild(selBox);
     selBox.focus();

@@ -42,7 +42,7 @@ export abstract class SessionView  {
       );
       this.pauseRefresh = false;
       this.sessionId = this.route.snapshot.paramMap.get('id');
-      //this.refreshData({}); //empty object passed in
+      this.refreshData({}); //empty object passed in
       this.notifier = notifierService;
     }
 
@@ -69,7 +69,7 @@ else{
           this.checkNotification(data.Data, r);
           this.data = data.Data; this.sortQuestions(this.data);
           if(!(this.pauseRefresh)){
-            //this.subscribeToData();
+            this.subscribeToData();
             this.time();
           }
           this.handleGetQuestionsError(data);
