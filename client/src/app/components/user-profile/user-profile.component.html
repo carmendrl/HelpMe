@@ -1,9 +1,7 @@
 <div class="float-right d-inline-block clearfix menu" ngbDropdown *ngIf="userService.CurrentUser$ | async as user">
-  <div *ngIf="user.Username.length > 0">
-  <div>
+  <div ngbDropdown *ngIf = "user.Username.length > 0">
     <button class="btn btn-outline-default" id="accountDropdown" ngbDropdownToggle>
       <!--  At screen size xs, we'll just show the profile icon  -->
-      <!-- <span class="fas fa-user"></span> -->
 			<img class="rounded-circle" [src]="gravatarImageUrl(user)"/>
       <!--  At screen size sm , show the user's first name  -->
       <span class="d-none d-sm-inline d-md-none">
@@ -17,17 +15,15 @@
     </button>
 
     <div ngbDropdownMenu>
-      <button class="dropdown-item" (click)="viewProfile()">Edit Profile</button>
-      <button  *ngIf="user.Type==='professors'" class="dropdown-item" (click)="switchTypes(user)">Switch to Student View</button>
-      <button  *ngIf="user.ActingAsStudent === true" class="dropdown-item" (click)="switchTypes(user)">Switch to Professor View</button>
-      <button  *ngIf="user.Role==='ta'" class="dropdown-item" (click)="switchRoles(user)">Switch to Student View</button>
-      <button  *ngIf="user.Role==='none' && user.Type==='students'" class="dropdown-item" (click)="switchRoles(user)">Switch to TA View</button>
-      <button *ngIf="user.Type==='professors'" class="dropdown-item" (click)="open(content)">Create a TA account</button>
-      <button class="dropdown-item logout" (click)="logout()">Log out</button>
+      <button ngbDropdownItem (click)="viewProfile()">Edit Profile</button>
+      <button ngbDropdownItem *ngIf="user.Type==='professors'" (click)="switchTypes(user)">Switch to Student View</button>
+      <button ngbDropdownItem *ngIf="user.ActingAsStudent === true" (click)="switchTypes(user)">Switch to Professor View</button>
+      <button ngbDropdownItem *ngIf="user.Role==='ta'" (click)="switchRoles(user)">Switch to Student View</button>
+      <button ngbDropdownItem *ngIf="user.Role==='none' && user.Type==='students'" (click)="switchRoles(user)">Switch to TA View</button>
+      <button ngbDropdownItem *ngIf="user.Type==='professors'" (click)="open(content)">Create a TA account</button>
+      <button ngbDropdownItem class="logout" (click)="logout()">Log out</button>
     </div>
   </div>
-
-
 </div>
 
 <ng-template #content let-modal let-d="dismiss" let-c="close">
