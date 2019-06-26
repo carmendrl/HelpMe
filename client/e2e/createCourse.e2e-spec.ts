@@ -3,7 +3,7 @@ import { browser } from 'protractor';
 //import { StartSessionComponent } from '././components/start-session.component';
 //import { CreateCourseFormComponent } from '././components/create-course-component.component'
 
-describe('Create course tests', () => {
+xdescribe('Create course tests', () => {
   let page: CreateCourse;
 
   beforeEach(() => {

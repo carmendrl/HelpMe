@@ -21,7 +21,7 @@
         <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}"
           triggers="mouseenter:mouseleave" popoverTitle= "Session Code">Copy Code</span>
            <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
-           <span (click)="viewSession(session);audioService.playSilentAudio()" id="viewButton" class="btn btn-primary actionSpace">View</span>
+           <span (click)="viewSession(session);audioService.playSilentAudio()" name="view" class="btn btn-primary actionSpace">View</span>
         </td>
       </tr>
     </tbody>

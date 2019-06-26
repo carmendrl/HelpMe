@@ -26,7 +26,9 @@ export class StudentLogin{
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
-
+  getStudentDashboard(){
+    return element(by.tagName('app-student-dashboard'));
+  }
   getUserProfile(){
     return element(by.tagName('app-user-profile'));
   }
