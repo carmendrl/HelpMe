@@ -65,12 +65,20 @@ export class ProfQuestionFunctionsPage {
 
 
 //parameter i refers to index of question in the array
+    getUnclaimedQuestions(){
+      return this.getUnclaimedQuestionComponent().all(by.id('questionRow'));
+    }
+
     getUnclaimedQuestion(i:number){
       return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).get(i);
     }
 
    getLengthOfUnclaimedQs(){
      return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).count();
+   }
+
+   getMyQuestions(){
+     return this.getMyQuestionComponent().all(by.id('questionRow'));
    }
 
     getMyQuestion(i:number){
@@ -81,12 +89,20 @@ export class ProfQuestionFunctionsPage {
      return this.getMyQuestionComponent().all(by.id('questionRow')).count();
    }
 
+   getFaqQuestions(){
+     return this.getFaqComponent().all(by.id('questionRow'));
+   }
+
     getFaqQuestion(i:number){
       return this.getFaqComponent().all(by.id('questionRow')).get(i);
     }
 
     getLengthOfFaq(){
       return this.getFaqComponent().all(by.id('questionRow')).count();
+    }
+
+    getOtherQuestions(){
+      return this.getOtherQuestionComponent().all(by.id('questionRow'));
     }
 
     getOtherQuestion(i:number){
@@ -125,6 +141,21 @@ export class ProfQuestionFunctionsPage {
 
     getRemoveFaqButton(e){
       return e.element(by.id('removeFaqButton'));
+    }
+
+    getElementValue(e){
+      //return string if the element has "value" attribute
+      //otherwise returns null
+      return e.getAttribute('value');
+    }
+
+    getElementValueArray(e){
+      var array= new Array<any>();
+      e.each(function(e){e.getAttribute('value').then(function(text){
+        array.push(text);
+      });
+    });
+      return array;
     }
 
     slowDown(){
