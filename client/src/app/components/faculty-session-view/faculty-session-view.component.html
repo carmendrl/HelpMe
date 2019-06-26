@@ -11,7 +11,7 @@
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
 <div class="btn-group pull-left">
   <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
-  <button class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
+  <button *ngIf="!ended" class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
   <button  *ngIf="!showCheck" class="btn btn-primary" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>

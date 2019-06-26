@@ -33,8 +33,14 @@ export class JoinSession{
   getJoinForm(){
     return element(by.name('joinSessForm'));
   }
-  getPageTitle(){
-    return browser.getTitle();
+  getModal(){
+    return element(by.name('sessionNotStarted'));
+  }
+  getAlert(){
+    return element(by.css('alert'));
+  }
+  getStudentSessionView(){
+    return element(by.tagName('app-student-session-view'));
   }
   getProfileMenuComponent(){
     return element(by.tagName('app-user-profile'));

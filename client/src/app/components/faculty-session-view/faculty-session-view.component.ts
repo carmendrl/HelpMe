@@ -43,6 +43,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
+  private ended: boolean;
 
 
   private errorSession: ApiResponse<LabSession>;
@@ -77,11 +78,14 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
              this.sortQuestions(this.questions)});
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
+         this.checkIfEnded();
       }
 
       checkNotification(datas : Question[], r:any){
-        if(r != undefined && r.question != undefined){
-          //r.question is defined if and only if the claimButton was selected
+        if(r != undefined && r._data != undefined && r._data.question != undefined){
+          //r.data.question is defined if and only if the claimButton was selected
+          //in the "claim case" An ApiResponse<Object> is returned,
+          //where the object has question and "claim" boolean attributes
           for (let data of datas){
             if(this.data && data.answer ===undefined){
               //must check that answer is undefined,
@@ -89,7 +93,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
               //and is simply moving between lists (e.g. to/from FAQ)
               for (let q of this.data){
                 if (q.id === data.id){
-                  if(q.id != r.question.id && data.id != r.question.id){
+                  if(q.id != r._data.question.id && data.id != r._data.question.id){
                     //this checks to make sure that the question is not the one
                     //that the user claimed themselves
                     if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
@@ -181,6 +185,21 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         this.currentTime = moment().utc().toDate();
         this.sessionService.updateEndDate(this.sessionId, this.currentTime).subscribe();
       }
+
+      checkIfEnded(){
+        this.currentDate = new Date();
+        this.sessionService.getSession(this.sessionId).subscribe(
+          r => {
+            if(new Date(r.Data.endDate.toString()) <= this.currentDate){
+              this.ended = true;
+            }
+            else{
+              this.ended = false;
+            }
+            this.getSessionError(r);
+          });
+
+        }
 
       getSessionCodeAndDescription(){
         this.sessionService.getSession(this.sessionId).subscribe(session =>

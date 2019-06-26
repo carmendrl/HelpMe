@@ -12,6 +12,7 @@ import { AudioService } from './services/audio.service';
 import { LabSession } from './models/lab_session.model';
 import * as moment from 'moment';
 import { ApiResponse } from './services/api-response';
+import { environment } from '../environments/environment';
 
 
 export abstract class SessionView  {
@@ -42,7 +43,7 @@ export abstract class SessionView  {
       );
       this.pauseRefresh = false;
       this.sessionId = this.route.snapshot.paramMap.get('id');
-    //  this.refreshData({}); //empty object passed in
+      this.refreshData({}); //empty object passed in
       this.notifier = notifierService;
     }
 
@@ -69,7 +70,7 @@ else{
           this.checkNotification(data.Data, r);
           this.data = data.Data; this.sortQuestions(this.data);
           if(!(this.pauseRefresh)){
-            //this.subscribeToData();
+            this.subscribeToData();
             this.time();
           }
           this.handleGetQuestionsError(data);
@@ -79,42 +80,47 @@ else{
     }
       }
 
+      //want to make this abstract method but must make this an abstract createNewLabSession
+      //to make this an abstract class can't have a constructor because can't instantiate
+  
 
-      private subscribeToData(){
-        this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
-        //empty object is passed into refreshData
-      }
-
-      setPauseRefresh(r:boolean){
-        this.pauseRefresh = r;
-
-      }
-
-      public ngOnDestroy(){
-        if (this.questionSubscription){
-          this.questionSubscription.unsubscribe();
+        private subscribeToData(){
+          if (environment.production) {
+            this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
+            //empty object is passed into refreshData
+          }
         }
-        if (this.timerSubscription){
-          this.timerSubscription.unsubscribe();
+
+        setPauseRefresh(r:boolean){
+          this.pauseRefresh = r;
+
+        }
+
+        public ngOnDestroy(){
+          if (this.questionSubscription){
+            this.questionSubscription.unsubscribe();
+          }
+          if (this.timerSubscription){
+            this.timerSubscription.unsubscribe();
+          }
+        }
+
+        time(){
+            this.timeFromRefresh = moment().format('LTS');
+        }
+
+
+        private handleGetQuestionsError(questions: ApiResponse<Question[]>){
+          if(!questions.Successful){
+            this.state = "errorGettingQuestions";
+            this.errorGetQuestions = questions;
+            this.getQuestions = <Question[]>questions.Data;
+            this.questionMessage = questions.ErrorMessages;
+            this.getQuestionsError = true;
+          }
+          else{
+            this.state = "loaded";
+            this.getQuestions = <Question[]>questions.Data;
+          }
         }
       }
-
-      time(){
-        this.timeFromRefresh = moment().format('LTS');
-      }
-
-
-      private handleGetQuestionsError(questions: ApiResponse<Question[]>){
-        if(!questions.Successful){
-          this.state = "errorGettingQuestions";
-          this.errorGetQuestions = questions;
-          this.getQuestions = <Question[]>questions.Data;
-          this.questionMessage = questions.ErrorMessages;
-          this.getQuestionsError = true;
-        }
-        else{
-          this.state = "loaded";
-          this.getQuestions = <Question[]>questions.Data;
-        }
-      }
-}

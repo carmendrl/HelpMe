@@ -70,26 +70,38 @@ export class ProfQuestionFunctionsPage {
     }
 
    getLengthOfUnclaimedQs(){
-return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).count();
-}
+     return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).count();
+   }
 
     getMyQuestion(i:number){
       return this.getMyQuestionComponent().all(by.id('questionRow')).get(i);
     }
 
    getLengthOfMyQs(){
-return this.getMyQuestionComponent().all(by.id('questionRow')).count();
-}
+     return this.getMyQuestionComponent().all(by.id('questionRow')).count();
+   }
 
     getFaqQuestion(i:number){
       return this.getFaqComponent().all(by.id('questionRow')).get(i);
+    }
+
+    getLengthOfFaq(){
+      return this.getFaqComponent().all(by.id('questionRow')).count();
     }
 
     getOtherQuestion(i:number){
       return this.getOtherQuestionComponent().all(by.id('questionRow')).get(i);
     }
 
+    getLengthOfOther(){
+      return this.getOtherQuestionComponent().all(by.id('questionRow')).count();
+    }
+
 //e is the row of a single question (the result of one of the previous 4 methods)
+    getCollapseButton(e){
+      return e.element(by.id('collapseButton'));
+    }
+
     getClaimButton(e){
       return e.element(by.id('claimButton'));
     }
@@ -116,7 +128,7 @@ return this.getMyQuestionComponent().all(by.id('questionRow')).count();
     }
 
     slowDown(){
-      browser.sleep(5000)
+      browser.sleep(2000)
     }
 
 
