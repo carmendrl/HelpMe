@@ -1,6 +1,6 @@
 import { ProfQuestionFunctionsPage } from './profQuestionFunctions.po';
 import { Question } from '../src/app/models/question.model';
-describe('Professor Question Functions', () => {
+xdescribe('Professor Question Functions', () => {
   let page: ProfQuestionFunctionsPage;
 
   beforeEach(() => {

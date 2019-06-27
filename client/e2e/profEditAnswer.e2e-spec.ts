@@ -39,6 +39,7 @@ it('Click on viewButton of first lab session and take to correct url', () => {
 //   expect(page.getOpenModalElement2()).toBeTruthy();
 //   expect(page.getOpenAnswerModalElement()).toBeTruthy();
 //   //add text to the quill-editor
+//   page.getTextEditor().sendKeys('This is a test answer. Hopefully it works');
 //   page.getSaveDraftButton().click();
 // });
 

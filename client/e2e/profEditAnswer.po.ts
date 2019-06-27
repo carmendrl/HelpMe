@@ -86,9 +86,12 @@ export class ProfEditAnswer{
     return element(by.id('modal-create-answer'));
   }
   getAnswerButton(e){
-    return element(by.id('answerButton'));
+    return e.element(by.id('answerButton'));
   }
   getSaveDraftButton(){
     return element(by.id('saveDraft'));
+  }
+  getTextEditor(){
+    return element(by.css('.ql-editor'));
   }
 }
