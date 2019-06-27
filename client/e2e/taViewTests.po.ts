@@ -112,6 +112,27 @@ export class TaViewTests{
   faq(){
     return element(by.name('addFaq'))
   }
+  rFaq(){
+    return element(by.name('removeFaq'));
+  }
+  assign(){
+    return element(by.name('assign'));
+  }
+  delete(){
+    return element(by.name('delete'));
+  }
+  answer(){
+    return element(by.name('answer'));
+  }
+  getAnswerModal(){
+    return element(by.tagName('app-answer-modal'));
+  }
+  getEditor(){
+    return element(by.css('ql-editor'));
+  }
+  getSaveButton(){
+    return element(by.id('save'));
+  }
   getUnclaimedQuestions(){
     this.getFacultySessionView();
     return element(by.id('unclaimedQs'));
@@ -124,12 +145,20 @@ export class TaViewTests{
     this.getFacultySessionView();
     return element(by.id('claimedQs'));
   }
+  getOtherQuestionsList(){
+    this.getFacultySessionView();
+    return element(by.id('otherQs'));
+  }
   getUnclaimedQuestionsLength(){
     return this.getUnclaimedQuestions().all(by.id('questionRow')).count();
   }
   getMyQuestionsLength(){
     this.getFacultySessionView();
     return this.getMyQuestions().all(by.id('questionRow')).count();
+  }
+  getOtherQslength(){
+    this.getFacultySessionView();
+    return this.getOtherQuestionsList().all(by.id('questionRow')).count();
   }
   getFaqLength(){
     this.getFacultySessionView();
@@ -150,5 +179,20 @@ export class TaViewTests{
   }
   getFaqOpen(){
     return this.getFaQlist().element(by.name('open'));
+  }
+  getOtherOpen(){
+    return this.getOtherQuestionsList().element(by.name('open'));
+  }
+  getAssignModal(){
+    return element(by.tagName('app-assign-modal'));
+  }
+  getAssignButton(){
+    return element(by.name('assignButton'));
+  }
+  getDeleteModal(){
+    return element(by.tagName('app-delete-modal'));
+  }
+  getDeleteButton(){
+    return element(by.name('deleteButton'));
   }
 }
