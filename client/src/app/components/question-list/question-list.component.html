@@ -121,6 +121,7 @@ are input into this model from the student dashboard, student view, and faculty 
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
       <div>
+        <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
         <span> {{question.smallText}} </span><br><br>
       </div>
