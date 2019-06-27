@@ -4,12 +4,12 @@ import { browser } from 'protractor';
 describe('ta login and act as student', () => {
   let page: TaViewTests;
 
-  // var child_process = require('child_process');
-  // child_process.exec('rails runner ~/help-me-web/scripts/setUpTATests.rb', function(err, stdout, stderr){
-  //   if(err){
-  //     console.log("child processes failed with error code: " + err.code);
-  //   }
-  // });
+  var child_process = require('child_process');
+  child_process.exec('rails runner ~/help-me-web/scripts/setUpTATests.rb', function(err, stdout, stderr){
+    if(err){
+      console.log("child processes failed with error code: " + err.code);
+    }
+  });
 
   beforeEach(() =>{
     page = new TaViewTests();
@@ -53,7 +53,7 @@ describe('ta login and act as student', () => {
     let a = page.getMyQuestionsLength().then((i:number) => {return i+1});
     let b = page.getUnclaimedQuestionsLength().then((i:number) => {return i-1});
     page.getUnclaimedOpen();
-    //  browser.sleep(10000);
+      //browser.sleep(10000);
     page.claim().click();
     page.navigateTo2();
     page.getSessionList();
@@ -87,7 +87,7 @@ describe('ta login and act as student', () => {
       //answer a question
       page.getUnclaimedQuestions();
       page.getUnclaimedOpen().click();
-      browser.sleep(10000);
+      //browser.sleep(10000);
       page.answer().click();
       page.getAnswerModal();
       page.getEditor().sendKeys('test answer');
