@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -35,11 +35,14 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
+    private playSound: boolean;
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
   private sessionMessage : string[];
   private loadSessionError: boolean;
+
+  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
 
 
   constructor(userService: UserService, questionService: QuestionService,
@@ -51,6 +54,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   }
 
       ngOnInit() {
+        this.playSound = false;
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
@@ -100,9 +104,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
                 if(data.answer != undefined){
                   if(data.answer.user.id != this.currentUser.id){
                     if(data.step != "" && data.step != undefined){
+                      if(this.playSound){this.audioService.playStudentAudio();}
                       this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
                     }
                     else{
+                      if(this.playSound){this.audioService.playStudentAudio();}
                       this.notifier.notify('info', 'Your question has been answered!');
                     }
                   }
@@ -112,9 +118,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               else{
                 if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
+                    if(this.playSound){this.audioService.playStudentAudio();}
                     this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
                   }
                   else{
+                    if(this.playSound){this.audioService.playStudentAudio();}
                     this.notifier.notify('info', 'The answer to your question has been updated.');
                   }
                 }
@@ -172,6 +180,12 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.state = "loaded";
             this.loadedSession = <LabSession>session.Data;
           }
+        }
+
+        toggleAudio():boolean{
+          this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
+          this.audioService.playSilentAudio();
+          return this.playSound;
         }
 
         }

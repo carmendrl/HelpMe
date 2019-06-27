@@ -82,7 +82,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
 
       checkNotification(datas : Question[], r:any){
-        debugger
         if(r != undefined && r._data != undefined && r._data.question != undefined){
           //r.data.question is defined if and only if the claimButton was selected
           //in the "claim case" An ApiResponse<Object> is returned,
@@ -253,6 +252,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
       toggleAudio():boolean{
         this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
+        this.audioService.playSilentAudio();
         return this.playSound;
       }
 
