@@ -253,6 +253,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         // this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
 				// return this.playSound;
 				this.playSound = !this.playSound;
+				this.audioService.playSilentAudio();
 				return this.playSound;
       }
 

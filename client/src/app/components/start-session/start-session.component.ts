@@ -145,7 +145,7 @@ export class StartSessionComponent implements OnInit {
       this.copied = true;
       let selBox = this.document.createElement('textarea');
       let url =`${environment.server}/lab_sessions/${this.newSession.Data.id}`;
-      selBox.value=url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
+      selBox.value=url;
       this.document.body.appendChild(selBox);
       selBox.focus();
       selBox.select();
