@@ -4,20 +4,21 @@ import { browser } from 'protractor';
 describe('ta login and act as student', () => {
   let page: TaViewTests;
 
+  // var child_process = require('child_process');
+  // child_process.exec('rails runner ~/help-me-web/scripts/setUpTATests.rb', function(err, stdout, stderr){
+  //   if(err){
+  //     console.log("child processes failed with error code: " + err.code);
+  //   }
+  // });
+
   beforeEach(() =>{
     page = new TaViewTests();
-    // var child_process = require('child_process');
-    // child_process.exec('rails runner ~/help-me-web/scripts/setUpTATests.rb', function(err, stdout, stderr){
-    //   if(err){
-    //     console.log("child processes failed with error code: " + err.code);
-    //   }
-    // });
   });
 
   it('should login and get correct dashboard', () => {
     //login
     page.navigateTo();
-    page.getEmailTextbox().sendKeys('ta@test.com');
+    page.getEmailTextbox().sendKeys('ta@hope.edu');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     //verify that it is the correct dashboard
@@ -26,39 +27,33 @@ describe('ta login and act as student', () => {
   });
 
   it('should switch to student view and back', () =>{
-    //browser.sleep(6000);
     page.getProfileMenu().click();
     page.getSwitchButton().click();
-    //browser.sleep(6000);
 
     //verify that it is the correct dashboard
     expect(page.getStudentDashboard()).toBeTruthy();
+      //browser.sleep(6000);
     page.getProfileMenu().click();
+    //  browser.sleep(6000);
     page.getSwitchBackButton().click();
+    //  browser.sleep(6000);
     expect(page.getFacultyDashboard()).toBeTruthy();
     expect(page.getJoinBox()).toBeTruthy();
   });
 
-  it('ta can create sessions', () =>{
-    page.navigateTo2();
-    let a = page.getSessionsLength().then((i:number) => {return i+1});
-    page.setUpSession();
-    page.startSession().click();
-    //browser.sleep(6000);
-    page.navigateTo2();
-    expect(page.getSessionsLength()).toBe(a);
-  });
 
   it('ta can claim and unclaim a question', () =>{
 //claim
     page.navigateTo2();
     page.getSessionList();
     //page.getSession();
+    //browser.sleep(10000);
     page.getViewButton().click();
     //browser.sleep(6000);
     let a = page.getMyQuestionsLength().then((i:number) => {return i+1});
     let b = page.getUnclaimedQuestionsLength().then((i:number) => {return i-1});
     page.getUnclaimedOpen();
+    //  browser.sleep(10000);
     page.claim().click();
     page.navigateTo2();
     page.getSessionList();
@@ -92,6 +87,7 @@ describe('ta login and act as student', () => {
       //answer a question
       page.getUnclaimedQuestions();
       page.getUnclaimedOpen().click();
+      browser.sleep(10000);
       page.answer().click();
       page.getAnswerModal();
       page.getEditor().sendKeys('test answer');

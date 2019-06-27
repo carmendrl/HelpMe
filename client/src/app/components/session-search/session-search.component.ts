@@ -31,6 +31,7 @@ export class SessionSearchComponent implements OnInit {
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService: QuestionService) {
+      //this.sessions = new ApiResponse<LabSession[]>();
       this.sessions.Data = new Array<LabSession>();
     }
 
@@ -44,6 +45,7 @@ export class SessionSearchComponent implements OnInit {
     this.labSessionService.labSessions().subscribe (
       s => {
         this.sessions.Data = s.Data;
+        //debugger;
         if (this.sessions.Data.length > 0) {
           this.selectedSession = this.sessions.Data[0];
           this.handleLoadSessions(s);

@@ -81,21 +81,6 @@ export class TaViewTests{
   getPMButton(){
     return element(by.name('end_time')).element(by.css('.btn-outline-primary'));
   }
-  setUpSession(){
-    this.getStartSessionComponent();
-    this.getForm();
-    this.getDescriptionTextBox().sendKeys('test session');
-    this.getStartDateTextBox().sendKeys('2019-06-26');
-    this.getStartTimePickerHour().sendKeys('10');
-    this.getStartTimePickerMinute().sendKeys('00');
-    this.getEndDateTextBox().sendKeys('2019-06-26');
-    this.getEndTimePickerHour().sendKeys('05');
-    this.getEndTimePickerMinute().sendKeys('30');
-    this.getPMButton().click();
-  }
-  startSession(){
-    return element(by.name('start'));
-  }
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
