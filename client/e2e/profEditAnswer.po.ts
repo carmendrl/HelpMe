@@ -7,6 +7,9 @@ export class ProfEditAnswer{
   navigateTo2(){
     return browser.get('/dashboard');
   }
+  navigateTo3(s:string){
+    return browser.get('/lab_sessions/'+s);
+  }
   getEmailTextbox() {
     return element(by.name('Email'));
   }
@@ -49,6 +52,12 @@ export class ProfEditAnswer{
   getOtherQuestion(i:number){
     return this.getOtherQuestionComponent().all(by.id('questionRow')).get(i);
   }
+  getMyQuestionComponent(){
+    return this.getFacultySessionView().element(by.id('claimedQs'));
+  }
+  getMyQuestion(i:number){
+    return this.getMyQuestionComponent().all(by.id('questionRow')).get(i);
+  }
   getEditButton(e){
     return e.element(by.id('editButton'));
   }
@@ -67,5 +76,19 @@ export class ProfEditAnswer{
   getSaveButton(){
     return element(by.id('saveButton'));
   }
-
+  getAnswerColumn(i:number){
+    return this.getOtherQuestion(i).element(by.id('answerText')).element(by.id('text'));
+  }
+  getOpenModalElement2() {
+    return element(by.tagName('app-answer-modal'));
+  }
+  getOpenAnswerModalElement() {
+    return element(by.id('modal-create-answer'));
+  }
+  getAnswerButton(e){
+    return element(by.id('answerButton'));
+  }
+  getSaveDraftButton(){
+    return element(by.id('saveDraft'));
+  }
 }

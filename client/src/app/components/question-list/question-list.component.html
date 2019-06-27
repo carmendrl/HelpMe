@@ -54,15 +54,15 @@ are input into this model from the student dashboard, student view, and faculty 
             </ul>
           </td>
           <td *ngIf="showTimeInQueue">{{timeDiff(question)}}</td>
-          <td *ngIf="showAnswer"><quill-editor class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="getAnswerText(question)"> </quill-editor></td>
+          <td id= "answerText" *ngIf="showAnswer"><quill-editor id="text" class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}" [modules]="{toolbar: false}" [placeholder]="''" format="json" [ngModel]="getAnswerText(question)"> </quill-editor></td>
           <!-- If we change container to fluid,
           then these class d-*_block may have to changed accordingly-->
           <td name="buttons" *ngIf="showAction && !readOnly &&!allowSelection">
             <div class="d-none d-lg-block d-xl-block">
-              <button  *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
+              <button id="answerButton" *ngIf="showAnswerButton && answerUndefined(question)" (click)="performAction(question, i, 'answer')" class="btn btn-primary actionSpace">Add Answer</button>
               <button id="editButton" *ngIf="showEditButton && !answerUndefined(question) && !checkSubmitted(question)" (click)="performAction(question, i, 'edit')" class="btn btn-primary actionSpace">Edit Answer</button>
               <button id="finishButton" *ngIf="showFinishButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'finish')" class="btn btn-primary actionSpace">Finish Draft</button>
-              <button  *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>
+              <button id="discardButton" *ngIf="showDiscardDraftButton && !answerUndefined(question) && checkSubmitted(question)" (click)="performAction(question, i, 'discardAnswer')" class="btn btn-primary actionSpace">Discard Draft</button>
               <button id="claimButton"  *ngIf="showClaimButton" (click)="performAction(question, i, 'claim')" class="btn btn-primary actionSpace">Claim</button>
               <button id="unclaimButton" *ngIf="showUnclaimButton" (click)="performAction(question, i, 'unclaim')" class="btn btn-primary actionSpace">Unclaim</button>
               <button id="assignButton" *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace">Assign</button>

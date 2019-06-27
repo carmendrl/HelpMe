@@ -10,7 +10,7 @@ import { Title }     from '@angular/platform-browser';
 import { User } from '../../models/user.model';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import * as moment from 'moment';
-import { environment } from '../environments/environment';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -42,7 +42,9 @@ export class EditModalComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(){
    this.titleService.setTitle('Session View - Help Me');
-    this.sub.unsubscribe();
+   if(environment.production){
+     this.sub.unsubscribe();
+   }
   }
 
   isNotAStudent(){
@@ -55,7 +57,9 @@ export class EditModalComponent implements OnInit, OnDestroy {
   }
 
   editAnswerFromForm(submitted:boolean){
-    this.sub.unsubscribe();
+    if(environment.production){
+      this.sub.unsubscribe();
+    }
     this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text, submitted, this.user.id).subscribe(r => this.activeModal.close()
   );
   }
