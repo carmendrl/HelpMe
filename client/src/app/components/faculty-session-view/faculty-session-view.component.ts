@@ -249,10 +249,11 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         }
       }
 
-
       toggleAudio():boolean{
-        this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
-        return this.playSound;
+        // this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
+				// return this.playSound;
+				this.playSound = !this.playSound;
+				return this.playSound;
       }
 
       scrollToClaimedQ():boolean{

@@ -1,22 +1,27 @@
-<label class="d-inline-block">Notification Sounds:</label>
-<div class="onoffswitch">
-    <input #myonoffswitch type="checkbox" (change)="toggleAudio()"  name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
-    <label class="onoffswitch-label" for="myonoffswitch">
-        <span class="onoffswitch-inner"></span>
-        <span class="onoffswitch-switch"></span>
-    </label>
+<div id="session_status">
+	<div class="sessionInfo">
+		{{subjectAndNumber}}: {{description}} ({{token}})
+		</div>
+
+		<div ngbDropdown class="d-inline-block">
+			<button ngbDropdownToggle><i class="fas fa-cog"></i> Session Settings</button>
+
+			<div ngbDropdownMenu>
+				<button ngbDropdownItem type="button" (click)="toggleAudio()">
+					<span *ngIf="playSound"><i class="fa fa-volume-off"></i></span>
+					<span *ngIf="!playSound"><i class="fa fa-volume-up"></i></span>
+					Turn sound {{ playSound ? "off" : "on"}}
+				</button>
+
+				<button ngbDropdownItem *ngIf="!ended" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+				<button ngbDropdownItem *ngIf="!showCheck" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
+				<button ngbDropdownItem *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
+				<button ngbDropdownItem type="button" (click)="open2(content2)">Search for Questions to Add</button>
+				<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to dashboard</button>
+			</div>
+		</div>
 </div>
-<h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
-<h4 class="center">The current session code is {{token}}</h4>
-<p class="center">Last refreshed: {{timeFromRefresh}}</p>
-<div class="btn-group pull-left">
-  <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
-  <button *ngIf="!ended" class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
-  <button  *ngIf="!showCheck" class="btn btn-primary" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
-  <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
-  <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
-</div>
-<br>
+
 <section>
   <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
@@ -48,6 +53,10 @@
   [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
+
+<footer>
+	<div class="center mt-3 lastRefreshed">Last refreshed: {{timeFromRefresh}}</div>
+</footer>
 
 <ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
