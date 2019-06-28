@@ -40,7 +40,7 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </thead>
       <tbody>
-        <tr id="questionRow" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " value="question.id">
+        <tr class="questionRow" id="{{question.id}}" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>
