@@ -41,8 +41,9 @@ export class ApiResponse<T> {
 
 	addErrorsFromHttpError (error : HttpErrorResponse) {
 		this.HttpStatusCode = error.status;
-		if (error.error.errors) {
-			error.error.error.errors.forEach (err => this.addError(err.message));
+		debugger;
+		if (error.error.error) {
+		 	this.addError(error.error.error.message);
 		}
 		else {
 			if (error.error) {
