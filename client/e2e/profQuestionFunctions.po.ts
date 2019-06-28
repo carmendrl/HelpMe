@@ -1,166 +1,155 @@
 import { browser, by, element } from 'protractor';
 export class ProfQuestionFunctionsPage {
-    navigateTo(){
-        return browser.get('/login');
-    }
+  navigateTo(){
+    return browser.get('/login');
+  }
 
-    navigateToLab1(){
-        return browser.get('/lab_sessions/16614b98-a4fc-4390-95f9-ae0a80cfedaf');
-    }
+  navigateToLab1(){
+    return browser.get('/lab_sessions/16614b98-a4fc-4390-95f9-ae0a80cfedaf');
+  }
 
-    getEmailTextbox() {
-      return element(by.name('Email'));
-    }
-    getPasswordTextbox() {
-      return element(by.name('Password'));
-    }
+  getEmailTextbox() {
+    return element(by.name('Email'));
+  }
+  getPasswordTextbox() {
+    return element(by.name('Password'));
+  }
 
-    getForm(){
-        return element(by.css('.loginForm'));
-    }
+  getForm(){
+    return element(by.css('.loginForm'));
+  }
 
-    getSubmitButton(){
-        return element(by.css('.loginButton'));
-    }
+  getSubmitButton(){
+    return element(by.css('.loginButton'));
+  }
 
-    getPageTitle(){
-      return browser.getTitle();
-    }
+  getPageTitle(){
+    return browser.getTitle();
+  }
 
-    getCurrentUrl(){
-      return browser.getCurrentUrl();
-    }
+  getCurrentUrl(){
+    return browser.getCurrentUrl();
+  }
 
-    getSessionList(){
-      return element(by.tagName('app-session-list'));
-    }
+  getSessionList(){
+    return element(by.tagName('app-session-list'));
+  }
 
-    getTableRowForSession(i:number){
-      return this.getSessionList().all(by.id('tableRow')).get(i);
-    }
+  getTableRowForSession(i:number){
+    return this.getSessionList().all(by.id('tableRow')).get(i);
+  }
 
-    getViewButtonForSession(e){
-      return e.element(by.id('viewButton'));
-    }
+  getViewButtonForSession(e){
+    return e.element(by.id('viewButton'));
+  }
 
-    getFacultySessionView(){
-      return element(by.tagName('app-faculty-session-view'));
-    }
+  getFacultySessionView(){
+    return element(by.tagName('app-faculty-session-view'));
+  }
 
-    getUnclaimedQuestionComponent(){
-      return this.getFacultySessionView().element(by.id('unclaimedQs'));
-    }
+  getUnclaimedQuestionComponent(){
+    return this.getFacultySessionView().element(by.id('unclaimedQs'));
+  }
 
-    getMyQuestionComponent(){
-      return this.getFacultySessionView().element(by.id('claimedQs'));
-    }
+  getComponentOfUnclaimedComponent(e){
+    return this.getUnclaimedQuestionComponent().element(by.id(e));
+  }
 
-    getFaqComponent(){
-      return this.getFacultySessionView().element(by.id('faqs'));
-    }
+  getMyQuestionComponent(){
+    return this.getFacultySessionView().element(by.id('claimedQs'));
+  }
 
-    getOtherQuestionComponent(){
-      return this.getFacultySessionView().element(by.id('otherQs'));
-    }
+  getComponentOfMyComponent(e){
+    return this.getMyQuestionComponent().element(by.id(e));
+  }
+
+  getFaqComponent(){
+    return this.getFacultySessionView().element(by.id('faqs'));
+  }
+
+  getComponentOfFaqComponent(e){
+    return this.getFaqComponent().element(by.id(e));
+  }
+
+  getOtherQuestionComponent(){
+    return this.getFacultySessionView().element(by.id('otherQs'));
+  }
+
+  getComponentOfOtherComponent(e){
+    return this.getOtherQuestionComponent().element(by.id(e));
+  }
 
 
-//parameter i refers to index of question in the array
-    getUnclaimedQuestions(){
-      return this.getUnclaimedQuestionComponent().all(by.id('questionRow'));
-    }
+  //parameter i refers to index of question (really of the action blocks) in the array
 
-    getUnclaimedQuestion(i:number){
-      return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).get(i);
-    }
+  //get array of <tr> question elements
+  getQuestionElementArray(e){
+    //e is full questionlist component
+    //returns an array of <tr> question elements
+    return e.all(by.className('questionRow'));
+  }
 
-   getLengthOfUnclaimedQs(){
-     return this.getUnclaimedQuestionComponent().all(by.id('questionRow')).count();
-   }
+  getQuestionElement(e, i:number){
+    //e is an array of <tr> question elements
+    //returns single Question <tr> element
+    return e.get(i);
+  }
 
-   getMyQuestions(){
-     return this.getMyQuestionComponent().all(by.id('questionRow'));
-   }
+  getQuestionId(e){
+    //e is a a single <tr> question element
+    //returns single Question string id
+    return e.getAttribute('id');
+  }
 
-    getMyQuestion(i:number){
-      return this.getMyQuestionComponent().all(by.id('questionRow')).get(i);
-    }
+  getQuestionIdArray(e){
+    //e is an array of <tr> question elements
+    //returns an array of id string (one for each element)
+  var array= new Array<any>();
+  e.each(function(element)
+    {element.getAttribute('id').then(function(text)
+    {array.push(text);})
+  });
+  return array;
+}
 
-   getLengthOfMyQs(){
-     return this.getMyQuestionComponent().all(by.id('questionRow')).count();
-   }
-
-   getFaqQuestions(){
-     return this.getFaqComponent().all(by.id('questionRow'));
-   }
-
-    getFaqQuestion(i:number){
-      return this.getFaqComponent().all(by.id('questionRow')).get(i);
-    }
-
-    getLengthOfFaq(){
-      return this.getFaqComponent().all(by.id('questionRow')).count();
-    }
-
-    getOtherQuestions(){
-      return this.getOtherQuestionComponent().all(by.id('questionRow'));
-    }
-
-    getOtherQuestion(i:number){
-      return this.getOtherQuestionComponent().all(by.id('questionRow')).get(i);
-    }
-
-    getLengthOfOther(){
-      return this.getOtherQuestionComponent().all(by.id('questionRow')).count();
-    }
+getElementArrayLength(e){
+  //e is an array of <tr> question elements
+  return e.count();
+}
 
 //e is the row of a single question (the result of one of the previous 4 methods)
-    getCollapseButton(e){
-      return e.element(by.id('collapseButton'));
-    }
+getCollapseButton(e){
+  return e.element(by.id('collapseButton'));
+}
 
-    getClaimButton(e){
-      return e.element(by.id('claimButton'));
-    }
+getClaimButton(e){
+  return e.element(by.id('claimButton'));
+}
 
-    getUnclaimButton(e){
-      return e.element(by.id('unclaimButton'));
-    }
+getUnclaimButton(e){
+  return e.element(by.id('unclaimButton'));
+}
 
-    getAssignButton(e){
-      return e.element(by.id('assignButton'));
+getAssignButton(e){
+  return e.element(by.id('assignButton'));
 
-    }
+}
 
-    getDeleteButton(e){
-      return e.element(by.id('deleteButton'));
-    }
+getDeleteButton(e){
+  return e.element(by.id('deleteButton'));
+}
 
-    getAddFaqButton(e){
-      return e.element(by.id('addFaqButton'));
-    }
+getAddFaqButton(e){
+  return e.element(by.id('addFaqButton'));
+}
 
-    getRemoveFaqButton(e){
-      return e.element(by.id('removeFaqButton'));
-    }
+getRemoveFaqButton(e){
+  return e.element(by.id('removeFaqButton'));
+}
 
-    getElementValue(e){
-      //return string if the element has "value" attribute
-      //otherwise returns null
-      return e.getAttribute('value');
-    }
-
-    getElementValueArray(e){
-      var array= new Array<any>();
-      e.each(function(e){e.getAttribute('value').then(function(text){
-        array.push(text);
-      });
-    });
-      return array;
-    }
-
-    slowDown(){
-      browser.sleep(2000)
-    }
+slowDown(){
+  browser.sleep(7000)
+}
 
 
 
