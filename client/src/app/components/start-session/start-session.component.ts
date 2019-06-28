@@ -99,6 +99,8 @@ export class StartSessionComponent implements OnInit {
       }
     }
       createStartEnd(){
+        this.start_date;
+        debugger
         this.fullStartDate = this.start_date.year +"-"+ this.start_date.month  +"-"+ this.start_date.day +"T"+ (this.start_time.hour+ 4) +":"+
          this.start_time.minute +":"+ this.start_time.second +"Z";
          this.fullEndDate = this.end_date.year +"-"+ this.end_date.month  +"-"+ this.end_date.day +"T"+ (this.end_time.hour+4) +":"+
