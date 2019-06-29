@@ -23,6 +23,13 @@ export class AskQuestionComponent implements OnInit {
   private questionMessage: string;
   private message: SafeHtml;
   private answer: Answer;
+  private toolbarOptions = [
+    ['bold','italic', 'underline', 'strike'],
+    [{'header': 1}, {'header': 2}],
+    [{'size':['small', 'large', 'huge']}],
+    [{'color':[]}],
+    ['link','image','video']
+  ];
 
   @Input() session: string;
 

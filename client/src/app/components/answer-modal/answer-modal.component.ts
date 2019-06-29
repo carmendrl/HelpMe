@@ -26,6 +26,13 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     lastSavedTime: string;
     sub : Subscription;
     private user : User;
+    private toolbarOptions = [
+      ['bold','italic', 'underline', 'strike'],
+      [{'header': 1}, {'header': 2}],
+      [{'size':['small', 'large', 'huge']}],
+      [{'color':[]}],
+      ['link','image','video']
+    ];
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }

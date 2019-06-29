@@ -19,7 +19,7 @@
 
      <!-- <quill-editor  class="qEditor smallScreen" format="json" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor> -->
       <quill-editor class="qEditor" format="json" name="askQuestion"[(ngModel)]="questionMessage"
-					[styles]="{height: '200px'}" (onEditorCreated)="created($event)"
+					[styles]="{height: '200px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
 					(onContentChanged)="editorContentChanged($event)" [placeholder]="'Enter your question'" required>
 			</quill-editor>
 
