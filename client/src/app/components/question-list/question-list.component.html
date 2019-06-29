@@ -123,7 +123,9 @@ are input into this model from the student dashboard, student view, and faculty 
       <div>
         <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
-        <span> {{question.smallText}} </span><br><br>
+        <span> {{question.smallText}} </span>
+        <span *ngIf="showNumberOfAskers"> / Askers: {{question.otherAskers.length}}</span>
+        <br><br>
       </div>
       <button *ngIf="question.answer != undefined" class="btn btn-primary" (click)="doToggleAnswer(i)" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">{{answerLabel(i)}}</button>
       <span><td *ngIf="showAction && !readOnly">
