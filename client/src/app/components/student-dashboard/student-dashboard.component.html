@@ -9,6 +9,9 @@
   <div *ngIf="invalidId" class="alert alert-danger">
     Token is invalid.
   </div>
+  <div *ngIf="idMessage" class="alert alert-danger">
+    {{idMessage}}
+  </div>
 </section>
 <div *ngIf="userService.CurrentUser$ | async as user">
 <section *ngIf="user.Role!='ta'">

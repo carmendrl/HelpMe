@@ -15,7 +15,7 @@ import { Question } from '../../models/question.model';
 export class SessionSearchComponent implements OnInit {
 
   closeResult: string;
-  private sessions : ApiResponse<LabSession[]>;
+  private sessions : LabSession[];
   private selectedSession : LabSession = new LabSession();
   private sessionReloaded : boolean = false;
   private state : string;
@@ -31,7 +31,7 @@ export class SessionSearchComponent implements OnInit {
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService: QuestionService) {
-      this.sessions.Data = new Array<LabSession>();
+      this.sessions = new Array<LabSession>();
     }
 
   ngOnInit() {
@@ -43,11 +43,12 @@ export class SessionSearchComponent implements OnInit {
 
     this.labSessionService.labSessions().subscribe (
       s => {
-        this.sessions.Data = s.Data;
-        if (this.sessions.Data.length > 0) {
-          this.selectedSession = this.sessions.Data[0];
-          this.handleLoadSessions(s);
+        this.sessions = s.Data;
+        //debugger;
+        if (this.sessions.length > 0) {
+          this.selectedSession = this.sessions[0];
         }
+        this.handleLoadSessions(s);
         this.sessionReloaded = true;
       }
     );

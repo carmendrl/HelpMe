@@ -27,6 +27,7 @@ ta = Student.create!(
 	:password => "password",
 	:email => "ta@hope.edu",
 	:username => "TA",
+  :role => "ta",
 )
 
 course = Course.create!(
@@ -44,17 +45,27 @@ labsession = LabSession.create!(
   :end_date => "2019-06-29",
 )
 
+join = LabSessionMembership.create!(
+  :lab_session => labsession,
+  :user => ta,
+)
+
+join1 = LabSessionMembership.create!(
+  :lab_session => labsession,
+  :user => stu,
+)
+
 question1 = Question.create!(
   :text => "testing question 1",
   :step => "1",
-  :original_asker => stu,
+  # :original_asker => stu,
   :lab_session => labsession,
 )
 
 question2 = Question.create!(
   :text => "testing question 2",
   :step => "2",
-  :original_asker => stu,
+  # :original_asker => stu,
   :lab_session => labsession,
 )
 
@@ -62,16 +73,17 @@ question2 = Question.create!(
 question3 = Question.create!(
   :text => "testing question 3",
   :step => "3",
-  :original_asker => stu,
+  # :original_asker => stu,
   :lab_session => labsession,
 )
 
-# answer = Answer.create!(
-#   :text => "test answer",
-#   :answerer => professor,
-#   :submitted => true,
-# )
 
-# question3.update!(
-#   :answer => answer,
-# )
+answer = Answer.create!(
+  :text => "test answer",
+  :answerer => professor,
+  :submitted => true,
+)
+
+question3.update!(
+  :answer => answer,
+)

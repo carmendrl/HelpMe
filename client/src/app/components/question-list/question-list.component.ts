@@ -149,7 +149,7 @@ export class QuestionListComponent implements OnInit {
       }
 
       checkCollapsed():boolean{
-        this.header === "My Questions" ? this.openCloseEvent.next() : this.isCollapsed = !this.isCollapsed;
+        this.isCollapsed = !this.isCollapsed;
         return this.isCollapsed;
       }
 

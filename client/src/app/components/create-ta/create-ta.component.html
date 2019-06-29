@@ -14,4 +14,10 @@
     <input type="email" class="form-control" id="emailAddress" name="email" [(ngModel)]="email" placeholder="Email">
   </div>
   <button class="btn btn-primary" type="submit" (click)="createTA()">Create</button>
+  <div *ngIf="taCreated" class="alert alert-success">
+    {{createTAmessageSuccess}}
+  </div>
+  <div *ngIf="createTAError" class="alert alert-danger">
+    {{createTAmessageError}}
+  </div>
 </form>

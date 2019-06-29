@@ -40,7 +40,7 @@ are input into this model from the student dashboard, student view, and faculty 
         </tr>
       </thead>
       <tbody>
-        <tr id="questionRow" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " value="question.id">
+        <tr class="questionRow" id="{{question.id}}" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
           <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>
@@ -119,8 +119,9 @@ are input into this model from the student dashboard, student view, and faculty 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
-    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " [ngClass]="question.otherAskers.length>2 ? 'popular' : 'unpopular'">
       <div>
+        <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
         <span> {{question.smallText}} </span><br><br>
       </div>
