@@ -40,7 +40,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private unclaimedQHeader:string = "Unclaimed Questions";
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
-  private otherQHeader:string = "Other Questions";
+  private otherQHeader:string = "All Questions";
   private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
@@ -168,11 +168,13 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             else if(question.claimedBy != undefined && question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
+                this.otherQs.push(question);
               }
               else if(question.claimedBy.id === ""){
                 //this else-if statement puts the question back the unclaimedQs
                 //if it was previous claimed and then unclaimed.
                 this.unclaimedQs.push(question);
+                this.otherQs.push(question);
               }
               else{
                 question.answer = new Answer();
@@ -181,6 +183,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             }
             else{
               this.unclaimedQs.push(question);
+              this.otherQs.push(question);
             }
         }
       }

@@ -13,6 +13,7 @@ import {EditModalComponent} from '../edit-modal/edit-modal.component';
 import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
 import {AssignModalComponent} from '../assign-modal/assign-modal.component';
 import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
+import {AddTagComponent} from '../add-tag/add-tag.component';
 import * as moment from 'moment';
 
 
@@ -64,6 +65,7 @@ export class QuestionListComponent implements OnInit {
   @Input() private showStep: boolean = true;
   @Input() private showNumberOfAskers: boolean = false;
   @Input() private showUnclaimButton: boolean = false;
+  @Input() private showAddTag: boolean = false;
   @Input() private showClaimedBy: boolean = false;
   @Input() public isCollapsed: boolean = true;
   @Input() private readOnly: boolean = false;
@@ -114,6 +116,7 @@ export class QuestionListComponent implements OnInit {
           "refreshEvent": this.refreshEvent,
           "setPauseRefresh":this.setPauseRefresh,
           "pauseRefresh": this.pauseRefresh,
+          "addTag": this.addTag,
 
         }
       }
@@ -310,6 +313,9 @@ export class QuestionListComponent implements OnInit {
           this.labsessionService.copyQuestions.push(question);
         }
       }
+      addTag(question: Question):Observable<any>{
+        return this.openAddTag(AddTagComponent, question);
+      }
 
       getAnswerText(question : Question): string{
           if(question.answer != undefined){
@@ -377,7 +383,22 @@ export class QuestionListComponent implements OnInit {
                   );
                   return from(modal.result);
                 }
-
+      openAddTag(content, question: Question):Observable<any>{
+        let modal= this.modalService.open(content,
+          <NgbModalOptions>{ariaLabelledBy: 'modal-add-tag', });
+          modal.componentInstance.currentQuestion = question;
+          modal.result.then(
+            (result) => {
+          this.setPauseRefresh(false);
+          this.refreshData(result);
+          }, (reason) => {
+            this.setPauseRefresh(false);
+            this.refreshData(reason);
+          }
+            );
+            return from(modal.result);
+          }
+          
           //Delete Modal method
           openDelete(content, question: Question):Observable<any>{
             let modal= this.modalService.open(content,
