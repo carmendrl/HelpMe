@@ -7,6 +7,7 @@ import * as moment from 'moment';
 export class Question extends Entity{
   private _tags : Set<string>;
   private timeDifference: string;
+  private notRendered: boolean = false;
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
@@ -36,13 +37,33 @@ export class Question extends Entity{
 
   set text(text : string) {
     //debugger
-    let tempString = "";
+    // let tempString = "";
     this._text = text;
     this.timeDifference = moment(this.date).fromNow();
-    tempString = tempString + text.substring(19,text.length-6) + " ";
-    tempString = tempString + "(" + this.timeDifference + ")";
+    //debugger;
+    let tempString = JSON.parse(text);
+    //debugger;
+    tempString = tempString["ops"];
+    //debugger;
+    let temp: string = "";
+    for(var i = 0; i < tempString.length; i++){
+      //debugger;
+      if(tempString[i]["insert"]["image"]=== undefined){
+        temp = temp + tempString[i]["insert"];
+      //  debugger;
+      }
+      else{
+        this.notRendered = true;
+        temp = temp + "[Data Could Not Be Rendered]";
+      }
+      //debugger;
+    }
+
+    // let temp:string = "";
+    //debugger;
+    temp = temp + "(" + this.timeDifference + ")";
     //debugger
-    this._smallText = tempString;
+    this._smallText = temp;
   }
 
   get smallText() : string{
