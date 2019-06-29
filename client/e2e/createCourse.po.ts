@@ -77,4 +77,8 @@ export class CreateCourse{
   getLogoutButton(){
     return element(by.css('.logout'));
   }
+
+  getStartSessionComponent(){
+    return element(by.tagName('app-start-session'))
+  }
 }

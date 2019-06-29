@@ -9,6 +9,9 @@ xdescribe('Start session tests', () => {
   });
 
   it('should display the right title', () =>{
+    page.getEmailTextbox().sendKeys('professorlogin@test.com');
+    page.getPasswordTextbox().sendKeys('password');
+    page.getSubmitButton().click();
     page.getPageTitle()
     .then((title:string) => {
         expect(title).toEqual('Dashboard - Help Me');
@@ -42,6 +45,17 @@ xdescribe('Start session tests', () => {
     page.getStartSessionButton().click();
     let form = page.getForm().getAttribute('class');
     expect(form).toContain('ng-valid');
+  });
+
+  it('should get profile menu',() =>{
+    page.navigateTo();
+    expect(page.getProfileMenuComponent()).toBeTruthy();
+    expect(page.getProfileMenu()).toBeTruthy();
+  });
+
+  it('should logout',()=>{
+    page.getProfileMenu().click();
+    page.getLogoutButton().click();
   });
 
 });

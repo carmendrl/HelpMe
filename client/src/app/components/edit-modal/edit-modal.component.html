@@ -18,8 +18,8 @@
 
       </div>
       <div class="modal-footer">
-        <button *ngIf="isNotAStudent() && !currentQuestion.answer.submitted" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(false)">Save Draft</button>
-        <button type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(true)">Save</button>
+        <button id="saveDraft" *ngIf="isNotAStudent() && !currentQuestion.answer.submitted" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(false)">Save Draft</button>
+        <button id="saveButton" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(true)">Save</button>
       </div>
     </form>
   </div>

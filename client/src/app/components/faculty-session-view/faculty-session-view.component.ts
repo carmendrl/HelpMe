@@ -16,6 +16,7 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -50,6 +51,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private loadedSession: LabSession;
   private sessionMessage: string[];
   private loadSessionError: boolean;
+  public href: string = "";
 
 
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
@@ -58,7 +60,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
   constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService,
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, private router: Router,
      sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.unclaimedQs = new Array<Question>();
@@ -79,6 +81,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
+         this.href = this.router.url;
       }
 
       checkNotification(datas : Question[], r:any){
@@ -232,6 +235,14 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       }
       open2(content2) {
         let modal= this.modalService.open(content2, <NgbModalOptions>{ariaLabelledBy: 'modal-search-previous-questions'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+
+      }
+      open3(content3) {
+        let modal= this.modalService.open(content3, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
         }, (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;

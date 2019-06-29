@@ -14,6 +14,7 @@ import { AskQuestionComponent } from '../ask-question/ask-question.component';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
 import { AudioService } from '../../services/audio.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-session-view',
@@ -35,18 +36,20 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
-    private playSound: boolean;
+  private playSound: boolean;
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
   private sessionMessage : string[];
   private loadSessionError: boolean;
+  public href: string = "";
 
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService, private titleService: Title) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService,
+    private titleService: Title, private router: Router) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
@@ -61,6 +64,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.checkIfEnded();
         this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
+        this.href = this.router.url;
       }
 
       checkIfEnded(){

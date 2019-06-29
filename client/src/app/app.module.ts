@@ -43,6 +43,7 @@ import { SessionSearchComponent } from './components/session-search/session-sear
 import { SearchPreviousQuestionsComponent } from './components/search-previous-questions/search-previous-questions.component';
 import { CreateTAComponent } from './components/create-ta/create-ta.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
+import { QRCodeModule } from 'angularx-qrcode';
 
 const Server = '/api';
 
@@ -117,7 +118,8 @@ const customNotifierOptions: NotifierOptions = {
   ],
 
   imports: [
-    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule, NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule
+    BrowserModule, NgbModule.forRoot(), FormsModule, HelpmeRoutingModule, UserManagementModule, HttpClientModule,
+    NotifierModule.withConfig(customNotifierOptions), QuillModule, StorageServiceModule, QRCodeModule
   ],
   providers: [
     UserService,

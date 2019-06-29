@@ -8,7 +8,7 @@ import { Title }     from '@angular/platform-browser';
 import * as moment from 'moment';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import { User } from '../../models/user.model';
-
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-answer-modal',
@@ -38,11 +38,15 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
 
  ngOnDestroy(){
    this.titleService.setTitle('Session View - Help Me');
-   this.sub.unsubscribe();
+   if(environment.production){
+     this.sub.unsubscribe();
+   }
  }
 
  createAnswerFromForm(submitted:boolean){
-   this.sub.unsubscribe();
+   if(environment.production){
+     this.sub.unsubscribe();
+   }
    this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {this.activeModal.close();
  });
   this.addToFaQs();
@@ -55,7 +59,9 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
  }
 
  save(){
-   this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+   if(environment.production){
+     this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+  }
  }
 
  time(){
