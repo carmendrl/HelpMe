@@ -117,7 +117,7 @@ export class QuestionService {
           var askers: Object[] = undefined;
         }
 
-        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
+        userQuestions.unshift(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
       }
 
       return userQuestions;

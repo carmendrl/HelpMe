@@ -16,13 +16,6 @@
 </section>
 
 <section *ngIf="started">
-  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false" [showFinishButton]="false"
-  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
-  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
-</section>
-
-<section *ngIf="started">
   <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
   [filteredQuestions]="faQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly" (refreshEvent)="refreshData()"
    [playSound]="playSound" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
@@ -32,6 +25,13 @@
   <app-question-list name="otherQs" [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
   [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly"
   [playSound]="playSound" (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
+</section>
+
+<section *ngIf="started">
+  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="true" [showFinishButton]="false"
+  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
+  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section *ngIf="!started">
