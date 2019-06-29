@@ -8,7 +8,7 @@
 </div>
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
-<button class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
+<button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
 <br>
 <section class="askQuestion" *ngIf="started">
   <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"

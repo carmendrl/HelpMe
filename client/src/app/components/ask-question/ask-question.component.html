@@ -12,7 +12,7 @@
     <form  #thisForm="ngForm">
 			<div class="form-group form-row">
 				<label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
-				<div class="col-sm-8">
+				<div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
 					<input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
 				</div>
 			</div>

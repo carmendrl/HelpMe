@@ -10,7 +10,7 @@
 <h4 class="center">The current session code is {{token}}</h4>
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
 <div class="btn-group pull-left">
-  <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
+  <button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
   <button *ngIf="!ended" class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
   <button  *ngIf="!showCheck" class="btn btn-primary" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>

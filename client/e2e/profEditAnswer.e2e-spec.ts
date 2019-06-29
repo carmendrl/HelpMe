@@ -1,7 +1,7 @@
 import { ProfEditAnswer } from './profEditAnswer.po';
 import { browser, Key } from 'protractor';
 
-describe('Professor is able to edit an answer', () => {
+xdescribe('Professor is able to edit an answer', () => {
   let page: ProfEditAnswer;
 
   beforeEach(() => {

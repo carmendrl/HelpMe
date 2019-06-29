@@ -1,7 +1,7 @@
 import { TaViewTests } from './taViewTests.po';
 import { browser } from 'protractor';
 
-describe('ta login and act as student', () => {
+xdescribe('ta login and act as student', () => {
   let page: TaViewTests;
 
   beforeEach(() =>{
