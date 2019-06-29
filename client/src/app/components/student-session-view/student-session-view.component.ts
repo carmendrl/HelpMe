@@ -192,5 +192,5 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           this.audioService.playSilentAudio();
           return this.playSound;
         }
-
+        
         }

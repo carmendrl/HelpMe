@@ -11,7 +11,7 @@
 <p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p><br>
 <button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
 <section class="askQuestion" *ngIf="started && !readOnly">
-  <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
+  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
   (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
 </section>
 
