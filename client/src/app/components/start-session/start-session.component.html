@@ -17,7 +17,13 @@
       </div>
       <div>
         <!--button that opens modal-->
-        <a *ngIf="user.Role!='ta'" name= "createCourseButton" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        <span *ngIf="mobile===false">
+          <a *ngIf="user.Role!='ta'" name= "createCourseButtonLarge" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        </span>
+        <span *ngIf="mobile===true">
+          <br>
+          <a *ngIf="user.Role!='ta'" name= "createCourseButtonSmall" class="createCourseButtonSmall inline-block btn btn-primary" style="color:white;margin-left:5vw;" (click)="open(content)">Create Course</a>
+        </span>
         </div>
     </div>
 

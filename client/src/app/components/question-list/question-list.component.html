@@ -121,12 +121,16 @@ are input into this model from the student dashboard, student view, and faculty 
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " [ngClass]="question.otherAskers.length>2 && currentUser.Type!='students' && question.answer==undefined ? 'popular' : 'unpopular'">
       <div>
+        <span  *ngIf="showCheck" style="float:right">
+          <input type="checkbox" (click)="copy(question)"> <label>Copy</label>
+        </span>
         <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
         <span> {{question.smallText}} </span>
         <span *ngIf="showNumberOfAskers"> / Askers: {{question.otherAskers.length}}</span>
         <br><br>
       </div>
+      <br>
       <button *ngIf="question.answer != undefined" class="btn btn-primary" (click)="doToggleAnswer(i)" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">{{answerLabel(i)}}</button>
       <span><td *ngIf="showAction && !readOnly">
 
