@@ -9,14 +9,28 @@
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <h4 class="center">The current session code is {{token}}</h4>
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
-<div class="btn-group pull-left">
+<div class="largeScreen btn-group pull-left">
   <button class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
   <button *ngIf="!ended" class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
   <button  *ngIf="!showCheck" class="btn btn-primary" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
 </div>
-<br>
+<div class="smallScreen">
+    <div class="row">
+      <div class="col">
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button ngbDropdownItem [routerLink]="['/dashboard']">Back</button>
+            <button ngbDropdownItem *ngIf="!ended" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+            <button ngbDropdownItem *ngIf="!showCheck" (click)="showCheck = true;pauseRefresh=true;" >Copy Questions to Another Session</button>
+            <button ngbDropdownItem *ngIf="showCheck" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
+            <button ngbDropdownItem (click)="open2(content2)">Search for Questions to Add</button>
+      </div>
+    </div>
+  </div>
+</div>
 <section>
   <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"

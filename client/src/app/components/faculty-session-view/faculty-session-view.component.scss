@@ -52,3 +52,11 @@
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px;
 }
+@media only screen and (max-width: 600px){
+  .smallScreen{
+    display:inline;
+  }
+  .largeScreen{
+    display:none;
+  }
+}

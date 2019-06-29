@@ -7,10 +7,9 @@
     </label>
 </div>
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
-<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
+<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p><br>
 <button class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
-<br>
-<section class="askQuestion" *ngIf="started">
+<section class="askQuestion" *ngIf="started && !readOnly">
   <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
   (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
 </section>

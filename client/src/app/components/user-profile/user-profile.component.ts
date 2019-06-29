@@ -17,12 +17,16 @@ export class UserProfileComponent implements OnInit {
 
   private currentUser: User;
   closeResult: string;
+  private mobile: boolean = false;
 
   constructor(private userService : UserService, private router : Router, private modalService: NgbModal) {
 
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    if(window.screen.width <= 360){
+      this.mobile = true;
+    };}
 
   logout () : void {
     this.userService.logout().subscribe (
