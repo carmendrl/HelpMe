@@ -119,7 +119,7 @@ are input into this model from the student dashboard, student view, and faculty 
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
-    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " [ngClass]="question.otherAskers.length>2 ? 'popular' : 'unpopular'">
+    <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " [ngClass]="question.otherAskers.length>2 && currentUser.Type!='students' && question.answer==undefined ? 'popular' : 'unpopular'">
       <div>
         <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
