@@ -23,7 +23,7 @@ are input into this model from the student dashboard, student view, and faculty 
 
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
-    <p *ngIf="filter()" class="table-caption">Matching Questions</p>
+    <p *ngIf="filter()" class="table-caption"> Showing Matching Questions:</p>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -70,7 +70,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button id="assignButton" *ngIf="showAssignButton" (click)="performAction(question, i, 'assign')" class="btn btn-primary actionSpace" name="assign">Assign</button>
               <button id="addFaqButton" *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'addFaQ')" name="addFaq" class="btn btn-primary actionSpace">Add FAQ</button>
               <button id="removeFaqButton" *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" name="removeFaq">Remove FAQ</button>
-              <button id="addTag" *ngIf="showAddTag" (click)="performAction(question, i, 'addTag')" class="btn btn-primary actionSpace" name="addTag">Add Tag</button>
+              <button id="addTag" *ngIf="showAddTag" (click)="openTag(content, question)" class="btn btn-primary actionSpace" name="addTag">Add Tag</button>
               <button id="deleteButton" *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace" name="delete">Delete</button>
               <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
               <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
@@ -88,6 +88,7 @@ are input into this model from the student dashboard, student view, and faculty 
                 <button ngbDropdownItem *ngIf="showAssignButton" (click)="performMenuAction(question, i, 'assign')" >Assign</button>
                 <button ngbDropdownItem *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'addFaQ')">Add FAQ</button>
                 <button ngbDropdownItem *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'removeFaQ')">Remove FAQ</button>
+                <button ngbDropdownItem *ngIf="showAddTag" id="addTag" (click)="openTag(content, question)" name="addTag">Add Tag</button>
                 <button ngbDropdownItem *ngIf="showDeleteButton" (click)="performMenuAction(question, i, 'delete')" >Delete</button>
                 <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo')">Me Too!</button>
                 <li class ="divider dropdown-divider"></li>
@@ -168,3 +169,23 @@ are input into this model from the student dashboard, student view, and faculty 
 </div>
 
 </div>
+
+
+<!-- modal to add a tag-->
+<ng-template #content let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-add-tag" aria-labelledBy="modal-add-tag">Add a Tag</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <form>
+        <div class="form-group">
+            <label>Enter a Tag:</label>
+            <input type="text" name="tagtext" [(ngModel)]="tagText" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary" (click)="addTag();d('Cross click');">Add</button>
+      </form>
+  </div>
+</ng-template>

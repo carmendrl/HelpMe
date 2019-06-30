@@ -13,7 +13,8 @@ import {EditModalComponent} from '../edit-modal/edit-modal.component';
 import {AnswerModalComponent} from '../answer-modal/answer-modal.component';
 import {AssignModalComponent} from '../assign-modal/assign-modal.component';
 import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
-import {AddTagComponent} from '../add-tag/add-tag.component';
+import { ApiResponse } from '../../services/api-response';
+
 import * as moment from 'moment';
 
 
@@ -38,11 +39,18 @@ export class QuestionListComponent implements OnInit {
   private searchText:string;
   private step: string;
   private i:number;
+  private tagText: string;
 
   //this variable helps when the dropdown menu is in use.
   private actionSelected:boolean =false; // Because the action of the button happens before the action of the menu closing, this helps make sure that when the menu closes it doesn't interfere with the refresh status for the element.
   private copied: boolean;
 
+  //for error handling
+  private state: string;
+  private errorBoolean: ApiResponse<boolean>;
+  private loadBoolean: boolean;
+  private booleanMessage: string[];
+  private loadBooleanError: boolean;
 
   @Input() private questions : Question[];
   @Input() private filteredQuestions : Question[];
@@ -116,7 +124,6 @@ export class QuestionListComponent implements OnInit {
           "refreshEvent": this.refreshEvent,
           "setPauseRefresh":this.setPauseRefresh,
           "pauseRefresh": this.pauseRefresh,
-          "addTag": this.addTag,
 
         }
       }
@@ -211,8 +218,10 @@ export class QuestionListComponent implements OnInit {
 
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
+        //debugger;
         this.currentQuestion = q;
         this.setPauseRefresh(true);
+        //debugger;
         this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r);
           if (this.selectedAction[i] ==="claim") {this.scrollToClaimedQ()};
           this.selectedAction[i]="";});
@@ -225,6 +234,7 @@ export class QuestionListComponent implements OnInit {
       }
 
       performAction (q: Question, i:number, action : string) {
+        //debugger;
         this.selectedAction[i] = action;
         this.performSelectedAction(q, i);
       }
@@ -313,8 +323,10 @@ export class QuestionListComponent implements OnInit {
           this.labsessionService.copyQuestions.push(question);
         }
       }
-      addTag(question: Question):Observable<any>{
-        return this.openAddTag(AddTagComponent, question);
+      addTag(){
+      //  debugger;
+        this.questionService.addATag(this.currentQuestion, this.tagText).subscribe(r => this.handleAddTagResponse(r));
+        this.currentQuestion.addTag(this.tagText);
       }
 
       getAnswerText(question : Question): string{
@@ -329,6 +341,29 @@ export class QuestionListComponent implements OnInit {
         return "";
       }
 
+      openTag(content, question: Question) {
+        //debugger;
+        this.currentQuestion = question;
+        let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-add-tag'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+        console.log("Testing Modal");
+        // this.courseService.newCourse$.subscribe(
+        //   course => this.modalService.dismissAll()
+        // );
+      }
+
+      private getDismissReason(reason: any): string {
+        if (reason === ModalDismissReasons.ESC) {
+          return 'by pressing ESC';
+        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+          return 'by clicking on a backdrop';
+        } else {
+          return  `with: ${reason}`;
+        }
+      }
       //Edit Modal methods
       openEdit(content, question: Question):Observable<any>{
         let modal = this.modalService.open(content,
@@ -383,26 +418,12 @@ export class QuestionListComponent implements OnInit {
                   );
                   return from(modal.result);
                 }
-      openAddTag(content, question: Question):Observable<any>{
-        let modal= this.modalService.open(content,
-          <NgbModalOptions>{ariaLabelledBy: 'modal-add-tag', });
-          modal.componentInstance.currentQuestion = question;
-          modal.result.then(
-            (result) => {
-          this.setPauseRefresh(false);
-          this.refreshData(result);
-          }, (reason) => {
-            this.setPauseRefresh(false);
-            this.refreshData(reason);
-          }
-            );
-            return from(modal.result);
-          }
-          
+
           //Delete Modal method
           openDelete(content, question: Question):Observable<any>{
+            //debugger;
             let modal= this.modalService.open(content,
-              <NgbModalOptions>{ariaLabelledBy: 'modal-create-answer', });
+              <NgbModalOptions>{ariaLabelledBy: 'modal-delete-qus', });
               modal.componentInstance.currentQuestion = question;
               modal.result.then(
                 (result) => {
@@ -428,7 +449,20 @@ export class QuestionListComponent implements OnInit {
         return false;
       }
 
-
+      private handleAddTagResponse(b: ApiResponse<boolean>){
+        //debugger;
+        if(!b.Successful){
+          this.state = "errorAddingTag";
+          this.errorBoolean = b;
+          this.loadBoolean = <boolean>b.Data;
+          this.booleanMessage = b.ErrorMessages;
+          this.loadBooleanError = true;
+        }
+        else{
+          this.state = "added";
+          this.loadBoolean = <boolean>b.Data;
+        }
+      }
 
           // gravatarImageUrl() : string {
           //     //debugger

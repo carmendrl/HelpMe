@@ -38,6 +38,7 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
               private titleService: Title) { }
 
   ngOnInit() {
+    //debugger;
   this.titleService.setTitle('Add Answer - Help Me');
   this.FaQ = false;
   this.save()

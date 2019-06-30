@@ -18,13 +18,14 @@
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
   <button class="btn btn-primary" type="button" (click)="open3(content3)">QR Code</button>
 </div> -->
+
 <div>
     <div class="row">
       <div class="col">
+        <button class="btn btn-primary" style="margin:1px;" [routerLink]="['/dashboard']">Back</button>
         <div ngbDropdown class="d-inline-block">
           <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem [routerLink]="['/dashboard']">Back</button>
             <button ngbDropdownItem *ngIf="!ended" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
             <button ngbDropdownItem *ngIf="!showCheck" (click)="showCheck = true;pauseRefresh=true;" >Copy Questions to Another Session</button>
             <button ngbDropdownItem *ngIf="showCheck" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>

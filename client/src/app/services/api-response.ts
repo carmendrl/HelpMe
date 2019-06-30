@@ -40,8 +40,7 @@ export class ApiResponse<T> {
 	}
 
 	addErrorsFromHttpError (error : HttpErrorResponse) {
-		this.HttpStatusCode = error.status;
-		debugger;
+		this.HttpStatusCode = error.status
 		if (error.error.error) {
 		 	this.addError(error.error.error.message);
 		}

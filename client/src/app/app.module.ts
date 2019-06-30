@@ -44,7 +44,7 @@ import { SearchPreviousQuestionsComponent } from './components/search-previous-q
 import { CreateTAComponent } from './components/create-ta/create-ta.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { QRCodeModule } from 'angularx-qrcode';
-import { AddTagComponent } from './components/add-tag/add-tag.component';
+
 
 const Server = '/api';
 
@@ -116,7 +116,6 @@ const customNotifierOptions: NotifierOptions = {
     SearchPreviousQuestionsComponent,
     CreateTAComponent,
     DeleteModalComponent,
-    AddTagComponent,
   ],
 
   imports: [
