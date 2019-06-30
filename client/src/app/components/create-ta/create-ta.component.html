@@ -20,4 +20,7 @@
   <div *ngIf="createTAError" class="alert alert-danger">
     {{createTAmessageError}}
   </div>
+  <div *ngIf="pending" class="alert alert-secondary">
+    Creating Account...
+  </div>
 </form>

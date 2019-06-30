@@ -17,6 +17,7 @@ export class CreateTAComponent implements OnInit {
   email: string;
   tempUsers: User[];
   tempUser: User;
+  pending: boolean;
   private state : string;
   private errorUser: ApiResponse<User>;
   private createdUser: User;
@@ -43,7 +44,9 @@ export class CreateTAComponent implements OnInit {
     user.Password = password;
     user.Username = this.firstName +"_"+this.lastName;
     user.Type = "Student";
+    this.pending = true;
     this.userService.createTA(user).subscribe(user => {this.handleCreateTAResponse(user);
+      this.pending = false;
       if(this.state!="errorCreatingTA"){
         this.userService.promoteToTA(user.Data.id).subscribe(user => {
           this.handleCreateTAResponse(user);

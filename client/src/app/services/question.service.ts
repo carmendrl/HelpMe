@@ -191,7 +191,7 @@ export class QuestionService {
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/tags`;
         var added: boolean = false;
         let body = {
-          text: text
+          name: text
         };
         debugger;
         return this.httpClient.post(url, body).pipe(
