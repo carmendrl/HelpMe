@@ -99,4 +99,7 @@
   <div align="center" class="modal-body">
     <qrcode [qrdata]="href" [size]="256" [level]="'M'"></qrcode>
   </div>
+  <div class="modal-footer">
+    <button id="copy" type="button" class="btn btn-outline-dark" (click)="copyQRCode(href)">Copy</button>
+  </div>
 </ng-template>
