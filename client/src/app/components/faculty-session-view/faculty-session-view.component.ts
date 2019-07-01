@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -16,6 +16,9 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
+import { Router } from '@angular/router';
+import {DOCUMENT} from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -39,17 +42,19 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private unclaimedQHeader:string = "Unclaimed Questions";
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
-  private otherQHeader:string = "Other Questions";
+  private otherQHeader:string = "All Questions";
   private claimedCollapsed:boolean = true;
   private copying: number;
   private playSound: boolean;
   private ended: boolean;
+  private copied: boolean = false;
 
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
   private sessionMessage: string[];
   private loadSessionError: boolean;
+  public href: string = "";
 
 
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
@@ -57,8 +62,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
 
-  constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService,
+  constructor(@Inject(DOCUMENT) public document: Document, userService: UserService, questionService: QuestionService, audioService: AudioService,
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, private router: Router,
      sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.unclaimedQs = new Array<Question>();
@@ -79,6 +84,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
+         this.href = `${environment.server}/lab_sessions/${this.sessionId}`;
+         //this.router.url;
       }
 
       checkNotification(datas : Question[], r:any){
@@ -165,11 +172,13 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             else if(question.claimedBy != undefined && question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
+                this.otherQs.push(question);
               }
               else if(question.claimedBy.id === ""){
                 //this else-if statement puts the question back the unclaimedQs
                 //if it was previous claimed and then unclaimed.
                 this.unclaimedQs.push(question);
+                this.otherQs.push(question);
               }
               else{
                 question.answer = new Answer();
@@ -178,6 +187,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             }
             else{
               this.unclaimedQs.push(question);
+              this.otherQs.push(question);
             }
         }
       }
@@ -238,6 +248,14 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         });
 
       }
+      open3(content3) {
+        let modal= this.modalService.open(content3, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result.then((result) => {
+          this.closeResult = `Closed with: ${result}`;
+        }, (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        });
+
+      }
 
       private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
@@ -270,6 +288,20 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         //(when either toggle button is clicked or a question is claimed)
         this.claimedCollapsed = !this.claimedCollapsed;
         return this.claimedCollapsed;
+      }
+
+      copyQRCode(){
+        this.copied = true;
+        let img = this.document.createElement('img');
+        img.src=this.href;
+        this.document.body.appendChild(img);
+        var r = this.document.createRange();
+        r.setStartBefore(img);
+        r.setEndAfter(img);
+        r.selectNode(img);
+        var sel = window.getSelection();
+        sel.addRange(r);
+        this.document.execCommand('Copy');
       }
 
     }

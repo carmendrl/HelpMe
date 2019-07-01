@@ -8,7 +8,7 @@ import { Title }     from '@angular/platform-browser';
 import * as moment from 'moment';
 import { Observable, interval, Subscription, timer } from 'rxjs';
 import { User } from '../../models/user.model';
-
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-answer-modal',
@@ -26,11 +26,19 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
     lastSavedTime: string;
     sub : Subscription;
     private user : User;
+    private toolbarOptions = [
+      ['bold','italic', 'underline', 'strike'],
+      [{'header': 1}, {'header': 2}],
+      [{'size':['small', 'large', 'huge']}],
+      [{'color':[]}],
+      ['link','image','video']
+    ];
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService, private questionService: QuestionService, private modalService: NgbModal,
               private titleService: Title) { }
 
   ngOnInit() {
+    //debugger;
   this.titleService.setTitle('Add Answer - Help Me');
   this.FaQ = false;
   this.save()
@@ -38,11 +46,15 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
 
  ngOnDestroy(){
    this.titleService.setTitle('Session View - Help Me');
-   this.sub.unsubscribe();
+   if(environment.production){
+     this.sub.unsubscribe();
+   }
  }
 
  createAnswerFromForm(submitted:boolean){
-   this.sub.unsubscribe();
+   if(environment.production){
+     this.sub.unsubscribe();
+   }
    this.questionService.answerAQuestion(this.currentQuestion, this.text, submitted).subscribe(r => {this.activeModal.close();
  });
   this.addToFaQs();
@@ -55,7 +67,9 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
  }
 
  save(){
-   this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+   if(environment.production){
+     this.sub = timer(7000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
+  }
  }
 
  time(){

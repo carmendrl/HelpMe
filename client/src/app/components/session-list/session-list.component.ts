@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
 export class SessionListComponent implements OnInit {
 
   @Input() private sessions : LabSession[];
-  @Input() private label : string = "Matching Sessions";
+  @Input() private label : string = "Showing Matching Sessions";
   @Input() public isCollapsed: boolean = true;
   private searchText:string;
 

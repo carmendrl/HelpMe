@@ -17,12 +17,14 @@ export class CreateTAComponent implements OnInit {
   email: string;
   tempUsers: User[];
   tempUser: User;
+  pending: boolean;
   private state : string;
   private errorUser: ApiResponse<User>;
   private createdUser: User;
   private createTAmessageSuccess: string;
   private createTAmessageError: string[];
   private createTAError: boolean;
+  private taCreated : boolean;
 
 
   constructor(private userService: UserService, private modalService: NgbModal) { }
@@ -34,7 +36,7 @@ export class CreateTAComponent implements OnInit {
     let newLastName = this.lastName + "(TA)";
     let email = this.email.substring(0,this.email.indexOf('@')) + "+ta" + this.email.substring(this.email.indexOf('@'));
     let password = this.generatePassword(this.email);
-    debugger;
+    //debugger;
     let user = new User();
     user.FirstName = this.firstName;
     user.LastName = this.lastName;
@@ -42,7 +44,9 @@ export class CreateTAComponent implements OnInit {
     user.Password = password;
     user.Username = this.firstName +"_"+this.lastName;
     user.Type = "Student";
+    this.pending = true;
     this.userService.createTA(user).subscribe(user => {this.handleCreateTAResponse(user);
+      this.pending = false;
       if(this.state!="errorCreatingTA"){
         this.userService.promoteToTA(user.Data.id).subscribe(user => {
           this.handleCreateTAResponse(user);
@@ -57,6 +61,7 @@ export class CreateTAComponent implements OnInit {
 }
 
 private handleCreateTAResponse (ta : ApiResponse<User>) {
+  debugger;
   if (!ta.Successful) {
     this.state = "errorCreatingTA";
     this.errorUser = ta;
@@ -65,6 +70,7 @@ private handleCreateTAResponse (ta : ApiResponse<User>) {
     this.createTAError = true;
   }
   else {
+    this.taCreated = true;
     this.state = "created";
     this.createdUser = <User>ta.Data;
     this.createTAmessageSuccess = "successfully created";

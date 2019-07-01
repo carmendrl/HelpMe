@@ -47,6 +47,12 @@ export class StudentDashboardComponent implements OnInit {
   private questionMessage: string[];
   private getQuestionsError : boolean;
 
+  private stateId : string;
+  private errorId : ApiResponse<string>;
+  private getId : string;
+  private idMessage : string[];
+  private getIdError : boolean;
+
   constructor(private labSessionService : LabSessionService, audioService: AudioService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
     private router : Router) {
     this.sessions = new ApiResponse<LabSession[]>(false);
@@ -75,7 +81,23 @@ export class StudentDashboardComponent implements OnInit {
         this.invalidId = true;
       }
       this.checkIfStarted(sessionId.Data, content);
+      this.handleJoinError(sessionId);
   })
+}
+
+private handleJoinError(id: ApiResponse<string>){
+  debugger;
+  if(!id.Successful){
+    this.stateId = "errorJoiningSession";
+    this.errorId = id;
+    this.getId = <string>id.Data;
+    this.idMessage = id.ErrorMessages;
+    this.getIdError = true;
+  }
+  else{
+    this.state = "loaded";
+    this.getId = <string>id.Data;
+  }
 }
   checkIfStarted(id: string, content){
     this.currentDate = new Date();

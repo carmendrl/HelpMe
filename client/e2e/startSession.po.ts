@@ -1,6 +1,15 @@
 import { browser, by, element, Key} from 'protractor';
 
 export class StartSession{
+  getEmailTextbox() {
+    return element(by.name('Email'));
+  }
+  getPasswordTextbox() {
+    return element(by.name('Password'));
+  }
+  getSubmitButton(){
+    return element(by.css('.loginButton'));
+  }
   navigateTo(){
     return browser.get('/dashboard');
   }
@@ -62,7 +71,13 @@ export class StartSession{
   select(){
     return this.selectACourse().sendKeys('t');
   }
-  // getCourseName(){
-  //   return element(by.css())
-  // }
+  getProfileMenuComponent(){
+    return element(by.tagName('app-user-profile'));
+  }
+  getProfileMenu(){
+    return element(by.css('.menu'));
+  }
+  getLogoutButton(){
+    return element(by.css('.logout'));
+  }
 }

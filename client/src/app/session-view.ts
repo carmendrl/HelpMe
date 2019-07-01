@@ -26,6 +26,7 @@ export abstract class SessionView  {
   protected timeFromRefresh: string;
   protected pauseRefresh: boolean;
   protected isRefreshing: boolean;
+  //protected token: string;
 
   protected state: string;
   private getQuestions : Question[];
@@ -43,6 +44,7 @@ export abstract class SessionView  {
       );
       this.pauseRefresh = false;
       this.sessionId = this.route.snapshot.paramMap.get('id');
+      //this.token = this.route.snapshot.paramMap.get('token');
       this.refreshData({}); //empty object passed in
       this.notifier = notifierService;
     }
@@ -85,10 +87,10 @@ else{
 
 
         private subscribeToData(){
-          //if (environment.production) {
+          if (environment.production) {
             this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
             //empty object is passed into refreshData
-          //}
+          }
         }
 
         setPauseRefresh(r:boolean){

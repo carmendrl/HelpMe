@@ -23,6 +23,14 @@ export class AskQuestionComponent implements OnInit {
   private questionMessage: string;
   private message: SafeHtml;
   private answer: Answer;
+  private openAsk: boolean = false;
+  private toolbarOptions = [
+    ['bold','italic', 'underline', 'strike'],
+    [{'header': 1}, {'header': 2}],
+    [{'size':['small', 'large', 'huge']}],
+    [{'color':[]}],
+    ['link','image','video']
+  ];
 
   @Input() session: string;
 
@@ -107,5 +115,6 @@ export class AskQuestionComponent implements OnInit {
       this.questionMessage = "";
 			this.possibleMatches = [];
     }
+
 
 }

@@ -19,6 +19,7 @@ import { ApiResponse } from '../../services/api-response';
 
 export class StartSessionComponent implements OnInit {
   closeResult: string;
+  private mobile: boolean = false;
   private description: string;
   private year: string;
   private startCourse : Course[];
@@ -60,6 +61,9 @@ export class StartSessionComponent implements OnInit {
     this.courseService.coursesList().subscribe(
       courses => {this.coursesRetrieved=true; this.startCourse = courses.Data; if (courses.Data.length> 0){this.selectedCourse = this.startCourse[0];this.handleGetCoursesError(courses)}});
       this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c;});
+    if(window.screen.width <= 500){
+      this.mobile = true;
+    };
     }
 
     private handleGetCoursesError(courses: ApiResponse<Course[]>){

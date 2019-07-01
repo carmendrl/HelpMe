@@ -6,4 +6,11 @@ class TagsController < ApplicationController
     render json: tag_json(tags)
   end
 
+  def create
+    tag = current_user.tags.create!(tag_params);
+  end
+
+  def tag_params
+    params.permit(:name)
+  end
 end
