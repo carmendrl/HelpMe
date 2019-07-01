@@ -117,7 +117,7 @@ export class QuestionService {
           var askers: Object[] = undefined;
         }
 
-        userQuestions.push(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
+        userQuestions.unshift(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
       }
 
       return userQuestions;
@@ -171,6 +171,8 @@ export class QuestionService {
         );
       }
 
+
+
       //deletes a question
       deleteAQuestion(question: Question): Observable<ApiResponse<boolean>>{
         let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;
@@ -185,7 +187,23 @@ export class QuestionService {
         );
       }
 
+      addATag(question: Question, text: string): Observable<ApiResponse<boolean>>{
+        let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/tags`;
+        var added: boolean = false;
+        let body = {
+          name: text
+        };
+        debugger;
+        return this.httpClient.post(url, body).pipe(
+          map(r => {
+            added = true;
+            let response: ApiResponse<boolean> = new ApiResponse<boolean>(true, added);
+            return response;
+          }),
+          catchError(r => this.handleBooleanQuestionError(r, added))
+        );
 
+      }
 
       updateQuestion(question: Question, text: string, faQ: boolean, plaintext? : string): Observable<ApiResponse<Question>>{
         let url:string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}`;

@@ -13,7 +13,8 @@
       <div class="form-group">
         Answer:
         <!-- <input type="text" [(ngModel)]="text" required> -->
-        <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
+        <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [modules]="{toolbar:toolbarOptions}" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)">
+        </quill-editor>
       </div>
       <div *ngIf="userService.CurrentUser$ | async as user">
         <div [ngSwitch]="user.Type">

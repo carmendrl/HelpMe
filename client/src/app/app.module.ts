@@ -45,6 +45,7 @@ import { CreateTAComponent } from './components/create-ta/create-ta.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { QRCodeModule } from 'angularx-qrcode';
 
+
 const Server = '/api';
 
 //Custom angular notifier options

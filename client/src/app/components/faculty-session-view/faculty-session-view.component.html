@@ -10,21 +10,22 @@
 <h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
 <h4 class="center">The current session code is {{token}}</h4>
 <p class="center">Last refreshed: {{timeFromRefresh}}</p>
-<div class="largeScreen btn-group pull-left">
+<!-- <div class="largeScreen btn-group pull-left">
   <button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary" type="button" [routerLink]="['/dashboard']">back</button><br>
   <button *ngIf="!ended" class="btn btn-primary" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button><br>
   <button  *ngIf="!showCheck" class="btn btn-primary" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
   <button *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
   <button class="btn btn-primary" type="button" (click)="open2(content2)">Search for Questions to Add</button>
   <button class="btn btn-primary" type="button" (click)="open3(content3)">QR Code</button>
-</div>
-<div class="smallScreen">
+</div> -->
+
+<div>
     <div class="row">
       <div class="col">
+        <button class="btn btn-primary" style="margin:1px;" [routerLink]="['/dashboard']">Back</button>
         <div ngbDropdown class="d-inline-block">
           <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button ngbDropdownItem [routerLink]="['/dashboard']">Back</button>
             <button ngbDropdownItem *ngIf="!ended" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
             <button ngbDropdownItem *ngIf="!showCheck" (click)="showCheck = true;pauseRefresh=true;" >Copy Questions to Another Session</button>
             <button ngbDropdownItem *ngIf="showCheck" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
@@ -37,7 +38,7 @@
   <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
-  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck"
+  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
@@ -46,21 +47,21 @@
   <app-question-list #claimedQs id="claimedQs" [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
-  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true"
+  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
 </section>
 
 <section>
   <app-question-list id="faqs" [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
-  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck"
+  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <section>
   <app-question-list id="otherQs" [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
-  [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
+  [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate" [showAddTag]="true"
   [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>

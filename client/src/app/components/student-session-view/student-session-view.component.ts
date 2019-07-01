@@ -31,7 +31,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private subjectAndNumber:string;
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
-  private otherQHeader:string = "All Other Questions";
+  private otherQHeader:string = "All Questions";
   private readOnly: boolean = false;
   private currentDate: Date = new Date();
   private started: boolean = true;
@@ -153,8 +153,9 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
 
           if(this.isMeTooUser){
-            //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
+            //assigned or claimed by me (will keep in myQs even if professor makes it a FAQ)
             this.myQs.push(question);
+            this.allOtherQs.push(question);
           }
           else if (question.faq){
             this.faQs.push(question);
@@ -191,5 +192,5 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           this.audioService.playSilentAudio();
           return this.playSound;
         }
-
+        
         }

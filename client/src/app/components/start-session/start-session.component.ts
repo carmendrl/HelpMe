@@ -61,7 +61,7 @@ export class StartSessionComponent implements OnInit {
     this.courseService.coursesList().subscribe(
       courses => {this.coursesRetrieved=true; this.startCourse = courses.Data; if (courses.Data.length> 0){this.selectedCourse = this.startCourse[0];this.handleGetCoursesError(courses)}});
       this.courseService.newCourse$.subscribe(c => {this.startCourse.unshift(c); this.selectedCourse= c;});
-    if(window.screen.width <= 360){
+    if(window.screen.width <= 500){
       this.mobile = true;
     };
     }
