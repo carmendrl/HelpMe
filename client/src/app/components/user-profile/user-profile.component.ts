@@ -24,7 +24,7 @@ export class UserProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(window.screen.width <= 360){
+    if(window.screen.width <= 500){
       this.mobile = true;
     };}
 

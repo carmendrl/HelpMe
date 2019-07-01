@@ -130,8 +130,9 @@ are input into this model from the student dashboard, student view, and faculty 
         </span>
         <p>{{question.asker.FullName}}</p>
         <span *ngIf="question.step">{{question.step}}.</span>
-        <span *ngIf="!question.notRendered">{{question.smallText}}</span>
-        <span *ngIf="question.notRendered" style="color:red">{{question.smallText}}</span>
+        <span><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor></span>
+        <!-- <span *ngIf="question.notRendered" style="color:red">{{question.smallText}}</span> -->
+        <span>{{timeDiff(question)}}</span>
         <span *ngIf="showNumberOfAskers"> / Askers: {{question.otherAskers.length}}</span>
         <br><br>
       </div>
@@ -158,6 +159,7 @@ are input into this model from the student dashboard, student view, and faculty 
           </div>
         </div>
       </td>
+      <br>
       <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer[i]"
       class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}"
       [modules]="{toolbar: false}" [placeholder]="''" format="json"
