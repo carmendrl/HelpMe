@@ -18,6 +18,7 @@ import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
 import { Router } from '@angular/router';
 import {DOCUMENT} from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -83,7 +84,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
-         this.href = this.router.url;
+         this.href = `${environment.server}/lab_sessions/${this.sessionId}`;
+         //this.router.url;
       }
 
       checkNotification(datas : Question[], r:any){
@@ -288,17 +290,17 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         return this.claimedCollapsed;
       }
 
-      copyQRCode(url){
+      copyQRCode(){
         this.copied = true;
         let img = this.document.createElement('img');
-        img.src=url
+        img.src=this.href;
         this.document.body.appendChild(img);
-        // var r = this.document.createRange();
-        // r.setStartBefore(img);
-        // r.setEndAfter(img);
-        // r.selectNode(img);
-        // var sel = window.getSelection();
-        // sel.addRange(r);
+        var r = this.document.createRange();
+        r.setStartBefore(img);
+        r.setEndAfter(img);
+        r.selectNode(img);
+        var sel = window.getSelection();
+        sel.addRange(r);
         this.document.execCommand('Copy');
       }
 
