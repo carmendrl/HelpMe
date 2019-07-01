@@ -22,7 +22,8 @@
 <div>
     <div class="row">
       <div class="col">
-        <button class="btn btn-primary" style="margin:1px;" [routerLink]="['/dashboard']">Back</button>
+        <button class="btn btn-primary" style="margin:1px;" [routerLink]="['/dashboard']" data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary" >Back</button>
+        <button class="btn btn-primary" type="button" (click)="open3(content3)">QR Code</button>
         <div ngbDropdown class="d-inline-block">
           <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
@@ -99,5 +100,8 @@
   </div>
   <div align="center" class="modal-body">
     <qrcode [qrdata]="href" [size]="256" [level]="'M'"></qrcode>
+  </div>
+  <div class="modal-footer">
+    <button id="copy" type="button" class="btn btn-outline-dark" (click)="copyQRCode()">Copy</button>
   </div>
 </ng-template>

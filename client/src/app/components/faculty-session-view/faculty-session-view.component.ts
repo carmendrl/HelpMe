@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -17,6 +17,8 @@ import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
 import { Router } from '@angular/router';
+import {DOCUMENT} from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -45,6 +47,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private copying: number;
   private playSound: boolean;
   private ended: boolean;
+  private copied: boolean = false;
 
 
   private errorSession: ApiResponse<LabSession>;
@@ -59,7 +62,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
 
 
 
-  constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
+  constructor(@Inject(DOCUMENT) public document: Document, userService: UserService, questionService: QuestionService, audioService: AudioService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService, private router: Router,
      sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
@@ -81,7 +84,8 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
-         this.href = this.router.url;
+         this.href = `${environment.server}/lab_sessions/${this.sessionId}`;
+         //this.router.url;
       }
 
       checkNotification(datas : Question[], r:any){
@@ -284,6 +288,20 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         //(when either toggle button is clicked or a question is claimed)
         this.claimedCollapsed = !this.claimedCollapsed;
         return this.claimedCollapsed;
+      }
+
+      copyQRCode(){
+        this.copied = true;
+        let img = this.document.createElement('img');
+        img.src=this.href;
+        this.document.body.appendChild(img);
+        var r = this.document.createRange();
+        r.setStartBefore(img);
+        r.setEndAfter(img);
+        r.selectNode(img);
+        var sel = window.getSelection();
+        sel.addRange(r);
+        this.document.execCommand('Copy');
       }
 
     }
