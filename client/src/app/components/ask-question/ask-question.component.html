@@ -1,6 +1,6 @@
 
-<button *ngIf="openAsk===false" class="btn btn-primary" (click)="openAsk = true"><label>Ask a Question</label> <i class="fas fa-sort-down"></i></button>
-<button *ngIf="openAsk===true" class="btn btn-primary" (click)="openAsk = false"><label>Ask a Question</label><i class="fas fa-sort-up"></i></button>
+<button *ngIf="openAsk===false" class="btn btn-primary askQuestion" (click)="openAsk = true"><label>Ask a Question</label> <i class="fas fa-sort-down"></i></button>
+<button *ngIf="openAsk===true" class="btn btn-primary askQuestion" (click)="openAsk = false"><label>Ask a Question</label><i class="fas fa-sort-up"></i></button>
 <br *ngIf="openAsk">
 <br *ngIf="openAsk">
 <form  *ngIf="openAsk" #thisForm="ngForm">
