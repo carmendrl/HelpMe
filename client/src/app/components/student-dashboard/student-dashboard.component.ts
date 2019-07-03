@@ -8,6 +8,7 @@ import { LabSession } from '../../models/lab_session.model';
 import { Question } from '../../models/question.model';
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { ApiResponse } from '../../services/api-response';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-student-dashboard',
@@ -53,10 +54,11 @@ export class StudentDashboardComponent implements OnInit {
   private idMessage : string[];
   private getIdError : boolean;
 
-  constructor(private labSessionService : LabSessionService, audioService: AudioService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
+  constructor(private route: ActivatedRoute, private labSessionService : LabSessionService, audioService: AudioService, private userService: UserService, private questionService: QuestionService,private modalService: NgbModal,
     private router : Router) {
     this.sessions = new ApiResponse<LabSession[]>(false);
     this.sessions.Data = new Array<LabSession>();
+    this.token = this.route.snapshot.queryParamMap.get('token');
   }
 
   ngOnInit() {
@@ -149,6 +151,7 @@ private handleJoinError(id: ApiResponse<string>){
       return  `with: ${reason}`;
     }
   }
+
 
 //error handlers
 

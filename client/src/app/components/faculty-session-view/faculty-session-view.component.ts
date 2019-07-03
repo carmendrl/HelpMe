@@ -48,7 +48,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private playSound: boolean;
   private ended: boolean;
   private copied: boolean = false;
-
+private sess: LabSession;
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
   private sessionMessage: string[];
@@ -72,6 +72,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.currentDate = new Date();
       this.userService.CurrentUser$.subscribe(r => this.user = r);
       this.copying = this.sessionService.copyQuestions.length;
+      // this.sess = <LabSession>this.session;
     }
 
       ngOnInit() {
@@ -83,7 +84,9 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
-         this.href = `${environment.server}/lab_sessions/${this.sessionId}`;
+         this.sessionService.getSession(this.sessionId).subscribe(sess => {this.session = sess; this.sess = <LabSession>this.session.Data;
+           this.token = this.sess.token ;this.href = `${environment.server}/dashboard?token=${this.token}`;});
+
 
       }
 
