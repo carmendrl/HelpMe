@@ -165,7 +165,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.myQs.push(question);
             this.allOtherQs.push(question);
             //checks to see if question if user's question is unclaimed
-            if(question.claimedBy.id === undefined){
+            if(question.claimedBy.id === undefined &&  question.answer ===undefined){
               this.myUnclaimedQs.push(question);
             }
 
@@ -176,7 +176,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           else{
             this.allOtherQs.push(question);
           }
-          if(question.claimedBy.id === undefined){
+          if(question.claimedBy.id === undefined &&  question.answer ===undefined){
             this.allUnclaimedQs.push(question);
           }
         }

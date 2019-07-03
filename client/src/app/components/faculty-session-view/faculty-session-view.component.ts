@@ -192,6 +192,8 @@ private sess: LabSession;
               this.otherQs.push(question);
             }
         }
+        //so older questions appear on top
+        this.unclaimedQs.reverse();
       }
       setEndDate(){
         this.currentTime = moment().utc().toDate();
