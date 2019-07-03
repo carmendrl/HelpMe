@@ -11,14 +11,16 @@
 <p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p><br>
 <button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
 
-
 <table class="table table-striped placeInLine tbody" align="right">
+  <div class="positionT">
   <tbody>
     <tr *ngFor= "let q of myUnclaimedQs">
       <td>Your question on step {{q.step}} is <strong>{{q.placeInLine}} in line.</strong></td>
     </tr>
   </tbody>
+  </div>
 </table>
+
 
 <section class="askQuestion" *ngIf="started && !readOnly">
   <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
