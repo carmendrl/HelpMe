@@ -37,6 +37,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private started: boolean = true;
   private startDate: Date;
   private playSound: boolean;
+  private placeInLine:number;
   //private sess: LabSession;
 
   private errorSession: ApiResponse<LabSession>;
@@ -142,6 +143,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.faQs.length = 0;
         this.myQs.length = 0;
         this.allOtherQs.length = 0;
+        let allUnclaimedQs = new Array<Question>();
+        let myUnclaimedQs = new Array<Question>();
 
         for (let question of questions){
 
@@ -157,6 +160,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             //assigned or claimed by me (will keep in myQs even if professor makes it a FAQ)
             this.myQs.push(question);
             this.allOtherQs.push(question);
+            //checks to see if question if user's question is unclaimed
+            if(question.claimedBy === undefined){
+              myUnclaimedQs.push(question);
+            }
+
           }
           else if (question.faq){
             this.faQs.push(question);
@@ -164,6 +172,17 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           else{
             this.allOtherQs.push(question);
           }
+          if(question.claimedBy === undefined){
+            allUnclaimedQs.push(question);
+          }
+        }
+        debugger
+        if(myUnclaimedQs.length != 0){
+          //then find place in line
+          for(let q of myUnclaimedQs){
+            q.placeInLine = allUnclaimedQs.indexOf(q);
+          }
+
         }
       }
 

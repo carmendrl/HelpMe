@@ -13,7 +13,8 @@ export class Question extends Entity{
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: string, private _smallText?: string, private _plaintext? : string) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: string,
+               private _smallText?: string, private _plaintext? : string, private _placeInLine?:number) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -193,6 +194,15 @@ export class Question extends Entity{
 
   set step(step : string){
     this._step = step;
+  }
+
+//place in line is a variable that is exclusively used and controlled in the front end
+  get placeInLine() : number{
+    return this._placeInLine;
+  }
+
+  set placeInLine(placeInLine : number){
+    this._placeInLine = placeInLine;
   }
 
 static createFromJSon(o:Object){
