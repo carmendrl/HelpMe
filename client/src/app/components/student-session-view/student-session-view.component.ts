@@ -38,6 +38,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private startDate: Date;
   private playSound: boolean;
   private placeInLine:number;
+  private myUnclaimedQs:Question[];
+  private allUnclaimedQs:Question[];
   //private sess: LabSession;
 
   private errorSession: ApiResponse<LabSession>;
@@ -56,6 +58,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();
+      this.allUnclaimedQs = new Array<Question>();
+      this.myUnclaimedQs = new Array<Question>();
   }
 
       ngOnInit() {
@@ -143,8 +147,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.faQs.length = 0;
         this.myQs.length = 0;
         this.allOtherQs.length = 0;
-        let allUnclaimedQs = new Array<Question>();
-        let myUnclaimedQs = new Array<Question>();
+        this.allUnclaimedQs.length = 0;
+        this.myUnclaimedQs.length = 0;
 
         for (let question of questions){
 
@@ -161,8 +165,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.myQs.push(question);
             this.allOtherQs.push(question);
             //checks to see if question if user's question is unclaimed
-            if(question.claimedBy === undefined){
-              myUnclaimedQs.push(question);
+            if(question.claimedBy.id === undefined){
+              this.myUnclaimedQs.push(question);
             }
 
           }
@@ -172,15 +176,15 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           else{
             this.allOtherQs.push(question);
           }
-          if(question.claimedBy === undefined){
-            allUnclaimedQs.push(question);
+          if(question.claimedBy.id === undefined){
+            this.allUnclaimedQs.push(question);
           }
         }
-        debugger
-        if(myUnclaimedQs.length != 0){
+        if(this.myUnclaimedQs.length != 0){
           //then find place in line
-          for(let q of myUnclaimedQs){
-            q.placeInLine = allUnclaimedQs.indexOf(q);
+          for(let q of this.myUnclaimedQs){
+            //question are returned with least recent (high index) to most recent (low index)
+            q.placeInLine = this.allUnclaimedQs.length - this.allUnclaimedQs.indexOf(q);
           }
 
         }
