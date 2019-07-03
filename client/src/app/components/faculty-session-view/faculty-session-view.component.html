@@ -23,9 +23,9 @@
     <div class="row">
       <div class="col">
         <button class="btn btn-primary" style="margin:1px;" [routerLink]="['/dashboard']" data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary" >Back</button>
-        <button class="btn btn-primary" type="button" (click)="open3(content3)">QR Code</button>
+        <button class="btn btn-primary" style="margin:1px;" type="button" (click)="open3(content3)">QR Code</button>
         <div ngbDropdown class="d-inline-block">
-          <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
+          <button class="btn btn-outline-primary" style="margin:1px;" id="dropdownBasic1" ngbDropdownToggle>Additional Actions</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button ngbDropdownItem *ngIf="!ended" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
             <button ngbDropdownItem *ngIf="!showCheck" (click)="showCheck = true;pauseRefresh=true;" >Copy Questions to Another Session</button>

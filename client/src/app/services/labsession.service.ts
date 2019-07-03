@@ -196,6 +196,7 @@ export class LabSessionService {
     let url = `${this.apiHost}/lab_sessions/${id}`;
 		let response;
     let session: LabSession;
+    debugger
     return this.httpClient.get<LabSession>(url).pipe(
 			map(r => {
         session = this.createNewLabSessionFromJson(r["data"], r["included"]);

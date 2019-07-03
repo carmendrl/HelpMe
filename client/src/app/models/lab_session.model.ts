@@ -51,6 +51,7 @@ export class LabSession extends Entity {
     session.startDate = o["attributes"]["start_date"];
     session.endDate = o["attributes"]["end_date"];
     session.token = o["attributes"]["token"];
+    //session.members = 
     return session;
   }
 }

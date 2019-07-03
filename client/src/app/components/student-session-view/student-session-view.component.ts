@@ -37,6 +37,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private started: boolean = true;
   private startDate: Date;
   private playSound: boolean;
+  //private sess: LabSession;
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
@@ -64,7 +65,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.checkIfEnded();
         this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
-        this.href = this.router.url;
+        //this.autoJoinASession();
       }
 
       checkIfEnded(){
@@ -187,10 +188,26 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
         }
 
+        // autoJoinASession(){
+        //   this.sessionService.getSession(this.sessionId).subscribe(session => this.session = session);
+        //   debugger
+        //   this.sess = <LabSession>this.session.Data;
+        //   var notInList:boolean;
+        //   debugger
+        //   for (let member of this.sess.members){
+        //     if(this.currentUser.id != member.id){
+        //       notInList = true;
+        //       if(notInList){
+        //       this.sessionService.joinASession(this.sess.token);
+        //     }
+        //   }
+        // }
+        // }
+
         toggleAudio():boolean{
           this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
           this.audioService.playSilentAudio();
           return this.playSound;
         }
-        
+
         }

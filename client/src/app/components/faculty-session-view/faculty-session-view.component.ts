@@ -49,7 +49,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private ended: boolean;
   private copied: boolean = false;
 
-
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
   private sessionMessage: string[];
@@ -85,7 +84,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
          this.href = `${environment.server}/lab_sessions/${this.sessionId}`;
-         //this.router.url;
+
       }
 
       checkNotification(datas : Question[], r:any){
