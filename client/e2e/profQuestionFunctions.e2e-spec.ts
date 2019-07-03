@@ -1,5 +1,5 @@
 import { ProfQuestionFunctionsPage } from './profQuestionFunctions.po';
-describe('Professor Question Functions', () => {
+xdescribe('Professor Question Functions', () => {
   let page: ProfQuestionFunctionsPage;
 
 

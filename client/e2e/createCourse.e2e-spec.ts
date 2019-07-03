@@ -3,30 +3,39 @@ import { browser } from 'protractor';
 //import { StartSessionComponent } from '././components/start-session.component';
 //import { CreateCourseFormComponent } from '././components/create-course-component.component'
 
-xdescribe('Create course tests', () => {
+describe('Create course tests', () => {
   let page: CreateCourse;
 
   beforeEach(() => {
     page = new CreateCourse();
   });
 
-  it('should open modal', () => {
+
+  it('should log in', () => {
   //page.navigateTo();
-  page.getEmailTextbox().sendKeys('professorlogin@test.com');
+  var child_process = require('child_process');
+  child_process.exec('rails runner ~/help-me-web/scripts/createCourseTestSetup.rb',
+  function(err, stdout, stderr){
+    if(err){
+      console.log("child processes failed with error code: " + err.code);
+    }
+  });
+
+  page.getEmailTextbox().sendKeys('professor@hope.edu');
   page.getPasswordTextbox().sendKeys('password');
    page.getSubmitButton().click();
 
-    page.getCreateCourseButton().click();
-
-    expect(page.getOpenModalElement()).toBeTruthy();
-    expect(page.getOpenModalFormElement()).toBeTruthy();
+    // page.getCreateCourseButton().click();
+    //
+    // expect(page.getOpenModalElement()).toBeTruthy();
+    // expect(page.getOpenModalFormElement()).toBeTruthy();
   });
 
-  it('should display right title',() =>{
-    page.navigateTo2();
+  xit('should display right title',() =>{
+    //page.navigateTo2();
     page.getPageTitle()
     .then((title:string) => {
-      expect(title).toEqual('Dashboard - Help Me');
+      expect(title).toEqual('Create a Course - Help Me');
     }
   );
 });
@@ -41,10 +50,12 @@ xdescribe('Create course tests', () => {
    page.getSaveButton().click();
    let form = page.getForm().getAttribute('class');
    expect(form).toContain('ng-valid');
+   browser.sleep(6000);
  });
 
- it('create form should be invalid',() =>{
+ xit('create form should be invalid',() =>{
  page.navigateTo2();
+ browser.sleep(6000);
  page.getCreateCourseButton().click();
  page.getTitleTextBox().sendKeys('Testing Course Form');
  page.getSubjectTextBox().sendKeys('Test');
@@ -55,13 +66,13 @@ xdescribe('Create course tests', () => {
  expect(form).toContain('ng-invalid');
 });
 
-it('should open profile menu',() =>{
+xit('should open profile menu',() =>{
   page.navigateTo2();
   expect(page.getProfileMenuComponent()).toBeTruthy();
   expect(page.getProfileMenu()).toBeTruthy();
 });
 
-it('should log out', () =>{
+xit('should log out', () =>{
   page.getProfileMenu().click();
   page.getLogoutButton().click();
 });
