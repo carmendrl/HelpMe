@@ -57,3 +57,16 @@ h1{
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px;
 }
+
+
+.tbody {
+    tr:nth-child(odd) > td:nth-child(odd) {
+        background: lighten(DodgerBlue, 30%); }
+    tr:nth-child(even) > td:nth-child(odd) {
+        background: lighten(DodgerBlue, 40%); }
+}
+
+.placeInLine{
+    position: relative;
+    width: 290px;
+  }
