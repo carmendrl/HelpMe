@@ -3,7 +3,8 @@ class CoursesController < ApplicationController
   before_action :find_course!, except: [:index, :create]
 
   def index
-    render json: Course.all, each_serializer: CourseSerializer, include: ['instructor']
+    #only courses that the current user (professor) created, are returned
+    render json: Course.where(instructor_id: current_user.id), each_serializer: CourseSerializer, include: ['instructor']
   end
 
   def create
