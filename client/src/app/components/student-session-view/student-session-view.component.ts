@@ -186,6 +186,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             //question are returned with least recent (high index) to most recent (low index)
             q.placeInLine = this.allUnclaimedQs.length - this.allUnclaimedQs.indexOf(q);
           }
+          //makes list displayed with highest priority question on top
+          this.myUnclaimedQs.reverse();
 
         }
       }
