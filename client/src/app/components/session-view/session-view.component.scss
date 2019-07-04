@@ -1,0 +1,32 @@
+#session_status {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	.sessionInfo {
+		font-size: 1.25em;
+		font-weight: bold;
+	}
+
+	.dropdown-toggle {
+		border: none;
+	}
+}
+
+#sound_controls {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	label {
+		margin-right: 3px;
+		margin-bottom: 0px;
+	}
+}
+
+.center{
+  text-align:center;
+}
+.underLine{
+  text-decoration: underline;
+}

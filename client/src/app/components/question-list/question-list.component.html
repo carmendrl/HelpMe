@@ -25,6 +25,7 @@ are input into this model from the student dashboard, student view, and faculty 
     <table class="table table-striped">
       <thead>
         <tr>
+					<th *ngIf="showCheck"><input type="checkbox" (change)="selectAll($event)"></th>
           <th *ngIf="showDate">Date</th>
           <th *ngIf="showCourse">Course</th>
           <th *ngIf="showStep">Step</th>
@@ -36,12 +37,16 @@ are input into this model from the student dashboard, student view, and faculty 
           <th *ngIf="showTimeInQueue">Time in queue</th>
           <th *ngIf="showAnswer">Answer</th>
           <th *ngIf="showAction && !readOnly && !allowSelection">Action</th>
-          <th *ngIf="showCheck"><input type="checkbox" (click)="copyAll(filteredQuestions)">Copy All</th>
         </tr>
       </thead>
       <tbody>
         <tr id="questionRow" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " value="question.id">
-          <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
+					<td *ngIf="showCheck">
+						<div class="d-none d-lg-block d-xl-block">
+							<input type="checkbox" [(ngModel)]="selected[i]" (change)="onQuestionSelectedChanged()">
+							</div>
+							</td>
+					<td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>
           <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
@@ -92,13 +97,8 @@ are input into this model from the student dashboard, student view, and faculty 
               </div>
 
             </div>
-            <button *ngIf="showCheck" type="submit" class ="btn btn-primary">Submit</button>
           </td>
-          <td *ngIf="showCheck">
-            <div class="d-none d-lg-block d-xl-block">
-              <input type="checkbox" (click)="copy(question)"> <label *ngIf="showCheck">Copy</label>
-              </div>
-              </td>
+
         </tr>
       </tbody>
     </table>

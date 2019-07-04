@@ -140,6 +140,37 @@ class QuestionsController < ApplicationController
     render json: current_user.questions_asked.create!(approved_params)
   end
 
+	def copy
+		#  @question contains the question to be copied, set by the find_question
+		#  method
+
+		destination_session = LabSession.find(params[:destination_id])
+
+		copy = Question.create!(
+			step: @question.step,
+			text: @question.text,
+			plaintext: @question.plaintext,
+			original_asker: current_user,
+			lab_session: destination_session
+		)
+
+		original_answer = @question.answer
+
+		if original_answer
+			copy.answer = Answer.create!(
+				text: original_answer.text,
+				status: original_answer.status,
+				submitted: original_answer.submitted,
+				answerer: original_answer.answerer,
+				question: copy
+			)
+		end
+
+		copy.save!
+
+		render json: copy
+	end
+
   def destroy
     if current_user.professor? || @question.askers.count == 1 # The only person is the current user
       @question.destroy!
@@ -208,6 +239,8 @@ class QuestionsController < ApplicationController
   end
 
   def find_question!
+		puts "In find question #{params[:lab_session_id]} #{params[:id]}"
+
     @question = current_user.lab_sessions.find(params[:lab_session_id]).questions.find(params[:id])
   end
 

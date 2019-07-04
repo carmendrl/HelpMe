@@ -1,21 +1,39 @@
 <div *ngIf="userService.CurrentUser$ | async as user">
-  <!-- <div [ngSwitch]="user.Type">
-    <div *ngSwitchCase="'professors'">
-      <app-faculty-session-view></app-faculty-session-view>
-    </div>
-    <div *ngSwitchCase="'students'">
-      <app-student-session-view></app-student-session-view>
-    </div>
-  </div>
-</div> -->
+	
+	<div id="session_status">
+		<div class="sessionInfo">
+			{{subjectAndNumber}}: {{description}} ({{token}})
+			</div>
+
+			<div ngbDropdown class="d-inline-block">
+				<button ngbDropdownToggle><i class="fas fa-cog"></i> Session Settings</button>
+
+				<div ngbDropdownMenu>
+					<button ngbDropdownItem type="button" (click)="toggleAudio()">
+						<span *ngIf="audioService.Unmuted"><i class="fa fa-volume-off"></i></span>
+						<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
+						Turn sound {{ audioService.Unmuted ? "off" : "on"}}
+					</button>
+
+					<button ngbDropdownItem *ngIf="user.Type ==='professors' && !ended" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+					<button ngbDropdownItem *ngIf="user.Type !=='students'" type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
+					<button ngbDropdownItem *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
+					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Search for Questions to Add</button>
+					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to dashboard</button>
+				</div>
+			</div>
+	</div>
+
   <div *ngIf="user.Type==='professors'">
     <app-faculty-session-view></app-faculty-session-view>
   </div>
+
   <div *ngIf="user.Type==='students' && user.Role==='ta'">
     <app-faculty-session-view></app-faculty-session-view>
-    <!-- <app-student-dashboard></app-student-dashboard> -->
   </div>
+
   <div *ngIf="user.Type==='students' && user.Role==='none'">
     <app-student-session-view></app-student-session-view>
   </div>
+
 </div>

@@ -27,6 +27,7 @@ export class QuestionListComponent implements OnInit {
   //Each question has own selected action and determinant of whether the answer is showing or not
   private selectedAction: Array<string>;
   public toggleAnswer: Array<boolean>;
+	public selected: Array<boolean>;
 
   private currentUser : User;
   private currentQuestion: Question;
@@ -81,7 +82,7 @@ export class QuestionListComponent implements OnInit {
   @Output() public claimedQEvent: EventEmitter<any> = new EventEmitter();
   @Output() public openCloseEvent: EventEmitter<any> = new EventEmitter();
 
-
+	@Output() public selectionChanged: EventEmitter<Question[]> = new EventEmitter<Question[]> ();
 
   constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
     private audioService: AudioService, private modalService: NgbModal) {
@@ -121,6 +122,8 @@ export class QuestionListComponent implements OnInit {
       ngOnInit() {
         this.selectedAction = new Array<string>();
         this.toggleAnswer = new Array<boolean>();
+				this.selected = new Array<boolean> (this.filteredQuestions.length);
+				this.selected.fill (false);
       }
 
 			headerStyles() {
@@ -193,6 +196,18 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+			onQuestionSelectedChanged () {
+				let selectedQuestions : Question[] = this.filteredQuestions.filter (
+					(e, index) => this.selected[index]
+				);
+
+				this.selectionChanged.emit (selectedQuestions);
+			}
+
+			unselect (i : number) : void {
+				this.selected[i] = false;
+				this.onQuestionSelectedChanged();
+			}
 
       answerUndefined(question:Question){
         if(question.answer === undefined){
@@ -305,10 +320,12 @@ export class QuestionListComponent implements OnInit {
         this.labsessionService.copyQuestions.push(question);
         this.copied = true;
       }
-      copyAll(questions: Question[]){
-        for(let question of questions){
-          this.labsessionService.copyQuestions.push(question);
-        }
+
+
+      selectAll(event){
+				let isSelected : boolean = event.srcElement.checked;
+				this.selected.fill(isSelected);
+				this.onQuestionSelectedChanged();
       }
 
       getAnswerText(question : Question): string{
@@ -406,14 +423,5 @@ export class QuestionListComponent implements OnInit {
         }
         return false;
       }
-
-
-
-          // gravatarImageUrl() : string {
-          //     //debugger
-          //
-          //
-          //     return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
-          // }
 
         }

@@ -35,7 +35,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
-    private playSound: boolean;
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
@@ -54,7 +53,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   }
 
       ngOnInit() {
-        this.playSound = false;
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
@@ -104,11 +102,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
                 if(data.answer != undefined){
                   if(data.answer.user.id != this.currentUser.id){
                     if(data.step != "" && data.step != undefined){
-                      if(this.playSound){this.audioService.playStudentAudio();}
+                      this.audioService.playStudentAudio();
                       this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
                     }
                     else{
-                      if(this.playSound){this.audioService.playStudentAudio();}
+                      this.audioService.playStudentAudio();
                       this.notifier.notify('info', 'Your question has been answered!');
                     }
                   }
@@ -118,11 +116,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               else{
                 if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
-                    if(this.playSound){this.audioService.playStudentAudio();}
+                    this.audioService.playStudentAudio();
                     this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
                   }
                   else{
-                    if(this.playSound){this.audioService.playStudentAudio();}
+                    this.audioService.playStudentAudio();
                     this.notifier.notify('info', 'The answer to your question has been updated.');
                   }
                 }
@@ -180,12 +178,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.state = "loaded";
             this.loadedSession = <LabSession>session.Data;
           }
-        }
-
-        toggleAudio():boolean{
-          this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
-          this.audioService.playSilentAudio();
-          return this.playSound;
         }
 
         }

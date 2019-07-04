@@ -43,6 +43,7 @@ import { SessionSearchComponent } from './components/session-search/session-sear
 import { SearchPreviousQuestionsComponent } from './components/search-previous-questions/search-previous-questions.component';
 import { CreateTAComponent } from './components/create-ta/create-ta.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
+import { CopyQuestionsDialogComponent } from './components/copy-questions-dialog/copy-questions-dialog.component';
 
 const Server = '/api';
 
@@ -114,6 +115,7 @@ const customNotifierOptions: NotifierOptions = {
     SearchPreviousQuestionsComponent,
     CreateTAComponent,
     DeleteModalComponent,
+    CopyQuestionsDialogComponent,
   ],
 
   imports: [
@@ -135,6 +137,6 @@ const customNotifierOptions: NotifierOptions = {
     LoginComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent]
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent, CopyQuestionsDialogComponent]
 })
 export class AppModule { }

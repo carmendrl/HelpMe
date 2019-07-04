@@ -82,10 +82,10 @@ else{
 
       //want to make this abstract method but must make this an abstract createNewLabSession
       //to make this an abstract class can't have a constructor because can't instantiate
-  
+
 
         private subscribeToData(){
-          if (environment.production) {
+          if (environment.production || environment.auto_refresh_enabled) {
             this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
             //empty object is passed into refreshData
           }

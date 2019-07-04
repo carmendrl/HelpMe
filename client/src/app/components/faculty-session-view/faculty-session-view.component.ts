@@ -42,7 +42,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private otherQHeader:string = "Other Questions";
   private claimedCollapsed:boolean = true;
   private copying: number;
-  private playSound: boolean;
   private ended: boolean;
 
 
@@ -51,11 +50,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private sessionMessage: string[];
   private loadSessionError: boolean;
 
-
-  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
   @ViewChild('claimedQuestions',{static: false}) private claimedQuestions;
-
-
 
   constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService,
@@ -71,7 +66,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
     }
 
       ngOnInit() {
-        this.playSound = true;
         this.questionService.getUpdatedQuestion$.subscribe(r =>
            { this.checkNotification(this.questions, {});
              //empty object passed in (because claimButton wasn't pressed)
@@ -99,7 +93,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                     if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                       if(data.claimedBy.id != undefined){
                         if (data.claimedBy.id === this.user.id){
-                          if(this.playSound){this.audioService.playProfessorAudio();}
+                          this.audioService.playProfessorAudio();
                           this.notifier.notify('info', 'You have been assigned a question!');
                         }
                       }
@@ -122,7 +116,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                   if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                     if(data.claimedBy.id != undefined){
                       if (data.claimedBy.id === this.user.id){
-                        if(this.playSound){this.audioService.playProfessorAudio();}
+                        this.audioService.playProfessorAudio();
                         this.notifier.notify('info', 'You have been assigned a question!');
                       }
                     }
@@ -134,7 +128,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         }
 
         if (this.data && datas.length > this.data.length){
-          if(this.playSound){this.audioService.playProfessorAudio();}
+          this.audioService.playProfessorAudio();
           this.notifier.notify('info', 'A new question has been posted!');
         }
       }
@@ -247,14 +241,6 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
         } else {
           return  `with: ${reason}`;
         }
-      }
-
-      toggleAudio():boolean{
-        // this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
-				// return this.playSound;
-				this.playSound = !this.playSound;
-				this.audioService.playSilentAudio();
-				return this.playSound;
       }
 
       scrollToClaimedQ():boolean{
