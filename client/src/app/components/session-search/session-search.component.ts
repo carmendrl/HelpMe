@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {NgbModal, NgbActiveModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 import { LabSessionService } from '../../services/labsession.service';
 import { QuestionService } from '../../services/question.service';
@@ -14,90 +14,66 @@ import { Question } from '../../models/question.model';
 })
 export class SessionSearchComponent implements OnInit {
 
-  closeResult: string;
   private sessions : LabSession[];
   private selectedSession : LabSession = new LabSession();
   private sessionReloaded : boolean = false;
   private state : string;
-  private question : Question;
-  private errorQuestions: ApiResponse<Question>[];
-  private confirmedQuestions: Question[];
   private stateLabSessions: string;
-  private errorSessions: ApiResponse<LabSession[]>;
-  private loadedSessions: LabSession[];
   private sessionMessage: string[];
   private loadSessionError: boolean;
+
+	@Input() private dropdownLabel : string;
   @Input() private currentLabSession : LabSession;
+
+	@Output() private sessionSelected : EventEmitter<LabSession>;
 
   constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
     private labSessionService : LabSessionService, private questionService: QuestionService) {
       this.sessions = new Array<LabSession>();
+			this.sessionSelected = new EventEmitter<LabSession> ();
     }
 
   ngOnInit() {
     this.loadSessions();
+		if (!this.dropdownLabel) {
+			this.dropdownLabel = "Select session";
+		}
   }
 
   private loadSessions() : void {
     this.sessionReloaded = false;
 
     this.labSessionService.labSessions().subscribe (
-      s => {
-        this.sessions = s.Data;
-        //debugger;
-        if (this.sessions.length > 0) {
-          this.selectedSession = this.sessions[0];
-        }
-        this.handleLoadSessions(s);
-        this.sessionReloaded = true;
+      response => {
+				if (response.Successful) {
+					this.stateLabSessions = "loaded";
+					this.sessions = response.Data.filter(ls => ls.id != this.currentLabSession.id);
+
+					if (this.sessions.length > 0) {
+	          this.selectedSession = this.sessions[0];
+						this.onSessionSelected();
+	        }
+
+	        this.sessionReloaded = true;
+				}
+				else {
+					this.handleLoadSessionsError (response);
+				}
       }
     );
   }
-  private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
-    if(!sessions.Successful){
-      this.stateLabSessions = "errorLoadingSessions";
-      this.errorSessions = sessions;
-      this.loadedSessions = <LabSession[]>sessions.Data;
-      this.sessionMessage = sessions.ErrorMessages;
-      this.loadSessionError = true;
-    }
-    else{
-      this.stateLabSessions = "loaded";
-      this.loadedSessions = <LabSession[]>sessions.Data;
-    }
-  }
-  copyAllQuestions(){
-    //debugger
-    this.state = "copyingQuestions";
-    let sessionSelected = this.selectedSession;
 
-    let copyQuestions = this.labSessionService.copyQuestions;
-    //debugger
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.selectedSession.id, question.step, question.plaintext, question.faq, question.answer));
-
-		//  forkJoin will subscribe to all the questions, and emit a single array value
-		//  containing all of the questions
-		forkJoin(copiedQuestions).subscribe (
-			qArray => this.handleCopyQuestionResponse(qArray)
-		);
-    this.modalService.dismissAll();
-  }
-
-  private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
-		if (qArray.some(r => !r.Successful)) {
-			this.state = "errorCopyingQuesstion";
-			this.errorQuestions = qArray.filter(r => !r.Successful);
-			this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
-		}
-		else {
-			this.state = "copied";
-			this.confirmedQuestions =qArray.map(r => <Question> r.Data);
-		}
+	private onSessionSelected() {
+		this.sessionSelected.emit(this.selectedSession);
 	}
+
+  private handleLoadSessionsError(response: ApiResponse<LabSession[]>){
+    this.stateLabSessions = "errorLoadingSessions";
+    this.loadSessionError = true;
+  }
 
   submitShouldBeDisabled() : boolean {
     return this.selectedSession === undefined;
-    //.id == undefined || this.selectedUser.EmailAddress === ""
   }
 
 }

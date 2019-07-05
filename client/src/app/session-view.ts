@@ -87,7 +87,7 @@ else{
 
 
         private subscribeToData(){
-          if (environment.production) {
+          if (environment.production || environment.auto_refresh_enabled) {
             this.timerSubscription = timer(3000).subscribe(() => this.refreshData({}));
             //empty object is passed into refreshData
           }

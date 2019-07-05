@@ -88,7 +88,6 @@ export class StudentDashboardComponent implements OnInit {
 }
 
 private handleJoinError(id: ApiResponse<string>){
-  debugger;
   if(!id.Successful){
     this.stateId = "errorJoiningSession";
     this.errorId = id;

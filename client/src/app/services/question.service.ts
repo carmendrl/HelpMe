@@ -193,7 +193,6 @@ export class QuestionService {
         let body = {
           name: text
         };
-        debugger;
         return this.httpClient.post(url, body).pipe(
           map(r => {
             added = true;
@@ -356,6 +355,19 @@ export class QuestionService {
           catchError(r => this.handleQuestionError(r,quest))
         );
       }
+
+	copyQuestion (question : Question, toSession : LabSession) : Observable<ApiResponse<Question>> {
+		let url: string = `${this.apiHost}/lab_sessions/${question.session.id}/questions/${question.id}/copy-to/${toSession.id}`;
+		return this.httpClient.post(url, {}).pipe(
+			map (r => {
+				let response : ApiResponse<Question> = new ApiResponse<Question> (true);
+				let newQuestion : Question = Question.createFromJSon(r["data"]);
+				response.Data = newQuestion;
+				return response;
+			})
+		);
+		//  TODO  Add proper error handling for this code
+	}
 
 
 

@@ -1,5 +1,5 @@
 <div class="float-right d-inline-block clearfix menu"  ngbDropdown *ngIf="userService.CurrentUser$ | async as user">
-  <div ngbDropdown *ngIf = "user.Username.length > 0 && mobile===false" >
+  <div ngbDropdown [placement]="mobile ? 'bottom-right' : 'bottom-left'" *ngIf = "user.Username.length > 0" >
     <button class="btn btn-outline-default" id="accountDropdown"  ngbDropdownToggle>
       <!--  At screen size xs, we'll just show the profile icon  -->
       <img class="rounded-circle" [src]="gravatarImageUrl(user)"/>
@@ -12,23 +12,6 @@
       <span class="d-none d-md-inline">
         {{user.FullName}}
       </span>
-    </button>
-
-    <div ngbDropdownMenu>
-      <button ngbDropdownItem (click)="viewProfile()">Edit Profile</button>
-      <button ngbDropdownItem *ngIf="user.Type==='professors'" class="switchToStudent" (click)="switchTypes(user)">Switch to Student View</button>
-      <button ngbDropdownItem *ngIf="user.ActingAsStudent === true" class="switchToProf" (click)="switchTypes(user)">Switch to Professor View</button>
-      <button ngbDropdownItem *ngIf="user.Role==='ta'" (click)="switchRoles(user)" name="taSwitch">Switch to Student View</button>
-      <button ngbDropdownItem *ngIf="user.Role==='none' && user.ActingAsStudent && user.Type==='students'" name="taSwitchBack"(click)="switchRoles(user)">Switch to TA View</button>
-      <button ngbDropdownItem *ngIf="user.Type==='professors'" (click)="open(content)">Create a TA account</button>
-      <button ngbDropdownItem class="logout" (click)="logout()">Log out</button>
-    </div>
-  </div>
-
-  <div ngbDropdown placement="bottom-right" *ngIf = "user.Username.length > 0 && mobile===true" >
-    <button class="btn btn-outline-default" id="accountDropdown"  ngbDropdownToggle>
-      <!--  At screen size xs, we'll just show the profile icon  -->
-      <img class="rounded-circle" [src]="gravatarImageUrl(user)"/>
     </button>
 
     <div ngbDropdownMenu>

@@ -8,5 +8,6 @@ export const environment = {
   production: false,
 	local_storage_mode: SESSION_STORAGE,
 	server: 'http://localhost:4200',
-	api_base: `/api`
+	api_base: `/api`,
+	auto_refresh_enabled: false
 };

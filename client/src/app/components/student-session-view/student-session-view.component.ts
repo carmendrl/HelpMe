@@ -36,7 +36,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
-  private playSound: boolean;
   private placeInLine:number;
   private myUnclaimedQs:Question[];
   private allUnclaimedQs:Question[];
@@ -46,10 +45,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private loadedSession : LabSession;
   private sessionMessage : string[];
   private loadSessionError: boolean;
-  public href: string = "";
-
-  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
-
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService,
@@ -63,7 +58,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   }
 
       ngOnInit() {
-        this.playSound = false;
         this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
         this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
         this.getSessionDescription();
@@ -71,6 +65,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
         //this.autoJoinASession();
+				this.audioService.mute();
       }
 
       checkIfEnded(){
@@ -114,11 +109,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
                 if(data.answer != undefined){
                   if(data.answer.user.id != this.currentUser.id){
                     if(data.step != "" && data.step != undefined){
-                      if(this.playSound){this.audioService.playStudentAudio();}
+                      this.audioService.playStudentAudio();
                       this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
                     }
                     else{
-                      if(this.playSound){this.audioService.playStudentAudio();}
+                      this.audioService.playStudentAudio();
                       this.notifier.notify('info', 'Your question has been answered!');
                     }
                   }
@@ -128,11 +123,11 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
               else{
                 if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
-                    if(this.playSound){this.audioService.playStudentAudio();}
+                    this.audioService.playStudentAudio();
                     this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
                   }
                   else{
-                    if(this.playSound){this.audioService.playStudentAudio();}
+                    this.audioService.playStudentAudio();
                     this.notifier.notify('info', 'The answer to your question has been updated.');
                   }
                 }
@@ -211,28 +206,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.state = "loaded";
             this.loadedSession = <LabSession>session.Data;
           }
-        }
-
-        // autoJoinASession(){
-        //   this.sessionService.getSession(this.sessionId).subscribe(session => this.session = session);
-        //   debugger
-        //   this.sess = <LabSession>this.session.Data;
-        //   var notInList:boolean;
-        //   debugger
-        //   for (let member of this.sess.members){
-        //     if(this.currentUser.id != member.id){
-        //       notInList = true;
-        //       if(notInList){
-        //       this.sessionService.joinASession(this.sess.token);
-        //     }
-        //   }
-        // }
-        // }
-
-        toggleAudio():boolean{
-          this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
-          this.audioService.playSilentAudio();
-          return this.playSound;
         }
 
         }

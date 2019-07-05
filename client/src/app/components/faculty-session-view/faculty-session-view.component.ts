@@ -17,7 +17,6 @@ import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
 import { Router } from '@angular/router';
-import {DOCUMENT} from '@angular/common';
 import { environment } from '../../../environments/environment';
 
 
@@ -45,9 +44,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private otherQHeader:string = "All Questions";
   private claimedCollapsed:boolean = true;
   private copying: number;
-  private playSound: boolean;
   private ended: boolean;
-  private copied: boolean = false;
 private sess: LabSession;
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
@@ -55,14 +52,10 @@ private sess: LabSession;
   private loadSessionError: boolean;
   public href: string = "";
 
-
-  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
   @ViewChild('claimedQuestions',{static: false}) private claimedQuestions;
 
-
-
-  constructor(@Inject(DOCUMENT) public document: Document, userService: UserService, questionService: QuestionService, audioService: AudioService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, private router: Router,
+  constructor(userService: UserService, questionService: QuestionService, audioService: AudioService,
+    route: ActivatedRoute, location: Location, notifierService: NotifierService,
      sessionService:LabSessionService, private titleService: Title, private modalService: NgbModal) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.unclaimedQs = new Array<Question>();
@@ -76,7 +69,6 @@ private sess: LabSession;
     }
 
       ngOnInit() {
-        this.playSound = true;
         this.questionService.getUpdatedQuestion$.subscribe(r =>
            { this.checkNotification(this.questions, {});
              //empty object passed in (because claimButton wasn't pressed)
@@ -108,7 +100,7 @@ private sess: LabSession;
                     if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                       if(data.claimedBy.id != undefined){
                         if (data.claimedBy.id === this.user.id){
-                          if(this.playSound){this.audioService.playProfessorAudio();}
+                          this.audioService.playProfessorAudio();
                           this.notifier.notify('info', 'You have been assigned a question!');
                         }
                       }
@@ -131,7 +123,7 @@ private sess: LabSession;
                   if (q.claimedBy === undefined || q.claimedBy.id!= this.user.id){
                     if(data.claimedBy.id != undefined){
                       if (data.claimedBy.id === this.user.id){
-                        if(this.playSound){this.audioService.playProfessorAudio();}
+                        this.audioService.playProfessorAudio();
                         this.notifier.notify('info', 'You have been assigned a question!');
                       }
                     }
@@ -143,7 +135,7 @@ private sess: LabSession;
         }
 
         if (this.data && datas.length > this.data.length){
-          if(this.playSound){this.audioService.playProfessorAudio();}
+          this.audioService.playProfessorAudio();
           this.notifier.notify('info', 'A new question has been posted!');
         }
       }
@@ -252,14 +244,6 @@ private sess: LabSession;
         });
 
       }
-      open3(content3) {
-        let modal= this.modalService.open(content3, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-
-      }
 
       private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {
@@ -269,13 +253,6 @@ private sess: LabSession;
         } else {
           return  `with: ${reason}`;
         }
-      }
-
-
-      toggleAudio():boolean{
-        this.audioSwitch.nativeElement.checked? this.playSound = true: this.playSound = false;
-        this.audioService.playSilentAudio();
-        return this.playSound;
       }
 
       scrollToClaimedQ():boolean{
@@ -292,20 +269,6 @@ private sess: LabSession;
         //(when either toggle button is clicked or a question is claimed)
         this.claimedCollapsed = !this.claimedCollapsed;
         return this.claimedCollapsed;
-      }
-
-      copyQRCode(){
-        this.copied = true;
-        let img = this.document.createElement('img');
-        img.src=this.href;
-        this.document.body.appendChild(img);
-        var r = this.document.createRange();
-        r.setStartBefore(img);
-        r.setEndAfter(img);
-        r.selectNode(img);
-        var sel = window.getSelection();
-        sel.addRange(r);
-        this.document.execCommand('Copy');
       }
 
     }

@@ -30,6 +30,8 @@ Rails.application.routes.draw do
 	        post "claim"
 	        post "assign"
 
+					post "copy-to/:destination_id", to: "questions#copy"
+
 	        # Tags
 	        get "tags"
 	        post "tags", to: "questions#add_tag"

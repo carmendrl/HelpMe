@@ -171,7 +171,6 @@ export class LabSessionService {
 
 //allows a user to join a session with a token and returns a session id
   joinASession(token: String): Observable<ApiResponse<string>>{
-    //debugger;
     let url: string = `${this.apiHost}/lab_sessions/join/${token}`;
     var id: string;
     let body = {
@@ -196,7 +195,6 @@ export class LabSessionService {
     let url = `${this.apiHost}/lab_sessions/${id}`;
 		let response;
     let session: LabSession;
-    debugger
     return this.httpClient.get<LabSession>(url).pipe(
 			map(r => {
         session = this.createNewLabSessionFromJson(r["data"], r["included"]);
@@ -268,7 +266,6 @@ export class LabSessionService {
   }
 
   private handleStringLabSessionError(error: any, id: string): Observable<ApiResponse<string>>{
-    //debugger;
     let apiResponse: ApiResponse<string> = new ApiResponse<string>(false);
     apiResponse.Data = id;
     if(error instanceof HttpErrorResponse){

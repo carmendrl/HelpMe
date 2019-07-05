@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { LabSessionService } from '../../services/labsession.service';
@@ -10,6 +10,14 @@ import { User } from '../../models/user.model';
 import { QuestionService } from '../../services/question.service';
 import { Router } from '@angular/router';
 
+import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
+import { QRCodeDialogComponent } from '../qrcode-dialog-component/qrcode-dialog.component';
+
+import { AudioService } from '../../services/audio.service';
+import { RoutingHelperService } from '../../services/routing-helper.service';
+
+import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'app-session-view',
   templateUrl: './session-view.component.html',
@@ -17,13 +25,68 @@ import { Router } from '@angular/router';
 })
 export class SessionViewComponent implements OnInit {
 
+	private token : string;
+  private description:string;
+  private subjectAndNumber:string;
 
-  constructor(private userService : UserService, private questionService: QuestionService, private route: ActivatedRoute) {
+	private sessionId : string;
+  private currentSession : LabSession;
+
+  constructor(
+		private userService : UserService, private questionService: QuestionService,
+		private route: ActivatedRoute, private labSessionService : LabSessionService,
+		public audioService : AudioService, private modalService : NgbModal,
+		public routingHelperService : RoutingHelperService
+	) {
   }
 
   ngOnInit() {
-
-
+		this.sessionId = this.route.snapshot.paramMap.get('id');
+		this.labSessionService.getSession(this.sessionId).subscribe(r =>
+			{
+				if (r.Successful) {
+					this.currentSession = r.Data;
+					this.token = this.currentSession.token;
+					this.subjectAndNumber = this.currentSession.course.subjectAndNumber;
+					this.description = this.currentSession.description;
+				}
+				else {
+					//  TODO  Add error handling here
+					console.log('Error loading the lab session');
+				}
+				//this.getSessionError(session)
+			}
+		);
   }
 
+	toggleAudio(): void {
+		this.audioService.toggleAudio();
+		this.audioService.playSilentAudio();
+	}
+
+  openCopyQuestionsModal() {
+    this.questionService.getSessionQuestions(this.sessionId).subscribe (
+			response => {
+				if (response.Successful) {
+					let questions : Question[] = response.Data;
+					let modalRef = this.modalService.open(CopyQuestionsDialogComponent, {size: 'lg'});
+					modalRef.componentInstance.questions = questions;
+					modalRef.componentInstance.currentSession = this.currentSession;
+				}
+				else {
+					//  TODO  Add error handling here
+					console.log("Error occurred trying to retrieve questions for the session");
+				}
+			}
+
+		)
+	}
+
+	openQRCodeModal(dialogContent) : any {
+		let modalRef = this.modalService.open(QRCodeDialogComponent);
+		modalRef.componentInstance.session = this.currentSession;
+
+		//this.qrCodeCopiedSuccessfully = false;
+		//return this.modalService.open(dialogContent, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result;
+	}
 }
