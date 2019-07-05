@@ -21,8 +21,8 @@
 					</select>
 	      </div>
 
-	      <button type="submit"
-	      [disabled]="submitShouldBeDisabled()"
+	      <button id="save" type="submit"
+	      [disabled]="submitShouldBeDisabled()" name="assignButton"
 	      class="btn btn-primary" (click)="assignSelectedUser();">Assign to {{selectedUser.FullName}}</button>
 	    </form>
 

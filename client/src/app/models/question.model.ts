@@ -7,12 +7,14 @@ import * as moment from 'moment';
 export class Question extends Entity{
   private _tags : Set<string>;
   private timeDifference: string;
+  private notRendered: boolean = false;
 
   constructor (private _date?: Date, private _text? : string,
                private _answer? : Answer, private _session? : LabSession,
                _id? : string, private _faQ? : boolean, private _asker? : User,
                private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: string, private _smallText?: string, private _plaintext? : string) {
+               private _claimedBy?:User, private _meToo?:boolean, private _step?: string,
+               private _smallText?: string, private _plaintext? : string, private _placeInLine?:number) {
     super (_id);
     this._tags = new Set<string> ();
     this._faQ = false;
@@ -36,13 +38,33 @@ export class Question extends Entity{
 
   set text(text : string) {
     //debugger
-    let tempString = "";
+    // let tempString = "";
     this._text = text;
     this.timeDifference = moment(this.date).fromNow();
-    tempString = tempString + text.substring(19,text.length-6) + " ";
-    tempString = tempString + "(" + this.timeDifference + ")";
+    //debugger;
+    let tempString = JSON.parse(text);
+    //debugger;
+    tempString = tempString["ops"];
+    //debugger;
+    let temp: string = "";
+    for(var i = 0; i < tempString.length; i++){
+      //debugger;
+      if(tempString[i]["insert"]["image"]=== undefined){
+        temp = temp + tempString[i]["insert"];
+      //  debugger;
+      }
+      else{
+        this.notRendered = true;
+        temp = temp + "[Data Could Not Be Rendered]";
+      }
+      //debugger;
+    }
+
+    // let temp:string = "";
+    //debugger;
+    temp = temp + "(" + this.timeDifference + ")";
     //debugger
-    this._smallText = tempString;
+    this._smallText = temp;
   }
 
   get smallText() : string{
@@ -172,6 +194,15 @@ export class Question extends Entity{
 
   set step(step : string){
     this._step = step;
+  }
+
+//place in line is a variable that is exclusively used and controlled in the front end
+  get placeInLine() : number{
+    return this._placeInLine;
+  }
+
+  set placeInLine(placeInLine : number){
+    this._placeInLine = placeInLine;
   }
 
 static createFromJSon(o:Object){

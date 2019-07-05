@@ -1,6 +1,6 @@
 <!-- modal -->
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Delete a Question</h4>
+    <h4 class="modal-title" id="modal-delete-question" aria-labelledBy="modal-delete-question">Delete a Question</h4>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -39,7 +39,7 @@
     </table>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="deleteQuestion();">Delete Question</button>
+        <button type="button" class="btn btn-primary" (click)="deleteQuestion();" name="deleteButton">Delete Question</button>
         <button type="button" class="btn btn-primary" (click)="activeModal.dismiss();">Cancel</button>
       </div>
   </div>

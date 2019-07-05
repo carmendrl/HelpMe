@@ -4,6 +4,9 @@ export class StudentQuestions{
   navigateTo(){
     return browser.get('/login');
   }
+  navigateTo2(){
+    return browser.get('/dashboard');
+  }
   getEmailTextbox() {
     return element(by.name('Email'));
   }
@@ -18,7 +21,9 @@ export class StudentQuestions{
   getSubmitButton(){
       return element(by.css('.loginButton'));
   }
-
+  getMyQuestionsList(){
+    return element(by.name('myQs'));
+  }
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
@@ -28,9 +33,30 @@ export class StudentQuestions{
   getViewButton(){
     return element(by.name('view'));
   }
+  getMyOpen(){
+    return this.getMyQuestionsList().element(by.name('open'));
+  }
+  getQuestion(i){
+    return this.getOtherQuestionsList().all(by.id('questionRow')).get(i)
+  }
+  getAnswerButton(){
+    return element(by.name('answer'));
+  }
+  getOtherQuestionsList(){
+    return element(by.name('otherQs'));
+  }
   // getAskQuestionSection(){
   //   return element(by.css('askQuestion'));
   // }
+  setUpAnswer(){
+    return element(by.tagName('app-answer-model'));
+  }
+  getSaveButton(){
+    return element(by.id('save'));
+  }
+  getAnswerText(){
+    return element(by.model('answer.text'));
+  }
   getAskQuestion(){
     return element(by.tagName('app-ask-question'));
   }
@@ -60,5 +86,17 @@ export class StudentQuestions{
   }
   getQuestionText(){
     return element(by.name('questionText'));
+  }
+
+  getProfileMenuComponent(){
+    return element(by.tagName('app-user-profile'));
+  }
+
+  getProfileMenu() {
+    return element(by.css('.menu'));
+  }
+
+  getLogoutButton(){
+    return element(by.css('.logout'));
   }
 }

@@ -48,6 +48,7 @@ class QuestionsController < ApplicationController
 		#  from the search and question words - to remove ? and . for
 		#  example
 		search_words = cleanupWords(search_words)
+		puts search_words
 		# search_words = search_words.map do |w|
 		# 	(matches = w.match(/^\W*(\w+)\W*$/)) ? matches[1] : w
 		# end
@@ -59,10 +60,10 @@ class QuestionsController < ApplicationController
 
 		#  Eliminate common stop words
 		filtered_search_words = @filter.filter(search_words).to_set
-		# puts "Filtered search words"
-		# filtered_search_words.each do |w|
-		# 	puts w
-		# end
+		puts "Filtered search words"
+		filtered_search_words.each do |w|
+			puts w
+		end
 
 		#  Early out if the whole search text consists of stop words
 		if filtered_search_words.length == 0
@@ -74,10 +75,10 @@ class QuestionsController < ApplicationController
 		end
 
 		filtered_question_words = @filter.filter(question_words).to_set
-		# puts "Filtered question words"
-		# filtered_question_words.each do |w|
-		# 	puts w
-		# end
+		puts "Filtered question words"
+		filtered_question_words.each do |w|
+			puts w
+		end
 
 		filtered_question_words = filtered_question_words.map do |w|
 			@stemmer.stem(w)

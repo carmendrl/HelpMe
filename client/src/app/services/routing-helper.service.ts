@@ -4,6 +4,10 @@ import { Router, NavigationStart } from '@angular/router';
 import { pipe } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
+import { environment } from '../../environments/environment';
+
+import { LabSession } from '../models/lab_session.model';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -41,8 +45,12 @@ export class RoutingHelperService {
 	goToConfirmPromotionRequests () : void {
 		this.router.navigateByUrl(this.ConfirmPromotionRequestsURL);
 	}
-	
+
 	get ConfirmPromotionRequestsURL () : string {
 		return "/users/confirm-promotions";
+	}
+
+	qrCodeDestinationForSession ( session : LabSession) {
+		return `${environment.server}/dashboard?token=${session.token}`
 	}
 }

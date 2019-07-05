@@ -1,32 +1,8 @@
-<!-- <div id="session_status">
-	<div class="sessionInfo">
-		{{subjectAndNumber}}: {{description}} ({{token}})
-		</div>
-
-		<div ngbDropdown class="d-inline-block">
-			<button ngbDropdownToggle><i class="fas fa-cog"></i> Session Settings</button>
-
-			<div ngbDropdownMenu>
-				<button ngbDropdownItem type="button" (click)="toggleAudio()">
-					<span *ngIf="playSound"><i class="fa fa-volume-off"></i></span>
-					<span *ngIf="!playSound"><i class="fa fa-volume-up"></i></span>
-					Turn sound {{ playSound ? "off" : "on"}}
-				</button>
-
-				<button ngbDropdownItem *ngIf="!ended" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
-				<button ngbDropdownItem *ngIf="!showCheck" type="button" (click)="showCheck = true;pauseRefresh=true;">Copy Questions to Another Session</button>
-				<button ngbDropdownItem *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
-				<button ngbDropdownItem type="button" (click)="open2(content2)">Search for Questions to Add</button>
-				<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to dashboard</button>
-			</div>
-		</div>
-</div> -->
-
 <section>
   <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
   [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
-  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck"
+  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
@@ -35,21 +11,21 @@
   <app-question-list #claimedQs id="claimedQs" [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
   [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
-  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true"
+  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
 </section>
 
 <section>
   <app-question-list id="faqs" [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
-  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck"
+  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck" [showAddTag]="true"
   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <section>
   <app-question-list id="otherQs" [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
-  [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate"
+  [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate" [showAddTag]="true"
   [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>

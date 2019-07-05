@@ -6,7 +6,13 @@
 	padding-top: 1em;
 	padding-bottom: 1em;
 
-	border-top: 1px solid $hopeOrange;
-	border-bottom: 1px solid #f46a1f;
+	border-top: 1px solid DodgerBlue;//$hopeOrange; changed orange color because looked confusing with other question lists on the page
+	border-bottom: 1px solid DodgerBlue;//#f46a1f;
 
+}
+.askQuestion{
+	padding-bottom: 1px;
+}
+label{
+	padding-right:5px;
 }

@@ -26,6 +26,8 @@ export abstract class SessionView  {
   protected timeFromRefresh: string;
   protected pauseRefresh: boolean;
   protected isRefreshing: boolean;
+  protected session: ApiResponse<LabSession>;
+  protected sessionToken: string;
 
   protected state: string;
   private getQuestions : Question[];

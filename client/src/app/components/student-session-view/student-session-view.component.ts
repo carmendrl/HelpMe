@@ -14,6 +14,7 @@ import { AskQuestionComponent } from '../ask-question/ask-question.component';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
 import { AudioService } from '../../services/audio.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-session-view',
@@ -30,26 +31,34 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private subjectAndNumber:string;
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
-  private otherQHeader:string = "All Other Questions";
+  private otherQHeader:string = "All Questions";
   private readOnly: boolean = false;
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
+  private placeInLine:number;
+  private myUnclaimedQs:Question[];
+  private allUnclaimedQs:Question[];
+  //private sess: LabSession;
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
   private sessionMessage : string[];
   private loadSessionError: boolean;
+  public href: string = "";
 
   @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
 
 
   constructor(userService: UserService, questionService: QuestionService,
-    route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService, private titleService: Title) {
+    route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService,
+    private titleService: Title, private router: Router) {
       super(userService, questionService, route, location, notifierService, sessionService, audioService);
       this.faQs = new Array<Question>();
       this.myQs = new Array<Question>();
       this.allOtherQs = new Array<Question>();
+      this.allUnclaimedQs = new Array<Question>();
+      this.myUnclaimedQs = new Array<Question>();
   }
 
       ngOnInit() {
@@ -59,6 +68,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.checkIfEnded();
         this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
+        //this.autoJoinASession();
       }
 
       checkIfEnded(){
@@ -135,6 +145,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.faQs.length = 0;
         this.myQs.length = 0;
         this.allOtherQs.length = 0;
+        this.allUnclaimedQs.length = 0;
+        this.myUnclaimedQs.length = 0;
 
         for (let question of questions){
 
@@ -147,8 +159,14 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
 
           if(this.isMeTooUser){
-            //assinged or claimed by me (will keep in myQs even if professor makes it a FAQ)
+            //assigned or claimed by me (will keep in myQs even if professor makes it a FAQ)
             this.myQs.push(question);
+            this.allOtherQs.push(question);
+            //checks to see if question if user's question is unclaimed
+            if(question.claimedBy.id === undefined &&  question.answer ===undefined){
+              this.myUnclaimedQs.push(question);
+            }
+
           }
           else if (question.faq){
             this.faQs.push(question);
@@ -156,6 +174,19 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           else{
             this.allOtherQs.push(question);
           }
+          if(question.claimedBy.id === undefined &&  question.answer ===undefined){
+            this.allUnclaimedQs.push(question);
+          }
+        }
+        if(this.myUnclaimedQs.length != 0){
+          //then find place in line
+          for(let q of this.myUnclaimedQs){
+            //question are returned with least recent (high index) to most recent (low index)
+            q.placeInLine = this.allUnclaimedQs.length - this.allUnclaimedQs.indexOf(q);
+          }
+          //makes list displayed with highest priority question on top
+          this.myUnclaimedQs.reverse();
+
         }
       }
 

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, DOCUMENT } from '@angular/common';
 import { LabSessionService } from '../../services/labsession.service';
 import { LabSession } from '../../models/lab_session.model';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
 
 import { AudioService } from '../../services/audio.service';
+import { RoutingHelperService } from '../../services/routing-helper.service';
 
 import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-bootstrap';
 
@@ -30,11 +31,20 @@ export class SessionViewComponent implements OnInit {
 	private sessionId : string;
   private currentSession : LabSession;
 
+	public qrCodeCopiedSuccessfully : boolean;
+
   constructor(
 		private userService : UserService, private questionService: QuestionService,
 		private route: ActivatedRoute, private labSessionService : LabSessionService,
-		public audioService : AudioService, private modalService : NgbModal) {
+		public audioService : AudioService, private modalService : NgbModal,
+		public routingHelperService : RoutingHelperService,
+		@Inject(DOCUMENT) public document: Document
+	) {
   }
+
+	get qrCodeDestination() : string {
+		return this.routingHelperService.qrCodeDestinationForSession(this.currentSession);
+	}
 
   ngOnInit() {
 		this.sessionId = this.route.snapshot.paramMap.get('id');
@@ -54,6 +64,7 @@ export class SessionViewComponent implements OnInit {
 			}
 		);
   }
+
 	toggleAudio(): void {
 		this.audioService.toggleAudio();
 		this.audioService.playSilentAudio();
@@ -75,5 +86,24 @@ export class SessionViewComponent implements OnInit {
 			}
 
 		)
+	}
+
+	openQRCodeModal(dialogContent) : any {
+		this.qrCodeCopiedSuccessfully = false;
+		return this.modalService.open(dialogContent, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result;
+	}
+
+	copyQRCode(){
+		let img = this.document.createElement('img');
+		img.src=this.qrCodeDestination;
+		this.document.body.appendChild(img);
+		var r = this.document.createRange();
+		r.setStartBefore(img);
+		r.setEndAfter(img);
+		r.selectNode(img);
+		var sel = window.getSelection();
+		sel.addRange(r);
+		this.document.execCommand('Copy');
+		this.qrCodeCopiedSuccessfully = true;
 	}
 }

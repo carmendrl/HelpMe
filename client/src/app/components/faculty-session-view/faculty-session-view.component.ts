@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Inject } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { QuestionService } from '../../services/question.service';
 import { SessionView } from '../../session-view';
@@ -16,6 +16,8 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import * as moment from 'moment';
 import { Title }     from '@angular/platform-browser';
 import { ApiResponse } from '../../services/api-response';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -39,16 +41,16 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
   private unclaimedQHeader:string = "Unclaimed Questions";
   private myQHeader:string = "My Questions";
   private faqHeader:string = "Frequently Asked Questions";
-  private otherQHeader:string = "Other Questions";
+  private otherQHeader:string = "All Questions";
   private claimedCollapsed:boolean = true;
   private copying: number;
   private ended: boolean;
-
-
+private sess: LabSession;
   private errorSession: ApiResponse<LabSession>;
   private loadedSession: LabSession;
   private sessionMessage: string[];
   private loadSessionError: boolean;
+  public href: string = "";
 
   @ViewChild('claimedQuestions',{static: false}) private claimedQuestions;
 
@@ -63,6 +65,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
       this.currentDate = new Date();
       this.userService.CurrentUser$.subscribe(r => this.user = r);
       this.copying = this.sessionService.copyQuestions.length;
+      // this.sess = <LabSession>this.session;
     }
 
       ngOnInit() {
@@ -73,6 +76,10 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
          this.getSessionCodeAndDescription();
          this.titleService.setTitle(`Session View - Help Me`);
          this.checkIfEnded();
+         this.sessionService.getSession(this.sessionId).subscribe(sess => {this.session = sess; this.sess = <LabSession>this.session.Data;
+           this.token = this.sess.token ;this.href = `${environment.server}/dashboard?token=${this.token}`;});
+
+
       }
 
       checkNotification(datas : Question[], r:any){
@@ -159,11 +166,13 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             else if(question.claimedBy != undefined && question.claimedBy.id != undefined){
               if(question.claimedBy.id === this.currentUser.id){
                 this.myQs.push(question);
+                this.otherQs.push(question);
               }
               else if(question.claimedBy.id === ""){
                 //this else-if statement puts the question back the unclaimedQs
                 //if it was previous claimed and then unclaimed.
                 this.unclaimedQs.push(question);
+                this.otherQs.push(question);
               }
               else{
                 question.answer = new Answer();
@@ -172,8 +181,11 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
             }
             else{
               this.unclaimedQs.push(question);
+              this.otherQs.push(question);
             }
         }
+        //so older questions appear on top
+        this.unclaimedQs.reverse();
       }
       setEndDate(){
         this.currentTime = moment().utc().toDate();

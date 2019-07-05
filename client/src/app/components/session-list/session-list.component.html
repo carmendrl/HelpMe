@@ -1,7 +1,7 @@
 <div class="largeScreen">
 <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
 <div class="results">
-<p *ngIf="filter()" class="table-caption">{{label}}</p>
+<p *ngIf="filter()" class="table-caption" style="font-size:1.5vw;">{{label}}</p>
   <table class="table table-striped">
     <thead>
       <tr>
@@ -45,7 +45,7 @@
       <span>{{session.course.subjectAndNumber}}- </span>
       <span>{{session.description}} </span>
       <span>({{session.professor.LastName}}) </span>
-      <button class="btn btn-primary actionSpace" (click)="viewSession(session);playSlientAudio();">View</button>
+      <button class="btn btn-primary actionSpace" (click)="viewSession(session);playSlientAudio();" name="view">View</button>
         </div>
       <hr>
     </div>

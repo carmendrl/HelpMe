@@ -3,12 +3,7 @@
   margin: 0;
   padding: 0;
 }
-.popular{
 
-}
-.notPopular{
-
-}
 .fa-hand-paper{
   font-size:2vw;
   float:right;
@@ -33,6 +28,10 @@
 	display: inline-block;
 }
 
+.popular{
+  background-color: PeachPuff;
+}
+
 @media only screen and (max-width: 600px){
   .smallScreen{
     display:inline;
@@ -53,4 +52,11 @@
 
 .button{
   float:left;
+}
+.ql-editor{
+  width:50%;
+  border:none;
+}
+.table-caption{
+  font-size:1.5vw;
 }

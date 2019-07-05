@@ -1,5 +1,5 @@
 <div *ngIf="userService.CurrentUser$ | async as user">
-	
+
 	<div id="session_status">
 		<div class="sessionInfo">
 			{{subjectAndNumber}}: {{description}} ({{token}})
@@ -16,10 +16,11 @@
 					</button>
 
 					<button ngbDropdownItem *ngIf="user.Type ==='professors' && !ended" type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+					<button class="btn btn-primary" style="margin:1px;" type="button" (click)="openQRCodeModal(qrModalContent)">QR Code</button>
 					<button ngbDropdownItem *ngIf="user.Type !=='students'" type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
 					<button ngbDropdownItem *ngIf="showCheck" class="btn btn-primary" type="button" (click)="pauseRefresh=false;open(content);showCheck=false;refreshData();">Select a Session</button>
 					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Search for Questions to Add</button>
-					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to dashboard</button>
+					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']" placement="top" ngbTooltip="Go back to Dashboard">Back</button>
 				</div>
 			</div>
 	</div>
@@ -37,3 +38,19 @@
   </div>
 
 </div>
+
+<ng-template #qrModalContent let-modal let-d="dismiss" let-c="close">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-qrcode" aria-labelledBy="modal-qrcode">QR Code</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div align="center" class="modal-body">
+    <qrcode [qrdata]="qrCodeDestination" [size]="256" [level]="'M'"></qrcode>
+  </div>
+  <div class="modal-footer">
+    <button id="copy" type="button" class="btn btn-outline-dark" (click)="copyQRCode()">Copy</button>
+		<div *ngIf="qrCodeCopiedSuccessfully" class="alert alert-success">The QR Code was copied to the clipboard</div>
+  </div>
+</ng-template>

@@ -1,5 +1,4 @@
 <form  #thisForm="ngForm">
-  <h4>Create a New TA Account</h4>
   <br>
   <div class="form-group">
     <label for="firstName">TA First Name:</label>
@@ -14,4 +13,13 @@
     <input type="email" class="form-control" id="emailAddress" name="email" [(ngModel)]="email" placeholder="Email">
   </div>
   <button class="btn btn-primary" type="submit" (click)="createTA()">Create</button>
+  <div *ngIf="taCreated" class="alert alert-success">
+    {{createTAmessageSuccess}}
+  </div>
+  <div *ngIf="createTAError" class="alert alert-danger">
+    {{createTAmessageError}}
+  </div>
+  <div *ngIf="pending" class="alert alert-secondary">
+    Creating Account...
+  </div>
 </form>

@@ -6,20 +6,25 @@
         <span class="onoffswitch-switch"></span>
     </label>
 </div>
-<h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
-<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p>
-<button class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
-<br>
-<section class="askQuestion" *ngIf="started">
-  <app-ask-question *ngIf="!readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
-  (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
-</section>
 
-<section *ngIf="started">
-  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="false" [showFinishButton]="false"
-  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
-  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+<h2 class="center underLine" >{{subjectAndNumber}}: {{description}}</h2>
+<p *ngIf="!readOnly" class="center">Last refreshed: {{timeFromRefresh}} </p><br>
+<button data-toggle="tooltip" data-placement="top" title="Go back to Dashboard" class="btn btn-primary back" type="button" [routerLink]="['/dashboard']">back</button>
+
+<table class="table table-striped placeInLine tbody" align="right">
+  <div class="positionT">
+  <tbody>
+    <tr *ngFor= "let q of myUnclaimedQs">
+      <td>Your question on step {{q.step}} is <strong>{{q.placeInLine}} in line.</strong></td>
+    </tr>
+  </tbody>
+  </div>
+</table>
+
+
+<section class="askQuestion" *ngIf="started && !readOnly">
+  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
+  (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
 </section>
 
 <section *ngIf="started">
@@ -32,6 +37,13 @@
   <app-question-list name="otherQs" [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
   [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly"
   [playSound]="playSound" (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
+</section>
+
+<section *ngIf="started">
+  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="true" [showFinishButton]="false"
+  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
+  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section *ngIf="!started">

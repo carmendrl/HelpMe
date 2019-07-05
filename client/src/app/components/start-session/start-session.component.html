@@ -17,7 +17,13 @@
       </div>
       <div>
         <!--button that opens modal-->
-        <a *ngIf="user.Role!='ta'" name= "createCourseButton" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        <span *ngIf="mobile===false">
+          <a *ngIf="user.Role!='ta'" name= "createCourseButtonLarge" class="createCourseButton inline-block btn btn-primary" style="color:white;" (click)="open(content)">Create Course</a>
+        </span>
+        <span *ngIf="mobile===true">
+          <br>
+          <a *ngIf="user.Role!='ta'" name= "createCourseButtonSmall" class="createCourseButtonSmall inline-block btn btn-primary" style="color:white;margin-left:5vw;" (click)="open(content)">Create Course</a>
+        </span>
         </div>
     </div>
 
@@ -44,10 +50,10 @@
       <div class="form-inline dateDiv" >
         <div class="form-group" >
           <div class="input-group">
-            <input class="form-control" placeholder="yyyy-mm-dd"
+            <input name="start_date" class="form-control" placeholder="yyyy-mm-dd"
             name="dp" [(ngModel)]="start_date" ngbDatepicker #d="ngbDatepicker" maxlength ="10" required>
             <div class ="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
+              <button name="select_start" class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button">Select</button>
             </div>
           </div>
         </div>
@@ -70,9 +76,9 @@
         <div class="form-group" >
           <div class="input-group">
             <input class="form-control" placeholder="yyyy-mm-dd"
-            name="p" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
+            name="end_date" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
             <div class ="input-group-append">
-              <button class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
+              <button name="select_end" class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
             </div>
           </div>
         </div>
@@ -87,7 +93,7 @@
 
     <div class="row form-group">
       <div class="col">
-        <button type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary startSessionButton">Start</button>
+        <button name="start" type="submit" [disabled]="!(thisForm.valid)" class="btn btn-primary startSessionButton">Start</button>
       </div>
     </div>
 
@@ -104,7 +110,7 @@
           Session code is <strong>{{generatedCode}}</strong>
         </p>
         <p *ngIf= "newSession != undefined">
-          <a [routerLink]="['/lab_sessions', newSession.id]" (click)="d('Cross click')">Go to session</a>
+          <a [routerLink]="['/lab_sessions/', generatedId]" (click)="d('Cross click')">Go to session</a>
         </p>
         <span (click)="copySessionCode()"  class="btn btn-primary">Copy Session Code</span>
         <span (click)="copySessionLink()"  class="btn btn-primary spanSpace">Copy Session Link</span>
