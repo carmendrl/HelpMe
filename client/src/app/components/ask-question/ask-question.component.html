@@ -1,9 +1,13 @@
 
-<button *ngIf="openAsk===false" class="btn btn-primary askQuestion" (click)="openAsk = true"><label>Ask a Question</label> <i class="fas fa-sort-down"></i></button>
+<!-- <button *ngIf="openAsk===false" class="btn btn-primary askQuestion" (click)="openAsk = true"><label>Ask a Question</label> <i class="fas fa-sort-down"></i></button>
 <button *ngIf="openAsk===true" class="btn btn-primary askQuestion" (click)="openAsk = false"><label>Ask a Question</label><i class="fas fa-sort-up"></i></button>
 <br *ngIf="openAsk">
-<br *ngIf="openAsk">
-<form  *ngIf="openAsk" #thisForm="ngForm">
+<br *ngIf="openAsk"> -->
+
+	<button class="btn btn-primary" (click) = "openAsk = true" *ngIf="!openAsk">Ask a Question</button>
+	<p class="d-inline-block" *ngIf="openAsk"><strong>What's your question?</strong></p>
+
+	<form  *ngIf="openAsk" #thisForm="ngForm">
   <div class="form-group form-row">
     <label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
     <div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
@@ -13,7 +17,7 @@
 
  <!-- <quill-editor  class="qEditor smallScreen" format="json" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor> -->
   <quill-editor class="qEditor" format="json" name="askQuestion"[(ngModel)]="questionMessage"
-      [styles]="{height: '200px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
+      [styles]="{height: '100px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
       (onContentChanged)="editorContentChanged($event)" [placeholder]="'Enter your question'" required>
   </quill-editor>
 
@@ -32,5 +36,6 @@
 <br>
 <div>
   <button name="submitQuestion" type="button" class="btn btn-primary" (click)="createQuestion();this.reset();">Submit Question</button>
+  <button name="cancelQuestion" type="button" class="btn btn-secondary ml-2" (click)="this.reset(); openAsk = false">Cancel</button>
 </div>
 </form>

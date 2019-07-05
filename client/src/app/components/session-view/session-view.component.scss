@@ -1,7 +1,7 @@
 #session_status {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: flex-start;
 	align-items: center;
 
 	.sessionInfo {
@@ -10,7 +10,9 @@
 	}
 
 	.dropdown-toggle {
-		border: none;
+		&:active, &:focus {
+			box-shadow: none;
+		}
 	}
 }
 

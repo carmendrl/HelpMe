@@ -45,10 +45,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private loadedSession : LabSession;
   private sessionMessage : string[];
   private loadSessionError: boolean;
-  public href: string = "";
-
-  @ViewChild('myonoffswitch',{static: false}) private audioSwitch;
-
 
   constructor(userService: UserService, questionService: QuestionService,
     route: ActivatedRoute, location: Location, notifierService: NotifierService, audioService: AudioService, sessionService:LabSessionService,
@@ -69,6 +65,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
         this.titleService.setTitle(`Session View - Help Me`);
         this.checkIfStarted();
         //this.autoJoinASession();
+				this.audioService.mute();
       }
 
       checkIfEnded(){

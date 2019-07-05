@@ -44,3 +44,8 @@ input[type='text'], input[type='password'], input[type='email'] {
 	padding-top: 0px !important;
 	padding-left: 0px;
 }
+
+/* Don't modify text size within the quill container  */
+.ql-container {
+	font-size: 100% !important;
+}

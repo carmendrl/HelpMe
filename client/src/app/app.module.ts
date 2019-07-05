@@ -45,6 +45,7 @@ import { CreateTAComponent } from './components/create-ta/create-ta.component';
 import { DeleteModalComponent } from './components/delete-modal/delete-modal.component';
 import { QRCodeModule } from 'angularx-qrcode';
 import { CopyQuestionsDialogComponent } from './components/copy-questions-dialog/copy-questions-dialog.component';
+import { QRCodeDialogComponent } from './components/qrcode-dialog-component/qrcode-dialog.component';
 
 
 const Server = '/api';
@@ -118,6 +119,7 @@ const customNotifierOptions: NotifierOptions = {
     CreateTAComponent,
     DeleteModalComponent,
     CopyQuestionsDialogComponent,
+    QRCodeDialogComponent,
   ],
 
   imports: [
@@ -140,6 +142,6 @@ const customNotifierOptions: NotifierOptions = {
     LoginComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent, CopyQuestionsDialogComponent]
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent, CopyQuestionsDialogComponent, QRCodeDialogComponent]
 })
 export class AppModule { }
