@@ -59,6 +59,7 @@ export class StudentDashboardComponent implements OnInit {
     this.sessions = new ApiResponse<LabSession[]>(false);
     this.sessions.Data = new Array<LabSession>();
     this.token = this.route.snapshot.queryParamMap.get('token');
+		this.myQuestions = [];
   }
 
   ngOnInit() {
