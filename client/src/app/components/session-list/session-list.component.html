@@ -41,13 +41,15 @@
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
   <div class="results">
-    <div *ngFor = "let session of sessions | sessionfilter: searchText">
-      <span>{{session.course.subjectAndNumber}}- </span>
-      <span>{{session.description}} </span>
-      <span>({{session.professor.LastName}}) </span>
-      <button class="btn btn-primary actionSpace" (click)="viewSession(session);playSlientAudio();" name="view">View</button>
-        </div>
-      <hr>
+		<ul class="list-unstyled">
+	    <li *ngFor = "let session of sessions | sessionfilter: searchText" class="mt-2">
+				<a [routerLink]="['/lab_sessions', session.id]">
+	      <span>{{session.course.subjectAndNumber}}- </span>
+	      <span>{{session.description}} </span>
+	      <span>({{session.professor.LastName}}) </span>
+				</a>
+	    </li>
+		</ul>
     </div>
   </div>
 </div>

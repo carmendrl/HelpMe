@@ -10,6 +10,8 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { CopyQuestionsStatusComponent } from '../copy-questions-status/copy-questions-status.component';
+
 @Component({
   selector: 'app-search-previous-questions',
   templateUrl: './search-previous-questions.component.html',
@@ -17,24 +19,18 @@ import { Location } from '@angular/common';
 })
 export class SearchPreviousQuestionsComponent implements OnInit {
 
-  closeResult: string;
-  private sessions : LabSession[];
-  private selectedSession : LabSession = new LabSession();
-  private sessionReloaded : boolean = false;
+  private selectedSession : LabSession;
   private sessionQuestions : Question[];
-  private stateQuestions : string;
-  private sessionId: string;
-  private question : Question;
+  private state : string;
   private errorQuestions: ApiResponse<Question>[];
   private confirmedQuestions: Question[];
-  private stateLabSessions: string;
-  private errorSessions: ApiResponse<LabSession[]>;
-  private loadedSessions: LabSession[];
-  private sessionMessage: string[];
-  private loadSessionError: boolean;
-  @Input() private currentLabSession : string;
+  @Input() private currentSession : LabSession;
 
-  private state: string;
+	private notAnsweredSelection : Question[] = new Array<Question>();
+	private answeredSelection : Question[] = new Array<Question>();
+	private faqSelection : Question[] = new Array<Question>();
+	private selectedQuestions : Question[] = new Array<Question>();
+
   private getQuestions : Question[];
   private questionMessage : string[];
   private getQuestionsError: boolean;
@@ -43,72 +39,85 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private FaQs: Question[];
   private answeredQs: Question[];
   private notAnsweredQs: Question[];
-  currentDate: Date;
+
   faqHeader: string = "FAQs";
   answeredQuestionsHeader: string = "Answered Questions";
   notAnsweredHeader: string = "Unanswered Questions";
 
+	//  These are needed because an Angular template can only access
+	//  instance fields, not static member variables
+	private readonly selecting = CopyQuestionsStatusComponent.SELECTING;
+	private readonly copying = CopyQuestionsStatusComponent.COPYING;
+	private readonly copied = CopyQuestionsStatusComponent.COPIED;
+	private readonly error = CopyQuestionsStatusComponent.ERROR;
 
-
-  constructor(private activeModal: NgbActiveModal, private modalService: NgbModal,
+  constructor(private activeModal: NgbActiveModal,
     private labSessionService : LabSessionService, private questionService: QuestionService, private route: ActivatedRoute, privatelocation: Location) {
       this.FaQs = new Array<Question>();
       this.answeredQs= new Array<Question>();
       this.notAnsweredQs = new Array<Question>();
-      this.sessions = new Array<LabSession>();
+			this.state = CopyQuestionsStatusComponent.SELECTING;
     }
 
+	onSessionSelected(session) {
+		this.selectedSession = session;
+		this.loadSessionQuestions();
+	}
+
+	answeredSelectionChanged(selected) {
+		this.answeredSelection = selected;
+		this.mergeSelections();
+	}
+
+	faqSelectionChanged(selected) {
+		this.faqSelection = selected;
+		this.mergeSelections();
+	}
+
+	notAnsweredSelectionChanged(selected) {
+		this.notAnsweredSelection = selected;
+		this.mergeSelections();
+	}
+
+	mergeSelections () {
+		this.selectedQuestions = this.answeredSelection.concat(this.notAnsweredSelection).concat(this.faqSelection);
+	}
+
+	cancel () {
+		this.activeModal.dismiss();
+	}
+
   ngOnInit() {
-    this.loadSessions();
-    this.sessionId = this.route.snapshot.paramMap.get('id');
-  }
-
-  private loadSessions() : void {
-    this.sessionReloaded = false;
-
-    this.labSessionService.labSessions().subscribe (
-      s => {
-        this.sessions = s.Data;
-        if (this.sessions.length > 0) {
-          this.selectedSession = this.sessions[0];
-          this.handleLoadSessions(s);
-        }
-        this.sessionReloaded = true;
-        this.loadSessionQuestions();
-      }
-    );
   }
 
   private loadSessionQuestions(){
-    //debugger
-    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions.Data; this.sortQuestions(this.sessionQuestions);this.handleGetQuestionsError(questions)});
+    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {
+			this.sessionQuestions = questions.Data;
+			this.sortQuestions(this.sessionQuestions);
+			this.handleGetQuestionsError(questions)
+		});
   }
 
 
   copyAllQuestions(){
-    this.stateQuestions = "copyingQuestions";
+    this.state = CopyQuestionsStatusComponent.COPYING;
+
     let sessionSelected = this.selectedSession;
 
-    let copyQuestions = this.labSessionService.copyQuestions;
-    let tempQuestion: Question;
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.plaintext, question.faq, question.answer));
+    let copyRequests : Observable<ApiResponse<Question>>[] = this.selectedQuestions.map(question => this.questionService.copyQuestion(question, this.currentSession));
 
 		//  forkJoin will subscribe to all the questions, and emit a single array value
 		//  containing all of the questions
-		forkJoin(copiedQuestions).subscribe (
+		forkJoin(copyRequests).subscribe (
 			qArray => this.handleCopyQuestionResponse(qArray)
 		);
-    this.modalService.dismissAll();
   }
-
 
   submitShouldBeDisabled() : boolean {
     return this.selectedSession === undefined;
-    //.id == undefined || this.selectedUser.EmailAddress === ""
   }
 
   sortQuestions(questions: Question[]){
-    this.currentDate=new Date();
     //clears the array
     this.FaQs.length = 0;
     this.answeredQs.length = 0;
@@ -131,7 +140,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
 //error handlers
 private handleGetQuestionsError(questions: ApiResponse<Question[]>){
   if(!questions.Successful){
-    this.state = "errorGettingQuestions";
+    this.state = CopyQuestionsStatusComponent.ERROR;
     this.errorGetQuestions = questions;
     this.getQuestions = <Question[]>questions.Data;
     this.questionMessage = questions.ErrorMessages;
@@ -142,29 +151,16 @@ private handleGetQuestionsError(questions: ApiResponse<Question[]>){
     this.getQuestions = <Question[]>questions.Data;
   }
 }
+
 private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
   if (qArray.some(r => !r.Successful)) {
-    this.stateQuestions = "errorCopyingQuestion";
+    this.state = CopyQuestionsStatusComponent.ERROR;
     this.errorQuestions = qArray.filter(r => !r.Successful);
     this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
   }
   else {
-    this.stateQuestions = "copied";
+    this.state = CopyQuestionsStatusComponent.COPIED;
     this.confirmedQuestions =qArray.map(r => <Question> r.Data);
-  }
-}
-
-private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
-  if(!sessions.Successful){
-    this.stateLabSessions = "errorLoadingSessions";
-    this.errorSessions = sessions;
-    this.loadedSessions = <LabSession[]>sessions.Data;
-    this.sessionMessage = sessions.ErrorMessages;
-    this.loadSessionError = true;
-  }
-  else{
-    this.stateLabSessions = "loaded";
-    this.loadedSessions = <LabSession[]>sessions.Data;
   }
 }
 

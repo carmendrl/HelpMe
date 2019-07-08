@@ -22,7 +22,7 @@ export class AskQuestionComponent implements OnInit {
   private questionMessage: string;
   private message: SafeHtml;
   private answer: Answer;
-  private openAsk: boolean = false;
+  private openAsk: boolean = false; //must start with opposite value as questionFormNotOpen in student-session-view.component
   private toolbarOptions = [
     ['bold','italic', 'underline', 'strike'],
     [{'header': 1}, {'header': 2}],
@@ -39,6 +39,7 @@ export class AskQuestionComponent implements OnInit {
 
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
+  @Output() public questionFormEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
 		this.editorContentChanged$ = new Subject<string> ();
@@ -91,11 +92,11 @@ export class AskQuestionComponent implements OnInit {
 
   createQuestion(){
     this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText(), this.faq, this.answer).subscribe(
-      r => {this.setPauseRefresh(false);this.refreshData()});
+      r => {this.setPauseRefresh(false);this.refreshData({})}); //passes in empty object to refreshData
   }
 
-  refreshData(){
-    this.refreshEvent.next();
+  refreshData(r){
+    this.refreshEvent.next(r);
   }
 
 	created(event) {
@@ -105,6 +106,18 @@ export class AskQuestionComponent implements OnInit {
 	setPauseRefresh(r: boolean){
 		this.pauseRefresh.next(r);
 	}
+
+  toggleQuestionForm(r:boolean){
+    this.questionFormEvent.next(r);
+  }
+  toggleQuestionFormForMeToo(){
+    //refreshData must be called before we collapse the form
+    //so that the subscriber is still available
+    this.refreshData({}); //passes in empty object to refreshData
+    this.openAsk=false;
+    this.toggleQuestionForm(this.openAsk);
+    this.reset();
+  }
 	private editorContentChanged (event) {
 		this.editorContentChanged$.next(event.text);
 	}

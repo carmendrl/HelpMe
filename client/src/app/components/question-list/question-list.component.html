@@ -75,7 +75,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button id="removeFaqButton" *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" name="removeFaq">Remove FAQ</button>
               <!-- <button id="addTag" *ngIf="showAddTag" (click)="openTag(content, question)" class="btn btn-primary actionSpace" name="addTag">Add Tag</button> -->
               <button id="deleteButton" *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace" name="delete">Delete</button>
-              <button *ngIf="showMeTooButton && question.answer == undefined && notMyQuestion(question)" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined && notMyQuestion(question)" (click)="performAction(question, i, 'meToo');closeQuestionForm();" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
               <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
             </div>
 
@@ -93,7 +93,7 @@ are input into this model from the student dashboard, student view, and faculty 
                 <button ngbDropdownItem *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'removeFaQ')">Remove FAQ</button>
                 <!-- <button ngbDropdownItem *ngIf="showAddTag" id="addTag" (click)="openTag(content, question)" name="addTag">Add Tag</button> -->
                 <button ngbDropdownItem *ngIf="showDeleteButton" (click)="performMenuAction(question, i, 'delete')" >Delete</button>
-                <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo')">Me Too!</button>
+                <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo');closeQuestionForm();">Me Too!</button>
                 <li class ="divider dropdown-divider"></li>
                 <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
               </div>
@@ -127,12 +127,14 @@ are input into this model from the student dashboard, student view, and faculty 
           <input type="checkbox" (click)="copy(question)"> <label>Copy</label>
         </span>
         <p>{{question.asker.FullName}}</p>
+				<div class="question">
         <span *ngIf="question.step">{{question.step}}.</span>
-        <span><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor></span>
+        <quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor>
         <!-- <span *ngIf="question.notRendered" style="color:red">{{question.smallText}}</span> -->
         <span>{{timeDiff(question)}}</span>
-        <span *ngIf="showNumberOfAskers"> / Askers: {{question.otherAskers.length}}</span>
-        <br><br>
+
+        </div>
+				<span *ngIf="showNumberOfAskers">Askers: {{question.otherAskers.length}}</span>
       </div>
       <br>
       <button *ngIf="question.answer != undefined" class="btn btn-primary" (click)="doToggleAnswer(i)" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">{{answerLabel(i)}}</button>
@@ -151,7 +153,7 @@ are input into this model from the student dashboard, student view, and faculty 
             <button ngbDropdownItem *ngIf="showFAQButton && !question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'addFaQ')">Add FAQ</button>
             <button ngbDropdownItem *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performMenuAction(question, i, 'removeFaQ')">Remove FAQ</button>
             <button ngbDropdownItem *ngIf="showDeleteButton" (click)="performMenuAction(question, i, 'delete')" >Delete</button>
-            <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo')">Me Too!</button>
+            <button ngbDropdownItem *ngIf="showMeTooButton && question.answer == undefined" (click)="performMenuAction(question, i, 'meToo');closeQuestionForm();">Me Too!</button>
             <li class ="divider dropdown-divider"></li>
             <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
           </div>

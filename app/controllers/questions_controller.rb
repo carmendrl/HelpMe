@@ -98,7 +98,7 @@ class QuestionsController < ApplicationController
 		results = SortedSet.new
 
 		candidates = @lab_session.questions.select do |question|
-			question.original_asker.id != current_user.id
+			question.original_asker.id != current_user.id && question.askers.exclude?(current_user)
 		end
 
 		if candidates.length > 0

@@ -16,37 +16,17 @@
 	</section>
 
 	<div class="mt-2">
+		<app-copy-questions-status [state]="state"
+			[selectedQuestions]="selectedQuestions"
+			[confirmedQuestions]="confirmedQuestions"
+			[errorQuestions]="errorQuestions"
+			[destinationSession]="selectedSession">
+		</app-copy-questions-status>
 
-		<div id="buttons" *ngIf="selectedSession && state != 'copied'">
+		<div id="buttons" *ngIf="selectedSession && state != copied">
 			<button [disabled]="selectedQuestions.length === 0"
 				class="btn btn-primary" (click)="copySelectedQuestions();">Copy to {{selectedSession.description}} - {{selectedSession.course.subjectAndNumber}}</button>
 			<button class="btn btn-secondary ml-2" (click)="cancel();">Cancel</button>
-		</div>
-
-		<div [ngSwitch]="state" class="mt-2">
-			<p *ngSwitchCase="'selecting'"></p>
-
-			<p *ngSwitchCase="'copying'" class="alert alert-info">Copying selected questions ...</p>
-
-			<div *ngSwitchCase="'copied'" class="alert alert-success">
-				<p>The selected {{selectedQuestions.length>1 ? "questions have" : "question has"}} been copied to the session {{selectedSession.description}}.</p>
-				<button class="btn btn-primary" (click)="close();">Close</button>
-			</div>
-
-			<div *ngSwitchCase="'errorCopying'" class="alert alert-danger">
-				<p *ngIf="confirmedQuestions.length > 0">
-					{{confirmedQuestions.length}} question{{confirmedQuestions.length > 1 ? 's' : ''}} was copied successfully
-				</p>
-
-				<p>
-					An error occurred copying {{errorQuestions.length}} question {{errorQuestions.length > 1 ? 's' : ''}}.
-					You can retry copying <span *ngIf="errorQuestions.length >1">these questions</span><span *ngIf="errorQuestions.length==1">this question</span> by clicking on the <strong>Copy</strong> button above.
-				</p>
-
-				<p>
-					If this problem persists, please contact the HelpMe administrators.
-				</p>
-			</div>
 		</div>
 	</div>
 </div>
