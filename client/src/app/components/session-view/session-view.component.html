@@ -6,7 +6,7 @@
 			</div>
 
 			<div ngbDropdown class="d-inline-block">
-				<button ngbDropdownToggle class="btn btn-outline-primary ml-2">Actions</button>
+				<button ngbDropdownToggle class="btn btn-outline-primary ml-2" id="actions">Actions</button>
 
 				<div ngbDropdownMenu>
 
@@ -21,7 +21,7 @@
 
 						<div class="dropdown-divider"></div>
 						<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
-						<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Add Questions from Another Session</button>
+						<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="openAddQuestionsFromAnotherSessionModal(content2)">Add Questions from Another Session</button>
 						<div class="dropdown-divider"></div>
 
 					</div>
@@ -32,7 +32,7 @@
 						<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
 						Turn sound {{ audioService.Unmuted ? "off" : "on"}}
 					</button>
-					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to Dashboard</button>
+					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']" id="back">Back to Dashboard</button>
 				</div>
 			</div>
 	</div>

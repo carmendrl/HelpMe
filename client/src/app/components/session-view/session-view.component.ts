@@ -11,6 +11,7 @@ import { QuestionService } from '../../services/question.service';
 import { Router } from '@angular/router';
 
 import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
+import { SearchPreviousQuestionsComponent } from '../search-previous-questions/search-previous-questions.component';
 import { QRCodeDialogComponent } from '../qrcode-dialog-component/qrcode-dialog.component';
 
 import { AudioService } from '../../services/audio.service';
@@ -85,8 +86,11 @@ export class SessionViewComponent implements OnInit {
 	openQRCodeModal(dialogContent) : any {
 		let modalRef = this.modalService.open(QRCodeDialogComponent);
 		modalRef.componentInstance.session = this.currentSession;
+	}
 
-		//this.qrCodeCopiedSuccessfully = false;
-		//return this.modalService.open(dialogContent, <NgbModalOptions>{ariaLabelledBy: 'modal-qrcode'}).result;
+	openAddQuestionsFromAnotherSessionModal(dialogContent) {
+		let modalRef = this.modalService.open(SearchPreviousQuestionsComponent, {size: 'lg'});
+		modalRef.componentInstance.currentSession = this.currentSession;
+		return modalRef.result;
 	}
 }
