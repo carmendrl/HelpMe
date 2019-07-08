@@ -37,8 +37,11 @@ export class ProfessorSwitchViews{
   getSwitchButton2(){
     return element(by.css('.switchToProf'));
   }
+  getActionDropdown(){
+    return element(by.id('actions'));
+  }
   getBackButton(){
-    return element(by.css('.back'));
+    return element(by.id('back'));
   }
   getCurrentUrl(){
     return browser.getCurrentUrl();

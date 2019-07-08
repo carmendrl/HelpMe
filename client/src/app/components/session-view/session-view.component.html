@@ -6,7 +6,7 @@
 			</div>
 
 			<div ngbDropdown class="d-inline-block">
-				<button ngbDropdownToggle class="btn btn-outline-primary ml-2">Actions</button>
+				<button ngbDropdownToggle class="btn btn-outline-primary ml-2" id="actions">Actions</button>
 
 				<div ngbDropdownMenu>
 
@@ -32,7 +32,7 @@
 						<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
 						Turn sound {{ audioService.Unmuted ? "off" : "on"}}
 					</button>
-					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to Dashboard</button>
+					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']" id="back">Back to Dashboard</button>
 				</div>
 			</div>
 	</div>
