@@ -10,7 +10,7 @@ xdescribe('Professor is able to edit an answer', () => {
 
 it('should display the right title', () =>{
   page.navigateTo();
-  page.getEmailTextbox().sendKeys('professorlogin@test.com');
+  page.getEmailTextbox().sendKeys('professor@hope.edu');
   page.getPasswordTextbox().sendKeys('password');
   page.getSubmitButton().click();
   page.getPageTitle()
@@ -22,7 +22,7 @@ it('should display the right title', () =>{
 it('Click on viewButton of first lab session and take to correct url', () => {
   page.getViewButtonForSession(page.getTableRowForSession(0)).click();
   page.getCurrentUrl().then((url:string) =>{
-    expect(url).toEqual('http://localhost:4200/lab_sessions/a6ecef92-77c1-4a29-9b19-0d3cf4fa0602');
+    expect(url).toEqual('http://localhost:4200/lab_sessions/338c2a65-124d-4978-aa64-6827710cdee2');
   });
 });
 
@@ -51,7 +51,7 @@ it('Click on viewButton of first lab session and take to correct url', () => {
  */
 it('should get the first question in the otherQs list, open edit modal for draft, and save it as another draft',() =>  {
   page.getCollapseButton(page.getOtherQuestionComponent()).click();
-  page.getFinishButton(page.getOtherQuestion(3)).click();
+  page.getFinishButton(page.getOtherQuestion(0)).click();
   expect(page.getOpenModalElement()).toBeTruthy();
   expect(page.getOpenModalEditElement()).toBeTruthy();
   page.getSaveDraftButton().click();
@@ -59,7 +59,7 @@ it('should get the first question in the otherQs list, open edit modal for draft
 //check to see if the text matches
 
 it('should save the draft as submitted answer',() =>{
-  page.getFinishButton(page.getOtherQuestion(3)).click();
+  page.getFinishButton(page.getOtherQuestion(0)).click();
   expect(page.getOpenModalElement()).toBeTruthy();
   expect(page.getOpenModalEditElement()).toBeTruthy();
   page.getSaveButton().click();

@@ -39,7 +39,9 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private placeInLine:number;
   private myUnclaimedQs:Question[];
   private allUnclaimedQs:Question[];
-  //private sess: LabSession;
+  private isCollapsed:boolean = true;
+  private suffixArray: string[] =new Array<string>("","st","nd", "rd", "th", "th", "th",
+  "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th");
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
@@ -55,31 +57,31 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       this.allOtherQs = new Array<Question>();
       this.allUnclaimedQs = new Array<Question>();
       this.myUnclaimedQs = new Array<Question>();
-  }
+    }
 
-      ngOnInit() {
-        this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
-        this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
-        this.getSessionDescription();
-        this.checkIfEnded();
-        this.titleService.setTitle(`Session View - Help Me`);
-        this.checkIfStarted();
-        //this.autoJoinASession();
-				this.audioService.mute();
-      }
+    ngOnInit() {
+      this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
+      this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
+      this.getSessionDescription();
+      this.checkIfEnded();
+      this.titleService.setTitle(`Session View - Help Me`);
+      this.checkIfStarted();
+      //this.autoJoinASession();
+      this.audioService.mute();
+    }
 
-      checkIfEnded(){
-        this.currentDate = new Date();
-        this.sessionService.getSession(this.sessionId).subscribe(
-          r => {
-            if(new Date(r.Data.endDate.toString()) <= this.currentDate){
-              this.readOnly = true;
-            }
-            else{
-              this.readOnly = false;
-            }
-            this.getSessionError(r);
-          });
+    checkIfEnded(){
+      this.currentDate = new Date();
+      this.sessionService.getSession(this.sessionId).subscribe(
+        r => {
+          if(new Date(r.Data.endDate.toString()) <= this.currentDate){
+            this.readOnly = true;
+          }
+          else{
+            this.readOnly = false;
+          }
+          this.getSessionError(r);
+        });
 
       }
 
@@ -98,104 +100,104 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           this.getSessionError(r);
         }
       );
-      }
+    }
 
-      checkNotification(datas : any){
-        for (let data of datas){
-          for (let q of this.myQs){
-            if(q.id === data.id){
-              //if your question was answered notification is sent (unless it was answered by yourself)
-              if(q.answer === undefined){
-                if(data.answer != undefined){
-                  if(data.answer.user.id != this.currentUser.id){
-                    if(data.step != "" && data.step != undefined){
-                      this.audioService.playStudentAudio();
-                      this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
-                    }
-                    else{
-                      this.audioService.playStudentAudio();
-                      this.notifier.notify('info', 'Your question has been answered!');
-                    }
-                  }
-                }
-              }
-              //if the answer to your question was editted (even if it was editted by yourself)
-              else{
-                if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
+    checkNotification(datas : any){
+      for (let data of datas){
+        for (let q of this.myQs){
+          if(q.id === data.id){
+            //if your question was answered notification is sent (unless it was answered by yourself)
+            if(q.answer === undefined){
+              if(data.answer != undefined){
+                if(data.answer.user.id != this.currentUser.id){
                   if(data.step != "" && data.step != undefined){
                     this.audioService.playStudentAudio();
-                    this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
+                    this.notifier.notify('info', 'Your question for step ' + data.step + ' has been answered!');
                   }
                   else{
                     this.audioService.playStudentAudio();
-                    this.notifier.notify('info', 'The answer to your question has been updated.');
+                    this.notifier.notify('info', 'Your question has been answered!');
                   }
+                }
+              }
+            }
+            //if the answer to your question was editted (even if it was editted by yourself)
+            else{
+              if(q.answer.text != data.answer.text && data.answer.user.id != this.currentUser.id){
+                if(data.step != "" && data.step != undefined){
+                  this.audioService.playStudentAudio();
+                  this.notifier.notify('info', 'The answer to your question for step ' + data.step + ' has been updated.');
+                }
+                else{
+                  this.audioService.playStudentAudio();
+                  this.notifier.notify('info', 'The answer to your question has been updated.');
                 }
               }
             }
           }
         }
       }
+    }
 
-      sortQuestions(questions: Question[]){
-        //clears the array
-        this.faQs.length = 0;
-        this.myQs.length = 0;
-        this.allOtherQs.length = 0;
-        this.allUnclaimedQs.length = 0;
-        this.myUnclaimedQs.length = 0;
+    sortQuestions(questions: Question[]){
+      //clears the array
+      this.faQs.length = 0;
+      this.myQs.length = 0;
+      this.allOtherQs.length = 0;
+      this.allUnclaimedQs.length = 0;
+      this.myUnclaimedQs.length = 0;
 
-        for (let question of questions){
+      for (let question of questions){
 
-          this.isMeTooUser=false;
+        this.isMeTooUser=false;
 
-          for (let a of question.otherAskers){
-            if(a.id === this.currentUser.id){
-              this.isMeTooUser = true;
-            }
-          }
-
-          if(this.isMeTooUser){
-            //assigned or claimed by me (will keep in myQs even if professor makes it a FAQ)
-            this.myQs.push(question);
-            this.allOtherQs.push(question);
-            //checks to see if question if user's question is unclaimed
-            if(question.claimedBy.id === undefined &&  question.answer ===undefined){
-              this.myUnclaimedQs.push(question);
-            }
-
-          }
-          else if (question.faq){
-            this.faQs.push(question);
-          }
-          else{
-            this.allOtherQs.push(question);
-          }
-          if(question.claimedBy.id === undefined &&  question.answer ===undefined){
-            this.allUnclaimedQs.push(question);
+        for (let a of question.otherAskers){
+          if(a.id === this.currentUser.id){
+            this.isMeTooUser = true;
           }
         }
-        if(this.myUnclaimedQs.length != 0){
-          //then find place in line
-          for(let q of this.myUnclaimedQs){
-            //question are returned with least recent (high index) to most recent (low index)
-            q.placeInLine = this.allUnclaimedQs.length - this.allUnclaimedQs.indexOf(q);
-          }
-          //makes list displayed with highest priority question on top
-          this.myUnclaimedQs.reverse();
 
+        if(this.isMeTooUser){
+          //assigned or claimed by me (will keep in myQs even if professor makes it a FAQ)
+          this.myQs.push(question);
+          this.allOtherQs.push(question);
+          //checks to see if question if user's question is unclaimed
+          if(question.claimedBy.id === undefined &&  question.answer ===undefined){
+            this.myUnclaimedQs.push(question);
+          }
+
+        }
+        else if (question.faq){
+          this.faQs.push(question);
+        }
+        else{
+          this.allOtherQs.push(question);
+        }
+        if(question.claimedBy.id === undefined &&  question.answer ===undefined){
+          this.allUnclaimedQs.push(question);
         }
       }
+      if(this.myUnclaimedQs.length != 0){
+        //then find place in line
+        for(let q of this.myUnclaimedQs){
+          //question are returned with least recent (high index) to most recent (low index)
+          q.placeInLine = this.allUnclaimedQs.length - this.allUnclaimedQs.indexOf(q);
+        }
+        //makes list displayed with highest priority question on top
+        this.myUnclaimedQs.reverse();
+
+      }
+    }
 
 
-      getSessionDescription(){
-        this.sessionService.getSession(this.sessionId).subscribe(session =>
-          {this.subjectAndNumber = session.Data.course.subjectAndNumber,
-            this.description = session.Data.description, this.getSessionError(session)});
-          }
+    getSessionDescription(){
+      this.sessionService.getSession(this.sessionId).subscribe(session =>
+        {this.subjectAndNumber = session.Data.course.subjectAndNumber,
+          this.description = session.Data.description, this.getSessionError(session)});
+        }
 
-      private getSessionError(session: ApiResponse<LabSession>){
-        if(!session.Successful){
+        private getSessionError(session: ApiResponse<LabSession>){
+          if(!session.Successful){
             this.state = "errorLoadingSession";
             this.errorSession = session;
             this.loadedSession = <LabSession>session.Data;
@@ -208,4 +210,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           }
         }
 
+        togglePendingQuestions(){
+          return this.isCollapsed = !(this.isCollapsed);
         }
+
+      }

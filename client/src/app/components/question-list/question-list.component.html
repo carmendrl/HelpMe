@@ -75,7 +75,7 @@ are input into this model from the student dashboard, student view, and faculty 
               <button id="removeFaqButton" *ngIf="showFAQButton && question.faq && !answerUndefined(question)" (click)="performAction(question, i, 'removeFaQ')" class="btn btn-primary actionSpace" name="removeFaq">Remove FAQ</button>
               <!-- <button id="addTag" *ngIf="showAddTag" (click)="openTag(content, question)" class="btn btn-primary actionSpace" name="addTag">Add Tag</button> -->
               <button id="deleteButton" *ngIf="showDeleteButton" (click)="performAction(question, i, 'delete')" class="btn btn-primary actionSpace" name="delete">Delete</button>
-              <button *ngIf="showMeTooButton && question.answer == undefined" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
+              <button *ngIf="showMeTooButton && question.answer == undefined && notMyQuestion(question)" (click)="performAction(question, i, 'meToo')" class="btn btn-primary actionSpace" name="meToo">Me Too!</button>
               <!-- <input *ngIf="showCheck" type="checkbox" (click)="performAction(question, i, 'copy');setPauseRefresh(true)"> <label *ngIf="showCheck">Copy</label> -->
             </div>
 
