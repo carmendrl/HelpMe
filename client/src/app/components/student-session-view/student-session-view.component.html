@@ -1,4 +1,4 @@
-<table class="table table-striped rightSide tbody" >
+<table *ngIf="questionFormNotOpen" class="table table-striped rightSide tbody" >
     <thead>
       <tr>
         <th class="tHeader collapseContainer" id="collapseButton" (click)="togglePendingQuestions()"
@@ -11,7 +11,7 @@
   </thead>
   <tbody id="collapseQL" [(ngbCollapse)]="isCollapsed">
     <tr *ngFor= "let q of myUnclaimedQs">
-      <td>Step {{q.step}} - <strong>{{q.placeInLine}}{{suffixArray[q.placeInLine]}}</strong> in line.</td>
+      <td>{{q.stepString}} - <strong>{{q.placeInLine}}{{suffixArray[q.placeInLine]}}</strong> in line.</td>
     </tr>
   </tbody>
 </table>
@@ -19,7 +19,7 @@
 
 <section class="askQuestion" *ngIf="started && !readOnly">
   <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
-  (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
+  (pauseRefresh)="setPauseRefresh($event)" (questionFormEvent)="toggleQuestionForm($event)" ></app-ask-question>
 </section>
 
 <section *ngIf="started">

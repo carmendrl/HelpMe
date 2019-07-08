@@ -42,6 +42,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private isCollapsed:boolean = true;
   private suffixArray: string[] =new Array<string>("","st","nd", "rd", "th", "th", "th",
   "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th");
+  private questionFormNotOpen:boolean = true; //must start with opposite value as openAsk in ask-question.component
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
@@ -212,6 +213,12 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
         togglePendingQuestions(){
           return this.isCollapsed = !(this.isCollapsed);
+        }
+
+        toggleQuestionForm(r:boolean):boolean{
+          this.questionFormNotOpen = !(r);
+          return this.questionFormNotOpen;
+
         }
 
       }

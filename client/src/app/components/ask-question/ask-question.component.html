@@ -4,7 +4,7 @@
 <br *ngIf="openAsk">
 <br *ngIf="openAsk"> -->
 
-	<button class="btn btn-primary" (click) = "openAsk = true" *ngIf="!openAsk">Ask a Question</button>
+	<button class="btn btn-primary" (click) = "openAsk = true;toggleQuestionForm(openAsk)" *ngIf="!openAsk">Ask a Question</button>
 	<p class="d-inline-block" *ngIf="openAsk"><strong>What's your question?</strong></p>
 
 	<form  *ngIf="openAsk" #thisForm="ngForm">
@@ -35,7 +35,7 @@
 </div>
 <br>
 <div>
-  <button name="submitQuestion" type="button" class="btn btn-primary" (click)="createQuestion();this.reset();">Submit Question</button>
-  <button name="cancelQuestion" type="button" class="btn btn-secondary ml-2" (click)="this.reset(); openAsk = false">Cancel</button>
+  <button name="submitQuestion" type="button" class="btn btn-primary" (click)="createQuestion();this.reset();openAsk = false; toggleQuestionForm(openAsk)">Submit Question</button>
+  <button name="cancelQuestion" type="button" class="btn btn-secondary ml-2" (click)="this.reset(); openAsk = false; toggleQuestionForm(openAsk)">Cancel</button>
 </div>
 </form>
