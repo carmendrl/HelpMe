@@ -39,7 +39,9 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   private placeInLine:number;
   private myUnclaimedQs:Question[];
   private allUnclaimedQs:Question[];
-  //private sess: LabSession;
+  private isCollapsed:boolean = true;
+  private suffixArray: string[] =new Array<string>("","st","nd", "rd", "th", "th", "th", 
+  "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th");
 
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
@@ -207,5 +209,14 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
             this.loadedSession = <LabSession>session.Data;
           }
         }
+
+  togglePendingQuestions(){
+    return this.isCollapsed = !(this.isCollapsed);
+  }
+
+  checkIfPendingQuestions():string{
+    return  this.isCollapsed ? "Show Pending Questions": "Close Pending Questions";
+
+  }
 
         }

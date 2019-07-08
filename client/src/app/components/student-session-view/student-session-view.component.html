@@ -1,11 +1,21 @@
 <table class="table table-striped placeInLine tbody" align="right">
   <div class="positionT">
-  <tbody>
+    <thead>
+      <tr>
+        <th class="tHeader collapseContainer" id="collapseButton" (click)="togglePendingQuestions()"
+        >You have <strong>{{myUnclaimedQs.length}}</strong> pending questions.
+        <span *ngIf="isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-down"></i></span>
+        <span *ngIf="!isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-up"></i></span>
+        <p *ngIf="isCollapsed && myUnclaimedQs.length > 0">*Your next question is {{myUnclaimedQs[0].placeInLine}}{{suffixArray[myUnclaimedQs[0].placeInLine]}} in line* </p>
+      </th>
+    </tr>
+  </thead>
+  <tbody id="collapseQL" [(ngbCollapse)]="isCollapsed">
     <tr *ngFor= "let q of myUnclaimedQs">
-      <td>Your question on step {{q.step}} is <strong>{{q.placeInLine}} in line.</strong></td>
+      <td>Step {{q.step}} - <strong>{{q.placeInLine}}{{suffixArray[q.placeInLine]}}</strong> in line.</td>
     </tr>
   </tbody>
-  </div>
+</div>
 </table>
 
 
