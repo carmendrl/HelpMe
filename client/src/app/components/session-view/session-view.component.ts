@@ -11,6 +11,7 @@ import { QuestionService } from '../../services/question.service';
 import { Router } from '@angular/router';
 
 import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
+import { FacultySessionViewComponent } from '../faculty-session-view/faculty-session-view.component';
 import { SearchPreviousQuestionsComponent } from '../search-previous-questions/search-previous-questions.component';
 import { QRCodeDialogComponent } from '../qrcode-dialog-component/qrcode-dialog.component';
 
@@ -32,6 +33,9 @@ export class SessionViewComponent implements OnInit {
 
 	private sessionId : string;
   private currentSession : LabSession;
+
+	@ViewChild (FacultySessionViewComponent, {static: false})
+	private facultySessionView : FacultySessionViewComponent;
 
   constructor(
 		private userService : UserService, private questionService: QuestionService,
@@ -89,8 +93,12 @@ export class SessionViewComponent implements OnInit {
 	}
 
 	openAddQuestionsFromAnotherSessionModal(dialogContent) {
+		let facultySessionView : FacultySessionViewComponent = this.facultySessionView;
+
 		let modalRef = this.modalService.open(SearchPreviousQuestionsComponent, {size: 'lg'});
 		modalRef.componentInstance.currentSession = this.currentSession;
-		return modalRef.result;
+		modalRef.result.then (
+			function (result) { if (facultySessionView) facultySessionView.refreshData();}
+		)
 	}
 }
