@@ -236,14 +236,6 @@ private sess: LabSession;
         });
 
       }
-      open2(content2) {
-        let modal= this.modalService.open(content2, <NgbModalOptions>{ariaLabelledBy: 'modal-search-previous-questions'}).result.then((result) => {
-          this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
-
-      }
 
       private getDismissReason(reason: any): string {
         if (reason === ModalDismissReasons.ESC) {

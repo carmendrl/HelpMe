@@ -5,6 +5,7 @@ import { forkJoin, Observable } from 'rxjs';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { QuestionListComponent } from '../../components/question-list/question-list.component';
+import { CopyQuestionsStatusComponent } from '../copy-questions-status/copy-questions-status.component';
 
 import { LabSession } from '../../models/lab_session.model';
 import { Question } from '../../models/question.model';
@@ -33,6 +34,13 @@ export class CopyQuestionsDialogComponent implements OnInit {
 
 	private errorQuestions: ApiResponse<Question>[];
 	private confirmedQuestions: Question[];
+
+	//  These are needed because an Angular template can only access
+	//  instance fields, not static member variables
+	private readonly selecting = CopyQuestionsStatusComponent.SELECTING;
+	private readonly copying = CopyQuestionsStatusComponent.COPYING;
+	private readonly copied = CopyQuestionsStatusComponent.COPIED;
+	private readonly error = CopyQuestionsStatusComponent.ERROR;
 
   constructor(private labSessionService : LabSessionService, private questionService : QuestionService, private activeModal : NgbActiveModal) {
 		this.selectedQuestions = new Array<Question> ();
