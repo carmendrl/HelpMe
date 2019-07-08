@@ -1,8 +1,7 @@
-
 import { CreateCourse } from './createCourse.po';
 import { browser } from 'protractor';
 
-describe('Create course tests', () => {
+xdescribe('Create course tests', () => {
   let page: CreateCourse;
 
   beforeEach(() => {

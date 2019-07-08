@@ -1,5 +1,6 @@
 import { LoginPage } from './login.po';
-describe('Login tests', () => {
+
+xdescribe('Login tests', () => {
     let page: LoginPage;
 
     beforeEach(() => {

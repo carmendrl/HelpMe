@@ -1,7 +1,7 @@
 import { ProfAssignQuestion } from './profAssignQuestion.po';
 import { browser, Key } from 'protractor';
 
-xdescribe('Professor is able to assign questions to TA', () =>{
+describe('Professor is able to assign questions to TA', () =>{
   let page: ProfAssignQuestion;
 
   beforeEach(() => {
@@ -9,8 +9,15 @@ xdescribe('Professor is able to assign questions to TA', () =>{
   });
 
   it('should display the right title', () =>{
+    var child_process = require('child_process');
+    child_process.exec('rails runner ~/help-me-web/scripts/assignQuestionTestSetup.rb',
+    function(err, stdout, stderr){
+      if(err){
+        console.log("child processes failed with error code: " + err.code);
+      }
+    });
     page.navigateTo();
-    page.getEmailTextbox().sendKeys('professorlogin@test.com');
+    page.getEmailTextbox().sendKeys('prof0@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getPageTitle().then((title:string) => {
