@@ -231,12 +231,22 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+      notMyQuestion(question:Question):boolean{
+        let isNotMyQuestion=true;
+        //This method determines whether or not MeToo button will appear
+        //in regards to the user possibly being the original asker or having clicked the MeToo button
+        for (let a of question.otherAskers){
+          if(a.id === this.currentUser.id){
+            isNotMyQuestion = false;
+          }
+        }
+        return isNotMyQuestion;
+      }
+
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
-        //debugger;
         this.currentQuestion = q;
         this.setPauseRefresh(true);
-        //debugger;
         this.actions[this.selectedAction[i]](q).subscribe(r => {this.setPauseRefresh(false); this.refreshData(r);
           if (this.selectedAction[i] ==="claim") {this.scrollToClaimedQ()};
           this.selectedAction[i]="";});
@@ -249,7 +259,6 @@ export class QuestionListComponent implements OnInit {
       }
 
       performAction (q: Question, i:number, action : string) {
-        //debugger;
         this.selectedAction[i] = action;
         this.performSelectedAction(q, i);
       }
@@ -341,7 +350,6 @@ export class QuestionListComponent implements OnInit {
 				this.onQuestionSelectedChanged();
       }
       addTag(){
-      //  debugger;
         this.questionService.addATag(this.currentQuestion, this.tagText).subscribe(r => this.handleAddTagResponse(r));
         this.currentQuestion.addTag(this.tagText);
       }
@@ -359,7 +367,6 @@ export class QuestionListComponent implements OnInit {
       }
 
       openTag(content, question: Question) {
-        //debugger;
         this.currentQuestion = question;
         let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-add-tag'}).result.then((result) => {
           this.closeResult = `Closed with: ${result}`;
@@ -467,7 +474,6 @@ export class QuestionListComponent implements OnInit {
       }
 
       private handleAddTagResponse(b: ApiResponse<boolean>){
-        //debugger;
         if(!b.Successful){
           this.state = "errorAddingTag";
           this.errorBoolean = b;

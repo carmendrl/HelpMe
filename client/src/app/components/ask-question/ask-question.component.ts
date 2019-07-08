@@ -3,7 +3,6 @@ import {NgbModal, ModalDismissReasons, NgbModalOptions} from '@ng-bootstrap/ng-b
 import { Question } from '../../models/question.model';
 import { Answer } from '../../models/answer.model';
 import { QuestionService } from '../../services/question.service';
-import { LabSessionService } from '../../services/labsession.service';
 import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 //import {QuillEditorComponent} from '../../../../node_modules/ngx-quill/src/quill-editor.component';
 
@@ -41,7 +40,7 @@ export class AskQuestionComponent implements OnInit {
   @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
 
-  constructor(private modalService: NgbModal, private questionService: QuestionService, private labSessionService : LabSessionService, private sanitizer: DomSanitizer) {
+  constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
 		this.editorContentChanged$ = new Subject<string> ();
 	}
 
@@ -57,7 +56,7 @@ export class AskQuestionComponent implements OnInit {
 
 	private lookForMatchingQuestions (text : string) {
 		console.log(text);
-		this.labSessionService.findMatchingQuestions (this.session, text, String(this.step)).pipe (
+		this.questionService.findMatchingQuestions (this.session, text, String(this.step)).pipe (
 				tap(response => response.Data.forEach(e => console.log(e)))
 			).subscribe(
 			response => this.possibleMatches = response.Data

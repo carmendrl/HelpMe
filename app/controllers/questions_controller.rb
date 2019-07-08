@@ -118,7 +118,7 @@ class QuestionsController < ApplicationController
 			end
 		end
 
-		render json: results.map { |m| m.question}, include: [:original_asker]
+		render json: results.map { |m| m.question}, each_serializer: QuestionSerializer, include: [:lab_session, 'lab_session.course', 'lab_session.users', :original_asker, :answer]
 	end
 
   def index

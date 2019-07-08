@@ -56,7 +56,7 @@ export class QuestionService {
     let questions: Question[];
     return this.httpClient.get(url).pipe(
       map(r=>{
-        questions = this.createArray(r["data"], r["included"]);
+        questions = this.createQuestionArrayFromJson(r["data"], r["included"]);
         let response : ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
         return response;
     }),
@@ -64,7 +64,7 @@ export class QuestionService {
     );
   }
 
-  private createArray(questionsData: any[], includedResponse : any[]) : Question[]{
+  private createQuestionArrayFromJson(questionsData: any[], includedResponse : any[]) : Question[]{
     let userQuestions = new Array<Question> ();
 
     for(let object of questionsData){
@@ -119,7 +119,6 @@ export class QuestionService {
 
         userQuestions.unshift(this.buildQuestion(object, session, prof, course, answer, asker, claimer, askers, answerer));
       }
-
       return userQuestions;
     }
 
@@ -163,7 +162,7 @@ export class QuestionService {
         var questions= new Array<Question>();
         return this.httpClient.get(url).pipe(
           map(r => {
-            questions = this.createArray(r['data'], r['included']);
+            questions = this.createQuestionArrayFromJson(r['data'], r['included']);
             let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
             return response;
           }),
@@ -384,18 +383,47 @@ export class QuestionService {
       )
     }
 
-    findQuestionByText (text : string) : Observable<ApiResponse<Question[]>>{
-      let url: string = `${this.apiHost}/user/questions`;
-      var questions: Question[];
+    // findQuestionByText (text : string) : Observable<ApiResponse<Question[]>>{
+    //   let url: string = `${this.apiHost}/user/questions`;
+    //   var questions: Question[];
+    //   return this.httpClient.get(url).pipe(
+    //     map(r => {
+    //       questions = this.createQuestionArrayFromJson(r['data'], r['included']);
+    //       let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true,questions);
+    //       return response;
+    //   }),
+    //     catchError(r => this.handleQuestionsError(r, questions))
+    //   );
+    // }
+
+    findMatchingQuestions (lab_session_id: string, searchText : string, step: string) : Observable<ApiResponse<Question[]>>{
+      let url: string = `${this.apiHost}/lab_sessions/${lab_session_id}/questions/matching?q=${searchText}`;
+var questions: Question[];
+      if (step != undefined && step != "undefined") {
+        url = `${url}&step=${step}`
+      }
+
+      url = encodeURI(url);
       return this.httpClient.get(url).pipe(
         map(r => {
-          questions = this.createArray(r['data'], r['included']);
-          let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true,questions);
+          questions = this.createQuestionArrayFromJson(r["data"], r["included"]);
+          let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
           return response;
-      }),
-        catchError(r => this.handleQuestionsError(r, questions))
+        }),
+        catchError(r => this.handleMatchingQuestionsError (r))
       );
     }
+
+  	handleMatchingQuestionsError (response) : Observable<ApiResponse<Question[]>> {
+  		let apiResponse : ApiResponse<Question[]> = new ApiResponse<Question[]> (false);
+  		if (response instanceof HttpErrorResponse) {
+  			apiResponse.addErrorsFromHttpError (<HttpErrorResponse> response);
+  		}
+  		else {
+  			apiResponse.addError ("Unable to load potential matches");
+  		}
+  		return of(apiResponse);
+  	}
 
 
 //error handlers
