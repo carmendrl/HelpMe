@@ -18,7 +18,7 @@
 
 
 <section class="askQuestion" *ngIf="started && !readOnly">
-  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
+  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (questionFormEvent)="toggleQuestionForm($event)" ></app-ask-question>
 </section>
 

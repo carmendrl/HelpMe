@@ -92,11 +92,11 @@ export class AskQuestionComponent implements OnInit {
 
   createQuestion(){
     this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText(), this.faq, this.answer).subscribe(
-      r => {this.setPauseRefresh(false);this.refreshData()});
+      r => {this.setPauseRefresh(false);this.refreshData({})}); //passes in empty object to refreshData
   }
 
-  refreshData(){
-    this.refreshEvent.next();
+  refreshData(r){
+    this.refreshEvent.next(r);
   }
 
 	created(event) {
@@ -109,6 +109,14 @@ export class AskQuestionComponent implements OnInit {
 
   toggleQuestionForm(r:boolean){
     this.questionFormEvent.next(r);
+  }
+  toggleQuestionFormForMeToo(){
+    //refreshData must be called before we collapse the form
+    //so that the subscriber is still available
+    this.refreshData({}); //passes in empty object to refreshData
+    this.openAsk=false;
+    this.toggleQuestionForm(this.openAsk);
+    this.reset();
   }
 	private editorContentChanged (event) {
 		this.editorContentChanged$.next(event.text);
