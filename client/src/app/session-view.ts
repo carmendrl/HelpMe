@@ -57,7 +57,7 @@ export abstract class SessionView  {
     abstract checkNotification( data : any, r:any );//allows different notifications depending on the specific user
 
 
-    private refreshData(r:any){
+    public refreshData(r:any){
       //often an empty object will be passed in
       //only time an actual object will be passed in
       //is when the claimed button is pressed.

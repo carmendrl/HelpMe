@@ -127,12 +127,14 @@ are input into this model from the student dashboard, student view, and faculty 
           <input type="checkbox" (click)="copy(question)"> <label>Copy</label>
         </span>
         <p>{{question.asker.FullName}}</p>
+				<div class="question">
         <span *ngIf="question.step">{{question.step}}.</span>
-        <span><quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor></span>
+        <quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor>
         <!-- <span *ngIf="question.notRendered" style="color:red">{{question.smallText}}</span> -->
         <span>{{timeDiff(question)}}</span>
-        <span *ngIf="showNumberOfAskers"> / Askers: {{question.otherAskers.length}}</span>
-        <br><br>
+
+        </div>
+				<span *ngIf="showNumberOfAskers">Askers: {{question.otherAskers.length}}</span>
       </div>
       <br>
       <button *ngIf="question.answer != undefined" class="btn btn-primary" (click)="doToggleAnswer(i)" [attr.aria-expanded]="toggleAnswer" aria-controls="collapseQL">{{answerLabel(i)}}</button>
