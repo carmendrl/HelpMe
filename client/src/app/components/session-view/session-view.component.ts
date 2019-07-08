@@ -98,7 +98,7 @@ export class SessionViewComponent implements OnInit {
 		let modalRef = this.modalService.open(SearchPreviousQuestionsComponent, {size: 'lg'});
 		modalRef.componentInstance.currentSession = this.currentSession;
 		modalRef.result.then (
-			function (result) { if (facultySessionView) facultySessionView.refreshData();}
+			function (result) { if (facultySessionView) facultySessionView.refreshData('');}
 		)
 	}
 }
