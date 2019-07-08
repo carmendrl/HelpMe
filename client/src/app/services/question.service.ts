@@ -383,19 +383,6 @@ export class QuestionService {
       )
     }
 
-    // findQuestionByText (text : string) : Observable<ApiResponse<Question[]>>{
-    //   let url: string = `${this.apiHost}/user/questions`;
-    //   var questions: Question[];
-    //   return this.httpClient.get(url).pipe(
-    //     map(r => {
-    //       questions = this.createQuestionArrayFromJson(r['data'], r['included']);
-    //       let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true,questions);
-    //       return response;
-    //   }),
-    //     catchError(r => this.handleQuestionsError(r, questions))
-    //   );
-    // }
-
     findMatchingQuestions (lab_session_id: string, searchText : string, step: string) : Observable<ApiResponse<Question[]>>{
       let url: string = `${this.apiHost}/lab_sessions/${lab_session_id}/questions/matching?q=${searchText}`;
 var questions: Question[];
