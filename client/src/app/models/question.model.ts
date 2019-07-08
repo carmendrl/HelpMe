@@ -196,6 +196,15 @@ export class Question extends Entity{
     this._step = step;
   }
 
+  get stepString():string{
+    if(this._step ===null || this._step === undefined || this._step === "undefined"){
+      return "No Step";
+    }
+    else{
+      return "Step "+this._step;
+    }
+  }
+
 //place in line is a variable that is exclusively used and controlled in the front end
   get placeInLine() : number{
     return this._placeInLine;
