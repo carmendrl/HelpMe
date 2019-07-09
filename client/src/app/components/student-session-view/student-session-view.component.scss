@@ -1,3 +1,18 @@
+@import '~variables.scss';
+
+$placeInLineHeaderBackground: $primary;
+$placeInLineHeaderColor: white;
+
+$placeInLineBackground: white;
+$placeInLineColor: $primary;
+
+$placeInLineBackgroundHover: white;
+$placeInLineColorHover: $primary;
+
+.student-session-view {
+	margin-top: 1em;
+}
+
 .center{
   text-align:center;
 }
@@ -11,17 +26,34 @@ h1{
   margin: 5px;
 }
 
-.tHeader{
-      background: lighten(DodgerBlue, 30%);
-}
-.tbody {
-    tr:nth-child(odd) > td:nth-child(odd) {
-        background: lighten(DodgerBlue, 40%); }
-    tr:nth-child(even) > td:nth-child(odd) {
-        background: lighten(DodgerBlue, 30%); }
-}
+.rightSide {
+	float:right;
+	width: 290px;
 
-.rightSide{
-  float:right;
-  width: 290px;
+	p {
+		margin-bottom: 0px;
+	}
+	.tHeader{
+	      background: $placeInLineHeaderBackground;
+				color: $placeInLineHeaderColor;
+	}
+
+	tbody {
+			color: $placeInLineColor;
+
+	    tr:nth-child(odd) > td:nth-child(odd) {
+	      background: $placeInLineBackground;
+				&:hover {
+					background: $placeInLineBackgroundHover;
+					color: $placeInLineColorHover;
+				}
+			}
+	    tr:nth-child(even) > td:nth-child(odd) {
+	      background: $placeInLineBackground;
+				&:hover {
+					background: $placeInLineBackgroundHover;;
+					color: $placeInLineColorHover;
+				}
+			}
+	}
 }
