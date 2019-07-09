@@ -30,6 +30,7 @@
   <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData($event)"
   (pauseRefresh)="setPauseRefresh($event)" (questionFormEvent)="toggleQuestionForm($event)" ></app-ask-question>
 </section>
+</table>
 
 <!-- sorted list of questions -->
 <section *ngIf="started">
