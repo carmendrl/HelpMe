@@ -22,7 +22,7 @@ class CreateTaConfirmationMailer < ApplicationMailer
 
       @newEmail2 += @newEmail[0]
 
-      @user.email = @newEmail2[0..7]
+      @user.password = @newEmail2[0..7]
 
       # generatePassword(email: string){
       #   //takes all the odd characters
