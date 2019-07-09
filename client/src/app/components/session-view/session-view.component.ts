@@ -11,6 +11,7 @@ import { QuestionService } from '../../services/question.service';
 import { Router } from '@angular/router';
 import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
 import { FacultySessionViewComponent } from '../faculty-session-view/faculty-session-view.component';
+import { StudentSessionViewComponent } from '../student-session-view/student-session-view.component';
 import { SearchPreviousQuestionsComponent } from '../search-previous-questions/search-previous-questions.component';
 import { QRCodeDialogComponent } from '../qrcode-dialog-component/qrcode-dialog.component';
 import { AudioService } from '../../services/audio.service';
@@ -34,6 +35,9 @@ export class SessionViewComponent implements OnInit {
 	@ViewChild (FacultySessionViewComponent, {static: false})
 	private facultySessionView : FacultySessionViewComponent;
 
+	@ViewChild (StudentSessionViewComponent, {static: false})
+	private studentSessionView : StudentSessionViewComponent;
+
   constructor(
     private userService : UserService, private questionService: QuestionService,
     private route: ActivatedRoute, private labSessionService : LabSessionService,
@@ -41,6 +45,17 @@ export class SessionViewComponent implements OnInit {
     public routingHelperService : RoutingHelperService
   ) {}
 
+	get timeFromRefresh() : string {
+		if (this.facultySessionView) {
+			return this.facultySessionView.TimeFromRefresh;
+		}
+		else if (this.studentSessionView) {
+			return this.studentSessionView.TimeFromRefresh;
+		}
+		else {
+			return "";
+		}
+	}
   ngOnInit() {
     this.sessionId = this.route.snapshot.paramMap.get('id'); //gets session id from page url
     this.labSessionService.getSession(this.sessionId).subscribe(r =>

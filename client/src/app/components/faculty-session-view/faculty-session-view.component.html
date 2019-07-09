@@ -36,10 +36,6 @@
   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
-<footer>
-  <div class="center mt-3 lastRefreshed">Last refreshed: {{timeFromRefresh}}</div>
-</footer>
-
 <!-- modal to search through all the sessions -->
 <ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">

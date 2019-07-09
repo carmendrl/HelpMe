@@ -49,6 +49,8 @@ export abstract class SessionView  {
       this.notifier = notifierService;
     }
 
+		get TimeFromRefresh () : string { return this.timeFromRefresh }
+
     //want to make this abstract method but must make this an abstract createNewLabSession
     //to make this an abstract class can't have a constructor because can't instantiate
     //an abstract class

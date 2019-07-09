@@ -73,3 +73,7 @@ input[type='text'], input[type='password'], input[type='email'] {
 .ql-container {
 	font-size: 100% !important;
 }
+
+.ql-editor[contenteditable=true], .ql-toolbar {
+	background-color: white;
+}
