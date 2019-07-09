@@ -1,3 +1,6 @@
+<!-- there is a different section for each list of questions -->
+
+<!-- Unclaimed Questions -->
 <section>
   <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
   [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
@@ -7,6 +10,7 @@
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
+<!-- Claimed Questions -->
 <section #claimedQuestions>
   <app-question-list #claimedQs id="claimedQs" [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
   [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
@@ -16,6 +20,7 @@
   (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
 </section>
 
+<!-- FAQ Questions -->
 <section>
   <app-question-list id="faqs" [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
   [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck" [showAddTag]="true"
@@ -23,6 +28,7 @@
   (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
+<!-- All Questions -->
 <section>
   <app-question-list id="otherQs" [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
   [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate" [showAddTag]="true"
@@ -31,9 +37,10 @@
 </section>
 
 <footer>
-	<div class="center mt-3 lastRefreshed">Last refreshed: {{timeFromRefresh}}</div>
+  <div class="center mt-3 lastRefreshed">Last refreshed: {{timeFromRefresh}}</div>
 </footer>
 
+<!-- modal to search through all the sessions -->
 <ng-template #content let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-search-sessions" aria-labelledBy="modal-search-sessions">Search Labsessions</h4>
@@ -46,6 +53,7 @@
   </div>
 </ng-template>
 
+<!-- modal to search previous questions -->
 <ng-template #content2 let-modal let-d="dismiss" let-c="close">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-search-previous-questions" aria-labelledBy="modal-search-previous-questions">Search Labsessions</h4>

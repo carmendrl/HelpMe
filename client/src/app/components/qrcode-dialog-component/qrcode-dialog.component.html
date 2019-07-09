@@ -1,3 +1,4 @@
+<!-- modal for the session QR code -->
 <div class="modal-header">
   <h4 class="modal-title" id="modal-qrcode" aria-labelledBy="modal-qrcode">QR Code</h4>
   <button type="button" class="close" aria-label="Close" (click)="close()">
@@ -7,12 +8,12 @@
 
 <div align="center" class="modal-body">
   <qrcode [qrdata]="qrCodeDestination" [size]="256" [level]="'M'" #qrcode></qrcode>
-	<div *ngIf="qrCodeCopiedSuccessfully" class="alert alert-success mt-2">The QR Code was copied to the clipboard</div>
+  <div *ngIf="qrCodeCopiedSuccessfully" class="alert alert-success mt-2">The QR Code was copied to the clipboard</div>
 </div>
 
 <div class="modal-footer">
-	<div>
-	  <button id="copy" type="button" class="btn btn-primary" (click)="copyQRCode()">Copy</button>
-	  <button id="close" type="button" class="btn btn-secondary ml-2" (click)="close()">Close</button>
-	</div>
+  <div>
+    <button id="copy" type="button" class="btn btn-primary" (click)="copyQRCode()">Copy</button>
+    <button id="close" type="button" class="btn btn-secondary ml-2" (click)="close()">Close</button>
+  </div>
 </div>

@@ -1,13 +1,8 @@
+<!-- ask a question for, -->
+<button class="btn btn-primary" (click) = "openAsk = true" *ngIf="!openAsk">Ask a Question</button>
+<p class="d-inline-block" *ngIf="openAsk"><strong>What's your question?</strong></p>
 
-<!-- <button *ngIf="openAsk===false" class="btn btn-primary askQuestion" (click)="openAsk = true"><label>Ask a Question</label> <i class="fas fa-sort-down"></i></button>
-<button *ngIf="openAsk===true" class="btn btn-primary askQuestion" (click)="openAsk = false"><label>Ask a Question</label><i class="fas fa-sort-up"></i></button>
-<br *ngIf="openAsk">
-<br *ngIf="openAsk"> -->
-
-	<button class="btn btn-primary" (click) = "openAsk = true" *ngIf="!openAsk">Ask a Question</button>
-	<p class="d-inline-block" *ngIf="openAsk"><strong>What's your question?</strong></p>
-
-	<form  *ngIf="openAsk" #thisForm="ngForm">
+<form  *ngIf="openAsk" #thisForm="ngForm">
   <div class="form-group form-row">
     <label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
     <div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
@@ -15,23 +10,24 @@
     </div>
   </div>
 
- <!-- <quill-editor  class="qEditor smallScreen" format="json" name="askQuestion"[(ngModel)]="questionMessage" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)" required></quill-editor> -->
   <quill-editor class="qEditor" format="json" name="askQuestion"[(ngModel)]="questionMessage"
-      [styles]="{height: '100px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
-      (onContentChanged)="editorContentChanged($event)" [placeholder]="'Enter your question'" required>
-  </quill-editor>
+  [styles]="{height: '100px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
+  (onContentChanged)="editorContentChanged($event)" [placeholder]="'Enter your question'" required>
+</quill-editor>
 
-  <!-- <label>Tags  </label>
-    <!-- list all the current tags and allow then to be removed individually-->
-  <!--  <div class="form-inline">
-  <input type="text" id="tags" class="form-control"/><br>
-  <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
+<!-- Possibly will add the tag function later? -->
+<!-- <label>Tags  </label>
+<!-- list all the current tags and allow then to be removed individually-->
+<!--  <div class="form-inline">
+<input type="text" id="tags" class="form-control"/><br>
+<button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
 
+<!--searches for questions that are similar to the users questions by using matching words -->
 <div *ngIf="possibleMatches.length > 0" id="possibleMatches">
-    <app-question-list
-      [isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
-      [showMeTooButton]="true" [showSearch]="false" [header]="'Possibly matching questions'">
-    </app-question-list>
+  <app-question-list
+  [isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
+  [showMeTooButton]="true" [showSearch]="false" [header]="'Possibly matching questions'">
+</app-question-list>
 </div>
 <br>
 <div>

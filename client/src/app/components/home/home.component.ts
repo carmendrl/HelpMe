@@ -20,20 +20,11 @@ export class HomeComponent implements OnInit {
  }
 
   ngOnInit() {
-    
+
   }
 
   gotoLogin() : void {
     this.router.navigateByUrl('/login');
   }
 
-  createNewAccount() : void {
-    // this.userService.createAccount(this.newUser).subscribe(
-    //   r => {
-    //     if (r) {
-    //       this.router.navigateByUrl('/dashboard');
-    //     }
-    //   }
-    // );
-  }
 }

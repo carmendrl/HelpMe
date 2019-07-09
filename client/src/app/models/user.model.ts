@@ -12,7 +12,7 @@ export class User extends Entity{
     private _role? : string,
     private _actingAsStudent? : boolean,
     private _toBeNotified? : boolean
-	)
+  )
   {
     super (_id);
   }
@@ -38,6 +38,7 @@ export class User extends Entity{
   }
 
   get Type() : string {
+    //ActingAsStudent === true means that a professor is acting as a student
     if(this._actingAsStudent === true)
     {
       return "students";
@@ -54,13 +55,14 @@ export class User extends Entity{
     this._type = type;
   }
 
-	get Role() : string { return this._role; }
-	set Role(role : string) { this._role = role;}
+  get Role() : string { return this._role; }
+  set Role(role : string) { this._role = role;}
 
+  //formats the users name
   get FullName() : string {
-		if (!this.FirstName && !this.LastName) {
-			return "";
-		}
+    if (!this.FirstName && !this.LastName) {
+      return "";
+    }
     return `${this._firstName} ${this._lastName}`;
   }
 
@@ -69,6 +71,7 @@ export class User extends Entity{
     this._password = newPassword;
   }
 
+  //if ActingAsStudent === true then a professor is acting as a student
   get ActingAsStudent(): boolean{
     return this._actingAsStudent;
   }
@@ -85,6 +88,8 @@ export class User extends Entity{
     this._toBeNotified = b;
   }
 
+
+  //creates an new user when given a json response
   static createFromJSon(o : Object){
     let user = new User();
 
@@ -96,7 +101,7 @@ export class User extends Entity{
     user.EmailAddress = src["email"];
     user.FirstName =src["first_name"];
     user.LastName = src["last_name"];
-		user.Role = src["role"];
+    user.Role = src["role"];
     user.ToBeNotified = src["toBeNotified"];
 
     return user;

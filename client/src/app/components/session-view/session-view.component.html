@@ -1,52 +1,53 @@
+<!-- displays a different session view depending on the type of the user-->
 <div *ngIf="userService.CurrentUser$ | async as user">
 
 	<div id="session_status">
 		<div class="sessionInfo">
 			{{subjectAndNumber}}: {{description}} ({{token}})
-			</div>
+		</div>
 
-			<div ngbDropdown class="d-inline-block">
-				<button ngbDropdownToggle class="btn btn-outline-primary ml-2">Actions</button>
+		<div ngbDropdown class="d-inline-block">
+			<button ngbDropdownToggle class="btn btn-outline-primary ml-2">Actions</button>
 
-				<div ngbDropdownMenu>
+			<div ngbDropdownMenu>
 
 
 
-					<!--  These options are visible only to instructional staff  -->
-					<div *ngIf="user.Type !=='students' && !ended">
-						<div *ngIf="!ended">
-							<button ngbDropdownItem type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
-							<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR Code</button>
-						</div>
-
-						<div class="dropdown-divider"></div>
-						<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
-						<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Add Questions from Another Session</button>
-						<div class="dropdown-divider"></div>
-
+				<!--  These options are visible only to instructional staff  -->
+				<div *ngIf="user.Type !=='students' && !ended">
+					<div *ngIf="!ended">
+						<button ngbDropdownItem type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+						<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR Code</button>
 					</div>
 
-					<!--  This option is visible to all users  -->
-					<button ngbDropdownItem type="button" (click)="toggleAudio()">
-						<span *ngIf="audioService.Unmuted"><i class="fa fa-volume-off"></i></span>
-						<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
-						Turn sound {{ audioService.Unmuted ? "off" : "on"}}
-					</button>
-					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to Dashboard</button>
+					<div class="dropdown-divider"></div>
+					<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
+					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Add Questions from Another Session</button>
+					<div class="dropdown-divider"></div>
+
 				</div>
+
+				<!--  This option is visible to all users  -->
+				<button ngbDropdownItem type="button" (click)="toggleAudio()">
+					<span *ngIf="audioService.Unmuted"><i class="fa fa-volume-off"></i></span>
+					<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
+					Turn sound {{ audioService.Unmuted ? "off" : "on"}}
+				</button>
+				<button ngbDropdownItem type="button" [routerLink]="['/dashboard']">Back to Dashboard</button>
 			</div>
+		</div>
 	</div>
 
-  <div *ngIf="user.Type==='professors'">
-    <app-faculty-session-view></app-faculty-session-view>
-  </div>
+	<div *ngIf="user.Type==='professors'">
+		<app-faculty-session-view></app-faculty-session-view>
+	</div>
 
-  <div *ngIf="user.Type==='students' && user.Role==='ta'">
-    <app-faculty-session-view></app-faculty-session-view>
-  </div>
+	<div *ngIf="user.Type==='students' && user.Role==='ta'">
+		<app-faculty-session-view></app-faculty-session-view>
+	</div>
 
-  <div *ngIf="user.Type==='students' && user.Role==='none'">
-    <app-student-session-view></app-student-session-view>
-  </div>
+	<div *ngIf="user.Type==='students' && user.Role==='none'">
+		<app-student-session-view></app-student-session-view>
+	</div>
 
 </div>

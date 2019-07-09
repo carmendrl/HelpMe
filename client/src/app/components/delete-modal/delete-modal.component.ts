@@ -13,23 +13,24 @@ import { Answer } from '../../models/answer.model';
   styleUrls: ['./delete-modal.component.scss']
 })
 export class DeleteModalComponent implements OnInit {
-    @Input() private currentQuestion : Question;
+  @Input() private currentQuestion : Question;
 
   constructor(private activeModal: NgbActiveModal, private userService: UserService,
     private questionService: QuestionService, private modalService: NgbModal,
-              private titleService: Title) { }
+    private titleService: Title) { }
 
-  ngOnInit() {
-    this.titleService.setTitle('Delete Question - Help Me');
+    ngOnInit() {
+      this.titleService.setTitle('Delete Question - Help Me');
+    }
+
+    ngOnDestroy(){
+      this.titleService.setTitle('Session View - Help Me');
+    }
+
+    //delete the currentQuestion from the database and close the modal
+    deleteQuestion(){
+      this.questionService.deleteAQuestion(this.currentQuestion).subscribe(r => this.activeModal.close());
+
+    }
+
   }
-
-  ngOnDestroy(){
-    this.titleService.setTitle('Session View - Help Me');
-  }
-
-  deleteQuestion(){
-    this.questionService.deleteAQuestion(this.currentQuestion).subscribe(r => this.activeModal.close());
-
-  }
-
-}

@@ -1,23 +1,25 @@
+<!--table that shows the student's question's place in line -->
 <table class="table table-striped placeInLine tbody" align="right">
   <div class="positionT">
-  <tbody>
-    <tr *ngFor= "let q of myUnclaimedQs">
-      <td>Your question on step {{q.step}} is <strong>{{q.placeInLine}} in line.</strong></td>
-    </tr>
-  </tbody>
+    <tbody>
+      <tr *ngFor= "let q of myUnclaimedQs">
+        <td>Your question on step {{q.step}} is <strong>{{q.placeInLine}} in line.</strong></td>
+      </tr>
+    </tbody>
   </div>
 </table>
 
-
+<!-- form to ask question -->
 <section class="askQuestion" *ngIf="started && !readOnly">
   <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData()"
   (pauseRefresh)="setPauseRefresh($event)" ></app-ask-question>
 </section>
 
+<!-- sorted list of questions -->
 <section *ngIf="started">
   <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
   [filteredQuestions]="faQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly" (refreshEvent)="refreshData()"
-   [playSound]="playSound" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+  [playSound]="playSound" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
 <section *ngIf="started">
@@ -33,6 +35,7 @@
   (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
 </section>
 
+<!-- alert users that session has not started yet -->
 <section *ngIf="!started">
   <h1>This session is not yet available, please come back on<br>{{startDate | date: 'MM/dd/yyyy'}} at {{startDate | date: 'shortTime'}}</h1>
 </section>

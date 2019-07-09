@@ -13,10 +13,10 @@ import { environment } from '../../../environments/environment';
 })
 export class SessionListComponent implements OnInit {
 
-  @Input() private sessions : LabSession[];
+  @Input() private sessions : LabSession[]; //list of all labsessions
   @Input() private label : string = "Showing Matching Sessions";
   @Input() public isCollapsed: boolean = true;
-  private searchText:string;
+  private searchText:string; //what the search uses to find mathcing sessions
 
 
 
@@ -27,6 +27,7 @@ export class SessionListComponent implements OnInit {
   ngOnInit() {
   }
 
+  //copy the session token to the clipboard
   copySessionCode(s:LabSession){
     this.copied = true;
     let selBox = this.document.createElement('textarea');
@@ -38,6 +39,7 @@ export class SessionListComponent implements OnInit {
     this.document.body.removeChild(selBox);
   }
 
+  //copy the session url to the clipboard
   copySessionLink(s:LabSession){
     this.copied = true;
     let selBox = this.document.createElement('textarea');
@@ -50,11 +52,12 @@ export class SessionListComponent implements OnInit {
     this.document.body.removeChild(selBox);
   }
 
+  //goes to the labsession url
   viewSession(s:LabSession){
     this.router.navigateByUrl(`/lab_sessions/${s.id}`);
   }
 
-
+  //filters the list of labsessions using the search text
   filter():boolean{
     if( this.searchText !=undefined && this.searchText!=""){
       return true;
@@ -64,23 +67,24 @@ export class SessionListComponent implements OnInit {
     }
   }
 
-
+  //the number of sessions in the list
   sessionsLength():number{
     if(this.sessions == undefined){
       return 0;
-        }
-      else{
-        return this.sessions.length;
-        }
     }
+    else{
+      return this.sessions.length;
+    }
+  }
 
-    checkIfCollapsed():string{
-      if(this.isCollapsed){
-        return "Open";
-      }
-      else{
-        return "Close"
-      }
+  //is the list collapsed?
+  checkIfCollapsed():string{
+    if(this.isCollapsed){
+      return "Open";
     }
+    else{
+      return "Close"
+    }
+  }
 
 }

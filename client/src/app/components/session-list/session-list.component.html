@@ -1,32 +1,36 @@
+<!-- view for a large screen -->
 <div class="largeScreen">
-<input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
-<div class="results">
-<p *ngIf="filter()" class="table-caption" style="font-size:1.5vw;">{{label}}</p>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Course</th>
-        <th>Professor</th>
-        <th>Description</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr id="tableRow" class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
-        <td>{{session.startDate | date:'EEE LLL dd'}}</td>
-        <td>{{session.course.subjectAndNumber}}</td>
-        <td>{{session.professor.FullName}}</td>
-        <td>{{session.description}}</td>
-        <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}"
-          triggers="mouseenter:mouseleave" popoverTitle= "Session Code">Copy Code</span>
-           <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
-           <span id="viewButton" name="view" (click)="viewSession(session);audioService.playSilentAudio()" class="btn btn-primary actionSpace">View</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  <!-- search box to search through all the labsessions  -->
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
+  <div class="results">
+    <p *ngIf="filter()" class="table-caption" style="font-size:1.5vw;">{{label}}</p>
+    <!--table to list the lab sessions -->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Course</th>
+          <th>Professor</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="tableRow" class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
+          <td>{{session.startDate | date:'EEE LLL dd'}}</td>
+          <td>{{session.course.subjectAndNumber}}</td>
+          <td>{{session.professor.FullName}}</td>
+          <td>{{session.description}}</td>
+          <!-- buttons to copy and view -->
+          <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}"
+            triggers="mouseenter:mouseleave" popoverTitle= "Session Code">Copy Code</span>
+            <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
+            <span id="viewButton" name="view" (click)="viewSession(session);audioService.playSilentAudio()" class="btn btn-primary actionSpace">View</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 
@@ -37,7 +41,7 @@
     [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
     <span *ngIf="isCollapsed" class="badge badge-light">{{sessionsLength()}}</span>
   </button>
-  </h2>
+</h2>
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
   <div class="results">
@@ -46,8 +50,8 @@
       <span>{{session.description}} </span>
       <span>({{session.professor.LastName}}) </span>
       <button class="btn btn-primary actionSpace" (click)="viewSession(session);playSlientAudio();" name="view">View</button>
-        </div>
-      <hr>
     </div>
+    <hr>
   </div>
+</div>
 </div>

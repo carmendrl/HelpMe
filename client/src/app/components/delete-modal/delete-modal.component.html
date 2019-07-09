@@ -1,45 +1,40 @@
-<!-- modal -->
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-delete-question" aria-labelledBy="modal-delete-question">Delete a Question</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<!-- modal to delete a question-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-delete-question" aria-labelledBy="modal-delete-question">Delete a Question</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-  <div class="modal-body">
-    <!-- form -->
-    <label>Are you sure you would like to delete this question?</label>
-    <!-- <label>Question:</label>
-    <quill-editor
-    class="qEditor" [styles]="{border:'none'}"
-    [modules]="{toolbar: false}" [placeholder]="''" format="json"
-    [ngModel]="currentQuestion.text"></quill-editor> -->
+<div class="modal-body">
+  <!-- form -->
+  <label>Are you sure you would like to delete this question?</label>
+  <!-- show the current question -->
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th *ngIf="currentQuestion.step != undefined">Step</th>
+        <th>Question</th>
+        <th *ngIf="currentQuestion.answerText != ''">Answer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th *ngIf="currentQuestion.step != undefined">Step</th>
-          <th>Question</th>
-          <th *ngIf="currentQuestion.answerText != ''">Answer</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-
-          <td *ngIf="currentQuestion.step != undefined">{{currentQuestion.step}}</td>
-          <td><quill-editor class="qEditor" [styles]="{border:'none'}"
-            [modules]="{toolbar: false}" format="json" [ngModel]="currentQuestion.text"> </quill-editor></td>
+        <td *ngIf="currentQuestion.step != undefined">{{currentQuestion.step}}</td>
+        <td><quill-editor class="qEditor" [styles]="{border:'none'}"
+          [modules]="{toolbar: false}" format="json" [ngModel]="currentQuestion.text"> </quill-editor></td>
 
           <td *ngIf="currentQuestion.answerText != ''"><quill-editor class="qEditor" style="color:dodgerBlue"
             [styles]="{border:'none'}" [modules]="{toolbar: false}"
-          format="json" [ngModel]="currentQuestion.answerText"> </quill-editor></td>
+            format="json" [ngModel]="currentQuestion.answerText"> </quill-editor></td>
 
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="deleteQuestion();" name="deleteButton">Delete Question</button>
-        <button type="button" class="btn btn-primary" (click)="activeModal.dismiss();">Cancel</button>
+        <button type="button" class="btn btn-secondary" (click)="activeModal.dismiss();">Cancel</button>
       </div>
-  </div>
+    </div>

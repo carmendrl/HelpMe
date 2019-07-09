@@ -1,3 +1,4 @@
+<!--modal to copy questions to another session-->
 <div class="modal-header">
 	<h4 class="modal-title">Copy questions to another session</h4>
 </div>
@@ -12,41 +13,42 @@
 		[showCheck]="true" [showAction]="false" (refreshEvent)="refreshData($event)"
 		(pauseRefresh)="setPauseRefresh($event)"
 		(selectionChanged)="onSelectedQuestionsChanged($event)">
-		</app-question-list>
-	</section>
+	</app-question-list>
+</section>
 
-	<div class="mt-2">
+<div class="mt-2">
 
-		<div id="buttons" *ngIf="selectedSession && state != 'copied'">
-			<button [disabled]="selectedQuestions.length === 0"
-				class="btn btn-primary" (click)="copySelectedQuestions();">Copy to {{selectedSession.description}} - {{selectedSession.course.subjectAndNumber}}</button>
-			<button class="btn btn-secondary ml-2" (click)="cancel();">Cancel</button>
+	<div id="buttons" *ngIf="selectedSession && state != 'copied'">
+		<button [disabled]="selectedQuestions.length === 0"
+		class="btn btn-primary" (click)="copySelectedQuestions();">Copy to {{selectedSession.description}} - {{selectedSession.course.subjectAndNumber}}</button>
+		<button class="btn btn-secondary ml-2" (click)="cancel();">Cancel</button>
+	</div>
+
+	<div [ngSwitch]="state" class="mt-2">
+		<p *ngSwitchCase="'selecting'"></p>
+
+		<p *ngSwitchCase="'copying'" class="alert alert-info">Copying selected questions ...</p>
+
+		<!-- alerts user of success or error in copying questions -->
+		<div *ngSwitchCase="'copied'" class="alert alert-success">
+			<p>The selected {{selectedQuestions.length>1 ? "questions have" : "question has"}} been copied to the session {{selectedSession.description}}.</p>
+			<button class="btn btn-primary" (click)="close();">Close</button>
 		</div>
 
-		<div [ngSwitch]="state" class="mt-2">
-			<p *ngSwitchCase="'selecting'"></p>
+		<div *ngSwitchCase="'errorCopying'" class="alert alert-danger">
+			<p *ngIf="confirmedQuestions.length > 0">
+				{{confirmedQuestions.length}} question{{confirmedQuestions.length > 1 ? 's' : ''}} was copied successfully
+			</p>
 
-			<p *ngSwitchCase="'copying'" class="alert alert-info">Copying selected questions ...</p>
+			<p>
+				An error occurred copying {{errorQuestions.length}} question {{errorQuestions.length > 1 ? 's' : ''}}.
+				You can retry copying <span *ngIf="errorQuestions.length >1">these questions</span><span *ngIf="errorQuestions.length==1">this question</span> by clicking on the <strong>Copy</strong> button above.
+			</p>
 
-			<div *ngSwitchCase="'copied'" class="alert alert-success">
-				<p>The selected {{selectedQuestions.length>1 ? "questions have" : "question has"}} been copied to the session {{selectedSession.description}}.</p>
-				<button class="btn btn-primary" (click)="close();">Close</button>
-			</div>
-
-			<div *ngSwitchCase="'errorCopying'" class="alert alert-danger">
-				<p *ngIf="confirmedQuestions.length > 0">
-					{{confirmedQuestions.length}} question{{confirmedQuestions.length > 1 ? 's' : ''}} was copied successfully
-				</p>
-
-				<p>
-					An error occurred copying {{errorQuestions.length}} question {{errorQuestions.length > 1 ? 's' : ''}}.
-					You can retry copying <span *ngIf="errorQuestions.length >1">these questions</span><span *ngIf="errorQuestions.length==1">this question</span> by clicking on the <strong>Copy</strong> button above.
-				</p>
-
-				<p>
-					If this problem persists, please contact the HelpMe administrators.
-				</p>
-			</div>
+			<p>
+				If this problem persists, please contact the HelpMe administrators.
+			</p>
 		</div>
 	</div>
+</div>
 </div>

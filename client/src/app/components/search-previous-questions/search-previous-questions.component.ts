@@ -17,14 +17,15 @@ import { Location } from '@angular/common';
 })
 export class SearchPreviousQuestionsComponent implements OnInit {
 
-  closeResult: string;
-  private sessions : LabSession[];
-  private selectedSession : LabSession = new LabSession();
-  private sessionReloaded : boolean = false;
-  private sessionQuestions : Question[];
-  private stateQuestions : string;
+  private sessions : LabSession[]; //list of other labsessions
+  private selectedSession : LabSession = new LabSession(); //the session selected in the dropdown
+  private sessionReloaded : boolean = false; //have the sessions been reloaded?
+  private sessionQuestions : Question[]; //the selected session questions
+  private stateQuestions : string; //errorCopyingQuestions, copyQuestions, or Copied
   private sessionId: string;
-  private question : Question;
+  private question : Question; //current question
+
+  //used in error handling
   private errorQuestions: ApiResponse<Question>[];
   private confirmedQuestions: Question[];
   private stateLabSessions: string;
@@ -32,14 +33,17 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private loadedSessions: LabSession[];
   private sessionMessage: string[];
   private loadSessionError: boolean;
+
   @Input() private currentLabSession : string;
 
+  //used in error handling
   private state: string;
   private getQuestions : Question[];
   private questionMessage : string[];
   private getQuestionsError: boolean;
   private errorGetQuestions: ApiResponse<Question[]>;
 
+  //lists of questions
   private FaQs: Question[];
   private answeredQs: Question[];
   private notAnsweredQs: Question[];
@@ -58,62 +62,65 @@ export class SearchPreviousQuestionsComponent implements OnInit {
       this.sessions = new Array<LabSession>();
     }
 
-  ngOnInit() {
-    this.loadSessions();
-    this.sessionId = this.route.snapshot.paramMap.get('id');
-  }
+    ngOnInit() {
+      this.loadSessions();
+      this.sessionId = this.route.snapshot.paramMap.get('id'); //get the session id from the url
+    }
 
-  private loadSessions() : void {
-    this.sessionReloaded = false;
+    //load the other labsessions
+    private loadSessions() : void {
+      this.sessionReloaded = false;
 
-    this.labSessionService.labSessions().subscribe (
-      s => {
-        this.sessions = s.Data;
-        if (this.sessions.length > 0) {
-          this.selectedSession = this.sessions[0];
-          this.handleLoadSessions(s);
+      this.labSessionService.labSessions().subscribe (
+        s => {
+          this.sessions = s.Data;
+          if (this.sessions.length > 0) {
+            this.selectedSession = this.sessions[0]; //set the selected session to the first session
+            this.handleLoadSessions(s);
+          }
+          this.sessionReloaded = true;
+          this.loadSessionQuestions(); //load the corresponding questions
         }
-        this.sessionReloaded = true;
-        this.loadSessionQuestions();
-      }
-    );
-  }
+      );
+    }
 
-  private loadSessionQuestions(){
-    //debugger
-    this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions.Data; this.sortQuestions(this.sessionQuestions);this.handleGetQuestionsError(questions)});
-  }
+    //load the questions that correspond with the selected labsession
+    private loadSessionQuestions(){
+      this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {this.sessionQuestions = questions.Data; this.sortQuestions(this.sessionQuestions);this.handleGetQuestionsError(questions)});
+    }
 
+    //copy all the questions in the list
+    copyAllQuestions(){
+      this.stateQuestions = "copyingQuestions";
+      let sessionSelected = this.selectedSession;
 
-  copyAllQuestions(){
-    this.stateQuestions = "copyingQuestions";
-    let sessionSelected = this.selectedSession;
+      let copyQuestions = this.labSessionService.copyQuestions;
+      let tempQuestion: Question;
+      let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.plaintext, question.faq, question.answer));
 
-    let copyQuestions = this.labSessionService.copyQuestions;
-    let tempQuestion: Question;
-    let copiedQuestions : Observable<ApiResponse<Question>>[] = copyQuestions.map(question => this.questionService.askQuestion(question.text, this.sessionId, question.step, question.plaintext, question.faq, question.answer));
+      //  forkJoin will subscribe to all the questions, and emit a single array value
+      //  containing all of the questions
+      forkJoin(copiedQuestions).subscribe (
+        qArray => this.handleCopyQuestionResponse(qArray)
+      );
+      this.modalService.dismissAll();
+    }
 
-		//  forkJoin will subscribe to all the questions, and emit a single array value
-		//  containing all of the questions
-		forkJoin(copiedQuestions).subscribe (
-			qArray => this.handleCopyQuestionResponse(qArray)
-		);
-    this.modalService.dismissAll();
-  }
+    //cannot submit form if the slected session is undefined
+    submitShouldBeDisabled() : boolean {
+      return this.selectedSession === undefined;
+      //.id == undefined || this.selectedUser.EmailAddress === ""
+    }
 
-
-  submitShouldBeDisabled() : boolean {
-    return this.selectedSession === undefined;
-    //.id == undefined || this.selectedUser.EmailAddress === ""
-  }
-
-  sortQuestions(questions: Question[]){
-    this.currentDate=new Date();
-    //clears the array
-    this.FaQs.length = 0;
-    this.answeredQs.length = 0;
-    this.notAnsweredQs.length = 0;
-    for (let question of questions){
+    //sorts the questions into their respective lists
+    //only uses three lists
+    sortQuestions(questions: Question[]){
+      this.currentDate=new Date();
+      //clears the arrays
+      this.FaQs.length = 0;
+      this.answeredQs.length = 0;
+      this.notAnsweredQs.length = 0;
+      for (let question of questions){
         if(question.isAnswered){
           if (question.faq){
             this.FaQs.push(question);
@@ -125,47 +132,47 @@ export class SearchPreviousQuestionsComponent implements OnInit {
         else{
           this.notAnsweredQs.push(question);
         }
+      }
     }
-  }
 
-//error handlers
-private handleGetQuestionsError(questions: ApiResponse<Question[]>){
-  if(!questions.Successful){
-    this.state = "errorGettingQuestions";
-    this.errorGetQuestions = questions;
-    this.getQuestions = <Question[]>questions.Data;
-    this.questionMessage = questions.ErrorMessages;
-    this.getQuestionsError = true;
-  }
-  else{
-    this.state = "loaded";
-    this.getQuestions = <Question[]>questions.Data;
-  }
-}
-private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
-  if (qArray.some(r => !r.Successful)) {
-    this.stateQuestions = "errorCopyingQuestion";
-    this.errorQuestions = qArray.filter(r => !r.Successful);
-    this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
-  }
-  else {
-    this.stateQuestions = "copied";
-    this.confirmedQuestions =qArray.map(r => <Question> r.Data);
-  }
-}
+    //error handlers
+    private handleGetQuestionsError(questions: ApiResponse<Question[]>){
+      if(!questions.Successful){
+        this.state = "errorGettingQuestions";
+        this.errorGetQuestions = questions;
+        this.getQuestions = <Question[]>questions.Data;
+        this.questionMessage = questions.ErrorMessages;
+        this.getQuestionsError = true;
+      }
+      else{
+        this.state = "loaded";
+        this.getQuestions = <Question[]>questions.Data;
+      }
+    }
+    private handleCopyQuestionResponse (qArray : ApiResponse<Question>[]) {
+      if (qArray.some(r => !r.Successful)) {
+        this.stateQuestions = "errorCopyingQuestion";
+        this.errorQuestions = qArray.filter(r => !r.Successful);
+        this.confirmedQuestions = qArray.filter(r => r.Successful).map(r => <Question> r.Data);
+      }
+      else {
+        this.stateQuestions = "copied";
+        this.confirmedQuestions =qArray.map(r => <Question> r.Data);
+      }
+    }
 
-private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
-  if(!sessions.Successful){
-    this.stateLabSessions = "errorLoadingSessions";
-    this.errorSessions = sessions;
-    this.loadedSessions = <LabSession[]>sessions.Data;
-    this.sessionMessage = sessions.ErrorMessages;
-    this.loadSessionError = true;
-  }
-  else{
-    this.stateLabSessions = "loaded";
-    this.loadedSessions = <LabSession[]>sessions.Data;
-  }
-}
+    private handleLoadSessions(sessions: ApiResponse<LabSession[]>){
+      if(!sessions.Successful){
+        this.stateLabSessions = "errorLoadingSessions";
+        this.errorSessions = sessions;
+        this.loadedSessions = <LabSession[]>sessions.Data;
+        this.sessionMessage = sessions.ErrorMessages;
+        this.loadSessionError = true;
+      }
+      else{
+        this.stateLabSessions = "loaded";
+        this.loadedSessions = <LabSession[]>sessions.Data;
+      }
+    }
 
-}
+  }
