@@ -1,3 +1,30 @@
+@import "~variables.scss";
+
+$borderWidth: 0px;
+
+table {
+	border-collapse: collapse;
+	border:none !important;
+
+	thead {
+		tr th {
+			border-top: $borderWidth solid $primary;
+			// text-decoration: underline;
+		}
+	}
+
+	tbody {
+		tr:first-child td {
+			border-top: $borderWidth solid $primary;
+		}
+
+		tr:last-child td {
+			border-bottom: $borderWidth solid $primary;
+		}
+	}
+
+}
+
 .noStyle{
   list-style-type: none;
   margin: 0;

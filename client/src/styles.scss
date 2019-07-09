@@ -1,6 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~angular-notifier/styles.scss";
+
 @import "~variables.scss";
+
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+@import "~angular-notifier/styles.scss";
+
+
+@font-face {
+  font-family: 'clarendon';
+  src: url("assets/fonts/clarendon_bold.eot");
+  src: url("assets/fonts/clarendon_bold.eot?#iefix") format("embedded-opentype"), url("assets/fonts/clarendon_bold.woff") format("woff"), url("assets/fonts/clarendon_bold.ttf") format("truetype"), url("assets/fonts/clarendon_bold.svg#clarendon") format("svg");
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-family: clarendon;
+}
+
+.dropdown-item:hover {
+	background-color: $primary;
+	color: white;
+	cursor: pointer;
+}
 
 section {
 
@@ -24,6 +45,9 @@ section {
   }
 }
 
+button {
+	background-color: $body-bg;
+}
 .table-caption {
   font-weight: bold;
 }
