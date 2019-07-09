@@ -1,10 +1,18 @@
 import { LoginPage } from './login.po';
-xdescribe('Login tests', () => {
+describe('Login tests', () => {
     let page: LoginPage;
 
     beforeEach(() => {
         page = new LoginPage();
         page.navigateTo();
+    });
+
+    var child_process = require('child_process');
+    child_process.exec('rails runner ~/help-me-web/scripts/loginTestSetup.rb',
+    function(err, stdout, stderr){
+      if(err){
+        console.log("child processes failed with error code: " + err.code);
+      }
     });
 
     it('should have right title',() =>{

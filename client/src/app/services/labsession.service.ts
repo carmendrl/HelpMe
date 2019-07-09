@@ -83,22 +83,6 @@ export class LabSessionService {
     return session;
   }
 
-//search and load mathching questions using a search text
-	findMatchingQuestions (lab_session_id: string, searchText : string, step: string) : Observable<ApiResponse<Question[]>>{
-		let url: string = `${this.apiHost}/lab_sessions/${lab_session_id}/questions/matching?q=${searchText}`;
-		if (step) {
-			url = `${url}&step=${step}`
-		}
-
-		url = encodeURI(url);
-		return this.httpClient.get(url).pipe(
-			map(r => r["data"].map(q => Question.createFromJSon(q))),
-			map(qArray => new ApiResponse<Question[]> (true, qArray)),
-			catchError(r => this.handleMatchingQuestionsError (r))
-		);
-	}
-
-//create a new labsession object and add to observable
   createNewLabSession(description:String, courseId:string, startDate: string, endDate: string): Observable<ApiResponse<LabSession>> {
     let url : string =`${this.apiHost}/lab_sessions`;
     let lab: LabSession;

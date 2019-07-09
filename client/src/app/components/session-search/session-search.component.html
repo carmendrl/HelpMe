@@ -1,29 +1,26 @@
 <!--modal to search for sessions -->
-<div class="modal-body">
-	<!-- alerts user that sessions are loading -->
-	<div *ngIf = "!sessionReloaded">
-		Loading list of labsessions
-	</div>
+<div *ngIf = "!sessionReloaded">
+	Loading list of labsessions
+</div>
 
-	<div *ngIf = "sessionReloaded">
+<div *ngIf = "sessionReloaded">
 
-		<form  #thisForm="ngForm" *ngIf="sessions.length > 0">
-			<div class="form-group row no-gutters">
-				<label class="form-label col-md-4" for="description">{{dropdownLabel}}</label>
-				<select [(ngModel)]="selectedSession" (change)="onSessionSelected()" name="selectedSession">
-					<option *ngFor="let session of sessions" [ngValue]="session">{{session.description}} - {{session.course.subjectAndNumber}} {{session.course.semester.friendlySemester}}</option>
-				</select>
-			</div>
-		</form>
+  <form  #thisForm="ngForm" *ngIf="sessions.length > 0">
+    <div class="form-group row no-gutters">
+      <label class="form-label col-md-4" for="description">{{dropdownLabel}}</label>
+			<select [(ngModel)]="selectedSession" (change)="onSessionSelected()" name="selectedSession">
+				<option *ngFor="let session of sessions" [ngValue]="session">{{session.description}} - {{session.course.subjectAndNumber}} {{session.course.semester.friendlySemester}}</option>
+			</select>
+    </div>
+   </form>
 
-		<div *ngIf="sessions.length === 0" class="alert alert-danger">
-			<p>
-				There are no other sessions.
-			</p>
+	<div *ngIf="sessions.length === 0" class="alert alert-danger">
+		<p>
+			There are no other sessions.
+		</p>
 
-			<p>Click the button below to reload the list of sessions</p>
+		<p>Click the button below to reload the list of sessions</p>
 
-			<span class="btn btn-outline-primary" (click)="loadSessions()">Reload</span>
-		</div>
+		<span class="btn btn-outline-primary" (click)="loadSessions()">Reload</span>
 	</div>
 </div>

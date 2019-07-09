@@ -83,7 +83,6 @@ export class QuestionListComponent implements OnInit {
   @Input() public showFinishButton: boolean = true;
   @Input() public showDiscardDraftButton: boolean = true;
 
-
   @Input() public isCollapsed: boolean = true;//is the questionlist collapsed?
   @Input() private readOnly: boolean = false; //is true if the session has ended
   @Input() private allowSelection: boolean = false;
@@ -96,7 +95,7 @@ export class QuestionListComponent implements OnInit {
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter(); //page the automatic refresh
   @Output() public claimedQEvent: EventEmitter<any> = new EventEmitter(); //a question was claimed
   @Output() public openCloseEvent: EventEmitter<any> = new EventEmitter();//the list was opened or closed
-
+  @Output() public meTooButtonClickedForMatchingQuestion: EventEmitter<any> = new EventEmitter();
   @Output() public selectionChanged: EventEmitter<Question[]> = new EventEmitter<Question[]> (); //the question that was selected changed
 
   constructor(private questionService: QuestionService, private labsessionService: LabSessionService, private userService: UserService,
@@ -250,6 +249,18 @@ export class QuestionListComponent implements OnInit {
         }
       }
 
+      notMyQuestion(question:Question):boolean{
+        let isNotMyQuestion=true;
+        //This method determines whether or not MeToo button will appear
+        //in regards to the user possibly being the original asker or having clicked the MeToo button
+        for (let a of question.otherAskers){
+          if(a.id === this.currentUser.id){
+            isNotMyQuestion = false;
+          }
+        }
+        return isNotMyQuestion;
+      }
+
       //main method for all buttons and the dropdown menu
       performSelectedAction(q: Question, i: number){
         this.currentQuestion = q;
@@ -290,22 +301,16 @@ export class QuestionListComponent implements OnInit {
           this.claimedQEvent.next();
         }
 
-        //configure pauseRefresh based on the position of the dropdown
-        menuPauseRefresh(event){
-          if(event){
-            //dropdown open
-            this.pauseRefresh.next(true);
-          }
-          else{
-            //dropdown closed and another action was not selected
-            if(!(this.actionSelected)){
-              this.pauseRefresh.next(false);
-              //this is necesssary so that timer is initiated once again
-              this.refreshEvent.next();
-            }
-            this.actionSelected = false;
-          }
+      closeQuestionForm(){
+        this.meTooButtonClickedForMatchingQuestion.next();
+      }
+
+      menuPauseRefresh(event){
+        if(event){
+          //dropdown open
+          this.pauseRefresh.next(true);
         }
+      }
 
         //open the answer modal
         answerQuestion(question: Question):Observable<any>{
@@ -358,18 +363,17 @@ export class QuestionListComponent implements OnInit {
         }
 
         //select all of the questions
-        selectAll(event){
-          let isSelected : boolean = event.srcElement.checked;
-          this.selected.fill(isSelected);
-          this.onQuestionSelectedChanged();
-        }
+      selectAll(event){
+				let isSelected : boolean = event.srcElement.checked;
+				this.selected.fill(isSelected);
+				this.onQuestionSelectedChanged();
+      }
+      addTag(){
+        this.questionService.addATag(this.currentQuestion, this.tagText).subscribe(r => this.handleAddTagResponse(r));
+        this.currentQuestion.addTag(this.tagText);
+      }
 
-        //add a tag to a question
-        //does not work
-        addTag(){
-          this.questionService.addATag(this.currentQuestion, this.tagText).subscribe(r => this.handleAddTagResponse(r));
-          this.currentQuestion.addTag(this.tagText);
-        }
+
         //get the text of the answer to the current question
         getAnswerText(question : Question): string{
           if(question.answer != undefined){
@@ -382,6 +386,8 @@ export class QuestionListComponent implements OnInit {
           }
           return "";
         }
+
+
 
         //open the modal to add a tag
         openTag(content, question: Question) {
@@ -398,7 +404,7 @@ export class QuestionListComponent implements OnInit {
           // );
         }
 
-        //set teh reason that the modal closed
+        //set the reason that the modal closed
         private getDismissReason(reason: any): string {
           if (reason === ModalDismissReasons.ESC) {
             return 'by pressing ESC';
@@ -495,19 +501,18 @@ export class QuestionListComponent implements OnInit {
                   return false;
                 }
 
-                //error handling
-                private handleAddTagResponse(b: ApiResponse<boolean>){
-                  //debugger;
-                  if(!b.Successful){
-                    this.state = "errorAddingTag";
-                    this.errorBoolean = b;
-                    this.loadBoolean = <boolean>b.Data;
-                    this.booleanMessage = b.ErrorMessages;
-                    this.loadBooleanError = true;
-                  }
-                  else{
-                    this.state = "added";
-                    this.loadBoolean = <boolean>b.Data;
-                  }
-                }
-              }
+//error handling
+      private handleAddTagResponse(b: ApiResponse<boolean>){
+        if(!b.Successful){
+          this.state = "errorAddingTag";
+          this.errorBoolean = b;
+          this.loadBoolean = <boolean>b.Data;
+          this.booleanMessage = b.ErrorMessages;
+          this.loadBooleanError = true;
+        }
+        else{
+          this.state = "added";
+          this.loadBoolean = <boolean>b.Data;
+        }
+      }
+        }

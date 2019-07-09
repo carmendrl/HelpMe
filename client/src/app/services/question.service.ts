@@ -26,11 +26,67 @@ export class QuestionService {
 
   constructor(private httpClient : HttpClient, private labsessionService: LabSessionService,
     private route:ActivatedRoute) {
+<<<<<<< HEAD
       this.apiHost = environment.api_base;
       this.updatedQuestion$ = new Subject<Question>();
       this.newAnswer$ = new Subject<Answer>();
       this.sessionId = this.route.snapshot.paramMap.get('id');
     }
+=======
+    this.apiHost = environment.api_base;
+    this.updatedQuestion$ = new Subject<Question>();
+    this.newAnswer$ = new Subject<Answer>();
+    this.sessionId = this.route.snapshot.paramMap.get('id');
+  }
+
+  get getUpdatedQuestion$() : Observable<Question> {
+    return this.updatedQuestion$;
+  }
+
+  get getNewAnswer$() : Observable<Answer> {
+    return this.newAnswer$;
+  }
+
+  // updateSmallText(question: Question){
+  //   let tempArray = new Array<Object>();
+  //   this.timeDifference = moment(question.date).fromNow();
+  //   tempArray.push(question.text);
+  //   tempArray.push(JSON.parse('{"insert": this.timeDifference}'));
+  //   //this.step = question.step;
+  //   question.smallText = tempArray;
+  // }
+
+  questionList() : Observable<ApiResponse<Question[]>> {
+    let url :string = `${this.apiHost}/user/questions`;
+    let questions: Question[];
+    return this.httpClient.get(url).pipe(
+      map(r=>{
+        questions = this.createQuestionArrayFromJson(r["data"], r["included"]);
+        let response : ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
+        return response;
+    }),
+      catchError(r => this.handleQuestionsError(r,questions))
+    );
+  }
+
+  private createQuestionArrayFromJson(questionsData: any[], includedResponse : any[]) : Question[]{
+    let userQuestions = new Array<Question> ();
+
+    for(let object of questionsData){
+
+      let lab_session_id = object["relationships"]["lab_session"]["data"]["id"];
+      let lab_session = includedResponse.find( e => e["type"] == "lab_sessions" && e["id"] == lab_session_id);
+      let course_id = lab_session["relationships"]["course"]["data"]["id"];
+      var course: Object = includedResponse.find(function(element) {
+        return element["type"]==="courses" && element["id"]=== course_id;
+      });
+      var session : Object = includedResponse.find(function(element){
+        return element["type"]==="lab_sessions" && element["id"]=== lab_session_id});
+
+        var prof : Object = includedResponse.find(function(element) {
+          return element["type"]==="professors" && element["id"]=== course["relationships"]["instructor"]["data"]["id"];
+        });
+
 
     //get the observable updated question
     get getUpdatedQuestion$() : Observable<Question> {
@@ -132,6 +188,7 @@ export class QuestionService {
         return userQuestions;
       }
 
+
       //build a question from the objects extracted from the json response
       private buildQuestion (qData: Object, sData : Object, profData : Object, cData :Object,
         aData : Object, askerData:Object, claimerData: Object, askersData:Object[], answererData:Object) : Question{
@@ -173,7 +230,7 @@ export class QuestionService {
           var questions= new Array<Question>();
           return this.httpClient.get(url).pipe(
             map(r => {
-              questions = this.createArray(r['data'], r['included']);
+              questions = this.createQuestionArrayFromJson(r['data'], r['included']);
               let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
               return response;
             }),
@@ -388,6 +445,34 @@ export class QuestionService {
             );
             //  TODO  Add proper error handling for this code
           }
+    findMatchingQuestions (lab_session_id: string, searchText : string, step: string) : Observable<ApiResponse<Question[]>>{
+      let url: string = `${this.apiHost}/lab_sessions/${lab_session_id}/questions/matching?q=${searchText}`;
+var questions: Question[];
+      if (step != undefined && step != "undefined") {
+        url = `${url}&step=${step}`
+      }
+
+      url = encodeURI(url);
+      return this.httpClient.get(url).pipe(
+        map(r => {
+          questions = this.createQuestionArrayFromJson(r["data"], r["included"]);
+          let response: ApiResponse<Question[]> = new ApiResponse<Question[]>(true, questions);
+          return response;
+        }),
+        catchError(r => this.handleMatchingQuestionsError (r))
+      );
+    }
+
+  	handleMatchingQuestionsError (response) : Observable<ApiResponse<Question[]>> {
+  		let apiResponse : ApiResponse<Question[]> = new ApiResponse<Question[]> (false);
+  		if (response instanceof HttpErrorResponse) {
+  			apiResponse.addErrorsFromHttpError (<HttpErrorResponse> response);
+  		}
+  		else {
+  			apiResponse.addError ("Unable to load potential matches");
+  		}
+  		return of(apiResponse);
+  	}
 
 
           //assigns a question to another user and returns a question

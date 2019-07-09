@@ -11,19 +11,17 @@ h1{
   margin: 5px;
 }
 
-
+.tHeader{
+      background: lighten(DodgerBlue, 30%);
+}
 .tbody {
     tr:nth-child(odd) > td:nth-child(odd) {
-        background: lighten(DodgerBlue, 30%); }
-    tr:nth-child(even) > td:nth-child(odd) {
         background: lighten(DodgerBlue, 40%); }
+    tr:nth-child(even) > td:nth-child(odd) {
+        background: lighten(DodgerBlue, 30%); }
 }
 
-.positionT{
-  margin-top: -60px;
+.rightSide{
+  float:right;
+  width: 290px;
 }
-
-.placeInLine{
-    position: relative;
-    width: 290px;
-  }

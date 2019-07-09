@@ -195,10 +195,21 @@ export class Question extends Entity{
     }
 
 
-    //creates a new question when given a json response
-    static createFromJSon(o:Object){
-      let question = new Question();
 
+  get stepString():string{
+    if(this._step ===null || this._step === undefined || this._step === "undefined"){
+      return "No Step";
+    }
+    else{
+      return "Step "+this._step;
+    }
+  }
+
+
+
+//creates a new question when given a json response
+static createFromJSon(o:Object){
+  let question = new Question();
       question.date = o["attributes"]["created_at"];
       question.text = o["attributes"]["text"];
       question.id = o["id"];

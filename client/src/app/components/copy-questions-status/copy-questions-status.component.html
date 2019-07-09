@@ -1,0 +1,25 @@
+<div [ngSwitch]="state" class="mt-2">
+	<div *ngSwitchCase="selecting"></div>
+
+	<p *ngSwitchCase="copying" class="alert alert-info">Copying selected questions ...</p>
+
+	<div *ngSwitchCase="copied" class="alert alert-success">
+		<p>The selected {{selectedQuestions.length >1 ? "questions have" : "question has"}} been copied to the session {{destinationSession.description}}.</p>
+		<button class="btn btn-primary" (click)="close();">Close</button>
+	</div>
+
+	<div *ngSwitchCase="error" class="alert alert-danger">
+		<p *ngIf="confirmedQuestions.length > 0">
+			{{confirmedQuestions.length}} question{{confirmedQuestions.length > 1 ? 's' : ''}} was copied successfully
+		</p>
+
+		<p>
+			An error occurred copying {{errorQuestions.length}} question {{errorQuestions.length > 1 ? 's' : ''}}.
+			You can retry copying <span *ngIf="errorQuestions.length >1">these questions</span><span *ngIf="errorQuestions.length==1">this question</span> by clicking on the <strong>Copy</strong> button above.
+		</p>
+
+		<p>
+			If this problem persists, please contact the HelpMe administrators.
+		</p>
+	</div>
+</div>

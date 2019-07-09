@@ -230,24 +230,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                 this.description = session.Data.description, this.getSessionError(session)});
               }
 
-              //open the search sessions modal
-              open(content) {
-                let modal= this.modalService.open(content, <NgbModalOptions>{ariaLabelledBy: 'modal-search-sessions'}).result.then((result) => {
-                  this.closeResult = `Closed with: ${result}`;
-                }, (reason) => {
-                  this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-                });
 
-                //open the search previous questions modal
-              }
-              open2(content2) {
-                let modal= this.modalService.open(content2, <NgbModalOptions>{ariaLabelledBy: 'modal-search-previous-questions'}).result.then((result) => {
-                  this.closeResult = `Closed with: ${result}`;
-                }, (reason) => {
-                  this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-                });
-
-              }
 
               //sets why the modal was dismissed
               private getDismissReason(reason: any): string {
@@ -277,7 +260,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit{
                 this.claimedCollapsed = !this.claimedCollapsed;
                 return this.claimedCollapsed;
               }
-              
+
 
               //handle errors
               private getSessionError(session: ApiResponse<LabSession>){

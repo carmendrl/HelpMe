@@ -75,15 +75,13 @@
             <label>End Date</label>
           </div>
 
-          <div class="form-inline  dateDiv" >
-            <div class="form-group" >
-              <div class="input-group">
-                <input class="form-control" placeholder="yyyy-mm-dd"
-                name="end_date" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
-                <div class ="input-group-append">
-                  <button name="select_end" class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
-                </div>
-              </div>
+      <div class="form-inline  dateDiv" >
+        <div class="form-group" >
+          <div class="input-group">
+            <input class="form-control" placeholder="yyyy-mm-dd"
+            name="p" [(ngModel)]="end_date" ngbDatepicker #p="ngbDatepicker" maxlength ="10" required>
+            <div class ="input-group-append">
+              <button name="select_end" class="btn btn-outline-secondary calendar" (click)="p.toggle()" type="button" >Select</button>
             </div>
           </div>
 

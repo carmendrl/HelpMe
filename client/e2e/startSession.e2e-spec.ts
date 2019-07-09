@@ -1,7 +1,7 @@
 import { StartSession } from './startSession.po';
 import { browser, Key } from 'protractor';
 
-xdescribe('Start session tests', () => {
+describe('Start session tests', () => {
   let page: StartSession;
 
   beforeEach(() => {
@@ -9,7 +9,7 @@ xdescribe('Start session tests', () => {
   });
 
   it('should display the right title', () =>{
-    page.getEmailTextbox().sendKeys('professorlogin@test.com');
+    page.getEmailTextbox().sendKeys('prof@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getPageTitle()

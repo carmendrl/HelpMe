@@ -4,7 +4,10 @@
 	<div id="session_status">
 		<div class="sessionInfo">
 			{{subjectAndNumber}}: {{description}} ({{token}})
-		</div>
+			</div>
+
+			<div ngbDropdown class="d-inline-block">
+				<button ngbDropdownToggle class="btn btn-outline-primary ml-2" id="actions">Actions</button>
 
 		<div ngbDropdown class="d-inline-block">
 			<button ngbDropdownToggle class="btn btn-outline-primary ml-2">Actions</button>
@@ -12,6 +15,17 @@
 			<div ngbDropdownMenu>
 
 
+					<!--  These options are visible only to instructional staff  -->
+					<div *ngIf="user.Type !=='students' && !ended">
+						<div *ngIf="!ended">
+							<button ngbDropdownItem type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
+							<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR Code</button>
+						</div>
+
+						<div class="dropdown-divider"></div>
+						<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
+						<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="openAddQuestionsFromAnotherSessionModal(content2)">Add Questions from Another Session</button>
+						<div class="dropdown-divider"></div>
 
 				<!--  These options are visible only to instructional staff  -->
 				<div *ngIf="user.Type !=='students' && !ended">
@@ -20,11 +34,13 @@
 						<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR Code</button>
 					</div>
 
-					<div class="dropdown-divider"></div>
-					<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
-					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="open2(content2)">Add Questions from Another Session</button>
-					<div class="dropdown-divider"></div>
-
+					<!--  This option is visible to all users  -->
+					<button ngbDropdownItem type="button" (click)="toggleAudio()">
+						<span *ngIf="audioService.Unmuted"><i class="fa fa-volume-off"></i></span>
+						<span *ngIf="audioService.Muted"><i class="fa fa-volume-up"></i></span>
+						Turn sound {{ audioService.Unmuted ? "off" : "on"}}
+					</button>
+					<button ngbDropdownItem type="button" [routerLink]="['/dashboard']" id="back">Back to Dashboard</button>
 				</div>
 
 				<!--  This option is visible to all users  -->
