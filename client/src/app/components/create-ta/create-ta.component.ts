@@ -36,8 +36,9 @@ export class CreateTAComponent implements OnInit {
   createTA(){
     let newLastName = this.lastName + "(TA)"; //adds "(TA)" to the lastName to indicate their status
     //creates a new email by adding +ta to the end of the student's email
+    debugger;
     let email = this.email.substring(0,this.email.indexOf('@')) + "+ta" + this.email.substring(this.email.indexOf('@'));
-    let password = this.generatePassword(this.email); //generates a password based on their email
+    let password = this.generatePassword(email); //generates a password based on their email
     let user = new User(); //creates a new user that will be the TA
     //sets adds the information from the form to the new user
     user.FirstName = this.firstName;
@@ -81,6 +82,7 @@ export class CreateTAComponent implements OnInit {
     //adds the first character onto the end
     newEmail2 += newEmail.charAt(0);
     return newEmail2.substring(0,8);
+    debugger;
   }
 
   //handles an error when creating TA
