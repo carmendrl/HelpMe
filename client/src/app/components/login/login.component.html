@@ -1,11 +1,11 @@
 <div [ngSwitch]="currentUser.Username">
-
+  <!-- check to make sure someone is logged in -->
   <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" class="loginForm" >
-		<div class="alert alert-info" *ngIf="loggedInGuard.urlAfterLogin != ''">
-			You must log in before navigating to this page.
-		</div>
+    <div class="alert alert-info" *ngIf="loggedInGuard.urlAfterLogin != ''">
+      You must log in before navigating to this page.
+    </div>
 
-		<div class="row form-group">
+    <div class="row form-group">
       <div class="col-12 col-sm-2">
         <label for="Email">Email Address</label>
       </div>
@@ -37,26 +37,28 @@
 
   </form>
 
-<div *ngIf="(this.time > 0 && this.time <= 5 && !failedLogin)">
-  <div class="alert alert-primary" role="alert">
-    We are contacting the server.
+  <!-- handle the event that it is taking a while for the server to respond -->
+  <div *ngIf="(this.time > 0 && this.time <= 5 && !failedLogin)">
+    <div class="alert alert-primary" role="alert">
+      We are contacting the server.
+    </div>
   </div>
-</div>
-<div *ngIf="(this.time > 5 && this.time <= 15 && !failedLogin)">
-  <div class="alert alert-primary" role="alert">
-    Thank you for your patience. We are still trying to contact the server.
+  <div *ngIf="(this.time > 5 && this.time <= 15 && !failedLogin)">
+    <div class="alert alert-primary" role="alert">
+      Thank you for your patience. We are still trying to contact the server.
+    </div>
   </div>
-</div>
 
-<div *ngIf="(this.time > 15 && !failedLogin)">
-  <div class="alert alert-primary" role="alert">
-    There has been a problem contacting the server. Pleases try again later.
+  <div *ngIf="(this.time > 15 && !failedLogin)">
+    <div class="alert alert-primary" role="alert">
+      There has been a problem contacting the server. Please try again later.
+    </div>
   </div>
-</div>
 
+  <!-- display if they are already logged in -->
   <div *ngSwitchDefault>
     You are already logged in as {{currentUser.FullName}}.
 
-		<button class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</button>
+    <button class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</button>
     <button class="btn btn-primary" (click)="doLogout()">Log out</button>
   </div>

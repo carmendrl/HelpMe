@@ -1,14 +1,11 @@
 import { Injectable, Inject } from '@angular/core';
 import { HttpInterceptor, HttpRequest, HttpEvent, HttpHandler, HttpResponse } from '@angular/common/http';
-
 import { Observable } from 'rxjs/Observable';
 import { filter, tap } from 'rxjs/operators';
-
 import { UserService } from './user.service';
-
 import { SESSION_STORAGE, StorageService } from 'angular-webstorage-service';
-
 import { environment } from '../../environments/environment';
+
 @Injectable()
 export class AddAuthorizationInterceptorService implements HttpInterceptor {
 
@@ -17,22 +14,22 @@ export class AddAuthorizationInterceptorService implements HttpInterceptor {
   private uid : string;
 
   constructor(private userService : UserService, @Inject(environment["local_storage_mode"]) private localStorage : StorageService) {
-		let authInfo = this.localStorage.get("AUTH_INFO");
-		if (authInfo) {
-			console.log("Restoring auth info from local storage to interceptor");
-			this.token = authInfo["token"];
-			this.client = authInfo["client"];
-			this.uid = authInfo["uid"];
-		}
-		else {
-			console.log("AuthInterceptor:  No saved information found in local storage");
-		}
-	}
+    let authInfo = this.localStorage.get("AUTH_INFO");
+    if (authInfo) {
+      console.log("Restoring auth info from local storage to interceptor");
+      this.token = authInfo["token"];
+      this.client = authInfo["client"];
+      this.uid = authInfo["uid"];
+    }
+    else {
+      console.log("AuthInterceptor:  No saved information found in local storage");
+    }
+  }
 
   intercept (request : HttpRequest<any>, next : HttpHandler ) : Observable<HttpEvent<any>> {
     //  If we're signing in or creating an account, we'll need to observe the response which will have
     //  the headers in it
-		let createAccountRegEx = RegExp("\/users(\\?.*)?$")
+    let createAccountRegEx = RegExp("\/users(\\?.*)?$")
 
     let creatingTA: boolean  = request.url.endsWith ('?accountType=ta');
 
@@ -70,15 +67,15 @@ export class AddAuthorizationInterceptorService implements HttpInterceptor {
     this.client = r.headers.get("client");
     this.token = r.headers.get("access-token");
 
-		//  Save these values into local storage as a single object
-		let authInfo = {
-			uid: this.uid,
-			client: this.client,
-			token: this.token
-		};
+    //  Save these values into local storage as a single object
+    let authInfo = {
+      uid: this.uid,
+      client: this.client,
+      token: this.token
+    };
 
-		this.localStorage.set("AUTH_INFO", authInfo);
-		console.log ("Setting AUTH_INFO information in local storage");
+    this.localStorage.set("AUTH_INFO", authInfo);
+    console.log ("Setting AUTH_INFO information in local storage");
   }
 
   private clearAccessTokens (r : HttpResponse<any>) {
@@ -86,7 +83,7 @@ export class AddAuthorizationInterceptorService implements HttpInterceptor {
     this.client = undefined;
     this.token = undefined;
 
-		this.localStorage.remove("AUTH_INFO");
-		console.log ("Clearing AUTH_INFO information from local storage");
+    this.localStorage.remove("AUTH_INFO");
+    console.log ("Clearing AUTH_INFO information from local storage");
   }
 }

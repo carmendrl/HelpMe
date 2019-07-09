@@ -1,25 +1,12 @@
+<!-- Checks what type/role the user has and shows the coresponding dashboard-->
 <div *ngIf="userService.CurrentUser$ | async as user">
-  <!-- <div [ngSwitch]="user.Type">
-    <div *ngSwitchCase="'professors'">
-      <app-faculty-dashboard></app-faculty-dashboard>
-    </div>
-    <div *ngSwitchCase="'students'">
-      <div *ngIf="user.Role===ta">
-        <app-faculty-dashboard></app-faculty-dashboard>
-      </div>
-      <div *ngIf="user.Role===none">
-          <app-student-dashboard></app-student-dashboard>
-      </div>
-    </div>
-    </div> -->
-    <div *ngIf="user.Type==='professors'">
-      <app-faculty-dashboard></app-faculty-dashboard>
-    </div>
-    <div *ngIf="user.Type==='students' && user.Role==='ta'">
-      <app-faculty-dashboard></app-faculty-dashboard>
-      <!-- <app-student-dashboard></app-student-dashboard> -->
-    </div>
-    <div *ngIf="user.Type==='students' && user.Role==='none'">
-      <app-student-dashboard></app-student-dashboard>
-    </div>
+  <div *ngIf="user.Type==='professors'">
+    <app-faculty-dashboard></app-faculty-dashboard>
   </div>
+  <div *ngIf="user.Type==='students' && user.Role==='ta'">
+    <app-faculty-dashboard></app-faculty-dashboard>
+  </div>
+  <div *ngIf="user.Type==='students' && user.Role==='none'">
+    <app-student-dashboard></app-student-dashboard>
+  </div>
+</div>

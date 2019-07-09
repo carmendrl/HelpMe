@@ -23,7 +23,7 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              
               "node_modules/quill/dist/quill.snow.css",
               "node_modules/quill/dist/quill.bubble.css",
               "node_modules/quill/dist/quill.core.css"
@@ -47,6 +47,14 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/logo_no_words.ico",
+                  "with": "src/logo_no_words_production.ico"
+                },
+                {
+                  "replace": "src/logo_main.png",
+                  "with": "src/logo_main_production.png"
                 }
               ]
             }

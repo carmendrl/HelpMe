@@ -1,0 +1,6 @@
+@import '~variables.scss';
+
+.dropdown-item:hover {
+	background-color: $primary;
+	color: white;
+}

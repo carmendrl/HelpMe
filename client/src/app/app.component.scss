@@ -1,3 +1,9 @@
+@import '~variables.scss';
+
 .focus:focus{
   outline: none;
+}
+
+h1 {
+	color: $primary;
 }

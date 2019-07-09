@@ -1,6 +1,5 @@
 import { Course } from './course.model';
 import { User } from './user.model';
-
 import { Entity } from './entity.model';
 
 export class LabSession extends Entity {
@@ -43,7 +42,7 @@ export class LabSession extends Entity {
     this._members= members;
   }
 
-
+  //creates a new labsession when given a josn response
   static createFromJSon(o : Object): LabSession{
     let session = new LabSession();
     session.id=o["id"];
@@ -51,7 +50,7 @@ export class LabSession extends Entity {
     session.startDate = o["attributes"]["start_date"];
     session.endDate = o["attributes"]["end_date"];
     session.token = o["attributes"]["token"];
-    //session.members = 
+    //session.members =
     return session;
   }
 }

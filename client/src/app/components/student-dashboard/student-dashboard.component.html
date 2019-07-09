@@ -1,3 +1,4 @@
+<!-- allows user to join a session -->
 <section>
   <h2>Join a session</h2><br>
   <form #thisForm="ngForm" name="joinSessForm" (ngSubmit)="joinSess(content);audioService.playSilentAudio()" class="form-inline">
@@ -5,7 +6,8 @@
     <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="token" name="token" [(ngModel)]="token" required>
     <button type="submit"  [disabled]="!(thisForm.valid)" name="join" class="btn btn-primary form-control ml-1 joinSessionButton">Join</button>
   </form>
- <br>
+  <br>
+  <!--alert users of errors -->
   <div *ngIf="invalidId" class="alert alert-danger">
     Token is invalid.
   </div>
@@ -13,17 +15,22 @@
     {{idMessage}}
   </div>
 </section>
-<div *ngIf="userService.CurrentUser$ | async as user">
-<section *ngIf="user.Role!='ta'">
-  <h2>View past sessions</h2>
-  <app-session-list [sessions]="sessions.Data"></app-session-list>
-</section>
 
-<section *ngIf="user.Role!='ta'">
-  <h2>My Questions</h2>
-  <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
-</section>
+
+<div *ngIf="userService.CurrentUser$ | async as user">
+  <section *ngIf="user.Role!='ta'">
+    <h2>View past sessions</h2>
+    <app-session-list [sessions]="sessions.Data"></app-session-list>
+  </section>
+
+  <!-- if the user is a TA show my questions -->
+  <section *ngIf="user.Role!='ta'">
+    <h2>My Questions</h2>
+    <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
+  </section>
 </div>
+
+<!-- alert user if the session has not started yet-->
 <ng-template #content let-modal let-d="dismiss" let-c="close" name="sessionNotStarted">
   <div class="modal-header">
     <h4 class="modal-title" id="modal-not-started" aria-labelledBy="modal-not-started">Please Wait</h4>

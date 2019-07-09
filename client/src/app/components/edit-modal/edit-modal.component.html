@@ -1,25 +1,23 @@
-<!-- modal -->
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-edit-answer" aria-labelledBy="modal-edit-answer">Edit an answer</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<!-- modal to edit a question-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-edit-answer" aria-labelledBy="modal-edit-answer">Edit an answer</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-  <div class="modal-body">
-    <!-- form -->
-    <form class="needs-validation" novalidate>
-      <p>Last saved: {{lastSavedTime}}</p>
-      <div class="form-group">
-        Answer:
-        <!-- <input type="text" class="form-control" name="text" [(ngModel)]="currentQuestion.answer.text" required><br> -->
-        <!-- <quill-editor format="html" name="editAnswer" [(ngModel)]="currentQuestion.answer.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor> -->
-        <quill-editor name="editAnswer" format="text" [(ngModel)]="currentQuestion.answer.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
+<div class="modal-body">
+  <!-- form -->
+  <form class="needs-validation" novalidate>
+    <p>Last saved: {{lastSavedTime}}</p>
+    <div class="form-group">
+      Answer:
+      <quill-editor name="editAnswer" format="text" [(ngModel)]="currentQuestion.answer.text" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)"></quill-editor>
 
-      </div>
-      <div class="modal-footer">
-        <button id="saveDraft" *ngIf="isNotAStudent() && !currentQuestion.answer.submitted" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(false)">Save Draft</button>
-        <button id="saveButton" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(true)">Save</button>
-      </div>
-    </form>
-  </div>
+    </div>
+    <div class="modal-footer">
+      <button id="saveDraft" *ngIf="isNotAStudent() && !currentQuestion.answer.submitted" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(false)">Save Draft</button>
+      <button id="saveButton" type="button" class="btn btn-outline-dark" (click)="editAnswerFromForm(true)">Save</button>
+    </div>
+  </form>
+</div>

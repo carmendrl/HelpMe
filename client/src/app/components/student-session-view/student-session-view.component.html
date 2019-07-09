@@ -1,46 +1,48 @@
-<table *ngIf="questionFormNotOpen" class="table table-striped rightSide tbody" >
-    <thead>
-      <tr>
-        <th class="tHeader collapseContainer" id="collapseButton" (click)="togglePendingQuestions()"
-        >You have <strong>{{myUnclaimedQs.length}}</strong> pending questions.
-        <span *ngIf="isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-down"></i></span>
-        <span *ngIf="!isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-up"></i></span>
-        <p *ngIf="isCollapsed && myUnclaimedQs.length > 0">*Your next question is {{myUnclaimedQs[0].placeInLine}}{{suffixArray[myUnclaimedQs[0].placeInLine]}} in line* </p>
-      </th>
-    </tr>
-  </thead>
-  <tbody id="collapseQL" [(ngbCollapse)]="isCollapsed">
-    <tr *ngFor= "let q of myUnclaimedQs">
-      <td>{{q.stepString}} - <strong>{{q.placeInLine}}{{suffixArray[q.placeInLine]}}</strong> in line.</td>
-    </tr>
-  </tbody>
-</table>
+<div class="student-session-view">
+	<table *ngIf="questionFormNotOpen" class="table table-striped rightSide tbody" >
+	    <thead>
+	      <tr>
+	        <th class="tHeader collapseContainer" id="collapseButton" (click)="togglePendingQuestions()"
+	        >You have <strong>{{myUnclaimedQs.length}}</strong> pending questions.
+	        <span *ngIf="isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-down"></i></span>
+	        <span *ngIf="!isCollapsed && myUnclaimedQs.length > 0" style="padding-left:2%;"><i class="fas fa-sort-up"></i></span>
+	        <p *ngIf="isCollapsed && myUnclaimedQs.length > 0">*Your next question is {{myUnclaimedQs[0].placeInLine}}{{suffixArray[myUnclaimedQs[0].placeInLine]}} in line* </p>
+	      </th>
+	    </tr>
+	  </thead>
+	  <tbody id="collapseQL" [(ngbCollapse)]="isCollapsed">
+	    <tr *ngFor= "let q of myUnclaimedQs">
+	      <td>{{q.stepString}} - <strong>{{q.placeInLine}}{{suffixArray[q.placeInLine]}}</strong> in line.</td>
+	    </tr>
+	  </tbody>
+	</table>
 
 
-<section class="askQuestion" *ngIf="started && !readOnly">
-  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData($event)"
-  (pauseRefresh)="setPauseRefresh($event)" (questionFormEvent)="toggleQuestionForm($event)" ></app-ask-question>
-</section>
+	<section class="askQuestion" *ngIf="started && !readOnly">
+	  <app-ask-question *ngIf="started && !readOnly" [session]="sessionId" (refreshEvent)="refreshData($event)"
+	  (pauseRefresh)="setPauseRefresh($event)" (questionFormEvent)="toggleQuestionForm($event)" ></app-ask-question>
+	</section>
 
-<section *ngIf="started">
-  <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
-  [filteredQuestions]="faQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly" (refreshEvent)="refreshData()"
-   [playSound]="playSound" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
-</section>
+	<section *ngIf="started">
+	  <app-question-list [header]="faqHeader" [showAction]="false" [questions]="faQs"
+	  [filteredQuestions]="faQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly" (refreshEvent)="refreshData()"
+	   [playSound]="playSound" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+	</section>
 
-<section *ngIf="started">
-  <app-question-list name="otherQs" [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly"
-  [playSound]="playSound" (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
-</section>
+	<section *ngIf="started">
+	  <app-question-list name="otherQs" [header]="otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+	  [showMeTooButton]= "true" [questions]="allOtherQs" [filteredQuestions]="allOtherQs" [showFinishButton]="false" [showDiscardDraftButton]="false" [readOnly]="readOnly"
+	  [playSound]="playSound" (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)"></app-question-list>
+	</section>
 
-<section *ngIf="started">
-  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="true" [showFinishButton]="false"
-  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
-  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
-</section>
+	<section *ngIf="started">
+	  <app-question-list name="myQs"[header]="myQHeader" [showAnswerButton]= "true" [showEditButton]= "true"
+	  [questions]="myQs" [filteredQuestions]="myQs" [isCollapsed]="true" [showFinishButton]="false"
+	  [showDiscardDraftButton]="false" [readOnly]="readOnly" [playSound]="playSound"
+	  (refreshEvent)="refreshData()" (pauseRefresh)="setPauseRefresh($event)" ></app-question-list>
+	</section>
 
-<section *ngIf="!started">
-  <h1>This session is not yet available, please come back on<br>{{startDate | date: 'MM/dd/yyyy'}} at {{startDate | date: 'shortTime'}}</h1>
-</section>
+	<section *ngIf="!started">
+	  <h1>This session is not yet available, please come back on<br>{{startDate | date: 'MM/dd/yyyy'}} at {{startDate | date: 'shortTime'}}</h1>
+	</section>
+</div>

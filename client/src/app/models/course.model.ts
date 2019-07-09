@@ -30,6 +30,7 @@ export class Course extends Entity{
     this._title = title;
   }
 
+  //ex: 08
   get semester() : string {
     return this._semester;
   }
@@ -38,24 +39,25 @@ export class Course extends Entity{
     this._semester = semester;
   }
 
+  //return the name of the semester ex: July 2019
   get friendlySemester() : string {
     let year = this._semester.substr(0, 4);
     let month = +(this._semester.substr(4, 6));
     switch (month) {
       case 8:
-        return `Fall ${year}`;
+      return `Fall ${year}`;
       case 1:
-        return `Spring ${year}`;
+      return `Spring ${year}`;
       case 5:
-        return `May ${year}`;
+      return `May ${year}`;
       case 6:
-        return `June ${year}`;
+      return `June ${year}`;
       case 7:
-        return `July ${year}`;
+      return `July ${year}`;
     }
 
   }
-
+  
   get professor () : User {
     return this._professor;
   }
@@ -68,16 +70,17 @@ export class Course extends Entity{
     return `${this.subject} ${this.number}`;
   }
 
+  //creates a new course given a josn response
   static createFromJSon(o: Object){
-  let course = new Course();
+    let course = new Course();
 
-  course.id = o["id"];
-  course.title = o["attributes"]["title"];
-  course.subject = o["attributes"]["subject"];
-  course.number = o["attributes"]["number"];
-  course.semester = o["attributes"]["semester"];
+    course.id = o["id"];
+    course.title = o["attributes"]["title"];
+    course.subject = o["attributes"]["subject"];
+    course.number = o["attributes"]["number"];
+    course.semester = o["attributes"]["semester"];
 
-  return course;
+    return course;
   }
 
 }

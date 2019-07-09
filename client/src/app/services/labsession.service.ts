@@ -14,10 +14,8 @@ import { Subject } from 'rxjs/Subject';
 import { SessionViewComponent } from '../components/session-view/session-view.component';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { ApiResponse } from './api-response';
-
 import { environment } from '../../environments/environment';
 
-//start of LabSessionService class
 @Injectable()
 export class LabSessionService {
   private apiHost : string;
@@ -27,7 +25,6 @@ export class LabSessionService {
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newLabSession$ = new Subject<LabSession>();
-    //this.copyQuestions = new Array<Question>();
   }
 
 //returns a list of all the labsessions
@@ -44,9 +41,7 @@ export class LabSessionService {
     );
   }
 
-
-
-
+//create an array of labsessions from json
   private createLabsessionsArray(objects: Object[], includedResponses: any[]) : LabSession[]{
     let sessions = new Array<LabSession>();
 
@@ -58,7 +53,6 @@ export class LabSessionService {
         return element["type"] === "courses" && element["id"]=== object["attributes"]["course_id"];
       });
 
-
       //search for the professor information
       var prof : Object = includedResponses.find(function(element) {
         return element["type"]==="professors" && element["id"]=== course["relationships"]["instructor"]["data"]["id"];
@@ -66,6 +60,7 @@ export class LabSessionService {
       sessions.push(this.buildCreateLabsessionFromJson(object, course, prof));
 
     }
+    //sort by startDate
     sessions= sessions.sort(function(a, b){
       if(a.startDate> b.startDate){
         return 1;
@@ -77,7 +72,7 @@ export class LabSessionService {
     return sessions;
   }
 
-
+//create a labsession object from json
   private buildCreateLabsessionFromJson(s: Object, a: Object, b: Object ) : LabSession {
     let prof = User.createFromJSon(b);
     let course = Course.createFromJSon(a);
@@ -109,6 +104,7 @@ export class LabSessionService {
 
   }
 
+//build a new labsession from json
   createNewLabSessionFromJson(r: Object, includedResponses:any[]): LabSession{
 	  var course: Object = includedResponses.find(function(element) {
       return element["type"] === "courses" && element["id"]=== r["attributes"]["course_id"];
@@ -140,6 +136,7 @@ export class LabSessionService {
     return session;
 }
 
+//get the observable new labsession
     get newLabSession$() : Observable<LabSession> {
       return this._newLabSession$;
 }
@@ -161,11 +158,13 @@ export class LabSessionService {
     );
   }
 
+//extracts the session id from a json response
   private extractSessionId(r: Object): string {
     let id : string = r["relationships"]["lab_session"]["data"]["id"];
     return id;
   }
 
+//gets one session from the server
   getSession(id: string): Observable<ApiResponse<LabSession>>{
     let url = `${this.apiHost}/lab_sessions/${id}`;
 		let response;
@@ -180,6 +179,7 @@ export class LabSessionService {
     );
   }
 
+//get the start date of a particular labsession
   getStartDate(token: string): Observable<ApiResponse<Date>>{
     let url : string =`${this.apiHost}/lab_sessions`;
     var date: Date;
@@ -193,6 +193,7 @@ export class LabSessionService {
     );
   }
 
+//extract the start date of a particular labsession when given a json response
   private extractStartDate(r: any[], token: string):Date{
     var start_date: any = r.find(function(element) {
       return element["attributes"]["token"] === token;
@@ -201,6 +202,7 @@ export class LabSessionService {
     return newDate;
   }
 
+//change the end date of a particular labsession
   updateEndDate(id: string, date: Date): Observable<ApiResponse<LabSession>>{
     let url : string = `${this.apiHost}/lab_sessions/${id}`;
     let body = { end_date: date};
@@ -215,7 +217,7 @@ export class LabSessionService {
     );
   }
 
-  //error handlers
+  //this section is for error handlers
   private handleLabsessionsError(error:any, lArray: LabSession[]): Observable<ApiResponse<LabSession[]>>{
     let apiResponse: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(false);
     apiResponse.Data = lArray;
@@ -264,4 +266,14 @@ export class LabSessionService {
     return of(apiResponse);
   }
 
+  handleMatchingQuestionsError (response) : Observable<ApiResponse<Question[]>> {
+		let apiResponse : ApiResponse<Question[]> = new ApiResponse<Question[]> (false);
+		if (response instanceof HttpErrorResponse) {
+			apiResponse.addErrorsFromHttpError (<HttpErrorResponse> response);
+		}
+		else {
+			apiResponse.addError ("Unable to load potential matches");
+		}
+		return of(apiResponse);
+	}
 }

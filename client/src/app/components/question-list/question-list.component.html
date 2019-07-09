@@ -6,28 +6,35 @@ are input into this model from the student dashboard, student view, and faculty 
 <!-- <head>
 <link src="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
 </head> -->
+
+<!-- the view for a large screen -->
 <div class="largeScreen">
-  <h2 name="questionListHeader"[ngStyle]="headerStyles()" class="inlineHeader">{{header}}
-		<div *ngIf="isCollapsible" class="collapseContainer">
-    <button placement="top" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
-    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-    <span *ngIf="isCollapsed" style="padding-left:8%;"><i class="fas fa-sort-down"></i></span>
-    <span *ngIf="!isCollapsed" style="padding-left:8%"><i class="fas fa-sort-up"></i></span>
-  </button>
+	<div class="mb-2">
+	  <h2 name="questionListHeader"[ngStyle]="headerStyles()" class="inlineHeader">{{header}}</h2>
+			<div *ngIf="isCollapsible" class="collapseContainer d-inline-block">
+	    <button placement="top" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
+	    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+	    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+	    <span *ngIf="isCollapsed" style="padding-left:8%;"><i class="fas fa-sort-down"></i></span>
+	    <span *ngIf="!isCollapsed" style="padding-left:8%"><i class="fas fa-sort-up"></i></span>
+	  	</button>
+		</div>
 	</div>
-</h2>
 
 
+<!-- list of questions -->
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
 
+  <!--search bar to search the question list -->
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <p *ngIf="filter()" class="table-caption"> Showing Matching Questions:</p>
+    <!--table that displays the list of questions -->
     <table class="table table-striped">
       <thead>
         <tr>
-					<th *ngIf="showCheck"><input type="checkbox" (change)="selectAll($event)"></th>
+          <!-- shows different features depending on boolean values -->
+          <th *ngIf="showCheck"><input type="checkbox" (change)="selectAll($event)"></th>
           <th *ngIf="showDate">Date</th>
           <th *ngIf="showCourse">Course</th>
           <th *ngIf="showStep">Step</th>
@@ -35,6 +42,7 @@ are input into this model from the student dashboard, student view, and faculty 
           <th>Question</th>
           <th *ngIf="showAskedBy">Asked By</th>
           <th *ngIf="showClaimedBy">Claimed By</th>
+          <!--may add the tag function later -->
           <!-- <th *ngIf="showTags">Tags</th> -->
           <th *ngIf="showTimeInQueue">Submitted</th>
           <th *ngIf="showAnswer">Answer</th>
@@ -43,10 +51,10 @@ are input into this model from the student dashboard, student view, and faculty 
       </thead>
       <tbody>
         <tr class="questionRow" id="{{question.id}}" *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index ">
-					<td *ngIf="showCheck">
-							<input type="checkbox" [(ngModel)]="selected[i]" (change)="onQuestionSelectedChanged()">
-							</td>
-					<td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
+          <td *ngIf="showCheck"> <!--check box used to copy questions -->
+            <input type="checkbox" [(ngModel)]="selected[i]" (change)="onQuestionSelectedChanged()">
+          </td>
+          <td *ngIf="showDate">{{question.date | date:'EEE LLL dd'}}</td>
           <td *ngIf="showCourse">{{question.session.course.subjectAndNumber}}</td>
           <td *ngIf="showStep">{{question.step}}</td>
           <td *ngIf="showNumberOfAskers">{{question.otherAskers.length}}<i [ngClass]="question.otherAskers.length>2 ? 'far fa-hand-paper' : 'no_icon'"></i></td>
@@ -98,27 +106,34 @@ are input into this model from the student dashboard, student view, and faculty 
                 <button ngbDropdownItem><span class="fa fa-window-close"></span> Close</button>
               </div>
 
-            </div>
-          </td>
+        </div>
+      </td>
 
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    </tr>
+  </tbody>
+</table>
 </div>
 </div>
+</div>
 
-<!-- mobile view -->
+
+
+
+<!-- the mobile view -->
 <div class="smallScreen">
-  <h2 class="inlineHeader">{{header}}
-		<div *ngIf="isCollapsible" class="collapseContainer">
-    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-  </button>
+	<div class="mb-2">
+	  <h2 class="inlineHeader">{{header}}</h2>
+			<div *ngIf="isCollapsible" class="collapseContainer">
+	    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+	    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+	    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+	  	</button>
+		</div>
 	</div>
-</h2>
+
+
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+  <!-- search box to search through the list of questions -->
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
   <div class="results">
     <div *ngFor = "let question of filteredQuestions | questionfilter: searchText; let i = index " [ngClass]="question.otherAskers.length>2 && currentUser.Type!='students' && question.answer==undefined ? 'popular' : 'unpopular'">
@@ -160,6 +175,7 @@ are input into this model from the student dashboard, student view, and faculty 
         </div>
       </td>
       <br>
+      <!-- show the answer if there is one -->
       <quill-editor *ngIf="showAnswer && question.answer != undefined && toggleAnswer[i]"
       class="qEditor" style="color:dodgerBlue" readOnly="true"  [styles]="{border:'none'}"
       [modules]="{toolbar: false}" [placeholder]="''" format="json"
@@ -182,12 +198,12 @@ are input into this model from the student dashboard, student view, and faculty 
     </button>
   </div>
   <div class="modal-body">
-      <form>
-        <div class="form-group">
-            <label>Enter a Tag:</label>
-            <input type="text" name="tagtext" [(ngModel)]="tagText" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary" (click)="addTag();d('Cross click');">Add</button>
-      </form>
+    <form>
+      <div class="form-group">
+        <label>Enter a Tag:</label>
+        <input type="text" name="tagtext" [(ngModel)]="tagText" class="form-control">
+      </div>
+      <button type="submit" class="btn btn-primary" (click)="addTag();d('Cross click');">Add</button>
+    </form>
   </div>
 </ng-template>
