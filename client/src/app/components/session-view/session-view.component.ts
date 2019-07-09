@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 
 import { CopyQuestionsDialogComponent } from '../copy-questions-dialog/copy-questions-dialog.component';
 import { FacultySessionViewComponent } from '../faculty-session-view/faculty-session-view.component';
+import { StudentSessionViewComponent } from '../student-session-view/student-session-view.component';
 import { SearchPreviousQuestionsComponent } from '../search-previous-questions/search-previous-questions.component';
 import { QRCodeDialogComponent } from '../qrcode-dialog-component/qrcode-dialog.component';
 
@@ -36,6 +37,9 @@ export class SessionViewComponent implements OnInit {
 
 	@ViewChild (FacultySessionViewComponent, {static: false})
 	private facultySessionView : FacultySessionViewComponent;
+
+	@ViewChild (StudentSessionViewComponent, {static: false})
+	private studentSessionView : StudentSessionViewComponent;
 
   constructor(
 		private userService : UserService, private questionService: QuestionService,
