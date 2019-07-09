@@ -27,11 +27,12 @@
   <input type="text" id="tags" class="form-control"/><br>
   <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
 
-<div *ngIf="possibleMatches.length > 0" id="possibleMatches">
-    <app-question-list
-      [isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
-      [showMeTooButton]="true" [showSearch]="false" [header]="'Possibly matching questions'">
-    </app-question-list>
+	<div *ngIf="possibleMatches.length > 0" id="possibleMatches">
+		<app-question-list
+		[isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
+		[showMeTooButton]="true" (meTooButtonClickedForMatchingQuestion)="toggleQuestionFormForMeToo()"
+		(refreshEvent)="refreshData($event)" [showSearch]="false" [header]="'Possibly matching questions'">
+	</app-question-list>
 </div>
 <br>
 <div>

@@ -91,6 +91,7 @@ export class QuestionListComponent implements OnInit {
   @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
   @Output() public claimedQEvent: EventEmitter<any> = new EventEmitter();
   @Output() public openCloseEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public meTooButtonClickedForMatchingQuestion: EventEmitter<any> = new EventEmitter();
 
 	@Output() public selectionChanged: EventEmitter<Question[]> = new EventEmitter<Question[]> ();
 
@@ -276,6 +277,10 @@ export class QuestionListComponent implements OnInit {
 
       scrollToClaimedQ(){
         this.claimedQEvent.next();
+      }
+
+      closeQuestionForm(){
+        this.meTooButtonClickedForMatchingQuestion.next();
       }
 
       menuPauseRefresh(event){
