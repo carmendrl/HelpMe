@@ -1,5 +1,6 @@
 import * as HttpStatus from 'http-status-codes';
 import { HttpErrorResponse } from '@angular/common/http';
+
 export class ApiResponse<T> {
 	constructor (private _success : boolean, private _data? : T, private _statusCode? : number, private _errorMessages? : string[]) {
 		this._errorMessages = new Array<string> ();
@@ -23,6 +24,8 @@ export class ApiResponse<T> {
 		return this._errorMessages;
 	}
 
+
+	//holds the object
 	get Data() : T {
 		return this._data;
 	}
@@ -42,7 +45,7 @@ export class ApiResponse<T> {
 	addErrorsFromHttpError (error : HttpErrorResponse) {
 		this.HttpStatusCode = error.status
 		if (error.error.error) {
-		 	this.addError(error.error.error.message);
+			this.addError(error.error.error.message);
 		}
 		else {
 			if (error.error) {

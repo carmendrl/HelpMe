@@ -1,3 +1,4 @@
+<!--modal to copy questions to another session-->
 <div class="modal-header">
 	<h4 class="modal-title">Copy questions to another session</h4>
 </div>
@@ -12,8 +13,8 @@
 		[showCheck]="true" [showAction]="false" (refreshEvent)="refreshData($event)"
 		(pauseRefresh)="setPauseRefresh($event)"
 		(selectionChanged)="onSelectedQuestionsChanged($event)">
-		</app-question-list>
-	</section>
+	</app-question-list>
+</section>
 
 	<div class="mt-2">
 		<app-copy-questions-status [state]="state"

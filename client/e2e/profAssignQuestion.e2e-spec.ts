@@ -9,8 +9,15 @@ xdescribe('Professor is able to assign questions to TA', () =>{
   });
 
   it('should display the right title', () =>{
+    var child_process = require('child_process');
+    child_process.exec('rails runner ~/help-me-web/scripts/assignQuestionTestSetup.rb',
+    function(err, stdout, stderr){
+      if(err){
+        console.log("child processes failed with error code: " + err.code);
+      }
+    });
     page.navigateTo();
-    page.getEmailTextbox().sendKeys('professorlogin@test.com');
+    page.getEmailTextbox().sendKeys('prof0@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getPageTitle().then((title:string) => {
@@ -19,6 +26,7 @@ xdescribe('Professor is able to assign questions to TA', () =>{
   });
 
   it('should get the view session button to enter the session view', () => {
+browser.sleep(5000);
     page.getViewButtonForSession(page.getTableRowForSession(0)).click();
     page.getCurrentUrl().then((url:string) =>{
       expect(url).toEqual('http://localhost:4200/lab_sessions/a6ecef92-77c1-4a29-9b19-0d3cf4fa0602');

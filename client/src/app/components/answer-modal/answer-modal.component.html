@@ -1,36 +1,36 @@
-<!-- modal -->
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<!-- create answer modal -->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-create-answer" aria-labelledBy="modal-create-answer">Add an answer</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-  <div class="modal-body">
-    <!-- form -->
-    <form class="needs-validation" novalidate>
-      <!-- <p>Last saved: {{lastSavedTime}}</p> -->
-      <div class="form-group">
-        Answer:
-        <!-- <input type="text" [(ngModel)]="text" required> -->
-        <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [modules]="{toolbar:toolbarOptions}" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)">
-        </quill-editor>
+<div class="modal-body">
+  <!-- form -->
+  <form class="needs-validation" novalidate>
+    <!-- <p>Last saved: {{lastSavedTime}}</p> -->
+    <div class="form-group">
+      Answer:
+      <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [modules]="{toolbar:toolbarOptions}" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)">
+      </quill-editor>
+    </div>
+    <!-- FAQ button only appears if the user is a professor or TA-->
+    <div *ngIf="userService.CurrentUser$ | async as user">
+      <div [ngSwitch]="user.Type">
+        <div *ngSwitchCase="'professors'">
+          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+        </div>
       </div>
-      <div *ngIf="userService.CurrentUser$ | async as user">
-        <div [ngSwitch]="user.Type">
-          <div *ngSwitchCase="'professors'">
-            <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
-          </div>
+      <div [ngSwitch]="user.Type">
+        <div *ngSwitchCase="'TAs'">
+          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
         </div>
-        <div [ngSwitch]="user.Type">
-          <div *ngSwitchCase="'TAs'">
-            <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
-          </div>
-        </div>
+      </div>
       <div class="modal-footer">
         <button id="saveDraft" *ngIf="user.Type != 'students'" type="button" class="btn btn-outline-dark" [disabled]="text === undefined || text.length <= 1" (click)="createAnswerFromForm(false)">Save Draft</button>
         <button id="save" type="button" [disabled]="text === undefined || text.length <= 1" class="btn btn-outline-dark" (click)="createAnswerFromForm(true)">Save</button>
       </div>
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
+</div>

@@ -22,17 +22,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./student-session-view.component.scss']
 })
 export class StudentSessionViewComponent extends SessionView implements OnInit {
+  //question lists
   @Input() private allQuestions : Question[]
   private faQs: Question[];
   private myQs: Question[];
   private allOtherQs:  Question[];
+
   private isMeTooUser: boolean;
   private description:string;
   private subjectAndNumber:string;
   private faqHeader:string = "Frequently Asked Questions";
   private myQHeader:string = "My Questions";
   private otherQHeader:string = "All Questions";
-  private readOnly: boolean = false;
+  private readOnly: boolean = false; //is true if the session has ended
   private currentDate: Date = new Date();
   private started: boolean = true;
   private startDate: Date;
@@ -44,6 +46,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
   "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th", "th");
   private questionFormNotOpen:boolean = true; //must start with opposite value as openAsk in ask-question.component
 
+  //error handling
   private errorSession: ApiResponse<LabSession>;
   private loadedSession : LabSession;
   private sessionMessage : string[];
@@ -61,16 +64,17 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
     }
 
     ngOnInit() {
-      this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions));
-      this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions));
+      this.questionService.getUpdatedQuestion$.subscribe(r => this.sortQuestions(this.questions)); //get new questions and resort
+      this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions)); //if new answers show notifications
       this.getSessionDescription();
       this.checkIfEnded();
       this.titleService.setTitle(`Session View - Help Me`);
       this.checkIfStarted();
-      //this.autoJoinASession();
-      this.audioService.mute();
+      this.audioService.mute(); //mute is automatically set on load
     }
 
+
+    //check if the session has ended
     checkIfEnded(){
       this.currentDate = new Date();
       this.sessionService.getSession(this.sessionId).subscribe(
@@ -86,6 +90,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 
       }
 
+      //check if the session has started
       checkIfStarted(){
         this.currentDate = new Date();
         this.sessionService.getSession(this.sessionId).subscribe(r => {
@@ -93,7 +98,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           let tenBefore = new Date(r.Data.startDate.toString());
           let tempDate = new Date(r.Data.startDate.toString());
           tenBefore.setMinutes(tempDate.getMinutes()-10);
-          if(tenBefore < this.currentDate)
+          if(tenBefore < this.currentDate) //allow ten minutes before
           {
             this.started = true;
           }
@@ -103,6 +108,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       );
     }
 
+    //add notifications depending on the action of the user
     checkNotification(datas : any){
       for (let data of datas){
         for (let q of this.myQs){
@@ -140,8 +146,9 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       }
     }
 
+    //sort all the questions into their respective lists
     sortQuestions(questions: Question[]){
-      //clears the array
+      //clears the arrays
       this.faQs.length = 0;
       this.myQs.length = 0;
       this.allOtherQs.length = 0;
@@ -197,6 +204,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
           this.description = session.Data.description, this.getSessionError(session)});
         }
 
+        //handles errors
         private getSessionError(session: ApiResponse<LabSession>){
           if(!session.Successful){
             this.state = "errorLoadingSession";

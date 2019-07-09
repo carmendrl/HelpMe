@@ -5,7 +5,6 @@ import { Answer } from '../../models/answer.model';
 import { QuestionService } from '../../services/question.service';
 import {BrowserModule, DomSanitizer, SafeHtml} from '@angular/platform-browser';
 //import {QuillEditorComponent} from '../../../../node_modules/ngx-quill/src/quill-editor.component';
-
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 
@@ -16,12 +15,12 @@ import { debounceTime, distinctUntilChanged, filter, tap } from 'rxjs/operators'
 })
 export class AskQuestionComponent implements OnInit {
   closeResult: string;
-  private possibleMatches: Question[] = new Array<Question>();
-  private step: string;
-  private faq: boolean = false;
-  private questionMessage: string;
+  private possibleMatches: Question[] = new Array<Question>(); //list of matching questions
+  private step: string; //the step that the question is on
+  private faq: boolean = false; //is it a frequently asked question?
+  private questionMessage: string;//the text of the question
   private message: SafeHtml;
-  private answer: Answer;
+  private answer: Answer;//the answer to the question
   private openAsk: boolean = false; //must start with opposite value as questionFormNotOpen in student-session-view.component
   private toolbarOptions = [
     ['bold','italic', 'underline', 'strike'],
@@ -31,21 +30,22 @@ export class AskQuestionComponent implements OnInit {
     ['link','image','video']
   ];
 
-  @Input() session: string;
+  @Input() session: string; //holds the ID of the current session
 
-	private editorContentChanged$ : Subject<string>;
+  private editorContentChanged$ : Subject<string>; //listens to see when the contents of the quill editor change
 
-	private editor : any;
+  private editor : any; //holds the text editor object
 
-  @Output() public refreshEvent: EventEmitter<any> = new EventEmitter();
-  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter();
-  @Output() public questionFormEvent: EventEmitter<any> = new EventEmitter();
+  @Output() public refreshEvent: EventEmitter<any> = new EventEmitter(); //outputs when the page refreshs
+  @Output() public pauseRefresh: EventEmitter<any> = new EventEmitter(); //outputs when the refresh is paused
+  @Output() public questionFormEvent: EventEmitter<any> = new EventEmitter(); //outputs when question form is used
 
   constructor(private modalService: NgbModal, private questionService: QuestionService, private sanitizer: DomSanitizer) {
 		this.editorContentChanged$ = new Subject<string> ();
 	}
 
   ngOnInit() {
+    //when the content in the editor changes, look for matching questions again
 		this.editorContentChanged$.pipe(
 			debounceTime (200),
 			distinctUntilChanged()
@@ -55,6 +55,7 @@ export class AskQuestionComponent implements OnInit {
 		).subscribe (text => this.lookForMatchingQuestions (text));
 	}
 
+//looks for questions that are similar to the one being asked
 	private lookForMatchingQuestions (text : string) {
 		console.log(text);
 		this.questionService.findMatchingQuestions (this.session, text, String(this.step)).pipe (
@@ -80,32 +81,21 @@ export class AskQuestionComponent implements OnInit {
     });
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return  `with: ${reason}`;
-    }
-  }
 
+  //creates a new question and refreshs the page
   createQuestion(){
     this.questionService.askQuestion(this.questionMessage, this.session, this.step, this.editor.getText(), this.faq, this.answer).subscribe(
       r => {this.setPauseRefresh(false);this.refreshData({})}); //passes in empty object to refreshData
   }
-
+//turns the automatic refresh on
   refreshData(r){
     this.refreshEvent.next(r);
   }
 
-	created(event) {
-		this.editor = event;
-	}
-
-	setPauseRefresh(r: boolean){
-		this.pauseRefresh.next(r);
-	}
+    //paused the automatic refresh
+    setPauseRefresh(r: boolean){
+      this.pauseRefresh.next(r);
+    }
 
   toggleQuestionForm(r:boolean){
     this.questionFormEvent.next(r);
@@ -118,15 +108,17 @@ export class AskQuestionComponent implements OnInit {
     this.toggleQuestionForm(this.openAsk);
     this.reset();
   }
+  //sends an event when the content of the text editor changes
 	private editorContentChanged (event) {
 		this.editorContentChanged$.next(event.text);
 	}
 
+    //resets the form
     reset(){
       this.step = undefined;
       this.questionMessage = "";
-			this.possibleMatches = [];
+      this.possibleMatches = [];
     }
 
 
-}
+  }

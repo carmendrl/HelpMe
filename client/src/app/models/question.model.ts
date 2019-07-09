@@ -10,191 +10,191 @@ export class Question extends Entity{
   private notRendered: boolean = false;
 
   constructor (private _date?: Date, private _text? : string,
-               private _answer? : Answer, private _session? : LabSession,
-               _id? : string, private _faQ? : boolean, private _asker? : User,
-               private _status? : string, private _otherAskers?: User[],
-               private _claimedBy?:User, private _meToo?:boolean, private _step?: string,
-               private _smallText?: string, private _plaintext? : string, private _placeInLine?:number) {
-    super (_id);
-    this._tags = new Set<string> ();
-    this._faQ = false;
-    this._otherAskers = new Array<User>();
-    this._claimedBy = new User();
+    private _answer? : Answer, private _session? : LabSession,
+    _id? : string, private _faQ? : boolean, private _asker? : User,
+    private _status? : string, private _otherAskers?: User[],
+    private _claimedBy?:User, private _meToo?:boolean, private _step?: string,
+    private _smallText?: string, private _plaintext? : string, private _placeInLine?:number) {
+      super (_id);
+      this._tags = new Set<string> ();
+      this._faQ = false;
+      this._otherAskers = new Array<User>();
+      this._claimedBy = new User();
 
-  }
+    }
 
 
-  get date() : Date {
-    return this._date;
-  }
+    get date() : Date {
+      return this._date;
+    }
 
-  set date(newDate : Date) {
-    this._date = newDate;
-  }
+    set date(newDate : Date) {
+      this._date = newDate;
+    }
 
-  get text() : string {
-    return this._text;
-  }
+    get text() : string {
+      return this._text;
+    }
 
-  set text(text : string) {
-    //debugger
-    // let tempString = "";
-    this._text = text;
-    this.timeDifference = moment(this.date).fromNow();
-    //debugger;
-    let tempString = JSON.parse(text);
-    //debugger;
-    tempString = tempString["ops"];
-    //debugger;
-    let temp: string = "";
-    for(var i = 0; i < tempString.length; i++){
-      //debugger;
-      if(tempString[i]["insert"]["image"]=== undefined){
-        temp = temp + tempString[i]["insert"];
-      //  debugger;
+    //parses through the json to find the text and sets that to smalltext
+    set text(text : string) {
+      this._text = text;
+      this.timeDifference = moment(this.date).fromNow();
+      let tempString = JSON.parse(text);
+      tempString = tempString["ops"];
+      let temp: string = "";
+      for(var i = 0; i < tempString.length; i++){
+        if(tempString[i]["insert"]["image"]=== undefined){
+          temp = temp + tempString[i]["insert"];
+        }
+        else{
+          this.notRendered = true;
+          temp = temp + "[Data Could Not Be Rendered]";
+        }
+      }
+      temp = temp + "(" + this.timeDifference + ")";
+      this._smallText = temp;
+    }
+
+    //used to render question text in mobile view - may not need
+    get smallText() : string{
+      return this._smallText;
+    }
+
+    set smallText(text: string) {
+      this._smallText = text;
+    }
+
+    get plaintext () { return this._plaintext }
+    set plaintext ( text : string) { this._plaintext = text }
+
+    get answer() : Answer {
+      return this._answer;
+    }
+
+    set answer(answer : Answer) {
+      this._answer = answer;
+    }
+
+    get answerText():string{
+      //handles if answer is undefined
+      if(this._answer === undefined){
+        return "";
       }
       else{
-        this.notRendered = true;
-        temp = temp + "[Data Could Not Be Rendered]";
+        return this._answer.text;
       }
-      //debugger;
     }
 
-    // let temp:string = "";
-    //debugger;
-    temp = temp + "(" + this.timeDifference + ")";
-    //debugger
-    this._smallText = temp;
-  }
-
-  get smallText() : string{
-    //debugger
-    return this._smallText;
-  }
-
-  set smallText(text: string) {
-    this._smallText = text;
-  }
-
-	get plaintext () { return this._plaintext }
-	set plaintext ( text : string) { this._plaintext = text }
-
-  get answer() : Answer {
-    return this._answer;
-  }
-
-  set answer(answer : Answer) {
-    this._answer = answer;
-  }
-
-  get answerText():string{
-    //handles if answer is undefined
-    if(this._answer === undefined){
-      return "";
+    get session() : LabSession {
+      return this._session;
     }
-    else{
-      return this._answer.text;
+
+    set session(session : LabSession) {
+      this._session = session;
     }
-  }
 
-  get session() : LabSession {
-    return this._session;
-  }
+    get faq() : boolean {
+      return this._faQ;
+    }
 
-  set session(session : LabSession) {
-    this._session = session;
-  }
+    set faq(b : boolean){
+      this._faQ = b;
+    }
 
-  get faq() : boolean {
-    return this._faQ;
-  }
+    get tags() : Set<string> {
+      return this._tags;
+    }
 
-  set faq(b : boolean){
-    this._faQ = b;
-  }
+    //user who asked the question
+    get asker(): User {
+      return this._asker;
+    }
 
-  get tags() : Set<string> {
-    return this._tags;
-  }
+    set asker(user : User) {
+      this._asker = user;
+    }
 
-  //user who asked the question
-  get asker(): User {
-    return this._asker;
-  }
+    //users who clicked "me too"
+    get otherAskers(): User[] {
+      return this._otherAskers;
+    }
 
-  set asker(user : User) {
-    this._asker = user;
-  }
+    set otherAskers(users : User[]) {
+      this._otherAskers = users;
+    }
 
-  //users who clicked "me too"
-  get otherAskers(): User[] {
-    return this._otherAskers;
-  }
+    get totalAskers(): number {
+      return this._otherAskers.length;
+    }
 
-  set otherAskers(users : User[]) {
-    this._otherAskers = users;
-  }
+    //user who claimed the question (teacher/ta)
+    get claimedBy(): User {
+      return this._claimedBy;
+    }
 
-  get totalAskers(): number {
-    return this._otherAskers.length;
-  }
+    set claimedBy(user : User) {
+      this._claimedBy= user;
+    }
 
-  //user who claimed the question (teacher/ta)
-  get claimedBy(): User {
-    return this._claimedBy;
-  }
+    get meToo(): boolean {
+      return this._meToo;
+    }
 
-  set claimedBy(user : User) {
-    this._claimedBy= user;
-  }
+    set meToo(b: boolean){
+      this._meToo = b;
+    }
+    public addTag (tag : string) : boolean {
+      if (this._tags.has(tag)) return false;
 
-  get meToo(): boolean {
-    return this._meToo;
-  }
-
-  set meToo(b: boolean){
-    this._meToo = b;
-  }
-  public addTag (tag : string) : boolean {
-    if (this._tags.has(tag)) return false;
-
-    this._tags.add(tag);
-    return true;
-  }
-
-  public removeTag (tag : string) : boolean {
-    if (this._tags.has(tag)) {
-      this._tags.delete(tag);
+      this._tags.add(tag);
       return true;
     }
 
-    return false;
-  }
+    public removeTag (tag : string) : boolean {
+      if (this._tags.has(tag)) {
+        this._tags.delete(tag);
+        return true;
+      }
 
-  get isAnswered() : boolean {
-    if (this._answer != undefined) {
-      return true;
-    }
-    else {
       return false;
     }
-  }
 
-  get status() : string{
-    return this._status;
-  }
+    get isAnswered() : boolean {
+      if (this._answer != undefined) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    }
 
-  set status(status : string){
-    this._status = status;
-  }
+    get status() : string{
+      return this._status;
+    }
 
-  get step() : string{
-    return this._step;
-  }
+    set status(status : string){
+      this._status = status;
+    }
 
-  set step(step : string){
-    this._step = step;
-  }
+    get step() : string{
+      return this._step;
+    }
+
+    set step(step : string){
+      this._step = step;
+    }
+
+    //place in line is a variable that is exclusively used and controlled in the front end
+    get placeInLine() : number{
+      return this._placeInLine;
+    }
+
+    set placeInLine(placeInLine : number){
+      this._placeInLine = placeInLine;
+    }
+
+
 
   get stepString():string{
     if(this._step ===null || this._step === undefined || this._step === "undefined"){
@@ -205,38 +205,31 @@ export class Question extends Entity{
     }
   }
 
-//place in line is a variable that is exclusively used and controlled in the front end
-  get placeInLine() : number{
-    return this._placeInLine;
-  }
 
-  set placeInLine(placeInLine : number){
-    this._placeInLine = placeInLine;
-  }
 
+//creates a new question when given a json response
 static createFromJSon(o:Object){
   let question = new Question();
+      question.date = o["attributes"]["created_at"];
+      question.text = o["attributes"]["text"];
+      question.id = o["id"];
+      question.faq = o["attributes"]["faq"];
+      question.status = o["attributes"]["status"];
+      question.plaintext = o["attributes"]["plaintext"];
+      question.asker = o["relationships"]["original_asker"]["data"];
+      if(o["relationships"]["claimed_by"]!= undefined){
+        question.claimedBy = o["relationships"]["claimed_by"]["data"];
+      }
+      if(o["relationships"]["askers"] != undefined){
+        let askers: User[]  = o["relationships"]["askers"]["data"];
+        for (let a of askers){
+          question.otherAskers.push(a)
+        }
+      }
+      question.step = o["attributes"]["step"];
+      return question;
 
-  question.date = o["attributes"]["created_at"];
-  question.text = o["attributes"]["text"];
-  question.id = o["id"];
-  question.faq = o["attributes"]["faq"];
-  question.status = o["attributes"]["status"];
-	question.plaintext = o["attributes"]["plaintext"];
-  question.asker = o["relationships"]["original_asker"]["data"];
-  if(o["relationships"]["claimed_by"]!= undefined){
-    question.claimedBy = o["relationships"]["claimed_by"]["data"];
-  }
-  if(o["relationships"]["askers"] != undefined){
-    let askers: User[]  = o["relationships"]["askers"]["data"];
-    for (let a of askers){
-      question.otherAskers.push(a)
     }
+
+
   }
-  question.step = o["attributes"]["step"];
-  return question;
-
-}
-
-
-}

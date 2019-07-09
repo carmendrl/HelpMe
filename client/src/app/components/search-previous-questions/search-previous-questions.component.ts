@@ -19,11 +19,12 @@ import { CopyQuestionsStatusComponent } from '../copy-questions-status/copy-ques
 })
 export class SearchPreviousQuestionsComponent implements OnInit {
 
-  private selectedSession : LabSession;
-  private sessionQuestions : Question[];
-  private state : string;
-  private errorQuestions: ApiResponse<Question>[];
+  private selectedSession : LabSession;//the session selected in the dropdown
+  private sessionQuestions : Question[];//the selected session questions
+  private state : string;//used in error handling
+  private errorQuestions: ApiResponse<Question>[]; //used in error handling
   private confirmedQuestions: Question[];
+
   @Input() private currentSession : LabSession;
 
 	private notAnsweredSelection : Question[] = new Array<Question>();
@@ -36,6 +37,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   private getQuestionsError: boolean;
   private errorGetQuestions: ApiResponse<Question[]>;
 
+  //lists of questions
   private FaQs: Question[];
   private answeredQs: Question[];
   private notAnsweredQs: Question[];
@@ -90,6 +92,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
   ngOnInit() {
   }
 
+//loads a list of question for a specific session
   private loadSessionQuestions(){
     this.questionService.getSessionQuestions(this.selectedSession.id).subscribe(questions => {
 			this.sessionQuestions = questions.Data;
@@ -117,6 +120,7 @@ export class SearchPreviousQuestionsComponent implements OnInit {
     return this.selectedSession === undefined;
   }
 
+//sort the questions into their respective lists
   sortQuestions(questions: Question[]){
     //clears the array
     this.FaQs.length = 0;
@@ -134,8 +138,8 @@ export class SearchPreviousQuestionsComponent implements OnInit {
         else{
           this.notAnsweredQs.push(question);
         }
+      }
     }
-  }
 
 //error handlers
 private handleGetQuestionsError(questions: ApiResponse<Question[]>){

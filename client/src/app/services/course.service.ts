@@ -11,18 +11,18 @@ import { Subject } from 'rxjs/Subject';
 import { ApiResponse } from './api-response';
 import { environment } from '../../environments/environment';
 
-//start of CourseService class
+
 @Injectable()
 export class CourseService {
-  private apiHost : string;
-  public _newCourse$: Subject<Course>;
+  private apiHost : string; //the base of all urls
+  public _newCourse$: Subject<Course>; //listens for new courses
 
   constructor(private httpClient : HttpClient) {
     this.apiHost = environment.api_base;
     this._newCourse$ = new Subject<Course>();
   }
 
-//returns a list of all the courses
+  //returns a list of all the courses
   coursesList() : Observable<ApiResponse<Course[]>>{
     let url : string =`${this.apiHost}/courses`;
     var courses = new Array<Course>();
@@ -36,6 +36,7 @@ export class CourseService {
     );
   }
 
+  //creates an array of courses when given json
   private createCoursesArray(objects : Object[], i: any[]) : Course[]{
     let courses = new Array <Course>();
     for(let object of objects){
@@ -63,6 +64,7 @@ export class CourseService {
       return courses;
     }
 
+    //creates a course from json
     private buildCreateCourse(o : Object, i: Object) : Course{
       let course = Course.createFromJSon(o);
       let prof = User.createFromJSon(i);
@@ -72,6 +74,7 @@ export class CourseService {
       return course;
     }
 
+    //creates a new course from json
     createNewCourse(o : Object, i: Object): Course{
       let newCourse = Course.createFromJSon(o);
       let prof = User.createFromJSon(i[0]);
@@ -82,7 +85,7 @@ export class CourseService {
       return newCourse;
     }
 
-    //returns the course
+    //posts a bew course to server and returns the course
     postNewCourse(subject : string, num : string, title : string, semester : string) : Observable<ApiResponse<Course>> {
       let url : string=`${this.apiHost}/courses`;
       var course: Course;
@@ -102,33 +105,34 @@ export class CourseService {
       );
     }
 
+    //gets the observable new course
     get newCourse$() : Observable<Course>{
       return this._newCourse$;
     }
 
-//error handlers
-private handleCoursesError(error: any, courses: Course[]): Observable<ApiResponse<Course[]>>{
-  let apiResponse: ApiResponse<Course[]> = new ApiResponse<Course[]>(false);
-  apiResponse.Data = courses;
-  if(error instanceof HttpErrorResponse){
-    apiResponse.addErrorsFromHttpError(error);
-  }
-  else{
-    apiResponse.addError("An unknown error occured");
-  }
-  return of(apiResponse);
-}
+    //this section is for error handlers
+    private handleCoursesError(error: any, courses: Course[]): Observable<ApiResponse<Course[]>>{
+      let apiResponse: ApiResponse<Course[]> = new ApiResponse<Course[]>(false);
+      apiResponse.Data = courses;
+      if(error instanceof HttpErrorResponse){
+        apiResponse.addErrorsFromHttpError(error);
+      }
+      else{
+        apiResponse.addError("An unknown error occured");
+      }
+      return of(apiResponse);
+    }
 
-private handleCourseError(error: any, course: Course): Observable<ApiResponse<Course>>{
-  let apiResponse: ApiResponse<Course> = new ApiResponse<Course>(false);
-  apiResponse.Data = course;
-  if(error instanceof HttpErrorResponse){
-    apiResponse.addErrorsFromHttpError(error);
-  }
-  else{
-    apiResponse.addError("Unknown error occured");
-  }
-  return of(apiResponse);
-}
+    private handleCourseError(error: any, course: Course): Observable<ApiResponse<Course>>{
+      let apiResponse: ApiResponse<Course> = new ApiResponse<Course>(false);
+      apiResponse.Data = course;
+      if(error instanceof HttpErrorResponse){
+        apiResponse.addErrorsFromHttpError(error);
+      }
+      else{
+        apiResponse.addError("Unknown error occured");
+      }
+      return of(apiResponse);
+    }
 
   }

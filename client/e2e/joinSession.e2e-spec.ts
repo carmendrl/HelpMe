@@ -8,36 +8,45 @@ xdescribe('join a session', () => {
     page = new JoinSession();
   });
 
-
   it('should join a session', () => {
+    var child_process = require('child_process');
+    child_process.exec('rails runner ~/help-me-web/scripts/joinSessionTestSetup.rb',
+    function(err, stdout, stderr){
+      if(err){
+        console.log("child processes failed with error code: " + err.code);
+      }
+    });
     //login
     page.navigateTo();
     page.getSubmitButton().click();
-    page.getEmailTextbox().sendKeys('s@test.com');
+    page.getEmailTextbox().sendKeys('student@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
-
     //join session
     page.getStudentDashboard();
     page.getJoinForm();
-    page.getTextBox().sendKeys('8bd201');
+    page.getTextBox().sendKeys('340a6f');
     page.getJoinButton().click();
     page.getStudentSessionView();
+
 });
 
-it('should say session has not started yet', () => {
+it('should join another session', () => {
     page.navigateTo2();
+    expect(page.getSessionListLength()).toBe(1);
     page.getJoinForm();
-    page.getTextBox().sendKeys('');
+    page.getTextBox().sendKeys('077dd8');
     page.getJoinButton().click();
     expect(page.getModal()).toBeTruthy();
 })
 
 it('should say token invalid', () => {
     page.navigateTo2();
+    expect(page.getSessionListLength()).toBe(2);
     page.getJoinForm();
-    page.getTextBox().sendKeys('d90ee7');
+    page.getTextBox().sendKeys('077hy8');
     page.getJoinButton().click();
+
     expect(page.getAlert()).toBeTruthy();
 })
 

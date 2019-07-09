@@ -1,7 +1,7 @@
 import { StartSession } from './startSession.po';
 import { browser, Key } from 'protractor';
 
-describe('Start session tests', () => {
+xdescribe('Start session tests', () => {
   let page: StartSession;
 
   beforeEach(() => {

@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-
 import { pipe } from 'rxjs';
 import { filter } from 'rxjs/operators';
-
 import { environment } from '../../environments/environment';
-
 import { LabSession } from '../models/lab_session.model';
 
 @Injectable({
@@ -13,44 +10,49 @@ import { LabSession } from '../models/lab_session.model';
 })
 export class RoutingHelperService {
 
-	private currentUrl : string;
-	private lastURL : string;
+  private currentUrl : string; //the url of the current page
+  private lastURL : string; //the url of the page that was visited right before the current one
 
   constructor(private router : Router) {
-		this.router.events.pipe (
-			filter (event => event instanceof NavigationStart)
-		).subscribe (
-			e => {
-				let navigationEvent = <NavigationStart> e;
-				console.log(e);
-				this.lastURL = this.currentUrl;
-				this.currentUrl = navigationEvent.url;
-				console.log(`RouterHistoryService: Set lastURL to ${this.lastURL} and currentURL to ${this.currentUrl}`);
-			}
-		);
-	}
+    //finds the url of the page
+    this.router.events.pipe (
+      filter (event => event instanceof NavigationStart)
+    ).subscribe (
+      e => {
+        let navigationEvent = <NavigationStart> e;
+        console.log(e);
+        this.lastURL = this.currentUrl; //sets the lastUrl to the current page
+        this.currentUrl = navigationEvent.url;  //sets the next url to the url of the next page visited
+        console.log(`RouterHistoryService: Set lastURL to ${this.lastURL} and currentURL to ${this.currentUrl}`);
+      }
+    );
+  }
 
-	get PreviousURL () : string {
-		return this.lastURL;
-	}
+  get PreviousURL () : string {
+    return this.lastURL;
+  }
 
-	get DashboardURL () : string {
-		return "/dashboard";
-	}
+  get DashboardURL () : string {
+    return "/dashboard";
+  }
 
-	goToDashboard () : void {
-		this.router.navigateByUrl(this.DashboardURL);
-	}
+  //sends the user to the dashboard
+  goToDashboard () : void {
+    this.router.navigateByUrl(this.DashboardURL);
+  }
 
-	goToConfirmPromotionRequests () : void {
-		this.router.navigateByUrl(this.ConfirmPromotionRequestsURL);
-	}
+  //go to the page to confirm promotion requests
+  goToConfirmPromotionRequests () : void {
+    this.router.navigateByUrl(this.ConfirmPromotionRequestsURL);
+  }
 
-	get ConfirmPromotionRequestsURL () : string {
-		return "/users/confirm-promotions";
-	}
+  //the url of the promotion requests page
+  get ConfirmPromotionRequestsURL () : string {
+    return "/users/confirm-promotions";
+  }
 
-	qrCodeDestinationForSession ( session : LabSession) {
-		return `${environment.server}/dashboard?token=${session.token}`
-	}
+  //the labsession url destination for the QR code
+  qrCodeDestinationForSession ( session : LabSession) {
+    return `${environment.server}/dashboard?token=${session.token}`
+  }
 }
