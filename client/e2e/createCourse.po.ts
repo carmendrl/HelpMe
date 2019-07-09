@@ -81,4 +81,13 @@ export class CreateCourse{
   getStartSessionComponent(){
     return element(by.tagName('app-start-session'))
   }
+
+  getCoursesDropdown(){
+    return this.getStartSessionComponent().element(by.id('selectedCourse'));
+  }
+
+  getLengthOfSelectedCourses(){
+    return this.getCoursesDropdown().all(by.id('courses')).count();
+  }
+
 }

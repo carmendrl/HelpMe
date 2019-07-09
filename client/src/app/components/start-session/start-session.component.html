@@ -10,8 +10,8 @@
       </div>
 
       <div class="inline-block col-12 col-sm-8">
-        <select [(ngModel)] = "selectedCourse" class="form-control selectACourse" name="selectedCourse">
-          <option *ngFor="let course of startCourse" [selected]= "course" [ngValue]="course"> {{course.subjectAndNumber}} </option>
+        <select [(ngModel)] = "selectedCourse" class="form-control selectACourse" name="selectedCourse" id="selectedCourse">
+          <option id= "courses" *ngFor="let course of startCourse" [selected]= "course" [ngValue]="course"> {{course.subjectAndNumber}} </option>
         </select>
 
       </div>

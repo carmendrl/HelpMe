@@ -28,10 +28,12 @@ xdescribe('join a session', () => {
     page.getTextBox().sendKeys('340a6f');
     page.getJoinButton().click();
     page.getStudentSessionView();
+
 });
 
 it('should join another session', () => {
     page.navigateTo2();
+    expect(page.getSessionListLength()).toBe(1);
     page.getJoinForm();
     page.getTextBox().sendKeys('077dd8');
     page.getJoinButton().click();
@@ -40,6 +42,7 @@ it('should join another session', () => {
 
 it('should say token invalid', () => {
     page.navigateTo2();
+    expect(page.getSessionListLength()).toBe(2);
     page.getJoinForm();
     page.getTextBox().sendKeys('077hy8');
     page.getJoinButton().click();
