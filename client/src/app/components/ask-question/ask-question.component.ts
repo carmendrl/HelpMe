@@ -81,6 +81,9 @@ export class AskQuestionComponent implements OnInit {
     });
   }
 
+	created (editor : any) : void {
+		this.editor = editor;
+	}
 
   //creates a new question and refreshs the page
   createQuestion(){
