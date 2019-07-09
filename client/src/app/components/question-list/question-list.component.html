@@ -9,17 +9,18 @@ are input into this model from the student dashboard, student view, and faculty 
 
 <!-- the view for a large screen -->
 <div class="largeScreen">
-  <h2 name="questionListHeader"[ngStyle]="headerStyles()" class="inlineHeader">{{header}}
-    <!--button that opens and closes list -->
-    <div *ngIf="isCollapsible" class="collapseContainer">
-      <button placement="top" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
-      [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-      <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-      <span *ngIf="isCollapsed" style="padding-left:8%;"><i class="fas fa-sort-down"></i></span>
-      <span *ngIf="!isCollapsed" style="padding-left:8%"><i class="fas fa-sort-up"></i></span>
-    </button>
-  </div>
-</h2>
+	<div class="mb-2">
+	  <h2 name="questionListHeader"[ngStyle]="headerStyles()" class="inlineHeader">{{header}}</h2>
+			<div *ngIf="isCollapsible" class="collapseContainer d-inline-block">
+	    <button placement="top" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()"
+	    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+	    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+	    <span *ngIf="isCollapsed" style="padding-left:8%;"><i class="fas fa-sort-down"></i></span>
+	    <span *ngIf="!isCollapsed" style="padding-left:8%"><i class="fas fa-sort-up"></i></span>
+	  	</button>
+		</div>
+	</div>
+
 
 <!-- list of questions -->
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
@@ -120,15 +121,17 @@ are input into this model from the student dashboard, student view, and faculty 
 
 <!-- the mobile view -->
 <div class="smallScreen">
-  <h2 class="inlineHeader">{{header}}
-    <div *ngIf="isCollapsible" class="collapseContainer">
-      <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-      [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-      <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-    </button>
-  </div>
-</h2>
-<!-- shows the list of questions -->
+	<div class="mb-2">
+	  <h2 class="inlineHeader">{{header}}</h2>
+			<div *ngIf="isCollapsible" class="collapseContainer">
+	    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
+	    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+	    <span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+	  	</button>
+		</div>
+	</div>
+
+
 <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
   <!-- search box to search through the list of questions -->
   <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search question" *ngIf="showSearch"/>
