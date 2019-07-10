@@ -1,4 +1,5 @@
 Professor.delete(Professor.all)
+Student.delete(Student.all)
 Course.delete(Course.all)
 LabSession.delete(LabSession.all)
 Question.delete(Question.all)

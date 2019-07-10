@@ -80,4 +80,10 @@ export class StartSession{
   getLogoutButton(){
     return element(by.css('.logout'));
   }
+  getSessionListComponent(){
+    return element(by.tagName('app-session-list'));
+  }
+  getSessionListLength(){
+    return this.getSessionListComponent().all(by.id('tableRow')).count();
+  }
 }
