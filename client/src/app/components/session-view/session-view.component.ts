@@ -57,6 +57,15 @@ export class SessionViewComponent implements OnInit {
 		}
 	}
   ngOnInit() {
+		this.userService.CurrentUser$.subscribe(
+			u => {
+				if (u.Username.length > 0 && u.Type === 'students') {
+					console.log("Audio service being muted in session-view-component since current user is student");
+					this.audioService.mute();
+				}
+			}
+		);
+
     this.sessionId = this.route.snapshot.paramMap.get('id'); //gets session id from page url
     this.labSessionService.getSession(this.sessionId).subscribe(r =>
       {

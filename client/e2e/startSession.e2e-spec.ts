@@ -1,23 +1,23 @@
 import { StartSession } from './startSession.po';
 import { browser, Key } from 'protractor';
 
-Xdescribe('Start session tests', () => {
+xdescribe('Start session tests', () => {
   let page: StartSession;
 
   beforeEach(() => {
     page = new StartSession();
   });
 
-    var child_process = require('child_process');
-    child_process.exec('rails runner ~/help-me-web/scripts/startSessionTestSetup.rb',
-    function(err, stdout, stderr){
-      if(err){
-        console.log("child processes failed with error code: " + err.code);
-      }
-    });
+  var child_process = require('child_process');
+  child_process.exec('rails runner ~/help-me-web/scripts/startSessionTestSetup.rb',
+  function(err, stdout, stderr){
+    if(err){
+      console.log("child processes failed with error code: " + err.code);
+    }
+  });
 
   it('should display the right title', () =>{
-    page.getEmailTextbox().sendKeys('prof@test.com');
+    page.getEmailTextbox().sendKeys('prof1@test.com');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getPageTitle()
@@ -39,11 +39,11 @@ Xdescribe('Start session tests', () => {
     page.getStartSessionButton().click();
     let form = page.getForm().getAttribute('class');
     expect(form).toContain('ng-invalid');
-    browser.sleep(6000);
     expect(page.getSessionListLength()).toBe(0);
   });
 
   it('create a session should be valid', () => {
+    page.getDescriptionTextBox().clear();
     page.getDescriptionTextBox().sendKeys('Testing start session');
     page.getStartDateTextBox().sendKeys('2019-06-18');
     page.getStartTimePickerHour().sendKeys('01');
@@ -59,6 +59,7 @@ Xdescribe('Start session tests', () => {
 
   it('should get profile menu',() =>{
     page.navigateTo();
+    expect(page.getSessionListLength()).toBe(1);
     expect(page.getProfileMenuComponent()).toBeTruthy();
     expect(page.getProfileMenu()).toBeTruthy();
   });

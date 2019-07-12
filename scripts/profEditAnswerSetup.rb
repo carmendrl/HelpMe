@@ -25,7 +25,8 @@ course = Course.create!(
   :title => "Web Design and Implementation",
   :subject => "CSCI",
   :number => "145",
-  :semester => "201901"
+  :semester => "201901",
+  :instructor => professor 
 )
 
 labSession = LabSession.create!(

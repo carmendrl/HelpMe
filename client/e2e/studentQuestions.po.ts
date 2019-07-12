@@ -24,6 +24,9 @@ export class StudentQuestions{
   getMyQuestionsList(){
     return element(by.name('myQs'));
   }
+  getMyQsOpen(){
+    return element(by.name('open'));
+  }
   getSessionList(){
     return element(by.tagName('app-session-list'));
   }
@@ -73,7 +76,7 @@ export class StudentQuestions{
     return element(by.name('step'));
   }
   getEditor(){
-    return element(by.model('questionMessage'));
+    return element(by.css('.ql-editor'));
   }
   getSubmitQuestion(){
     return element(by.name('submitQuestion'));

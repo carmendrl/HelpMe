@@ -8,6 +8,14 @@ xdescribe('Professor is able to edit an answer', () => {
     page = new  ProfEditAnswer();
   });
 
+  var child_process = require('child_process');
+  child_process.exec('rails runner ~/help-me-web/scripts/startSessionTestSetup.rb',
+  function(err, stdout, stderr){
+    if(err){
+      console.log("child processes failed with error code: " + err.code);
+    }
+  });
+
 it('should display the right title', () =>{
   page.navigateTo();
   page.getEmailTextbox().sendKeys('professor@hope.edu');
@@ -30,18 +38,18 @@ it('Click on viewButton of first lab session and take to correct url', () => {
   *This test works; however, I still need to figure out a way to access the quill
   *editor in order to actually create an answer.
   */
-// it('should get the first question in MyQs list,open add modal, and save an answer draft',() =>  {
-//   page.getCollapseButton(page.getMyQuestionComponent()).click();
-//   browser.sleep(8000);
-//   page.getAnswerButton(page.getMyQuestion(0)).click();
-//   browser.sleep(8000);
-//
-//   expect(page.getOpenModalElement2()).toBeTruthy();
-//   expect(page.getOpenAnswerModalElement()).toBeTruthy();
-//   //add text to the quill-editor
-//   page.getTextEditor().sendKeys('This is a test answer. Hopefully it works');
-//   page.getSaveDraftButton().click();
-// });
+it('should get the first question in MyQs list,open add modal, and save an answer draft',() =>  {
+  page.getCollapseButton(page.getMyQuestionComponent()).click();
+  browser.sleep(8000);
+  page.getAnswerButton(page.getMyQuestion(0)).click();
+  browser.sleep(8000);
+
+  expect(page.getOpenModalElement2()).toBeTruthy();
+  expect(page.getOpenAnswerModalElement()).toBeTruthy();
+  //add text to the quill-editor
+  page.getTextEditor().sendKeys('This is a test answer. Hopefully it works');
+  page.getSaveDraftButton().click();
+});
 
 //check to see if the text matches
 
