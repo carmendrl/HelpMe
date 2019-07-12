@@ -70,7 +70,6 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
       this.checkIfEnded();
       this.titleService.setTitle(`Session View - Help Me`);
       this.checkIfStarted();
-      this.audioService.mute(); //mute is automatically set on load
     }
 
 

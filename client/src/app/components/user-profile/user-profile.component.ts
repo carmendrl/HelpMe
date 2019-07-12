@@ -63,7 +63,11 @@ export class UserProfileComponent implements OnInit {
       let hashedEmail : string = <string> Md5.hashStr(email);
       hashedEmail = hashedEmail.toLowerCase();
 
-      return `https://www.gravatar.com/avatar/${hashedEmail}?s=40`;
+			//  This doesn't work because the image is just barely not square.  For now
+			//  we will use the 'mystery person'
+			//let defaultImage : string = encodeURI(`http://helpme.hope.edu/logo_main.png`);
+			let defaultImage : string = 'mp';
+      return `https://www.gravatar.com/avatar/${hashedEmail}?s=40&d=${defaultImage}`;
     }
 
     //go to the profile page
@@ -78,7 +82,7 @@ export class UserProfileComponent implements OnInit {
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
-      
+
     }
 
     //set the closedResult reason
