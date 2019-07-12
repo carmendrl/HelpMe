@@ -33,7 +33,6 @@ describe('test ask and answer questions', () => {
     page.getModalBody();
     page.getStep().sendKeys('1');
     page.getEditor().sendKeys('Test Question');
-    browser.sleep(6000);
     page.getSubmitQuestion().click();
     browser.sleep(6000);
 

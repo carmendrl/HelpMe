@@ -3,6 +3,7 @@ User.delete(User.all)
 # Student.delete(Student.all)
 Course.delete(Course.all)
 LabSession.delete(LabSession.all)
+LabSessionMembership.delete(LabSessionMembership.all)
 Question.delete(Question.all)
 Answer.delete(Answer.all)
 
