@@ -9,7 +9,7 @@ xdescribe('Professor is able to edit an answer', () => {
   });
 
   var child_process = require('child_process');
-  child_process.exec('rails runner ~/help-me-web/scripts/startSessionTestSetup.rb',
+  child_process.exec('rails runner ~/help-me-web/scripts/profEditAnswerSetup.rb',
   function(err, stdout, stderr){
     if(err){
       console.log("child processes failed with error code: " + err.code);

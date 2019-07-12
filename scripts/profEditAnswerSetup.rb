@@ -26,14 +26,16 @@ course = Course.create!(
   :subject => "CSCI",
   :number => "145",
   :semester => "201901",
-  :instructor => professor 
+  :instructor => professor
 )
 
 labSession = LabSession.create!(
-  :description => "Test Lab 1",
-  # :course_id => "338c2a65-124d-4978-aa64-6827710cdee2",
-  :start_date => "",
-  :end_date => ""
+  :description => "Test Lab 3",
+  :active => true,
+  :course => course,
+  :start_date => "2019-02-06T14:22:37Z",
+  :end_date => "2019-09-09T14:22:37Z",
+  #:token => "368fa4"
 )
 
 question = Question.create!)(
