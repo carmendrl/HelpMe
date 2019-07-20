@@ -6,11 +6,11 @@ import { PromoteUserComponent } from './components/promote-user/promote-user.com
 import { ConfirmPromotionRequestComponent } from './components/confirm-promotion-request/confirm-promotion-request.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
-const routes : Routes = [
-  {
-    'path': 'newuser',
-    'component': NewUserComponent
-  },
+const routes: Routes = [
+	{
+		'path': 'newuser',
+		'component': NewUserComponent
+	},
 	{
 		'path': 'promote',
 		'component': PromoteUserComponent
@@ -27,19 +27,19 @@ const routes : Routes = [
 		'path': 'confirm-promotions',
 		'component': ConfirmPromotionRequestComponent
 	},
-  {
-    'path': 'profile',
-    'component': EditProfileComponent
-  }
+	{
+		'path': 'profile',
+		'component': EditProfileComponent
+	}
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+	imports: [
+		RouterModule.forChild(routes)
+	],
+	exports: [
+		RouterModule
+	]
 
 })
 export class UserManageRoutingModule { }

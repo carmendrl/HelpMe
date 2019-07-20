@@ -1,3 +1,5 @@
+<!--  REVIEW:  The panels aren't really necessary here and clutter up the mark up  -->
+
 <div class="row">
   <div class="col-xs-12 col-sm-9">
     <form class="form-horizontal" #thisForm="ngForm">
@@ -5,13 +7,13 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-        <h4 class="panel-title">User info</h4>
+          <h4 class="panel-title">User info</h4>
         </div>
         <div class="panel-body">
           <div class="form-group">
             <label class="col-sm-2 control-label" for="firstName">First Name</label>
             <div class="col-sm-10">
-              <input type="text" name="firstName" class="form-control" [(ngModel)]="firstName" >
+              <input type="text" name="firstName" class="form-control" [(ngModel)]="firstName">
             </div>
           </div>
           <div class="form-group">
@@ -31,7 +33,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-        <h4 class="panel-title">Contact info</h4>
+          <h4 class="panel-title">Contact info</h4>
         </div>
         <div class="panel-body">
           <div class="form-group">
@@ -45,16 +47,16 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-        <h4 class="panel-title">Security</h4>
+          <h4 class="panel-title">Security</h4>
         </div>
         <div class="panel-body">
           <div class="form-group">
             <label class="col-sm-2 control-label" for="password">New password</label>
             <div class="col-sm-10">
               <input type="password" name="password" class="form-control" #passwordField="ngModel" [(ngModel)]="password" rquired minlength="8">
-            <div [hidden]="passwordField.valid || passwordField.pristine">
-              <p *ngIf="passwordField.errors && passwordField.errors.minlength">Password must be at least 8 characters</p>
-            </div>
+              <div [hidden]="passwordField.valid || passwordField.pristine">
+                <p *ngIf="passwordField.errors && passwordField.errors.minlength">Password must be at least 8 characters</p>
+              </div>
             </div>
           </div>
           <div class="form-group">
@@ -63,10 +65,10 @@
               <input type="password" name="confirmPassword" class="form-control" [(ngModel)]="confirmPassword" required>
               <div>
                 <p *ngIf="confirmPassword !== password && confirmPassword.length > 0"> Passwords don't match </p>
-                </div>
+              </div>
             </div>
           </div>
-          <div *ngIf= "checkIfNotStudent()" class="form-group">
+          <div *ngIf="checkIfNotStudent()" class="form-group">
             <div class="col-sm-10 col-sm-offset-2">
               <div class="checkbox">
                 <input type="checkbox" [(ngModel)]="wantsNotifications" name="wantsNotifications" id="wantsNotifications">
@@ -87,20 +89,17 @@
 </div>
 
 <ng-template #success let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title" id="createprofessor-header">Profile has been updated</h4>
-	</div>
+  <div class="modal-header">
+    <h4 class="modal-title" id="createprofessor-header">Profile has been updated</h4>
+  </div>
 
-	<div class="modal-body">
-		<p>Your changes have been saved successfully! Please log in again.
+  <div class="modal-body">
+    <p>Your changes have been saved successfully! Please log in again.
+    </p>
+  </div>
 
-		</p>
-	</div>
-
-	<div class="modal-footer">
-
-		<button class="btn btn-primary" (click)="modal.close('Modal closed')">Ok</button>
-
-	</div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" (click)="modal.close('Modal closed')">Ok</button>
+  </div>
 
 </ng-template>

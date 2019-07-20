@@ -7,26 +7,17 @@
 	<app-session-search [currentLabSession]="currentSession" (sessionSelected)="onSessionSelected($event)" [dropdownLabel]="'Session to copy to'"></app-session-search>
 
 	<section class="with-top-border">
-		<app-question-list *ngIf="selectedSession" [header]= "'Select Questions to Copy'"
-		[isCollapsible]="false" [isCollapsed]="false"
-		[questions]="questions" [filteredQuestions]="questions" [currentDate]="currentDate"
-		[showCheck]="true" [showAction]="false" (refreshEvent)="refreshData($event)"
-		(pauseRefresh)="setPauseRefresh($event)"
-		(selectionChanged)="onSelectedQuestionsChanged($event)">
-	</app-question-list>
-</section>
+		<app-question-list *ngIf="selectedSession" [header]="'Select Questions to Copy'" [isCollapsible]="false" [isCollapsed]="false" [questions]="questions" [filteredQuestions]="questions" [currentDate]="currentDate" [showCheck]="true"
+		 [showAction]="false" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="onSelectedQuestionsChanged($event)">
+		</app-question-list>
+	</section>
 
 	<div class="mt-2">
-		<app-copy-questions-status [state]="state"
-			[selectedQuestions]="selectedQuestions"
-			[confirmedQuestions]="confirmedQuestions"
-			[errorQuestions]="errorQuestions"
-			[destinationSession]="selectedSession">
+		<app-copy-questions-status [state]="state" [selectedQuestions]="selectedQuestions" [confirmedQuestions]="confirmedQuestions" [errorQuestions]="errorQuestions" [destinationSession]="selectedSession">
 		</app-copy-questions-status>
 
 		<div id="buttons" *ngIf="selectedSession && state != copied">
-			<button [disabled]="selectedQuestions.length === 0"
-				class="btn btn-primary" (click)="copySelectedQuestions();">Copy to {{selectedSession.description}} - {{selectedSession.course.subjectAndNumber}}</button>
+			<button [disabled]="selectedQuestions.length === 0" class="btn btn-primary" (click)="copySelectedQuestions();">Copy to {{selectedSession.description}} - {{selectedSession.course.subjectAndNumber}}</button>
 			<button class="btn btn-secondary ml-2" (click)="cancel();">Cancel</button>
 		</div>
 	</div>

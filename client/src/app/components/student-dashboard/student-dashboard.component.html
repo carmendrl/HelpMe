@@ -4,7 +4,7 @@
   <form #thisForm="ngForm" name="joinSessForm" (ngSubmit)="joinSess(content);audioService.playSilentAudio()" class="form-inline">
     <label>Enter a 6-digit Session Code:</label>
     <input minlength="6" maxlength="6" type="text" class="form-control ml-2" id="token" name="token" [(ngModel)]="token" required>
-    <button type="submit"  [disabled]="!(thisForm.valid)" name="join" class="btn btn-primary form-control ml-1 joinSessionButton">Join</button>
+    <button type="submit" [disabled]="!(thisForm.valid)" name="join" class="btn btn-primary form-control ml-1 joinSessionButton">Join</button>
   </form>
   <br>
   <!--alert users of errors -->
@@ -16,7 +16,6 @@
   </div>
 </section>
 
-
 <div *ngIf="userService.CurrentUser$ | async as user">
   <section *ngIf="user.Role!='ta'">
     <h2>View past sessions</h2>
@@ -26,7 +25,7 @@
   <!-- if the user is a TA show my questions -->
   <section *ngIf="user.Role!='ta'">
     <h2>My Questions</h2>
-    <app-question-list [showDate]= "true" [showCourse]= "true"  [showAction]= "false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
+    <app-question-list [showDate]="true" [showCourse]="true" [showAction]="false" [questions]="myQuestions" [filteredQuestions]="myQuestions"></app-question-list>
   </section>
 </div>
 

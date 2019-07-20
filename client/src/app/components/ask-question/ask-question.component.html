@@ -1,37 +1,34 @@
-	<button class="btn btn-primary" name="askQuestionButton" (click) = "openAsk = true;toggleQuestionForm(openAsk)" *ngIf="!openAsk">Ask a Question</button>
+	<button class="btn btn-primary" name="askQuestionButton" (click)="openAsk = true;toggleQuestionForm(openAsk)" *ngIf="!openAsk">Ask a Question</button>
 	<p class="d-inline-block" *ngIf="openAsk"><strong>What's your question?</strong></p>
 
-	<form  *ngIf="openAsk" #thisForm="ngForm">
-  <div class="form-group form-row">
-    <label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
-    <div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
-      <input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
-    </div>
-  </div>
+	<form *ngIf="openAsk" #thisForm="ngForm">
+		<div class="form-group form-row">
+			<label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
+			<div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
+				<input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
+			</div>
+		</div>
 
-  <quill-editor class="qEditor" format="json" name="askQuestion"[(ngModel)]="questionMessage"
-  [styles]="{height: '100px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}"
-  (onContentChanged)="editorContentChanged($event)" [placeholder]="'Enter your question'" required>
-</quill-editor>
+		<quill-editor class="qEditor" format="json" name="askQuestion" [(ngModel)]="questionMessage" [styles]="{height: '100px'}" (onEditorCreated)="created($event)" [modules]="{toolbar:toolbarOptions}" (onContentChanged)="editorContentChanged($event)"
+		 [placeholder]="'Enter your question'" required>
+		</quill-editor>
 
-<!-- Possibly will add the tag function later? -->
-<!-- <label>Tags  </label>
+		<!-- Possibly will add the tag function later? -->
+		<!-- <label>Tags  </label>
 <!-- list all the current tags and allow then to be removed individually-->
-<!--  <div class="form-inline">
+		<!--  <div class="form-inline">
 <input type="text" id="tags" class="form-control"/><br>
 <button type="button" class="btn btn-primary actionSpace">Add Tag</button></div><br> -->
 
-<!--searches for questions that are similar to the users questions by using matching words -->
-	<div *ngIf="possibleMatches.length > 0" id="possibleMatches">
-		<app-question-list
-		[isCollapsed]="false" [isCollapsible]="false" [filteredQuestions] = "possibleMatches" [questions]="possibleMatches"
-		[showMeTooButton]="true" (meTooButtonClickedForMatchingQuestion)="toggleQuestionFormForMeToo()"
-		(refreshEvent)="refreshData($event)" [showSearch]="false" [header]="'Possibly matching questions'">
-	</app-question-list>
-</div>
-<br>
-<div>
-  <button name="submitQuestion" type="button" class="btn btn-primary" (click)="createQuestion();this.reset();openAsk = false; toggleQuestionForm(openAsk)">Submit Question</button>
-  <button name="cancelQuestion" type="button" class="btn btn-secondary ml-2" (click)="this.reset(); openAsk = false; toggleQuestionForm(openAsk)">Cancel</button>
-</div>
-</form>
+		<!--searches for questions that are similar to the users questions by using matching words -->
+		<div *ngIf="possibleMatches.length > 0" id="possibleMatches">
+			<app-question-list [isCollapsed]="false" [isCollapsible]="false" [filteredQuestions]="possibleMatches" [questions]="possibleMatches" [showMeTooButton]="true" (meTooButtonClickedForMatchingQuestion)="toggleQuestionFormForMeToo()"
+			 (refreshEvent)="refreshData($event)" [showSearch]="false" [header]="'Possibly matching questions'">
+			</app-question-list>
+		</div>
+		<br>
+		<div>
+			<button name="submitQuestion" type="button" class="btn btn-primary" (click)="createQuestion();this.reset();openAsk = false; toggleQuestionForm(openAsk)">Submit Question</button>
+			<button name="cancelQuestion" type="button" class="btn btn-secondary ml-2" (click)="this.reset(); openAsk = false; toggleQuestionForm(openAsk)">Cancel</button>
+		</div>
+	</form>

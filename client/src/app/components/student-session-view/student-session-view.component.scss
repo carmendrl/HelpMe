@@ -1,11 +1,8 @@
 @import '~variables.scss';
-
 $placeInLineHeaderBackground: $primary;
 $placeInLineHeaderColor: white;
-
 $placeInLineBackground: white;
 $placeInLineColor: $primary;
-
 $placeInLineBackgroundHover: white;
 $placeInLineColorHover: $primary;
 
@@ -13,47 +10,54 @@ $placeInLineColorHover: $primary;
 	margin-top: 1em;
 }
 
-.center{
-  text-align:center;
+.center {
+	text-align: center;
 }
-.underLine{
-  text-decoration: underline;
+
+.underLine {
+	text-decoration: underline;
 }
-h1{
-  margin-left:375px;
+
+h1 {
+	margin-left: 375px;
 }
-.actionSpace{
-  margin: 5px;
+
+.actionSpace {
+	margin: 5px;
 }
 
 .rightSide {
-	float:right;
+	float: right;
 	width: 290px;
 
 	p {
-		margin-bottom: 0px;
+		margin-bottom: 0;
 	}
-	.tHeader{
-	      background: $placeInLineHeaderBackground;
-				color: $placeInLineHeaderColor;
+
+	.tHeader {
+		background: $placeInLineHeaderBackground;
+		color: $placeInLineHeaderColor;
 	}
 
 	tbody {
-			color: $placeInLineColor;
+		color: $placeInLineColor;
 
-	    tr:nth-child(odd) > td:nth-child(odd) {
-	      background: $placeInLineBackground;
-				&:hover {
-					background: $placeInLineBackgroundHover;
-					color: $placeInLineColorHover;
-				}
+		tr:nth-child(odd) > td:nth-child(odd) {
+			background: $placeInLineBackground;
+
+			&:hover {
+				background: $placeInLineBackgroundHover;
+				color: $placeInLineColorHover;
 			}
-	    tr:nth-child(even) > td:nth-child(odd) {
-	      background: $placeInLineBackground;
-				&:hover {
-					background: $placeInLineBackgroundHover;;
-					color: $placeInLineColorHover;
-				}
+		}
+
+		tr:nth-child(even) > td:nth-child(odd) {
+			background: $placeInLineBackground;
+
+			&:hover {
+				background: $placeInLineBackgroundHover;
+				color: $placeInLineColorHover;
 			}
+		}
 	}
 }

@@ -2,38 +2,29 @@
 
 <!-- Unclaimed Questions -->
 <section>
-  <app-question-list id="unclaimedQs" [header]= "unclaimedQHeader" [showAskedBy]= "true" [showTags]= "true"
-  [showTimeInQueue]= "true" [showAnswer]= "false" [showClaimButton]= "true" [showAssignButton]= "true"
-  [showDeleteButton]= "true" [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs"
-  [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck" [showAddTag]="true"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
-  (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
+  <app-question-list id="unclaimedQs" [header]="unclaimedQHeader" [showAskedBy]="true" [showTags]="true" [showTimeInQueue]="true" [showAnswer]="false" [showClaimButton]="true" [showAssignButton]="true" [showDeleteButton]="true"
+   [questions]="unclaimedQs" [filteredQuestions]="unclaimedQs" [currentDate]="currentDate" [showNumberOfAskers]="true" [isCollapsed]="false" [showCheck]="showCheck" [showAddTag]="true" [playSound]="playSound" (refreshEvent)="refreshData($event)"
+   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <!-- Claimed Questions -->
 <section #claimedQuestions>
-  <app-question-list #claimedQs id="claimedQs" [header]= "myQHeader" [showAskedBy]= "true" [showTags]= "true"  [showTimeInQueue]= "true"
-  [showAnswer]= "false" [showAnswerButton]= "true" [showAssignButton]= "true" [showDeleteButton]= "true"
-  [questions]="myQs" [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck"
-  [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true" [showAddTag]="true"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
-  (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
+  <app-question-list #claimedQs id="claimedQs" [header]="myQHeader" [showAskedBy]="true" [showTags]="true" [showTimeInQueue]="true" [showAnswer]="false" [showAnswerButton]="true" [showAssignButton]="true" [showDeleteButton]="true" [questions]="myQs"
+   [filteredQuestions]="myQs" [currentDate]="currentDate" [showCheck]="showCheck" [showNumberOfAskers]="true" [isCollapsed]="claimedCollapsed" [showUnclaimButton]="true" [showAddTag]="true" [playSound]="playSound" (refreshEvent)="refreshData($event)"
+   (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()" (openCloseEvent)="changeCollapseState()"></app-question-list>
 </section>
 
 <!-- FAQ Questions -->
 <section>
-  <app-question-list id="faqs" [header]= "faqHeader" [showEditButton]= "true" [showFAQButton]= "true" [questions]="faQs"
-  [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]= "true" [showCheck]="showCheck" [showAddTag]="true"
-  [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
-  (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
+  <app-question-list id="faqs" [header]="faqHeader" [showEditButton]="true" [showFAQButton]="true" [questions]="faQs" [filteredQuestions]="faQs" [currentDate]="currentDate" [showDeleteButton]="true" [showCheck]="showCheck" [showAddTag]="true"
+   [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
 </section>
 
 <!-- All Questions -->
 <section>
-  <app-question-list id="otherQs" [header]= "otherQHeader" [showAnswerButton]= "true" [showEditButton]= "true" [showFAQButton]= "true" [showClaimedBy]= "true"
-  [showAnswer]="true"[questions]="otherQs" [filteredQuestions]="otherQs" [currentDate]="currentDate" [showAddTag]="true"
-  [showDeleteButton]= "true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)"
-  (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()"></app-question-list>
+  <app-question-list id="otherQs" [header]="otherQHeader" [showAnswerButton]="true" [showEditButton]="true" [showFAQButton]="true" [showClaimedBy]="true" [showAnswer]="true" [questions]="otherQs" [filteredQuestions]="otherQs"
+   [currentDate]="currentDate" [showAddTag]="true" [showDeleteButton]="true" [showCheck]="showCheck" [playSound]="playSound" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (claimedQEvent)="scrollToClaimedQ()">
+  </app-question-list>
 </section>
 
 <!-- modal to search through all the sessions -->

@@ -10,13 +10,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmPromotionRequestComponent } from './components/confirm-promotion-request/confirm-promotion-request.component';
 
 @NgModule({
-  declarations: [NewUserComponent, PromoteUserComponent, ConfirmPromotionRequestComponent, EditProfileComponent],
+	declarations: [NewUserComponent, PromoteUserComponent, ConfirmPromotionRequestComponent, EditProfileComponent],
 	exports: [
 		NewUserComponent,
-    EditProfileComponent
+		EditProfileComponent
 	],
-  imports: [
-    CommonModule, FormsModule, UserManageRoutingModule, NgbModule.forRoot()
-  ]
+	imports: [
+		CommonModule, FormsModule, UserManageRoutingModule, NgbModule.forRoot()
+	]
 })
 export class UserManagementModule { }

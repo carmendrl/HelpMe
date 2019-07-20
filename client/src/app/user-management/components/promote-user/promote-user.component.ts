@@ -7,22 +7,22 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, mergeMap, filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-promote-user',
-  templateUrl: './promote-user.component.html',
-  styleUrls: ['./promote-user.component.scss']
+	selector: 'app-promote-user',
+	templateUrl: './promote-user.component.html',
+	styleUrls: ['./promote-user.component.scss']
 })
 export class PromoteUserComponent implements OnInit {
 
-	private selectedUser : User = new User();
-	private status : string = "";
-  private errorMessages : string[] = [];
+	private selectedUser: User = new User();
+	private status: string = "";
+	private errorMessages: string[] = [];
 
-  constructor(private userService : UserService) { }
+	constructor(private userService: UserService) { }
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
-	findUsers (value$ : Observable<string>) {
+	findUsers(value$: Observable<string>) {
 		return value$.pipe(
 			debounceTime(200),
 			distinctUntilChanged(),
@@ -30,7 +30,7 @@ export class PromoteUserComponent implements OnInit {
 		);
 	}
 
-	formatUserForTypeAhead (user : User) : string {
+	formatUserForTypeAhead(user: User): string {
 		if (user.FullName === "") {
 			return "";
 		}
@@ -38,20 +38,20 @@ export class PromoteUserComponent implements OnInit {
 		return `${user.FullName} (${user.EmailAddress})`;
 	}
 
-	submitShouldBeDisabled() : boolean {
-			return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
+	submitShouldBeDisabled(): boolean {
+		return this.selectedUser.id == undefined || this.selectedUser.EmailAddress === "";
 	}
 
-	promoteSelectedUser () {
+	promoteSelectedUser() {
 		this.status = "promoting";
-		this.userService.requestPromotion(this.selectedUser).subscribe (
+		this.userService.requestPromotion(this.selectedUser).subscribe(
 			response => {
 				if (response.Successful) {
 					this.status = "successful";
 				}
 				else {
 					this.status = "error";
-					response.ErrorMessages.forEach (e => this.errorMessages.push(e));
+					response.ErrorMessages.forEach(e => this.errorMessages.push(e));
 				}
 			}
 		);

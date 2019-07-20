@@ -18,23 +18,26 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+
 	label {
 		margin-right: 3px;
-		margin-bottom: 0px;
+		margin-bottom: 0;
 	}
 }
 
-.center{
-  text-align:center;
+.center {
+	text-align: center;
 }
-.underLine{
-  text-decoration: underline;
+
+.underLine {
+	text-decoration: underline;
 }
-@media only screen and (max-width: 600px){
-  .smallScreen{
-    display:inline;
-  }
-  .largeScreen{
-    display:none;
-  }
+@media only screen and (max-width: 600px) {
+	.smallScreen {
+		display: inline;
+	}
+
+	.largeScreen {
+		display: none;
+	}
 }

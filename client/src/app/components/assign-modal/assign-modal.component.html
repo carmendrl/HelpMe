@@ -8,13 +8,13 @@
 
 <!-- alerts users that users are loading -->
 <div class="modal-body">
-  <div *ngIf = "!sessionReloaded">
+  <div *ngIf="!sessionReloaded">
     Loading list of users for the session
   </div>
 
-  <div *ngIf = "sessionReloaded">
+  <div *ngIf="sessionReloaded">
 
-    <form  #thisForm="ngForm" *ngIf="sessionTAs.length > 0">
+    <form #thisForm="ngForm" *ngIf="sessionTAs.length > 0">
       <div class="form-group row no-gutters">
         <label class="form-label col-md-4" for="emailAddress" class="sr-only">Email address</label>
         <select [(ngModel)]="selectedUser" name="selectedUser">
@@ -22,9 +22,7 @@
         </select>
       </div>
 
-      <button id="save" type="submit"
-      [disabled]="submitShouldBeDisabled()" name="assignButton"
-      class="btn btn-primary" (click)="assignSelectedUser();">Assign to {{selectedUser.FullName}}</button>
+      <button id="save" type="submit" [disabled]="submitShouldBeDisabled()" name="assignButton" class="btn btn-primary" (click)="assignSelectedUser();">Assign to {{selectedUser.FullName}}</button>
     </form>
     <!-- alerts user if there are no applicable users to assign to -->
     <div *ngIf="sessionTAs.length === 0" class="alert alert-danger">

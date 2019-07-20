@@ -10,7 +10,8 @@
 	}
 
 	.dropdown-toggle {
-		&:active, &:focus {
+		&:active,
+		&:focus {
 			box-shadow: none;
 		}
 	}
@@ -20,17 +21,19 @@
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+
 	label {
 		margin-right: 3px;
-		margin-bottom: 0px;
+		margin-bottom: 0;
 	}
 }
 
-.center{
-  text-align:center;
+.center {
+	text-align: center;
 }
-.underLine{
-  text-decoration: underline;
+
+.underLine {
+	text-decoration: underline;
 }
 
 footer {

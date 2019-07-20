@@ -6,38 +6,31 @@
 
 	<app-session-search [currentLabSession]="currentSession" (sessionSelected)="onSessionSelected($event)" [dropdownLabel]="'Copy from'"></app-session-search>
 
-  <form  #thisForm="ngForm" *ngIf="selectedSession">
+	<form #thisForm="ngForm" *ngIf="selectedSession">
 		<div *ngIf="sessionQuestions?.length == 0">
 			<p>There are no questions in the selected session.</p>
 		</div>
 
 		<div *ngIf="sessionQuestions?.length > 0">
-	    <section>
-	      <app-question-list [header]= "faqHeader" [questions]="FaQs"
-	      [filteredQuestions]="FaQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
-	      (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="faqSelectionChanged($event)" ></app-question-list>
-	    </section>
+			<section>
+				<app-question-list [header]="faqHeader" [questions]="FaQs" [filteredQuestions]="FaQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true" (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)"
+				 (selectionChanged)="faqSelectionChanged($event)"></app-question-list>
+			</section>
 
-	    <section>
-	      <app-question-list [header]= "answeredQuestionsHeader" [questions]="answeredQs"
-	      [filteredQuestions]="answeredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
-	      (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="answeredSelectionChanged($event)" ></app-question-list>
-	    </section>
+			<section>
+				<app-question-list [header]="answeredQuestionsHeader" [questions]="answeredQs" [filteredQuestions]="answeredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true" (refreshEvent)="refreshData($event)"
+				 (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="answeredSelectionChanged($event)"></app-question-list>
+			</section>
 
-	    <section>
-	      <app-question-list [header]= "notAnsweredHeader" [questions]="notAnsweredQs"
-	      [filteredQuestions]="notAnsweredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true"
-	      (refreshEvent)="refreshData($event)" (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="notAnsweredSelectionChanged($event)" ></app-question-list>
-	    </section>
+			<section>
+				<app-question-list [header]="notAnsweredHeader" [questions]="notAnsweredQs" [filteredQuestions]="notAnsweredQs" [currentDate]="currentDate" [showCheck]="true" [allowSelection]="true" (refreshEvent)="refreshData($event)"
+				 (pauseRefresh)="setPauseRefresh($event)" (selectionChanged)="notAnsweredSelectionChanged($event)"></app-question-list>
+			</section>
 		</div>
 
-  </form>
+	</form>
 
-	<app-copy-questions-status [state]="state"
-		[selectedQuestions]="selectedQuestions"
-		[confirmedQuestions]="confirmedQuestions"
-		[errorQuestions]="errorQuestions"
-		[destinationSession]="currentSession">
+	<app-copy-questions-status [state]="state" [selectedQuestions]="selectedQuestions" [confirmedQuestions]="confirmedQuestions" [errorQuestions]="errorQuestions" [destinationSession]="currentSession">
 
 	</app-copy-questions-status>
 

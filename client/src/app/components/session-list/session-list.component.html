@@ -1,7 +1,7 @@
 <!-- view for a large screen -->
 <div class="largeScreen">
   <!-- search box to search through all the labsessions  -->
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
+  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session" />
   <div class="results">
     <p *ngIf="filter()" class="table-caption" style="font-size:1.5vw;">{{label}}</p>
     <!--table to list the lab sessions -->
@@ -16,15 +16,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr id="tableRow" class="sessionList" *ngFor = "let session of sessions | sessionfilter: searchText">
+        <tr id="tableRow" class="sessionList" *ngFor="let session of sessions | sessionfilter: searchText">
           <td>{{session.startDate | date:'EEE LLL dd'}}</td>
           <td>{{session.course.subjectAndNumber}}</td>
           <td>{{session.professor.FullName}}</td>
           <td>{{session.description}}</td>
           <!-- buttons to copy and view -->
-          <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}"
-            triggers="mouseenter:mouseleave" popoverTitle= "Session Code">Copy Code</span>
-            <span (click)="copySessionLink(session)"  class="btn btn-primary actionSpace">Copy Link</span>
+          <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}" triggers="mouseenter:mouseleave" popoverTitle="Session Code">Copy Code</span>
+            <span (click)="copySessionLink(session)" class="btn btn-primary actionSpace">Copy Link</span>
             <span id="viewButton" name="view" (click)="viewSession(session);audioService.playSilentAudio()" class="btn btn-primary actionSpace">View</span>
           </td>
         </tr>
@@ -37,23 +36,22 @@
 <!-- mobile view -->
 <div class="smallScreen">
   <h2 class="inlineHeader">{{header}}
-    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed"
-    [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-    <span *ngIf="isCollapsed" class="badge badge-light">{{sessionsLength()}}</span>
-  </button>
-</h2>
-<div id="collapseQL" [(ngbCollapse)]="isCollapsed">
-  <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session"/>
-  <div class="results">
-		<ul class="list-unstyled">
-	    <li *ngFor = "let session of sessions | sessionfilter: searchText" class="mt-2">
-				<a [routerLink]="['/lab_sessions', session.id]">
-	      <span>{{session.course.subjectAndNumber}}- </span>
-	      <span>{{session.description}} </span>
-	      <span>({{session.professor.LastName}}) </span>
-				</a>
-	    </li>
-		</ul>
+    <button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
+      <span *ngIf="isCollapsed" class="badge badge-light">{{sessionsLength()}}</span>
+    </button>
+  </h2>
+  <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
+    <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session" />
+    <div class="results">
+      <ul class="list-unstyled">
+        <li *ngFor="let session of sessions | sessionfilter: searchText" class="mt-2">
+          <a [routerLink]="['/lab_sessions', session.id]">
+            <span>{{session.course.subjectAndNumber}}- </span>
+            <span>{{session.description}} </span>
+            <span>({{session.professor.LastName}}) </span>
+          </a>
+        </li>
+      </ul>
     </div>
     <hr>
   </div>

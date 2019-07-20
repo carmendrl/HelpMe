@@ -1,6 +1,6 @@
 <div [ngSwitch]="currentUser.Username">
   <!-- check to make sure someone is logged in -->
-  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" class="loginForm" >
+  <form *ngSwitchCase="''" #thisForm="ngForm" (ngSubmit)="onSubmit();loginTimer();" class="loginForm">
     <div class="alert alert-info" *ngIf="loggedInGuard.urlAfterLogin != ''">
       You must log in before navigating to this page.
     </div>
@@ -11,7 +11,7 @@
       </div>
 
       <div class="col-12 col-sm-8">
-        <input [(ngModel)] = "emailAddress" class="form-control" type="email" name="Email" required placeholder="Email address" email/>
+        <input [(ngModel)]="emailAddress" class="form-control" type="email" name="Email" required placeholder="Email address" email />
       </div>
     </div>
 
@@ -21,7 +21,7 @@
       </div>
 
       <div class="col-12 col-sm-8">
-        <input [(ngModel)] = "password" class="form-control" type="password" name="Password" required placeholder="Your password"/>
+        <input [(ngModel)]="password" class="form-control" type="password" name="Password" required placeholder="Your password" />
       </div>
     </div>
 

@@ -9,5 +9,5 @@ export const environment = {
 	local_storage_mode: SESSION_STORAGE,
 	server: 'http://localhost:4200',
 	api_base: `/api`,
-	auto_refresh_enabled: false
+	auto_refresh_enabled: true
 };

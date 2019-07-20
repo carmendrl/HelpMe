@@ -12,19 +12,19 @@
     <!-- <p>Last saved: {{lastSavedTime}}</p> -->
     <div class="form-group">
       Answer:
-      <quill-editor  format="text" name="editAnswer"[(ngModel)]="text" [modules]="{toolbar:toolbarOptions}" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)">
+      <quill-editor format="text" name="editAnswer" [(ngModel)]="text" [modules]="{toolbar:toolbarOptions}" [styles]="{height: '200px'}" (onFocus)="focus($event)" (onBlur)="blur($event)" (onEditorCreated)="created($event)">
       </quill-editor>
     </div>
     <!-- FAQ button only appears if the user is a professor or TA-->
     <div *ngIf="userService.CurrentUser$ | async as user">
       <div [ngSwitch]="user.Type">
         <div *ngSwitchCase="'professors'">
-          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label> Add to FAQs</label>
         </div>
       </div>
       <div [ngSwitch]="user.Type">
         <div *ngSwitchCase="'TAs'">
-          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label>  Add to FAQs</label>
+          <input type="checkbox" class="faQ" id="faQcheck" (click)="FaQ=true"><label> Add to FAQs</label>
         </div>
       </div>
       <div class="modal-footer">

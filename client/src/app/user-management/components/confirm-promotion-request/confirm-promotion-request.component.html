@@ -1,22 +1,22 @@
-<div *ngIf = "!initCompleted">
+<div *ngIf="!initCompleted">
 	Initializing ...
 </div>
 
-<div *ngIf = "initCompleted">
-	<div *ngIf = "requestType=='single' && routeParamId === '' && !promotionRequest.id">
+<div *ngIf="initCompleted">
+	<div *ngIf="requestType=='single' && routeParamId === '' && !promotionRequest.id">
 		<p>
-		  Please enter the id of the request in the form below
+			Please enter the id of the request in the form below
 			<input type="text" [(ngModel)]="requestId">
 			<button type="button" class="btn btn-primary" (click)="confirmRequest()">Confirm</button>
 		</p>
 	</div>
 
 	<div [ngSwitch]="state">
-		<div *ngSwitchCase = "'loadingRequest'">
-			Looking up information ...  please wait.
+		<div *ngSwitchCase="'loadingRequest'">
+			Looking up information ... please wait.
 		</div>
 
-		<div *ngSwitchCase = "'loaded'">
+		<div *ngSwitchCase="'loaded'">
 			<div *ngIf="requestType=='single'">
 				<h2>Confirm request</h2>
 				<p>
@@ -32,7 +32,7 @@
 					The {{unconfirmedRequests.length > 1 ? 'users' : 'user'}}
 					below
 					{{unconfirmedRequests.length > 1 ? "have" : "has"}}
-					requested a professor account.  Please
+					requested a professor account. Please
 					confirm any users you recognize to be professors.
 				</p>
 				<p>
@@ -74,11 +74,11 @@
 			<button class="btn btn-primary" (click)="confirmRequest()" [disabled]="confirmShouldBeDisabled()">Confirm</button>
 		</div>
 
-		<div *ngSwitchCase = "'confirming'">
+		<div *ngSwitchCase="'confirming'">
 			<p>Confirming request ....</p>
 		</div>
 
-		<div *ngSwitchCase = "'confirmed'">
+		<div *ngSwitchCase="'confirmed'">
 			<div *ngIf="requestType == 'single'">
 				The requested user has been promoted to a professor acccount.
 			</div>
@@ -87,7 +87,7 @@
 				The following {{confirmedRequests.length > 1 ? "users have " : "user has been"}}
 				promoted to a professor:
 				<ul>
-					<li *ngFor = "let request of confirmedRequests">
+					<li *ngFor="let request of confirmedRequests">
 						{{request.User.FullName}}
 					</li>
 				</ul>
@@ -96,7 +96,7 @@
 			<span class="btn btn-primary" [routerLink]="['/dashboard']">Go to Dashboard</span>
 		</div>
 
-		<div *ngSwitchCase = "'errorConfirming'">
+		<div *ngSwitchCase="'errorConfirming'">
 			<p>
 				<span *ngIf="errorRequests.length > 1">
 					Some errors
