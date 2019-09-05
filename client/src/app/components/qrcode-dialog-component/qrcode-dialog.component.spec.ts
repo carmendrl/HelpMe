@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QRCodeDialogComponentComponent } from './qrcode-dialog-component.component';
+import { QRCodeDialogComponent } from './qrcode-dialog.component';
 
 describe('QRCodeDialogComponentComponent', () => {
-  let component: QRCodeDialogComponentComponent;
-  let fixture: ComponentFixture<QRCodeDialogComponentComponent>;
+  let component: QRCodeDialogComponent;
+  let fixture: ComponentFixture<QRCodeDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QRCodeDialogComponentComponent ]
+      declarations: [ QRCodeDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QRCodeDialogComponentComponent);
+    fixture = TestBed.createComponent(QRCodeDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

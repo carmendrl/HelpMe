@@ -16,6 +16,8 @@ import { ApiResponse } from '../../services/api-response';
 import { AudioService } from '../../services/audio.service';
 import { Router } from '@angular/router';
 
+import * as moment from 'moment';
+
 @Component({
 	selector: 'app-student-session-view',
 	templateUrl: './student-session-view.component.html',
@@ -75,14 +77,21 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 	//check if the session has ended
 	checkIfEnded() {
 		this.currentDate = new Date();
+		//  REVIEW
+		//  Calling getSession multiple times results in multiple network
+		//  requests and introduces the possibility of errors due to network access
 		this.sessionService.getSession(this.sessionId).subscribe(
 			r => {
-				if (new Date(r.Data.endDate.toString()) <= this.currentDate) {
-					this.readOnly = true;
-				}
-				else {
-					this.readOnly = false;
-				}
+				// if (new Date(r.Data.endDate.toString()) <= this.currentDate) {
+				// 	this.readOnly = true;
+				// }
+				// else {
+				// 	this.readOnly = false;
+				// }
+
+				let endMoment = moment(r.Data.endDate);
+				let now = moment();
+				this.readOnly = now.diff(endMoment) > 0;
 				this.getSessionError(r);
 			});
 
@@ -91,16 +100,27 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 	//check if the session has started
 	checkIfStarted() {
 		this.currentDate = new Date();
+		//  REVIEW
+		//  Calling getSession multiple times results in multiple network
+		//  requests and introduces the possibility of errors due to network access
 		this.sessionService.getSession(this.sessionId).subscribe(r => {
-			this.startDate = new Date(r.Data.startDate.toString());
-			let tenBefore = new Date(r.Data.startDate.toString());
-			let tempDate = new Date(r.Data.startDate.toString());
-			tenBefore.setMinutes(tempDate.getMinutes() - 10);
-			if (tenBefore < this.currentDate) //allow ten minutes before
-			{
-				this.started = true;
-			}
-			else { this.started = false; }
+			//  REVIEW  This is the only place this.startDate is referenced
+			//  It shouldn't be a member variable in that case
+			// this.startDate = new Date(r.Data.startDate.toString());
+			// let tenBefore = new Date(r.Data.startDate.toString());
+			// let tempDate = new Date(r.Data.startDate.toString());
+			// tenBefore.setMinutes(tempDate.getMinutes() - 10);
+			// if (tenBefore < this.currentDate) //allow ten minutes before
+			// {
+			// 	this.started = true;
+			// }
+			// else { this.started = false; }
+
+			//  Subtracting 10 here allows you to join up to 10 minutes before
+			//  the official session start time
+			let startMoment = moment(r.Data.startDate).subtract(10, 'minutes');
+			let now = moment();
+			this.started = now.diff(startMoment) > 0;
 			this.getSessionError(r);
 		}
 		);
@@ -196,6 +216,8 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 	}
 
 
+	//  REVIEW  Calling getSession multiple times results in multiple network
+	//  requests and introduces the possibility of errors due to network access
 	getSessionDescription() {
 		this.sessionService.getSession(this.sessionId).subscribe(session => {
 			this.subjectAndNumber = session.Data.course.subjectAndNumber,

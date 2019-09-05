@@ -1,7 +1,7 @@
 import { CreateCourse } from './createCourse.po';
 import { browser } from 'protractor';
 
-xdescribe('Create course tests', () => {
+describe('Create course tests', () => {
   let page: CreateCourse;
 
   beforeEach(() => {
@@ -12,7 +12,8 @@ xdescribe('Create course tests', () => {
   child_process.exec('rails runner ~/help-me-web/scripts/createCourseTestSetup.rb',
   function(err, stdout, stderr){
     if(err){
-      console.log("child processes failed with error code: " + err.code);
+      console.log(`child processes failed with error code: ${err}`);
+			console.log(stderr);
     }
   });
 

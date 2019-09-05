@@ -9,5 +9,5 @@ professor = Professor.create!(
   :last_name => "Professor",
   :password => "password",
   :email => "professor@hope.edu",
-  :username =>  "prof1"
+  :username =>  "prof12"
 )

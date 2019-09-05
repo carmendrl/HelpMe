@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RouterHistoryService } from './router-history.service';
+import { RoutingHelperService } from './routing-helper.service';
 
-describe('RouterHistoryService', () => {
+describe('RouterHelperService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: RouterHistoryService = TestBed.get(RouterHistoryService);
+    const service: RoutingHelperService = TestBed.get(RoutingHelperService);
     expect(service).toBeTruthy();
   });
 });
