@@ -16,8 +16,7 @@ course = Course.create!(
   :subject => "Presentation Questions",
   :number => "101",
   :semester => "201908",
-  :instructor_id => "503a8e4d-e2f1-4f8e-8a66-3824977120db",
-  :id => "da4d117f-399e-4c69-b5fc-3d9f6cc7b4eb"
+  :instructor => professor,
 )
 
 digits = 1..20

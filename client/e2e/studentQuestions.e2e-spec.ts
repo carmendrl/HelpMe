@@ -2,7 +2,7 @@ import { StudentQuestions } from './studentQuestions.po';
 import { browser } from 'protractor';
 
 
-describe('test ask and answer questions', () => {
+xdescribe('test ask and answer questions', () => {
   let page: StudentQuestions;
 
 
@@ -33,7 +33,6 @@ describe('test ask and answer questions', () => {
     page.getModalBody();
     page.getStep().sendKeys('1');
     page.getEditor().sendKeys('Test Question');
-    browser.sleep(6000);
     page.getSubmitQuestion().click();
     browser.sleep(6000);
 

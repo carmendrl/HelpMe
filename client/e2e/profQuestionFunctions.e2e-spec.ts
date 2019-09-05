@@ -6,17 +6,23 @@ xdescribe('Professor Question Functions', () => {
   beforeEach(() => {
     page = new ProfQuestionFunctionsPage();
   });
-  //must login and log out every time.
-
+  //must log in and out in every file?
+  var child_process = require('child_process');
+  child_process.exec('rails runner ~/help-me-web/scripts/profQuestionFunctionsScript.rb',
+  function(err, stdout, stderr){
+    if(err){
+      console.log("child processes failed with error code: " + err.code);
+    }
+  });
 
   it('Click on viewButton of first lab session and take to correct url', () => {
     page.navigateTo();
-    page.getEmailTextbox().sendKeys('professorlogin@test.com');
+    page.getEmailTextbox().sendKeys('prof@hope.edu');
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getViewButtonForSession(page.getTableRowForSession(0)).click();
     page.getCurrentUrl().then((url:string) =>{
-      expect(url).toEqual('http://localhost:4200/lab_sessions/16614b98-a4fc-4390-95f9-ae0a80cfedaf');
+      expect(url).toEqual('http://localhost:4200/lab_sessions/d82fabc9-0976-4f6f-8bb1-b8ec9f16a395');
     });
   });
 

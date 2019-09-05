@@ -5,7 +5,7 @@ export class ProfQuestionFunctionsPage {
   }
 
   navigateToLab1(){
-    return browser.get('/lab_sessions/16614b98-a4fc-4390-95f9-ae0a80cfedaf');
+    return browser.get('/lab_sessions/d82fabc9-0976-4f6f-8bb1-b8ec9f16a395');
   }
 
   getEmailTextbox() {
