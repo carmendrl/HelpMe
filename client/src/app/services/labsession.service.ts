@@ -83,14 +83,14 @@ export class LabSessionService {
 		return session;
 	}
 
-	createNewLabSession(description: String, courseId: string, startDate: string, endDate: string): Observable<ApiResponse<LabSession>> {
+	createNewLabSession(description: String, courseId: string, startDate: Date, endDate: Date): Observable<ApiResponse<LabSession>> {
 		let url: string = `${this.apiHost}/lab_sessions`;
 		let lab: LabSession;
 		let body = {
 			description: description,
 			course_id: courseId,
-			start_date: startDate,
-			end_date: endDate
+			start_date: startDate.toISOString(),
+			end_date: endDate.toISOString()
 		};
 		return this.httpClient.post(url, body).pipe(
 			map(r => {

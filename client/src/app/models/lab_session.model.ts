@@ -2,6 +2,8 @@ import { Course } from './course.model';
 import { User } from './user.model';
 import { Entity } from './entity.model';
 
+import * as moment from 'moment';
+
 export class LabSession extends Entity {
 	constructor(private _description?: string, private _startDate?: Date, private _endDate?: Date, private _course?: Course, _id?: string, private _token?: string, private _members?: User[]) {
 		super(_id);
@@ -47,10 +49,9 @@ export class LabSession extends Entity {
 		let session = new LabSession();
 		session.id = o["id"];
 		session.description = o["attributes"]["description"];
-		session.startDate = o["attributes"]["start_date"];
-		session.endDate = o["attributes"]["end_date"];
+		session.startDate = moment(o["attributes"]["start_date"]).toDate();
+		session.endDate = moment(o["attributes"]["end_date"]).toDate();
 		session.token = o["attributes"]["token"];
-		//session.members =
 		return session;
 	}
 }

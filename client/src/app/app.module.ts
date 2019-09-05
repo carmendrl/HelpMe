@@ -47,6 +47,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { CopyQuestionsDialogComponent } from './components/copy-questions-dialog/copy-questions-dialog.component';
 import { QRCodeDialogComponent } from './components/qrcode-dialog-component/qrcode-dialog.component';
 import { CopyQuestionsStatusComponent } from './components/copy-questions-status/copy-questions-status.component';
+import { SessionExceptionDialogComponent } from './components/session-exception-dialog/session-exception-dialog.component';
 
 
 const Server = '/api';
@@ -122,6 +123,7 @@ const customNotifierOptions: NotifierOptions = {
     CopyQuestionsDialogComponent,
     QRCodeDialogComponent,
     CopyQuestionsStatusComponent,
+    SessionExceptionDialogComponent,
   ],
 
   imports: [
@@ -144,6 +146,6 @@ const customNotifierOptions: NotifierOptions = {
     LoginComponent
   ],
   bootstrap: [AppComponent],
-  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent, CopyQuestionsDialogComponent, QRCodeDialogComponent, SearchPreviousQuestionsComponent]
+  entryComponents:[EditModalComponent, AnswerModalComponent, AssignModalComponent, DeleteModalComponent, CopyQuestionsDialogComponent, QRCodeDialogComponent, SearchPreviousQuestionsComponent, SessionExceptionDialogComponent]
 })
 export class AppModule { }

@@ -1,0 +1,19 @@
+<div class="modal-header">
+  Select exception date(s)
+</div>
+
+<div class="modal-body container">
+  <div class="row">
+    <div *ngFor="let d of PossibleDates; let i = index" class="form-check col-4">
+
+      <input type="checkbox" class="form-check-input" id="date{{i}}" (change)="onToggleDate($event, d)" [checked]="shouldDateBeSelected(d)">
+      <label class="form-check-label" for="date{{i}}">{{d | date: 'MMM dd'}}</label>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="onAddButtonClicked()">Add exceptions</button>
+  <button type="button" class="btn btn-secondary" (click)="onCancelButtonClicked()">Cancel</button>
+</div>
