@@ -142,7 +142,7 @@ are input into this model from the student dashboard, student view, and faculty 
 					<span *ngIf="showCheck" style="float:right">
 						<input type="checkbox" (click)="copy(question)"> <label>Copy</label>
 					</span>
-					<p>{{question.asker.FullName}}</p>
+					<p *ngIf="showAskedBy">{{question.asker.FullName}}</p>
 					<div class="question">
 						<span *ngIf="question.step">{{question.step}}.</span>
 						<quill-editor class="qEditor" readOnly="true" [styles]="{border:'none'}" [modules]="{toolbar: false}" format="json" name="questionText" [ngModel]="question.text"> </quill-editor>
