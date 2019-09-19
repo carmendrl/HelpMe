@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
+
 import { LabSessionService } from '../../services/labsession.service';
+import { RoutingHelperService } from '../../services/routing-helper.service';
 import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
 import { environment } from '../../../environments/environment';
@@ -18,9 +20,9 @@ export class SessionListComponent implements OnInit {
 	@Input() public isCollapsed: boolean = true;
 	private searchText: string; //what the search uses to find mathcing sessions
 	private copied: boolean = false;
-  
+
 	constructor(@Inject(DOCUMENT) public document: Document, private router: Router,
-		private audioService: AudioService) { }
+		private audioService: AudioService, private routingHelperService: RoutingHelperService) { }
 
 	ngOnInit() {
 	}
@@ -41,7 +43,7 @@ export class SessionListComponent implements OnInit {
 	copySessionLink(s: LabSession) {
 		this.copied = true;
 		let selBox = this.document.createElement('textarea');
-		let url = `${environment.server}/lab_sessions/${s.id}`;
+		let url = this.routingHelperService.qrCodeDestinationForSession(s);
 		selBox.value = url; ///////NEED TO CHANGE THIS TO URL TO GO TO SESSION
 		this.document.body.appendChild(selBox);
 		selBox.focus();
