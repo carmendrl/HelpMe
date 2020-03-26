@@ -31,6 +31,8 @@ export class SessionViewComponent implements OnInit {
 	private subjectAndNumber: string;
 	private sessionId: string;
 	private currentSession: LabSession;
+	private editingDescription: boolean;
+	private newDescription: string;
 
 	@ViewChild(FacultySessionViewComponent, { static: false })
 	private facultySessionView: FacultySessionViewComponent;
@@ -121,5 +123,20 @@ export class SessionViewComponent implements OnInit {
 		modalRef.result.then(
 			function(result) { if (facultySessionView) facultySessionView.refreshData(''); }
 		)
+	}
+
+	beginEditDescription() {
+		this.newDescription = this.description;
+		this.editingDescription = true;
+	}
+
+	cancelEditDescription() {
+		this.editingDescription = false;
+	}
+
+	saveEditDescription() {
+		this.description = this.newDescription;
+		this.labSessionService.updateDescription(this.sessionId, this.description).subscribe();
+		this.editingDescription = false;
 	}
 }

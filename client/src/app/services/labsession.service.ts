@@ -217,6 +217,21 @@ export class LabSessionService {
 		);
 	}
 
+	//change the description of a particular labsession
+	updateDescription(id: string, desc: string): Observable<ApiResponse<LabSession>> {
+		let url: string = `${this.apiHost}/lab_sessions/${id}`;
+		let body = { description: desc };
+		var session: LabSession;
+		return this.httpClient.put<LabSession>(url, body).pipe(
+			map(r => {
+				session = LabSession.createFromJSon(r);
+				let response: ApiResponse<LabSession> = new ApiResponse<LabSession>(true, session);
+				return response;
+			}),
+			catchError(r => this.handleLabsessionError(r, session))
+		);
+	}
+
 	//this section is for error handlers
 	private handleLabsessionsError(error: any, lArray: LabSession[]): Observable<ApiResponse<LabSession[]>> {
 		let apiResponse: ApiResponse<LabSession[]> = new ApiResponse<LabSession[]>(false);
