@@ -20,11 +20,11 @@ export class DeleteModalComponent implements OnInit {
 		private titleService: Title) { }
 
 	ngOnInit() {
-		this.titleService.setTitle('Delete Question - Help Me');
+		this.titleService.setTitle('Delete Question - HelpMe');
 	}
 
 	ngOnDestroy() {
-		this.titleService.setTitle('Session View - Help Me');
+		this.titleService.setTitle('Session View - HelpMe');
 	}
 
 	//delete the currentQuestion from the database and close the modal

@@ -36,12 +36,12 @@ export class EditModalComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.titleService.setTitle('Edit Answer - Help Me');
+		this.titleService.setTitle('Edit Answer - HelpMe');
 		this.save(); //save the answer
 	}
 
 	ngOnDestroy() {
-		this.titleService.setTitle('Session View - Help Me');
+		this.titleService.setTitle('Session View - HelpMe');
 		if (environment.production) {
 			this.sub.unsubscribe();
 		}

@@ -19,7 +19,7 @@ xdescribe('Login tests', () => {
     it('should have right title',() =>{
       page.getPageTitle()
       .then((title:string) =>{
-        expect(title).toEqual('Log into Help Me');
+        expect(title).toEqual('Log into HelpMe');
       });
     });
 

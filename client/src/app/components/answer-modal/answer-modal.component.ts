@@ -43,13 +43,13 @@ export class AnswerModalComponent implements OnInit, OnDestroy {
 		private titleService: Title) { }
 
 	ngOnInit() {
-		this.titleService.setTitle('Add Answer - Help Me'); //change the title of the page
+		this.titleService.setTitle('Add Answer - HelpMe'); //change the title of the page
 		this.FaQ = false;
 		this.save()
 	}
 
 	ngOnDestroy() {
-		this.titleService.setTitle('Session View - Help Me'); //change the title of the page back
+		this.titleService.setTitle('Session View - HelpMe'); //change the title of the page back
 		if (environment.production) {
 			this.sub.unsubscribe();
 		}

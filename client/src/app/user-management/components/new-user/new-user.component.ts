@@ -32,7 +32,7 @@ export class NewUserComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.titleService.setTitle('Create an Account - Help Me');
+		this.titleService.setTitle('Create an Account - HelpMe');
 	}
 
 	createNewAccount(): void {

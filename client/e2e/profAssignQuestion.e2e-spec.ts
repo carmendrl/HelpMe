@@ -21,7 +21,7 @@ xdescribe('Professor is able to assign questions to TA', () =>{
     page.getPasswordTextbox().sendKeys('password');
     page.getSubmitButton().click();
     page.getPageTitle().then((title:string) => {
-        expect(title).toEqual('Dashboard - Help Me');
+        expect(title).toEqual('Dashboard - HelpMe');
       });
   });
 
@@ -32,7 +32,7 @@ browser.sleep(5000);
       expect(url).toEqual('http://localhost:4200/lab_sessions/a6ecef92-77c1-4a29-9b19-0d3cf4fa0602');
     });
     page.getPageTitle().then((title:string) => {
-        expect(title).toEqual('Session View - Help Me');
+        expect(title).toEqual('Session View - HelpMe');
       });
   });
 
@@ -44,7 +44,7 @@ browser.sleep(5000);
     expect(page.getAssignModal()).toBeTruthy();
     expect(page.getOpenAssignModal()).toBeTruthy();
     page.getPageTitle().then((title:string) => {
-      expect(title).toEqual('Assign a Question - Help Me');
+      expect(title).toEqual('Assign a Question - HelpMe');
     });
     page.getSaveAssignButton().click();
     page.navigateTo2('a6ecef92-77c1-4a29-9b19-0d3cf4fa0602');
@@ -60,7 +60,7 @@ browser.sleep(5000);
     expect(page.getAssignModal()).toBeTruthy();
     expect(page.getOpenAssignModal()).toBeTruthy();
     page.getPageTitle().then((title:string) => {
-      expect(title).toEqual('Assign a Question - Help Me');
+      expect(title).toEqual('Assign a Question - HelpMe');
     });
     page.getSaveAssignButton().click();
     page.navigateTo2('a6ecef92-77c1-4a29-9b19-0d3cf4fa0602');

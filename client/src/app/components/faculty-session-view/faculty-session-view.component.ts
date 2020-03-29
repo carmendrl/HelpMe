@@ -75,7 +75,7 @@ export class FacultySessionViewComponent extends SessionView implements OnInit {
 			this.sortQuestions(this.questions)
     });
 		this.getSessionCodeAndDescription();
-		this.titleService.setTitle(`Session View - Help Me`);
+		this.titleService.setTitle(`Session View - HelpMe`);
 		this.checkIfEnded();
 		this.sessionService.getSession(this.sessionId).subscribe(sess => {
 		this.session = sess; this.sess = <LabSession>this.session.Data;

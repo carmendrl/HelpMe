@@ -23,11 +23,11 @@ export class CreateCourseFormComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.titleService.setTitle('Create a Course - Help Me');
+		this.titleService.setTitle('Create a Course - HelpMe');
 	}
 
 	ngOnDestroy() {
-		this.titleService.setTitle('Dashboard - Help Me');
+		this.titleService.setTitle('Dashboard - HelpMe');
 	}
 
 	//crete a new course form the information in the form

@@ -70,7 +70,7 @@ export class StudentSessionViewComponent extends SessionView implements OnInit {
 		this.questionService.getNewAnswer$.subscribe(r => this.checkNotification(this.questions)); //if new answers show notifications
 		this.getSessionDescription();
 		this.checkIfEnded();
-		this.titleService.setTitle(`Session View - Help Me`);
+		this.titleService.setTitle(`Session View - HelpMe`);
 		this.checkIfStarted();
 	}
 

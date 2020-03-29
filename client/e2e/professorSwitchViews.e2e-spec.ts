@@ -23,7 +23,7 @@ it('should display the right title', () =>{
   page.getSubmitButton().click();
   page.getPageTitle()
   .then((title:string) => {
-      expect(title).toEqual('Dashboard - Help Me');
+      expect(title).toEqual('Dashboard - HelpMe');
     }
   );
 });
@@ -49,7 +49,7 @@ it('should join a session as a student an get the correct url', () =>{
 it('should display the right title', () =>{
   page.getPageTitle()
   .then((title:string) => {
-      expect(title).toEqual('Session View - Help Me');
+      expect(title).toEqual('Session View - HelpMe');
     }
   );
 });
@@ -59,7 +59,7 @@ it('should go back to the dashboard and get the right title',() =>{
   page.getBackButton().click();
   page.getPageTitle()
   .then((title:string) => {
-      expect(title).toEqual('Dashboard - Help Me');
+      expect(title).toEqual('Dashboard - HelpMe');
     }
   );
 });
