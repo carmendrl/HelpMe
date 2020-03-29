@@ -3,10 +3,10 @@
 	<div id="session_status">
 		<div class="sessionInfo">
 			<span>{{subjectAndNumber}}: </span>
-			<div *ngIf="user.Type === 'professors'; else notProfessors">
-				<div *ngIf="!editingDescription" class="d-inline-block">
+			<div *ngIf="user.Type === 'professors'; else notProfessors" class="d-inline-block">
+				<div *ngIf="!editingDescription">
 					<span>{{description}} </span>
-					<button class="btn btn-outline-primary" (click)="beginEditDescription()"><i class="fa fa-pencil-alt"></i></button>
+					<button class="btn btn-outline-primary btn-sm" (click)="beginEditDescription()"><i class="fa fa-pencil-alt"></i></button>
 				</div>
 				<div *ngIf="editingDescription" class="form-inline d-inline-block">
 						<input [(ngModel)]="newDescription" class="form-control" type="text" id="descriptionInput"/>
