@@ -3,8 +3,10 @@
 
 	<form *ngIf="openAsk" #thisForm="ngForm">
 		<div class="form-group form-row">
-			<label class="col-12 col-sm-4 col-form-label">Step / Question #</label>
-			<div class="col-sm-8" data-toggle="tooltip" data-placement="top" title="Describe the step you're currently on">
+			<label class="col-12 col-sm-4 col-form-label">Step / Question # 
+				<a ngbTooltip="If you're working on a homework assignment, project, or lab activity that has individual problems on it, enter the problem number here.  Otherwise, you can leave it blank." placement="right"><i class="fa fa-info-circle"></i></a>
+			</label>
+			<div class="col-sm-8">
 				<input name="step" type="text" id="step" class="form-control" [(ngModel)]="step" required><br>
 			</div>
 		</div>
