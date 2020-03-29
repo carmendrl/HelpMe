@@ -3,15 +3,18 @@
 	<div id="session_status">
 		<div class="sessionInfo">
 			<span>{{subjectAndNumber}}: </span>
-			<div *ngIf="!editingDescription" class="d-inline-block">
-				<span>{{description}} </span>
-				<button class="btn btn-outline-primary" (click)="beginEditDescription()"><i class="fa fa-pencil-alt"></i></button>
+			<div *ngIf="user.Type === 'professors'; else notProfessors">
+				<div *ngIf="!editingDescription" class="d-inline-block">
+					<span>{{description}} </span>
+					<button class="btn btn-outline-primary" (click)="beginEditDescription()"><i class="fa fa-pencil-alt"></i></button>
+				</div>
+				<div *ngIf="editingDescription" class="form-inline d-inline-block">
+						<input [(ngModel)]="newDescription" class="form-control" type="text" id="descriptionInput"/>
+						<button class="btn btn-primary" (click)="saveEditDescription()">Save</button>
+						<button class="btn btn-outline-primary" (click)="cancelEditDescription()">Cancel</button>
+				</div>
 			</div>
-			<div *ngIf="editingDescription" class="form-inline d-inline-block">
-					<input [(ngModel)]="newDescription" class="form-control" type="text" id="descriptionInput"/>
-					<button class="btn btn-primary" (click)="saveEditDescription()">Save</button>
-					<button class="btn btn-outline-primary" (click)="cancelEditDescription()">Cancel</button>
-			</div>
+			<ng-template #notProfessors><span>{{description}} </span></ng-template>
 			<span> ({{token}})</span>
 		</div>
 
