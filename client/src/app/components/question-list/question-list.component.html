@@ -12,11 +12,11 @@ are input into this model from the student dashboard, student view, and faculty 
 	<div class="mb-2">
 		<h2 name="questionListHeader" [ngStyle]="headerStyles()" class="inlineHeader">{{header}}</h2>
 		<div *ngIf="isCollapsible" class="collapseContainer d-inline-block">
-			<button placement="top" name="open" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" name="open" class="btn btn-primary inlineButton" (click)="checkCollapsed()" [attr.aria-expanded]="!isCollapsed"
-			 aria-controls="collapseQL">{{checkIfCollapsed()}}
-				<span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
-				<span *ngIf="isCollapsed" style="padding-left:8%;"><i class="fas fa-sort-down"></i></span>
-				<span *ngIf="!isCollapsed" style="padding-left:8%"><i class="fas fa-sort-up"></i></span>
+			<button name="open" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" class="btn btn-primary d-flex flex-row align-items-center actionSpace" (click)="checkCollapsed()" [attr.aria-expanded]="!isCollapsed"
+			 aria-controls="collapseQL">
+				 <span class="badge badge-light">{{filteredQuestionsLength()}}</span>
+				<span *ngIf="isCollapsed" class="inlineButton"><i class="fas fa-caret-down"></i></span>
+				<span *ngIf="!isCollapsed" class="inlineButton"><i class="fas fa-caret-up"></i></span>
 			</button>
 		</div>
 	</div>
@@ -127,8 +127,11 @@ are input into this model from the student dashboard, student view, and faculty 
 	<div class="mb-2">
 		<h2 class="inlineHeader">{{header}}</h2>
 		<div *ngIf="isCollapsible" class="collapseContainer">
-			<button class="btn btn-primary inlineButton" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseQL">{{checkIfCollapsed()}}
-				<span *ngIf="isCollapsed" class="badge badge-light">{{filteredQuestionsLength()}}</span>
+			<button name="open" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" class="btn btn-primary d-flex flex-row align-items-center actionSpace" (click)="checkCollapsed()" [attr.aria-expanded]="!isCollapsed"
+			 aria-controls="collapseQL">
+				 <span class="badge badge-light">{{filteredQuestionsLength()}}</span>
+				<span *ngIf="isCollapsed" class="inlineButton"><i class="fas fa-caret-down"></i></span>
+				<span *ngIf="!isCollapsed" class="inlineButton"><i class="fas fa-caret-up"></i></span>
 			</button>
 		</div>
 	</div>
