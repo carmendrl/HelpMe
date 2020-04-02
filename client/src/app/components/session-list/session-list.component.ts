@@ -3,6 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { LabSessionService } from '../../services/labsession.service';
+import { UserService } from '../../services/user.service';
 import { RoutingHelperService } from '../../services/routing-helper.service';
 import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
@@ -25,7 +26,7 @@ export class SessionListComponent implements OnInit {
 
 	constructor(@Inject(DOCUMENT) public document: Document, private router: Router,
 		private audioService: AudioService, private routingHelperService: RoutingHelperService,
-		private labSessionService: LabSessionService) { }
+		private labSessionService: LabSessionService, private userService: UserService) { }
 
 	ngOnInit() {
 	}

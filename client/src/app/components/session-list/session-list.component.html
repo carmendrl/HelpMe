@@ -1,3 +1,5 @@
+<div *ngIf="userService.CurrentUser$ | async as user">
+
 <!-- view for a large screen -->
 <div class="largeScreen">
   <!-- search box to search through all the labsessions  -->
@@ -21,17 +23,20 @@
           <td>{{session.course.subjectAndNumber}}</td>
           <td>{{session.professor.FullName}}</td>
           <td>
-            <div *ngIf="!editingDescription(session)">
-              <span>{{session.description}}</span>
-              <button class="btn btn-outline-primary btn-sm actionSpace" (click)="beginEditDescription(session)">
-                <i class="fa fa-pencil-alt"></i>
-              </button>
-            </div>
-            <div *ngIf="editingDescription(session)" class="form-inline d-inline-block">
-              <input [(ngModel)]="session.description" class="form-control actionSpace" type="text" id="descriptionInput" />
-              <button class="btn btn-primary actionSpace" (click)="saveEditDescription(session)">Save</button>
-              <button class="btn btn-outline-primary actionSpace" (click)="cancelEditDescription(session)">Cancel</button>
-            </div>
+            <div *ngIf="user.Type === 'professors'; else notProfessors" class="d-inline-block">
+              <div *ngIf="!editingDescription(session)">
+                <span>{{session.description}}</span>
+                <button class="btn btn-outline-primary btn-sm actionSpace" (click)="beginEditDescription(session)">
+                  <i class="fa fa-pencil-alt"></i>
+                </button>
+              </div>
+              <div *ngIf="editingDescription(session)" class="form-inline d-inline-block">
+                <input [(ngModel)]="session.description" class="form-control actionSpace" type="text" id="descriptionInput" />
+                <button class="btn btn-primary actionSpace" (click)="saveEditDescription(session)">Save</button>
+                <button class="btn btn-outline-primary actionSpace" (click)="cancelEditDescription(session)">Cancel</button>
+              </div>
+            </div> 
+            <ng-template #notProfessors>{{session.description}}</ng-template>
           </td>
           <!-- buttons to copy and view -->
           <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace" ngbPopover="{{session.token}}" triggers="mouseenter:mouseleave" popoverTitle="Session Code">Copy Code</span>
@@ -67,4 +72,6 @@
     </div>
     <hr>
   </div>
+</div>
+
 </div>
