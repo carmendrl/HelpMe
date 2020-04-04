@@ -42,7 +42,7 @@ export class EditModalComponent implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		this.titleService.setTitle('Session View - Help Me');
-		if (environment.production) {
+		if (environment.production && false) {
 			this.sub.unsubscribe();
 		}
 	}
@@ -59,7 +59,7 @@ export class EditModalComponent implements OnInit, OnDestroy {
 
 	//updates the answer with the information from the form
 	editAnswerFromForm(submitted: boolean) {
-		if (environment.production) {
+		if (environment.production && false) {
 			this.sub.unsubscribe();
 		}
 		this.questionService.editAnAnswer(this.currentQuestion, this.currentQuestion.answer.text, submitted, this.user.id).subscribe(r => this.activeModal.close()
@@ -75,7 +75,7 @@ export class EditModalComponent implements OnInit, OnDestroy {
 
 	//if in production mode then autoSave is on
 	save() {
-		if (environment.production) {
+		if (environment.production && false) {
 			this.sub = timer(3000).subscribe(() => this.autoSave(this.currentQuestion.answer.submitted));
 		}
 	}
