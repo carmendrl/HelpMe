@@ -22,7 +22,7 @@ xdescribe('Start session tests', () => {
     page.getSubmitButton().click();
     page.getPageTitle()
     .then((title:string) => {
-        expect(title).toEqual('Dashboard - Help Me');
+        expect(title).toEqual('Dashboard - HelpMe');
       }
     );
   });

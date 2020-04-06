@@ -42,11 +42,11 @@ export class AssignModalComponent implements OnInit, OnDestroy {
 				this.loadSessionUsers();
 			})
 
-		this.titleService.setTitle('Assign a Question - Help Me');
+		this.titleService.setTitle('Assign a Question - HelpMe');
 	}
 
 	ngOnDestroy() {
-		this.titleService.setTitle('Session View - Help Me');
+		this.titleService.setTitle('Session View - HelpMe');
 	}
 
 	//loads the list of session users who are TAs or professors

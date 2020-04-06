@@ -26,7 +26,7 @@ describe('Create course tests', () => {
   it('should display right title',() =>{
     page.getPageTitle()
     .then((title:string) => {
-      expect(title).toEqual('Create a Course - Help Me');
+      expect(title).toEqual('Create a Course - HelpMe');
     }
   );
 });

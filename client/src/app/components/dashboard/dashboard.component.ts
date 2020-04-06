@@ -14,7 +14,7 @@ export class DashboardComponent implements OnInit {
 	constructor(private userService: UserService, private titleService: Title) { }
 
 	ngOnInit() {
-		this.titleService.setTitle('Dashboard - Help Me')
+		this.titleService.setTitle('Dashboard - HelpMe')
 	}
 
 }

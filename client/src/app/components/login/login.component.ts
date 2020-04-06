@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
 		this.userService.CurrentUser$.subscribe(
 			u => this.currentUser = u
 		);
-		this.titleService.setTitle('Log into Help Me');
+		this.titleService.setTitle('Log into HelpMe');
 	}
 
 	//check to make sure that the email is in the correct format

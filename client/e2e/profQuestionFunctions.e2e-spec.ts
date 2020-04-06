@@ -31,7 +31,7 @@ xdescribe('Professor Question Functions', () => {
   it('should have right title',() =>{
     page.navigateToLab1();
     page.getPageTitle().then((title:string) =>{
-      expect(title).toEqual('Session View - Help Me');
+      expect(title).toEqual('Session View - HelpMe');
     });
   });
 

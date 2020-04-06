@@ -50,7 +50,7 @@ export class EditProfileComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.titleService.setTitle('Edit My Profile - Help me');
+		this.titleService.setTitle('Edit My Profile - HelpMe');
 	}
 
 	checkIfNotStudent() {
