@@ -63,6 +63,10 @@ input[type='text'], input[type='password'], input[type='email'] {
 	cursor:pointer;
 }
 
+.actionSpace{
+  margin: 5px;
+}
+
 /*  Don't add padding to the QuillEditor content container when it's just displaying content */
 .ql-editor[contenteditable="false"] {
 	padding-top: 0px !important;

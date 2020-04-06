@@ -3,6 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { LabSessionService } from '../../services/labsession.service';
+import { UserService } from '../../services/user.service';
 import { RoutingHelperService } from '../../services/routing-helper.service';
 import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
@@ -20,9 +21,12 @@ export class SessionListComponent implements OnInit {
 	@Input() public isCollapsed: boolean = true;
 	private searchText: string; //what the search uses to find mathcing sessions
 	private copied: boolean = false;
+	private editingDescriptions = new Map<LabSession,boolean>();
+	private tempDescriptions = new Map<LabSession,string>();
 
 	constructor(@Inject(DOCUMENT) public document: Document, private router: Router,
-		private audioService: AudioService, private routingHelperService: RoutingHelperService) { }
+		private audioService: AudioService, private routingHelperService: RoutingHelperService,
+		private labSessionService: LabSessionService, private userService: UserService) { }
 
 	ngOnInit() {
 	}
@@ -85,6 +89,27 @@ export class SessionListComponent implements OnInit {
 		else {
 			return "Close"
 		}
+	}
+
+	beginEditDescription(s: LabSession) {
+		this.tempDescriptions.set(s,s.description);
+		this.editingDescriptions.set(s,true);
+	}
+
+	cancelEditDescription(s: LabSession) {
+		this.editingDescriptions.set(s,false);
+		s.description = this.tempDescriptions.get(s);
+	}
+	
+	saveEditDescription(s: LabSession) {
+		this.labSessionService.updateDescription(s.id, s.description).subscribe();
+		this.editingDescriptions.set(s,false);
+	}
+
+	editingDescription(s: LabSession): boolean {
+		let res = this.editingDescriptions.get(s);
+		if (res != null) return res;
+		else return false;
 	}
 
 }

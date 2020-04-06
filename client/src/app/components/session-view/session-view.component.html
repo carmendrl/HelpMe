@@ -2,7 +2,22 @@
 
 	<div id="session_status">
 		<div class="sessionInfo">
-			{{subjectAndNumber}}: {{description}} ({{token}})
+			<span>{{subjectAndNumber}}: </span>
+			<div *ngIf="user.Type === 'professors'; else notProfessors" class="d-inline-block">
+				<div *ngIf="!editingDescription">
+					<span>{{description}} </span>
+					<button class="btn btn-outline-primary btn-sm actionSpace" (click)="beginEditDescription()">
+						<i class="fa fa-pencil-alt"></i>
+					</button>
+				</div>
+				<div *ngIf="editingDescription" class="form-inline d-inline-block">
+					<input [(ngModel)]="newDescription" class="form-control actionSpace" type="text" id="descriptionInput" />
+					<button class="btn btn-primary actionSpace" (click)="saveEditDescription()">Save</button>
+					<button class="btn btn-outline-primary actionSpace" (click)="cancelEditDescription()">Cancel</button>
+				</div>
+			</div>
+			<ng-template #notProfessors><span>{{description}} </span></ng-template>
+			<span> ({{token}})</span>
 		</div>
 
 		<div ngbDropdown class="d-inline-block">
@@ -12,13 +27,17 @@
 				<!--  These options are visible only to instructional staff  -->
 				<div *ngIf="user.Type !=='students' && !ended">
 					<div *ngIf="!ended">
-						<button ngbDropdownItem type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End Session</button>
-						<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR Code</button>
+						<button ngbDropdownItem type="button" (click)="setEndDate()" [routerLink]="['/dashboard']">End
+							Session</button>
+						<button ngbDropdownItem type="button" (click)="openQRCodeModal(qrModalContent)">View Session QR
+							Code</button>
 					</div>
 
 					<div class="dropdown-divider"></div>
-					<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another Session</button>
-					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button" (click)="openAddQuestionsFromAnotherSessionModal(content2)">Add Questions from Another Session</button>
+					<button ngbDropdownItem type="button" (click)="openCopyQuestionsModal()">Copy Questions to Another
+						Session</button>
+					<button ngbDropdownItem *ngIf="user.Type !== 'students'" type="button"
+						(click)="openAddQuestionsFromAnotherSessionModal(content2)">Add Questions from Another Session</button>
 					<div class="dropdown-divider"></div>
 				</div>
 
