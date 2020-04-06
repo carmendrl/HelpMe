@@ -23,7 +23,7 @@
           <td>{{session.course.subjectAndNumber}}</td>
           <td>{{session.professor.FullName}}</td>
           <td>
-            <div *ngIf="!editingDescription(session)">
+            <div *ngIf="!editingDescription(session)" class="description">
               <span>{{session.description}}</span>
               <button *ngIf="user.Type === 'professors'" class="btn btn-outline-primary btn-sm actionSpace" (click)="beginEditDescription(session)">
                 <i class="fa fa-pencil-alt"></i>

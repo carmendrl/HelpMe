@@ -3,6 +3,18 @@
   display:none;
 }
 
+ 
+th, td {
+  vertical-align: middle;
+  padding: 0.25rem;
+}
+
+.description {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 @media only screen and (max-width: 600px){
   .smallScreen{
     display:inline;
