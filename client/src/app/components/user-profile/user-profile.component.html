@@ -1,5 +1,5 @@
 <div class="float-right d-inline-block clearfix menu" ngbDropdown *ngIf="userService.CurrentUser$ | async as user">
-  <div ngbDropdown [placement]="mobile ? 'bottom-right' : 'bottom-left'" *ngIf="user.Username.length > 0">
+  <div ngbDropdown placement="bottom-right" *ngIf="user.Username.length > 0">
     <button class="btn btn-outline-default" id="accountDropdown" ngbDropdownToggle>
       <!--  At screen size xs, we'll just show the profile icon  -->
       <img class="rounded-circle" [src]="gravatarImageUrl(user)" />
