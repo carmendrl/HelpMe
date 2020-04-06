@@ -14,7 +14,8 @@ are input into this model from the student dashboard, student view, and faculty 
 		<div *ngIf="isCollapsible" class="collapseContainer d-inline-block">
 			<button name="open" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" class="btn btn-primary d-flex flex-row align-items-center actionSpace" (click)="checkCollapsed()" [attr.aria-expanded]="!isCollapsed"
 			 aria-controls="collapseQL">
-				 <span class="badge badge-light">{{filteredQuestionsLength()}}</span>
+			 <span>{{checkIfCollapsed()}}</span>
+				 <span class="badge badge-light inlineButton">{{filteredQuestionsLength()}}</span>
 				<span *ngIf="isCollapsed" class="inlineButton"><i class="fas fa-caret-down"></i></span>
 				<span *ngIf="!isCollapsed" class="inlineButton"><i class="fas fa-caret-up"></i></span>
 			</button>
@@ -129,7 +130,8 @@ are input into this model from the student dashboard, student view, and faculty 
 		<div *ngIf="isCollapsible" class="collapseContainer">
 			<button name="open" ngbTooltip="{{isCollapsed? 'Show': 'Hide'}} these questions" id="collapseButton" class="btn btn-primary d-flex flex-row align-items-center actionSpace" (click)="checkCollapsed()" [attr.aria-expanded]="!isCollapsed"
 			 aria-controls="collapseQL">
-				 <span class="badge badge-light">{{filteredQuestionsLength()}}</span>
+			 <span>{{checkIfCollapsed()}}</span>
+				 <span class="badge badge-light inlineButton">{{filteredQuestionsLength()}}</span>
 				<span *ngIf="isCollapsed" class="inlineButton"><i class="fas fa-caret-down"></i></span>
 				<span *ngIf="!isCollapsed" class="inlineButton"><i class="fas fa-caret-up"></i></span>
 			</button>
