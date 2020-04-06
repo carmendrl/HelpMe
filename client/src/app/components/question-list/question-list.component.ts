@@ -168,7 +168,7 @@ export class QuestionListComponent implements OnInit {
 
 	//check if the list is collapsed or not
 	checkIfCollapsed(): string {
-		return this.isCollapsed ? "Open" : "Close";
+		return this.isCollapsed ? "Show" : "Hide";
 	}
 
 	//open/close the list
