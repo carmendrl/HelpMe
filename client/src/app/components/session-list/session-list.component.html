@@ -21,7 +21,6 @@
               <thead>
                 <tr>
                   <th>Date</th>
-                  <th>Course</th>
                   <th>Professor</th>
                   <th>Description</th>
                   <th>Action</th>
@@ -30,7 +29,6 @@
               <tbody>
                 <tr id="tableRow" class="sessionList" *ngFor="let session of getSessionsForCourse(course.id) | sessionfilter: searchText">
                   <td>{{session.startDate | date:'EEE LLL dd'}}</td>
-                  <td>{{session.course.subjectAndNumber}}</td>
                   <td>{{session.professor.FullName}}</td>
                   <td>
                     <div *ngIf="!editingDescription(session)" class="description">
