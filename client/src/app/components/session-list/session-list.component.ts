@@ -7,6 +7,7 @@ import { UserService } from '../../services/user.service';
 import { RoutingHelperService } from '../../services/routing-helper.service';
 import { AudioService } from '../../services/audio.service';
 import { LabSession } from '../../models/lab_session.model';
+import { Course } from '../../models/course.model';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -111,5 +112,27 @@ export class SessionListComponent implements OnInit {
 		if (res != null) return res;
 		else return false;
 	}
+
+	get courses(): Course[] {
+		var courseIds = new Set<string>();
+		var courses: Course[] = [];
+		for (let session of this.sessions) {
+			if (!courseIds.has(session.course.id)) {
+				courseIds.add(session.course.id);
+				courses.push(session.course);
+			}
+		}
+		return courses;
+	}
+
+	getSessionsForCourse(courseId: string): LabSession[] {
+		var sessions: LabSession[] = [];
+		for (let session of this.sessions) {
+			if (session.course.id === courseId) {
+				sessions.push(session);
+			}
+		}
+		return sessions;
+	} 
 
 }
