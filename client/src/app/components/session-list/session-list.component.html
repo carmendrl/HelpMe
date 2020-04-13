@@ -78,18 +78,31 @@
     <div id="collapseQL" [(ngbCollapse)]="isCollapsed">
       <input type="text" class="form-control" [(ngModel)]="searchText" placeholder="search session" />
       <div class="results">
-        <ul class="list-unstyled">
-          <li *ngFor="let session of sessions | sessionfilter: searchText" class="mt-2">
-            <a [routerLink]="['/lab_sessions', session.id]">
-              <span>{{session.course.subjectAndNumber}}- </span>
-              <span>{{session.description}} </span>
-              <span>({{session.professor.LastName}}) </span>
-            </a>
-          </li>
-        </ul>
+        <ngb-accordion>
+          <div *ngFor="let course of courses">
+            <ngb-panel *ngIf="(getSessionsForCourse(course.id) | sessionfilter: searchText).length">
+              <ng-template ngbPanelHeader let-opened="opened">
+                <button class="btn btn-link" ngbPanelToggle>
+                  <span><strong>{{course.subjectAndNumber}}</strong> – {{course.title}} </span>
+                  <span *ngIf="opened"><i class="fas fa-caret-up"></i></span>
+                  <span *ngIf="!opened"><i class="fas fa-caret-down"></i></span>
+                </button>
+              </ng-template>
+              <ng-template ngbPanelContent>
+                <ul class="list-unstyled">
+                  <li *ngFor="let session of getSessionsForCourse(course.id) | sessionfilter: searchText" class="mt-2">
+                    <a [routerLink]="['/lab_sessions', session.id]">
+                      <span>{{session.description}} </span>
+                      <span>({{session.professor.LastName}}) </span>
+                    </a>
+                  </li>
+                </ul>
+              </ng-template>
+            </ngb-panel>
+          </div>
+        </ngb-accordion>
       </div>
       <hr>
     </div>
   </div>
-
 </div>
