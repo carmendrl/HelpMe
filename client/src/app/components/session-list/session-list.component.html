@@ -8,57 +8,60 @@
       <p *ngIf="filter()" class="table-caption" style="font-size:1.5vw;">{{label}}</p>
       <!--table to list the lab sessions -->
       <ngb-accordion>
-        <ngb-panel *ngFor="let course of courses">
+        <div *ngFor="let course of courses">
+          <ngb-panel *ngIf="(getSessionsForCourse(course.id) | sessionfilter: searchText).length">
             <ng-template ngbPanelHeader let-opened="opened">
               <button class="btn btn-link" ngbPanelToggle>
-                <span><strong>{{course.subjectAndNumber}}</strong> – {{course.title}}   </span>
+                <span><strong>{{course.subjectAndNumber}}</strong> – {{course.title}} </span>
                 <span *ngIf="opened"><i class="fas fa-caret-up"></i></span>
                 <span *ngIf="!opened"><i class="fas fa-caret-down"></i></span>
               </button>
             </ng-template>
-          <ng-template ngbPanelContent>
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Professor</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr id="tableRow" class="sessionList" *ngFor="let session of getSessionsForCourse(course.id) | sessionfilter: searchText">
-                  <td>{{session.startDate | date:'EEE LLL dd'}}</td>
-                  <td>{{session.professor.FullName}}</td>
-                  <td>
-                    <div *ngIf="!editingDescription(session)" class="description">
-                      <span>{{session.description}}</span>
-                      <button *ngIf="user.Type === 'professors'" class="btn btn-outline-primary btn-sm actionSpace"
-                        (click)="beginEditDescription(session)">
-                        <i class="fa fa-pencil-alt"></i>
-                      </button>
-                    </div>
-                    <div *ngIf="editingDescription(session)" class="form-inline d-inline-block">
-                      <input [(ngModel)]="session.description" class="form-control actionSpace" type="text"
-                        id="descriptionInput" />
-                      <button class="btn btn-primary actionSpace" (click)="saveEditDescription(session)">Save</button>
-                      <button class="btn btn-outline-primary actionSpace"
-                        (click)="cancelEditDescription(session)">Cancel</button>
-                    </div>
-                  </td>
-                  <!-- buttons to copy and view -->
-                  <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace"
-                      ngbPopover="{{session.token}}" triggers="mouseenter:mouseleave" popoverTitle="Session Code">Copy
-                      Code</span>
-                    <span (click)="copySessionLink(session)" class="btn btn-primary actionSpace">Copy Link</span>
-                    <span id="viewButton" name="view" (click)="viewSession(session);audioService.playSilentAudio()"
-                      class="btn btn-primary actionSpace">View</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </ng-template>
-        </ngb-panel>
+            <ng-template ngbPanelContent>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Professor</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="tableRow" class="sessionList"
+                    *ngFor="let session of getSessionsForCourse(course.id) | sessionfilter: searchText">
+                    <td>{{session.startDate | date:'EEE LLL dd'}}</td>
+                    <td>{{session.professor.FullName}}</td>
+                    <td>
+                      <div *ngIf="!editingDescription(session)" class="description">
+                        <span>{{session.description}}</span>
+                        <button *ngIf="user.Type === 'professors'" class="btn btn-outline-primary btn-sm actionSpace"
+                          (click)="beginEditDescription(session)">
+                          <i class="fa fa-pencil-alt"></i>
+                        </button>
+                      </div>
+                      <div *ngIf="editingDescription(session)" class="form-inline d-inline-block">
+                        <input [(ngModel)]="session.description" class="form-control actionSpace" type="text"
+                          id="descriptionInput" />
+                        <button class="btn btn-primary actionSpace" (click)="saveEditDescription(session)">Save</button>
+                        <button class="btn btn-outline-primary actionSpace"
+                          (click)="cancelEditDescription(session)">Cancel</button>
+                      </div>
+                    </td>
+                    <!-- buttons to copy and view -->
+                    <td><span (click)="copySessionCode(session)" class="btn btn-primary actionSpace"
+                        ngbPopover="{{session.token}}" triggers="mouseenter:mouseleave" popoverTitle="Session Code">Copy
+                        Code</span>
+                      <span (click)="copySessionLink(session)" class="btn btn-primary actionSpace">Copy Link</span>
+                      <span id="viewButton" name="view" (click)="viewSession(session);audioService.playSilentAudio()"
+                        class="btn btn-primary actionSpace">View</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </ng-template>
+          </ngb-panel>
+        </div>
       </ngb-accordion>
     </div>
   </div>
